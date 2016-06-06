@@ -36,6 +36,7 @@ public final class SpecBuilderTest {
 
         final SpecDesc specDesc = specBuilder.build(spec);
 
+        assertEquals("com.example", specDesc.getPackageName());
         final List<ValueDesc> values = specDesc.getValues();
         assertEquals(2, values.size());
 

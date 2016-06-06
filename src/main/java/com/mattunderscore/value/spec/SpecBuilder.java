@@ -47,6 +47,7 @@ public final class SpecBuilder {
     public SpecDesc build(SpecContext context) {
         return SpecDesc
             .builder()
+            .packageName(context.r_package().qualifiedName().getText())
             .values(context
                 .value()
                 .stream()

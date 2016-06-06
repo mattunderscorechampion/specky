@@ -1,4 +1,6 @@
 
+package com.example
+
 value FirstValue {
   Integer num
   String str

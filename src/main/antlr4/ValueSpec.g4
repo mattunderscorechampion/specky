@@ -12,6 +12,10 @@ CLOSE_BLOCK
     : '}'
     ;
 
+PACKAGE
+    : 'package'
+    ;
+
 fragment
 UpperCaseLetter
     :   [A-Z]
@@ -58,8 +62,16 @@ property
     : TypeName PropertyName
     ;
 
+qualifiedName
+    : PropertyName ('.' PropertyName)*
+    ;
+
+r_package
+    : PACKAGE qualifiedName
+    ;
+
 spec
-    : value+
+    : r_package value+
     ;
 
 value
