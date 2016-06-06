@@ -42,19 +42,25 @@ public final class SpecBuilderTest {
         final ValueDesc valueDesc0 = values.get(0);
         assertEquals("FirstValue", valueDesc0.getName());
         final List<PropertySpec> properties0 = valueDesc0.getProperties();
-        assertEquals(1, properties0.size());
+        assertEquals(2, properties0.size());
 
         final PropertySpec propertySpec0 = properties0.get(0);
         assertEquals("num", propertySpec0.getName());
         assertEquals("java.lang.Integer", propertySpec0.getType());
+        final PropertySpec propertySpec1 = properties0.get(1);
+        assertEquals("str", propertySpec1.getName());
+        assertEquals("java.lang.String", propertySpec1.getType());
 
         final ValueDesc valueDesc1 = values.get(1);
         assertEquals("SecondValue", valueDesc1.getName());
         final List<PropertySpec> properties1 = valueDesc1.getProperties();
-        assertEquals(1, properties1.size());
+        assertEquals(2, properties1.size());
 
-        final PropertySpec propertySpec1 = properties1.get(0);
-        assertEquals("num", propertySpec1.getName());
-        assertEquals("java.lang.Integer", propertySpec1.getType());
+        final PropertySpec propertySpec2 = properties1.get(0);
+        assertEquals("num", propertySpec2.getName());
+        assertEquals("java.lang.Integer", propertySpec2.getType());
+        final PropertySpec propertySpec3 = properties1.get(1);
+        assertEquals("dbl", propertySpec3.getName());
+        assertEquals("java.lang.Double", propertySpec3.getType());
     }
 }

@@ -1,4 +1,10 @@
 
-value FirstValue { Integer num }
+value FirstValue {
+  Integer num
+  String str
+}
 
-value SecondValue { Integer num }
+value SecondValue {
+  Integer num
+  Double dbl
+}
