@@ -31,6 +31,8 @@ import lombok.Value;
 import java.util.List;
 
 /**
+ * Bean model.
+ *
  * @author Matt Champion on 05/06/16
  */
 @Value
