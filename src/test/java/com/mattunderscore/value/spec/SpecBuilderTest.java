@@ -1,11 +1,11 @@
 package com.mattunderscore.value.spec;
 
-import com.mattunderscore.value.spec.ValueSpecLexer;
-import com.mattunderscore.value.spec.ValueSpecParser;
 import com.mattunderscore.value.spec.ValueSpecParser.SpecContext;
 import com.mattunderscore.value.spec.model.PropertySpec;
 import com.mattunderscore.value.spec.model.SpecDesc;
 import com.mattunderscore.value.spec.model.ValueDesc;
+import com.mattunderscore.value.spec.type.resolver.TypeResolver;
+import com.mattunderscore.value.spec.type.resolver.TypeResolverBuilder;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonToken;
@@ -32,7 +32,8 @@ public final class SpecBuilderTest {
         final com.mattunderscore.value.spec.ValueSpecLexer lexer = new ValueSpecLexer(stream);
         final ValueSpecParser parser = new ValueSpecParser(new UnbufferedTokenStream<CommonToken>(lexer));
         final SpecContext spec = parser.spec();
-        final SpecBuilder specBuilder = new SpecBuilder(new TypeResolver());
+        final TypeResolver resolver = new TypeResolverBuilder().build(spec);
+        final SpecBuilder specBuilder = new SpecBuilder(resolver);
 
         final SpecDesc specDesc = specBuilder.build(spec);
 

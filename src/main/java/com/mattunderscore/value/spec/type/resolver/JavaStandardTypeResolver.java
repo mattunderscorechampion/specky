@@ -23,24 +23,30 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.value.spec;
+package com.mattunderscore.value.spec.type.resolver;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 /**
+ * {@link TypeResolver} for types in the standard Java library.
+ *
  * @author Matt Champion on 06/06/16
  */
-public final class TypeResolver {
+/*package*/ final class JavaStandardTypeResolver implements TypeResolver {
     private final Map<String, String> nameToType = new HashMap<>();
 
-    public TypeResolver() {
+    public JavaStandardTypeResolver() {
         nameToType.put("Integer", "java.lang.Integer");
         nameToType.put("Double", "java.lang.Double");
         nameToType.put("String", "java.lang.String");
+        nameToType.put("java.lang.Integer", "java.lang.Integer");
+        nameToType.put("java.lang.Double", "java.lang.Double");
+        nameToType.put("java.lang.String", "java.lang.String");
     }
 
+    @Override
     public Optional<String> resolve(String name) {
         return Optional.ofNullable(nameToType.get(name));
     }

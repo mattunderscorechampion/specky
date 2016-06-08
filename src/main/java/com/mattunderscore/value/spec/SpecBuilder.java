@@ -31,6 +31,7 @@ import com.mattunderscore.value.spec.ValueSpecParser.ValueContext;
 import com.mattunderscore.value.spec.model.PropertySpec;
 import com.mattunderscore.value.spec.model.SpecDesc;
 import com.mattunderscore.value.spec.model.ValueDesc;
+import com.mattunderscore.value.spec.type.resolver.TypeResolver;
 
 import static java.util.stream.Collectors.toList;
 
