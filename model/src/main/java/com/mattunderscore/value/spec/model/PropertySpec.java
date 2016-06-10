@@ -28,8 +28,6 @@ package com.mattunderscore.value.spec.model;
 import lombok.Builder;
 import lombok.Value;
 
-import java.lang.reflect.Type;
-
 /**
  * Property model.
  *

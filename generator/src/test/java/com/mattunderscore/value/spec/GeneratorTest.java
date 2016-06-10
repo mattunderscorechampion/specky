@@ -25,6 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.value.spec;
 
+import com.mattunderscore.value.spec.ValueSpecLexer;
 import com.mattunderscore.value.spec.ValueSpecParser.SpecContext;
 import com.mattunderscore.value.spec.model.SpecDesc;
 import com.mattunderscore.value.spec.type.resolver.TypeResolver;
@@ -52,7 +53,7 @@ public class GeneratorTest {
                 .class
                 .getClassLoader()
                 .getResourceAsStream("Test.spec"));
-        final com.mattunderscore.value.spec.ValueSpecLexer lexer = new ValueSpecLexer(stream);
+        final ValueSpecLexer lexer = new ValueSpecLexer(stream);
         final ValueSpecParser parser = new ValueSpecParser(new UnbufferedTokenStream<CommonToken>(lexer));
         final SpecContext spec = parser.spec();
         final TypeResolver resolver = new TypeResolverBuilder().build(spec);
