@@ -25,8 +25,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.value.spec;
 
-import com.mattunderscore.value.spec.ValueSpecLexer;
-import com.mattunderscore.value.spec.ValueSpecParser.SpecContext;
+import com.mattunderscore.value.spec.parser.ValueSpecLexer;
+import com.mattunderscore.value.spec.parser.ValueSpecParser;
+import com.mattunderscore.value.spec.parser.ValueSpecParser.SpecContext;
 import com.mattunderscore.value.spec.model.SpecDesc;
 import com.mattunderscore.value.spec.type.resolver.TypeResolver;
 import com.mattunderscore.value.spec.type.resolver.TypeResolverBuilder;

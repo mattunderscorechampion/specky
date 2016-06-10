@@ -1,6 +1,8 @@
 package com.mattunderscore.value.spec;
 
-import com.mattunderscore.value.spec.ValueSpecParser.SpecContext;
+import com.mattunderscore.value.spec.parser.ValueSpecLexer;
+import com.mattunderscore.value.spec.parser.ValueSpecParser;
+import com.mattunderscore.value.spec.parser.ValueSpecParser.SpecContext;
 import com.mattunderscore.value.spec.model.PropertySpec;
 import com.mattunderscore.value.spec.model.SpecDesc;
 import com.mattunderscore.value.spec.model.ValueDesc;
@@ -29,7 +31,7 @@ public final class SpecBuilderTest {
                 .class
                 .getClassLoader()
                 .getResourceAsStream("Test.spec"));
-        final com.mattunderscore.value.spec.ValueSpecLexer lexer = new ValueSpecLexer(stream);
+        final ValueSpecLexer lexer = new ValueSpecLexer(stream);
         final ValueSpecParser parser = new ValueSpecParser(new UnbufferedTokenStream<CommonToken>(lexer));
         final SpecContext spec = parser.spec();
         final TypeResolver resolver = new TypeResolverBuilder().build(spec);

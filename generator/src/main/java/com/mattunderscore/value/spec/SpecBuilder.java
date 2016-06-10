@@ -25,9 +25,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.value.spec;
 
-import com.mattunderscore.value.spec.ValueSpecParser.PropertyContext;
-import com.mattunderscore.value.spec.ValueSpecParser.SpecContext;
-import com.mattunderscore.value.spec.ValueSpecParser.ValueContext;
+import com.mattunderscore.value.spec.parser.ValueSpecLexer;
+import com.mattunderscore.value.spec.parser.ValueSpecParser;
+import com.mattunderscore.value.spec.parser.ValueSpecParser.SpecContext;
+import com.mattunderscore.value.spec.parser.ValueSpecParser.PropertyContext;
+import com.mattunderscore.value.spec.parser.ValueSpecParser.ValueContext;
 import com.mattunderscore.value.spec.model.PropertySpec;
 import com.mattunderscore.value.spec.model.SpecDesc;
 import com.mattunderscore.value.spec.model.ValueDesc;
