@@ -37,6 +37,7 @@ import com.squareup.javapoet.TypeSpec;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.lang.Character.toUpperCase;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
@@ -67,7 +68,7 @@ public final class Generator {
             .forEach(propertyDesc -> {
                 final ClassName type = ClassName.bestGuess(propertyDesc.getType());
                 final FieldSpec fieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build();
-                final MethodSpec methodSpec = MethodSpec.methodBuilder("get" + propertyDesc.getName())
+                final MethodSpec methodSpec = MethodSpec.methodBuilder("get" + getName(propertyDesc.getName()))
                     .addModifiers(PUBLIC)
                     .addJavadoc("Getter for the property $L\n@returns the value of $L\n", propertyDesc.getName(), propertyDesc.getName())
                     .returns(type)
@@ -83,5 +84,9 @@ public final class Generator {
                     .addMethod(methodSpec);
             });
         return builder.addMethod(constructor.build()).build();
+    }
+
+    private static String getName(String propertyName) {
+        return toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
     }
 }
