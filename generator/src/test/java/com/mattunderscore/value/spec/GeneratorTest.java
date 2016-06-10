@@ -25,10 +25,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.value.spec;
 
+import com.mattunderscore.value.spec.model.SpecDesc;
 import com.mattunderscore.value.spec.parser.ValueSpecLexer;
 import com.mattunderscore.value.spec.parser.ValueSpecParser;
 import com.mattunderscore.value.spec.parser.ValueSpecParser.SpecContext;
-import com.mattunderscore.value.spec.model.SpecDesc;
 import com.mattunderscore.value.spec.type.resolver.TypeResolver;
 import com.mattunderscore.value.spec.type.resolver.TypeResolverBuilder;
 import com.squareup.javapoet.JavaFile;
@@ -40,7 +40,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests for {@link Generator}.

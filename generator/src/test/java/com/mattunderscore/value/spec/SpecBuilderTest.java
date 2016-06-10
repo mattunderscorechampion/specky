@@ -1,11 +1,11 @@
 package com.mattunderscore.value.spec;
 
-import com.mattunderscore.value.spec.parser.ValueSpecLexer;
-import com.mattunderscore.value.spec.parser.ValueSpecParser;
-import com.mattunderscore.value.spec.parser.ValueSpecParser.SpecContext;
 import com.mattunderscore.value.spec.model.PropertySpec;
 import com.mattunderscore.value.spec.model.SpecDesc;
 import com.mattunderscore.value.spec.model.ValueDesc;
+import com.mattunderscore.value.spec.parser.ValueSpecLexer;
+import com.mattunderscore.value.spec.parser.ValueSpecParser;
+import com.mattunderscore.value.spec.parser.ValueSpecParser.SpecContext;
 import com.mattunderscore.value.spec.type.resolver.TypeResolver;
 import com.mattunderscore.value.spec.type.resolver.TypeResolverBuilder;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -17,7 +17,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests for {@link SpecBuilder}.

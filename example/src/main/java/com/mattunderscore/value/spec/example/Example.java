@@ -54,7 +54,7 @@ public final class Example {
             .getResourceAsStream("Example.spec"));
         final ValueSpecLexer lexer = new ValueSpecLexer(stream);
         final ValueSpecParser parser = new ValueSpecParser(new UnbufferedTokenStream<CommonToken>(lexer));
-        final ValueSpecParser.SpecContext spec = parser.spec();
+        final SpecContext spec = parser.spec();
         final TypeResolver resolver = new TypeResolverBuilder().build(spec);
         final SpecBuilder specBuilder = new SpecBuilder(resolver);
 
