@@ -12,6 +12,7 @@
         <module>model</module>
         <module>parser</module>
         <module>generator</module>
+        <module>example</module>
     </modules>
 
     <dependencyManagement>
@@ -29,6 +30,11 @@
             <dependency>
                 <groupId>com.mattunderscore.code.generation.value.spec</groupId>
                 <artifactId>generator</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mattunderscore.code.generation.value.spec</groupId>
+                <artifactId>example</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
