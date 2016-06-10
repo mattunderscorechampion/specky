@@ -23,22 +23,6 @@
             <plugin>
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr4-maven-plugin</artifactId>
-                <version>4.5.3</version>
-                <configuration>
-                    <arguments>
-                        <argument>-package</argument>
-                        <argument>com.mattunderscore.value.spec</argument>
-                    </arguments>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>antlr</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>antlr4</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
