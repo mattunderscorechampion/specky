@@ -51,9 +51,9 @@ public class GeneratorTest {
     @Test
     public void testGenerate() throws Exception {
         final CharStream stream = new ANTLRInputStream(SpecBuilderTest
-                .class
-                .getClassLoader()
-                .getResourceAsStream("Test.spec"));
+            .class
+            .getClassLoader()
+            .getResourceAsStream("Test.spec"));
         final ValueSpecLexer lexer = new ValueSpecLexer(stream);
         final ValueSpecParser parser = new ValueSpecParser(new UnbufferedTokenStream<CommonToken>(lexer));
         final SpecContext spec = parser.spec();
@@ -65,8 +65,5 @@ public class GeneratorTest {
         final Generator generator = new Generator();
         final List<JavaFile> files = generator.generate(specDesc);
         assertEquals(2, files.size());
-        for (JavaFile file : files) {
-            file.writeTo(System.out);
-        }
     }
 }
