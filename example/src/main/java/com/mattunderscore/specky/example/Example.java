@@ -47,7 +47,7 @@ import java.util.List;
  * @author Matt Champion on 10/06/16
  */
 public final class Example {
-    public static final void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
         final CharStream stream = new ANTLRInputStream(Example
             .class
             .getClassLoader()

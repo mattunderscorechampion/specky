@@ -1,7 +1,12 @@
 
 package com.example
 
-value Person {
+value PersonValue {
+  Integer id
+  String name
+}
+
+bean PersonBean {
   Integer id
   String name
 }
