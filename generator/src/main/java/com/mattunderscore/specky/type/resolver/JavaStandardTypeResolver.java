@@ -23,20 +23,31 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.value.spec.model;
+package com.mattunderscore.specky.type.resolver;
 
-import lombok.Builder;
-import lombok.Value;
-
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
- * Bean model.
+ * {@link TypeResolver} for types in the standard Java library.
  *
- * @author Matt Champion on 05/06/16
+ * @author Matt Champion on 06/06/16
  */
-@Value
-@Builder
-public class BeanDesc {
-    List<PropertySpec> properties;
+/*package*/ final class JavaStandardTypeResolver implements TypeResolver {
+    private final Map<String, String> nameToType = new HashMap<>();
+
+    public JavaStandardTypeResolver() {
+        nameToType.put("Integer", "java.lang.Integer");
+        nameToType.put("Double", "java.lang.Double");
+        nameToType.put("String", "java.lang.String");
+        nameToType.put("java.lang.Integer", "java.lang.Integer");
+        nameToType.put("java.lang.Double", "java.lang.Double");
+        nameToType.put("java.lang.String", "java.lang.String");
+    }
+
+    @Override
+    public Optional<String> resolve(String name) {
+        return Optional.ofNullable(nameToType.get(name));
+    }
 }

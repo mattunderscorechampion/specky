@@ -1,4 +1,4 @@
-package com.mattunderscore.value.spec.type.resolver;
+package com.mattunderscore.specky.type.resolver;
 
 import java.util.Optional;
 

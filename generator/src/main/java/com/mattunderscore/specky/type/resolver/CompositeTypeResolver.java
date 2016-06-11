@@ -23,21 +23,33 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.value.spec.model;
+package com.mattunderscore.specky.type.resolver;
 
-import lombok.Builder;
-import lombok.Value;
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
- * Value model.
+ * {@link TypeResolver} that delegates to many other resolvers.
  *
- * @author Matt Champion on 05/06/16
+ * @author Matt Champion on 08/06/16
  */
-@Value
-@Builder
-public class ValueDesc {
-    String name;
-    List<PropertySpec> properties;
+/*package*/ final class CompositeTypeResolver implements TypeResolver {
+    private final List<TypeResolver> resolvers = new ArrayList<>();
+
+    public CompositeTypeResolver registerResolver(TypeResolver resolver) {
+        resolvers.add(resolver);
+        return this;
+    }
+
+    @Override
+    public Optional<String> resolve(String name) {
+        return resolvers
+            .stream()
+            .map(resolver -> resolver.resolve(name))
+            .filter(value -> value.isPresent())
+            .flatMap(o -> o.isPresent() ? Stream.of(o.get()) : Stream.empty())
+            .findFirst();
+    }
 }

@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.mattunderscore.code.generation.value.spec</groupId>
-    <artifactId>value-spec-parent</artifactId>
+    <groupId>com.mattunderscore.code.generation.specky</groupId>
+    <artifactId>specky-parent</artifactId>
     <packaging>pom</packaging>
     <version>0.1.0-SNAPSHOT</version>
     <modules>
@@ -18,22 +18,22 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.mattunderscore.code.generation.value.spec</groupId>
+                <groupId>com.mattunderscore.code.generation.specky</groupId>
                 <artifactId>model</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.mattunderscore.code.generation.value.spec</groupId>
+                <groupId>com.mattunderscore.code.generation.specky</groupId>
                 <artifactId>parser</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.mattunderscore.code.generation.value.spec</groupId>
+                <groupId>com.mattunderscore.code.generation.specky</groupId>
                 <artifactId>generator</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.mattunderscore.code.generation.value.spec</groupId>
+                <groupId>com.mattunderscore.code.generation.specky</groupId>
                 <artifactId>example</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -71,7 +71,7 @@
                     <configuration>
                         <arguments>
                             <argument>-package</argument>
-                            <argument>com.mattunderscore.value.spec.parser</argument>
+                            <argument>com.mattunderscore.specky.parser</argument>
                         </arguments>
                     </configuration>
                     <executions>

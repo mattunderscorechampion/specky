@@ -23,15 +23,15 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.value.spec;
+package com.mattunderscore.specky;
 
-import com.mattunderscore.value.spec.model.PropertySpec;
-import com.mattunderscore.value.spec.model.SpecDesc;
-import com.mattunderscore.value.spec.model.ValueDesc;
-import com.mattunderscore.value.spec.parser.ValueSpecParser.PropertyContext;
-import com.mattunderscore.value.spec.parser.ValueSpecParser.SpecContext;
-import com.mattunderscore.value.spec.parser.ValueSpecParser.ValueContext;
-import com.mattunderscore.value.spec.type.resolver.TypeResolver;
+import com.mattunderscore.specky.model.PropertySpec;
+import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.ValueDesc;
+import com.mattunderscore.specky.parser.ValueSpecParser.PropertyContext;
+import com.mattunderscore.specky.parser.ValueSpecParser.SpecContext;
+import com.mattunderscore.specky.parser.ValueSpecParser.ValueContext;
+import com.mattunderscore.specky.type.resolver.TypeResolver;
 
 import static java.util.stream.Collectors.toList;
 

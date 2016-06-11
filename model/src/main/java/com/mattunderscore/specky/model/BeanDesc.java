@@ -23,27 +23,20 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.value.spec;
+package com.mattunderscore.specky.model;
 
-import com.squareup.javapoet.JavaFile;
+import lombok.Builder;
+import lombok.Value;
 
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.List;
 
 /**
- * @author Matt Champion on 10/06/16
+ * Bean model.
+ *
+ * @author Matt Champion on 05/06/16
  */
-public final class Writer {
-    private final String targetDir;
-
-    public Writer(String targetDir) {
-        this.targetDir = targetDir;
-    }
-
-    public void write(List<JavaFile> files) throws IOException {
-        for (JavaFile file : files) {
-            file.writeTo(Paths.get(targetDir));
-        }
-    }
+@Value
+@Builder
+public class BeanDesc {
+    List<PropertySpec> properties;
 }

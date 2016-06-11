@@ -23,33 +23,34 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.value.spec.type.resolver;
+package com.mattunderscore.specky.type.resolver;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
+import com.mattunderscore.specky.parser.ValueSpecParser.SpecContext;
 
 /**
- * {@link TypeResolver} that delegates to many other resolvers.
- *
+ * Build a {@link TypeResolver} for specification.
  * @author Matt Champion on 08/06/16
  */
-/*package*/ final class CompositeTypeResolver implements TypeResolver {
-    private final List<TypeResolver> resolvers = new ArrayList<>();
+public final class TypeResolverBuilder {
 
-    public CompositeTypeResolver registerResolver(TypeResolver resolver) {
-        resolvers.add(resolver);
-        return this;
+    /**
+     * @param spec The specification
+     * @return The type resolver
+     */
+    public TypeResolver build(SpecContext spec) {
+        return new CompositeTypeResolver()
+            .registerResolver(new JavaStandardTypeResolver())
+            .registerResolver(getSpecTypeResolver(spec));
     }
 
-    @Override
-    public Optional<String> resolve(String name) {
-        return resolvers
+    private static SpecTypeResolver getSpecTypeResolver(SpecContext spec) {
+        final String packageName = spec.r_package().PACKAGE().getText();
+        return spec
+            .value()
             .stream()
-            .map(resolver -> resolver.resolve(name))
-            .filter(value -> value.isPresent())
-            .flatMap(o -> o.isPresent() ? Stream.of(o.get()) : Stream.empty())
-            .findFirst();
+            .collect(
+                () -> new SpecTypeResolver(packageName),
+                (resolver, value) -> resolver.registerTypeName(value.TypeName().getText()),
+                (resolver0, resolver1) -> resolver0.merge(resolver1));
     }
 }

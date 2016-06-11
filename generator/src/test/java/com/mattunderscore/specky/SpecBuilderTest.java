@@ -1,13 +1,13 @@
-package com.mattunderscore.value.spec;
+package com.mattunderscore.specky;
 
-import com.mattunderscore.value.spec.model.PropertySpec;
-import com.mattunderscore.value.spec.model.SpecDesc;
-import com.mattunderscore.value.spec.model.ValueDesc;
-import com.mattunderscore.value.spec.parser.ValueSpecLexer;
-import com.mattunderscore.value.spec.parser.ValueSpecParser;
-import com.mattunderscore.value.spec.parser.ValueSpecParser.SpecContext;
-import com.mattunderscore.value.spec.type.resolver.TypeResolver;
-import com.mattunderscore.value.spec.type.resolver.TypeResolverBuilder;
+import com.mattunderscore.specky.model.PropertySpec;
+import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.ValueDesc;
+import com.mattunderscore.specky.parser.ValueSpecLexer;
+import com.mattunderscore.specky.parser.ValueSpecParser;
+import com.mattunderscore.specky.parser.ValueSpecParser.SpecContext;
+import com.mattunderscore.specky.type.resolver.TypeResolver;
+import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonToken;

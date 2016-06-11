@@ -23,34 +23,21 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.value.spec.type.resolver;
+package com.mattunderscore.specky.model;
 
-import com.mattunderscore.value.spec.parser.ValueSpecParser.SpecContext;
+import lombok.Builder;
+import lombok.Value;
+
+import java.util.List;
 
 /**
- * Build a {@link TypeResolver} for specification.
- * @author Matt Champion on 08/06/16
+ * Specification model.
+ *
+ * @author Matt Champion on 05/06/16
  */
-public final class TypeResolverBuilder {
-
-    /**
-     * @param spec The specification
-     * @return The type resolver
-     */
-    public TypeResolver build(SpecContext spec) {
-        return new CompositeTypeResolver()
-            .registerResolver(new JavaStandardTypeResolver())
-            .registerResolver(getSpecTypeResolver(spec));
-    }
-
-    private static SpecTypeResolver getSpecTypeResolver(SpecContext spec) {
-        final String packageName = spec.r_package().PACKAGE().getText();
-        return spec
-            .value()
-            .stream()
-            .collect(
-                () -> new SpecTypeResolver(packageName),
-                (resolver, value) -> resolver.registerTypeName(value.TypeName().getText()),
-                (resolver0, resolver1) -> resolver0.merge(resolver1));
-    }
+@Value
+@Builder
+public class SpecDesc {
+    String packageName;
+    List<ValueDesc> values;
 }
