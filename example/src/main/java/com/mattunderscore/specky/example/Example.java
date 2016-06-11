@@ -29,7 +29,7 @@ import com.mattunderscore.specky.Writer;
 import com.mattunderscore.specky.parser.ValueSpecLexer;
 import com.mattunderscore.specky.parser.ValueSpecParser;
 import com.mattunderscore.specky.parser.ValueSpecParser.SpecContext;
-import com.mattunderscore.specky.Generator;
+import com.mattunderscore.specky.generator.Generator;
 import com.mattunderscore.specky.SpecBuilder;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.type.resolver.TypeResolver;

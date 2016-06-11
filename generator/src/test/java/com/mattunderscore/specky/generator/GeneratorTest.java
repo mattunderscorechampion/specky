@@ -23,8 +23,10 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky;
+package com.mattunderscore.specky.generator;
 
+import com.mattunderscore.specky.SpecBuilder;
+import com.mattunderscore.specky.SpecBuilderTest;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.parser.ValueSpecLexer;
 import com.mattunderscore.specky.parser.ValueSpecParser;
@@ -66,13 +68,5 @@ public class GeneratorTest {
         final Generator generator = new Generator();
         final List<JavaFile> files = generator.generate(specDesc);
         assertEquals(3, files.size());
-        files.stream().forEach(javaFile -> {
-            try {
-                javaFile.writeTo(System.out);
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
     }
 }
