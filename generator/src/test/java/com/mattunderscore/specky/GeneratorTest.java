@@ -66,5 +66,13 @@ public class GeneratorTest {
         final Generator generator = new Generator();
         final List<JavaFile> files = generator.generate(specDesc);
         assertEquals(3, files.size());
+        files.stream().forEach(javaFile -> {
+            try {
+                javaFile.writeTo(System.out);
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

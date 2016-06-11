@@ -25,6 +25,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import static java.lang.Character.toUpperCase;
+import static javax.lang.model.element.Modifier.FINAL;
+import static javax.lang.model.element.Modifier.PRIVATE;
+import static javax.lang.model.element.Modifier.PUBLIC;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
@@ -36,14 +44,6 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static java.lang.Character.toUpperCase;
-import static javax.lang.model.element.Modifier.FINAL;
-import static javax.lang.model.element.Modifier.PRIVATE;
-import static javax.lang.model.element.Modifier.PUBLIC;
 
 /**
  * Code generator for specification.
@@ -59,7 +59,19 @@ public final class Generator {
             .collect(Collectors.toList());
     }
 
-    private TypeSpec generateType(TypeDesc valueDesc) {
+    private TypeSpec generateType(TypeDesc typeDesc) {
+        if (typeDesc instanceof ValueDesc) {
+            return generateValue((ValueDesc) typeDesc);
+        }
+        else if (typeDesc instanceof BeanDesc) {
+            return generateBean((BeanDesc) typeDesc);
+        }
+        else {
+            throw new IllegalArgumentException("Unknown type to generate");
+        }
+    }
+
+    private TypeSpec generateValue(ValueDesc valueDesc) {
         final TypeSpec.Builder builder = TypeSpec
             .classBuilder(valueDesc.getName())
             .addModifiers(PUBLIC, FINAL)
@@ -82,21 +94,46 @@ public final class Generator {
                 constructor.addParameter(constructorParameter);
                 constructor.addStatement("this.$N = $N", fieldSpec, constructorParameter);
 
-                if (valueDesc instanceof BeanDesc) {
-                    final ParameterSpec parameterSpec = ParameterSpec.builder(type, propertyDesc.getName()).build();
-                    final MethodSpec setterSpec = MethodSpec.methodBuilder("set" + getName(propertyDesc.getName()))
-                        .addModifiers(PUBLIC)
-                        .addParameter(parameterSpec)
-                        .addJavadoc("Setter for the property $L\n@param the new value of $L\n", propertyDesc.getName(), propertyDesc.getName())
-                        .returns(TypeName.VOID)
-                        .addStatement("this.$N = $N", fieldSpec, parameterSpec)
-                        .build();
-                    builder.addMethod(setterSpec);
-                }
-
                 builder
                     .addField(fieldSpec)
                     .addMethod(methodSpec);
+            });
+
+        return builder.addMethod(constructor.build()).build();
+    }
+
+    private TypeSpec generateBean(BeanDesc beanDesc) {
+        final TypeSpec.Builder builder = TypeSpec
+            .classBuilder(beanDesc.getName())
+            .addModifiers(PUBLIC, FINAL)
+            .addJavadoc("Value type $L.\n\nAuto-generated from specification.\n", beanDesc.getName());
+        final MethodSpec.Builder constructor = MethodSpec.constructorBuilder().addModifiers(PUBLIC);
+        beanDesc
+            .getProperties()
+            .stream()
+            .forEach(propertyDesc -> {
+                final ClassName type = ClassName.bestGuess(propertyDesc.getType());
+                final FieldSpec fieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE).build();
+                final MethodSpec methodSpec = MethodSpec.methodBuilder("get" + getName(propertyDesc.getName()))
+                    .addModifiers(PUBLIC)
+                    .addJavadoc("Getter for the property $L\n@returns the value of $L\n", propertyDesc.getName(), propertyDesc.getName())
+                    .returns(type)
+                    .addStatement("return $N", fieldSpec)
+                    .build();
+
+                final ParameterSpec parameterSpec = ParameterSpec.builder(type, propertyDesc.getName()).build();
+                final MethodSpec setterSpec = MethodSpec.methodBuilder("set" + getName(propertyDesc.getName()))
+                    .addModifiers(PUBLIC)
+                    .addParameter(parameterSpec)
+                    .addJavadoc("Setter for the property $L\n@param the new value of $L\n", propertyDesc.getName(), propertyDesc.getName())
+                    .returns(TypeName.VOID)
+                    .addStatement("this.$N = $N", fieldSpec, parameterSpec)
+                    .build();
+
+                builder
+                    .addField(fieldSpec)
+                    .addMethod(methodSpec)
+                    .addMethod(setterSpec);
             });
 
         return builder.addMethod(constructor.build()).build();
