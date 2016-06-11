@@ -56,7 +56,9 @@ import com.squareup.javapoet.TypeSpec;
             .classBuilder(beanDesc.getName())
             .addModifiers(PUBLIC, FINAL)
             .addJavadoc(getTypeJavadoc(), "Bean", beanDesc.getName());
-        final MethodSpec.Builder constructor = constructorBuilder().addModifiers(PUBLIC);
+        final MethodSpec.Builder constructor = constructorBuilder()
+            .addModifiers(PUBLIC)
+            .addJavadoc("Constructor.\n");
         beanDesc
             .getProperties()
             .stream()

@@ -54,7 +54,9 @@ import com.squareup.javapoet.TypeSpec;
             .classBuilder(valueDesc.getName())
             .addModifiers(PUBLIC, FINAL)
             .addJavadoc(getTypeJavadoc(), "Value", valueDesc.getName());
-        final MethodSpec.Builder constructor = constructorBuilder().addModifiers(PUBLIC);
+        final MethodSpec.Builder constructor = constructorBuilder()
+            .addModifiers(PUBLIC)
+            .addJavadoc("Constructor.\n");
         valueDesc
             .getProperties()
             .stream()
@@ -69,8 +71,9 @@ import com.squareup.javapoet.TypeSpec;
                     .build();
                 final ParameterSpec constructorParameter = ParameterSpec.builder(type, propertyDesc.getName()).build();
 
-                constructor.addParameter(constructorParameter);
-                constructor.addStatement("this.$N = $N", fieldSpec, constructorParameter);
+                constructor
+                    .addParameter(constructorParameter)
+                    .addStatement("this.$N = $N", fieldSpec, constructorParameter);
 
                 builder
                     .addField(fieldSpec)
