@@ -37,7 +37,7 @@ import java.util.List;
  */
 @Value
 @Builder
-public class ValueDesc {
+public class ValueDesc implements TypeDesc {
     String name;
     List<PropertySpec> properties;
 }

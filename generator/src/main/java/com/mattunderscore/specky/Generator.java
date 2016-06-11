@@ -25,13 +25,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ValueDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import java.util.List;
@@ -56,7 +59,7 @@ public final class Generator {
             .collect(Collectors.toList());
     }
 
-    private TypeSpec generateType(ValueDesc valueDesc) {
+    private TypeSpec generateType(TypeDesc valueDesc) {
         final TypeSpec.Builder builder = TypeSpec
             .classBuilder(valueDesc.getName())
             .addModifiers(PUBLIC, FINAL)
@@ -79,10 +82,23 @@ public final class Generator {
                 constructor.addParameter(constructorParameter);
                 constructor.addStatement("this.$N = $N", fieldSpec, constructorParameter);
 
+                if (valueDesc instanceof BeanDesc) {
+                    final ParameterSpec parameterSpec = ParameterSpec.builder(type, propertyDesc.getName()).build();
+                    final MethodSpec setterSpec = MethodSpec.methodBuilder("set" + getName(propertyDesc.getName()))
+                        .addModifiers(PUBLIC)
+                        .addParameter(parameterSpec)
+                        .addJavadoc("Setter for the property $L\n@param the new value of $L\n", propertyDesc.getName(), propertyDesc.getName())
+                        .returns(TypeName.VOID)
+                        .addStatement("this.$N = $N", fieldSpec, parameterSpec)
+                        .build();
+                    builder.addMethod(setterSpec);
+                }
+
                 builder
                     .addField(fieldSpec)
                     .addMethod(methodSpec);
             });
+
         return builder.addMethod(constructor.build()).build();
     }
 

@@ -4,6 +4,10 @@ VALUE
     : 'value'
     ;
 
+BEAN
+    : 'bean'
+    ;
+
 OPEN_BLOCK
     : '{'
     ;
@@ -70,10 +74,10 @@ r_package
     : PACKAGE qualifiedName
     ;
 
-spec
-    : r_package value+
+typeSpec
+    : (VALUE | BEAN) TypeName OPEN_BLOCK (property)+ CLOSE_BLOCK
     ;
 
-value
-    : VALUE TypeName OPEN_BLOCK (property)* CLOSE_BLOCK
+spec
+    : r_package typeSpec+
     ;

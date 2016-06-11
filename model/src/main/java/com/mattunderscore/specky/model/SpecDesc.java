@@ -39,5 +39,5 @@ import java.util.List;
 @Builder
 public class SpecDesc {
     String packageName;
-    List<ValueDesc> values;
+    List<TypeDesc> values;
 }

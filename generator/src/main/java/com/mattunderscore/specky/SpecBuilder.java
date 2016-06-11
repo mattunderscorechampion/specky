@@ -25,12 +25,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.PropertySpec;
 import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ValueDesc;
 import com.mattunderscore.specky.parser.ValueSpecParser.PropertyContext;
 import com.mattunderscore.specky.parser.ValueSpecParser.SpecContext;
-import com.mattunderscore.specky.parser.ValueSpecParser.ValueContext;
+import com.mattunderscore.specky.parser.ValueSpecParser.TypeSpecContext;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 
 import static java.util.stream.Collectors.toList;
@@ -50,23 +52,36 @@ public final class SpecBuilder {
             .builder()
             .packageName(context.r_package().qualifiedName().getText())
             .values(context
-                .value()
+                .typeSpec()
                 .stream()
                 .map(this::createValue)
                 .collect(toList()))
             .build();
     }
 
-    private ValueDesc createValue(ValueContext context) {
-        return ValueDesc
-            .builder()
-            .name(context.TypeName().getText())
-            .properties(context
-                .property()
-                .stream()
-                .map(this::createProperty)
-                .collect(toList()))
-            .build();
+    private TypeDesc createValue(TypeSpecContext context) {
+        if (context.BEAN() == null) {
+            return ValueDesc
+                .builder()
+                .name(context.TypeName().getText())
+                .properties(context
+                    .property()
+                    .stream()
+                    .map(this::createProperty)
+                    .collect(toList()))
+                .build();
+        }
+        else {
+            return BeanDesc
+                .builder()
+                .name(context.TypeName().getText())
+                .properties(context
+                    .property()
+                    .stream()
+                    .map(this::createProperty)
+                    .collect(toList()))
+                .build();
+        }
     }
 
     private PropertySpec createProperty(PropertyContext context) {

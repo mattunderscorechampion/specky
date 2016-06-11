@@ -38,6 +38,7 @@ import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.UnbufferedTokenStream;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -64,6 +65,6 @@ public class GeneratorTest {
 
         final Generator generator = new Generator();
         final List<JavaFile> files = generator.generate(specDesc);
-        assertEquals(2, files.size());
+        assertEquals(3, files.size());
     }
 }
