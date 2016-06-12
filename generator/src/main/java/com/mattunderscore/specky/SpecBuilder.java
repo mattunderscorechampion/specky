@@ -95,6 +95,8 @@ public final class SpecBuilder {
                     .TypeName()
                     .getText())
                 .get())
+            .optional(false)
+            .defaultValue(null)
             .build();
     }
 }

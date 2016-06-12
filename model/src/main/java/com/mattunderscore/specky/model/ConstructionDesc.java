@@ -25,19 +25,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model;
 
-import lombok.Builder;
-import lombok.Value;
-
 /**
- * Property model.
+ * Description of creation method.
  *
- * @author Matt Champion on 05/06/16
+ * @author Matt Champion
  */
-@Value
-@Builder
-public class PropertySpec {
-    String type;
-    String name;
-    boolean optional;
-    String defaultValue;
+public enum ConstructionDesc {
+    CONSTRUCTOR,
+    FACTORY,
+    MUTABLE_BUILDER,
+    IMMUTABLE_BUILDER;
 }
