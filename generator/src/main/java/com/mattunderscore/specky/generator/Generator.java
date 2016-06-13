@@ -47,14 +47,14 @@ public final class Generator {
         return specDesc
             .getValues()
             .stream()
-            .map(this::generateType)
+            .map(valueSpec -> generateType(specDesc, valueSpec))
             .map(typeSpec -> JavaFile.builder(specDesc.getPackageName(), typeSpec).build())
             .collect(Collectors.toList());
     }
 
-    private TypeSpec generateType(TypeDesc typeDesc) {
+    private TypeSpec generateType(SpecDesc specDesc, TypeDesc typeDesc) {
         if (typeDesc instanceof ValueDesc) {
-            return generateValue((ValueDesc) typeDesc);
+            return generateValue(specDesc, (ValueDesc) typeDesc);
         }
         else if (typeDesc instanceof BeanDesc) {
             return generateBean((BeanDesc) typeDesc);

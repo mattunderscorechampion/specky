@@ -25,7 +25,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import static java.util.stream.Collectors.toList;
+
 import com.mattunderscore.specky.model.BeanDesc;
+import com.mattunderscore.specky.model.ConstructionDesc;
 import com.mattunderscore.specky.model.PropertySpec;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
@@ -34,8 +37,6 @@ import com.mattunderscore.specky.parser.ValueSpecParser.PropertyContext;
 import com.mattunderscore.specky.parser.ValueSpecParser.SpecContext;
 import com.mattunderscore.specky.parser.ValueSpecParser.TypeSpecContext;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * @author Matt Champion on 05/06/16
@@ -69,6 +70,7 @@ public final class SpecBuilder {
                     .stream()
                     .map(this::createProperty)
                     .collect(toList()))
+                .construction(ConstructionDesc.CONSTRUCTOR)
                 .build();
         }
         else {

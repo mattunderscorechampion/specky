@@ -25,44 +25,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.getAccessorJavadoc;
-import static com.mattunderscore.specky.generator.GeneratorUtils.getAccessorName;
-import static com.mattunderscore.specky.generator.GeneratorUtils.getTypeJavadoc;
-import static com.squareup.javapoet.MethodSpec.methodBuilder;
+import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.model.ConstructionDesc;
-import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.ValueDesc;
+import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 
 /**
- * @author Matt Champion on 11/06/2016
+ * @author Matt Champion on 13/06/2016
  */
-/*package*/ final class ValueGenerator {
-    private ValueGenerator() {
-    }
-
-    static TypeSpec generateValue(SpecDesc specDesc, ValueDesc valueDesc) {
-        final TypeSpec.Builder builder = TypeSpec
-            .classBuilder(valueDesc.getName())
-            .addModifiers(PUBLIC, FINAL)
-            .addJavadoc(getTypeJavadoc(), "Value", valueDesc.getName());
-
-        if (valueDesc.getConstruction() == ConstructionDesc.CONSTRUCTOR) {
-            ConstructorGenerator.build(builder, valueDesc);
-        }
-        else if (valueDesc.getConstruction() == ConstructionDesc.MUTABLE_BUILDER) {
-            BuilderGenerator.build(builder, specDesc, valueDesc);
-        }
-        else {
-            throw new IllegalArgumentException("Unsupported construction type");
-        }
+public final class ConstructorGenerator {
+    static TypeSpec.Builder build(TypeSpec.Builder typeSpecBuilder, TypeDesc valueDesc) {
+        final MethodSpec.Builder constructor = constructorBuilder()
+            .addModifiers(PUBLIC)
+            .addJavadoc("Constructor.\n");
 
         valueDesc
             .getProperties()
@@ -70,18 +52,14 @@ import com.squareup.javapoet.TypeSpec;
             .forEach(propertyDesc -> {
                 final ClassName type = ClassName.bestGuess(propertyDesc.getType());
                 final FieldSpec fieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build();
-                final MethodSpec methodSpec = methodBuilder(getAccessorName(propertyDesc.getName()))
-                    .addModifiers(PUBLIC)
-                    .addJavadoc(getAccessorJavadoc(), propertyDesc.getName(), propertyDesc.getName())
-                    .returns(type)
-                    .addStatement("return $N", fieldSpec)
-                    .build();
 
-                builder
-                    .addField(fieldSpec)
-                    .addMethod(methodSpec);
+                final ParameterSpec constructorParameter = ParameterSpec.builder(type, propertyDesc.getName()).build();
+
+                constructor
+                    .addParameter(constructorParameter)
+                    .addStatement("this.$N = $N", fieldSpec, constructorParameter);
             });
 
-        return builder.build();
+        return typeSpecBuilder.addMethod(constructor.build());
     }
 }

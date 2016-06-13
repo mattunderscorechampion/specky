@@ -25,6 +25,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CommonToken;
+import org.antlr.v4.runtime.UnbufferedTokenStream;
+import org.junit.Test;
+
 import com.mattunderscore.specky.SpecBuilder;
 import com.mattunderscore.specky.SpecBuilderTest;
 import com.mattunderscore.specky.model.SpecDesc;
@@ -34,16 +44,6 @@ import com.mattunderscore.specky.parser.ValueSpecParser.SpecContext;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
 import com.squareup.javapoet.JavaFile;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CommonToken;
-import org.antlr.v4.runtime.UnbufferedTokenStream;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Tests for {@link Generator}.

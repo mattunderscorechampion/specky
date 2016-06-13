@@ -40,4 +40,5 @@ import java.util.List;
 public class ValueDesc implements TypeDesc {
     String name;
     List<PropertySpec> properties;
+    ConstructionDesc construction;
 }
