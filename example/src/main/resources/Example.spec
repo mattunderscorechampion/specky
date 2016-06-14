@@ -2,6 +2,7 @@
 package com.example
 
 value PersonValue {
+  builder
   Integer id
   String name
 }

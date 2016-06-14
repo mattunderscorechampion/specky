@@ -63,7 +63,7 @@ public final class Example {
         final Generator generator = new Generator();
         final List<JavaFile> files = generator.generate(specDesc);
 
-        final Writer writer = new Writer("target/example-output");
+        final Writer writer = new Writer("example/target/generated-sources/specky");
         writer.write(files);
     }
 }
