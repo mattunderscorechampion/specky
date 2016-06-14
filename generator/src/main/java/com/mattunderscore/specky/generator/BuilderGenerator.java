@@ -50,7 +50,7 @@ public final class BuilderGenerator {
             .addModifiers(PRIVATE)
             .addJavadoc("Constructor.\n");
 
-        final TypeSpec.Builder builder = classBuilder("Builder").addModifiers(PUBLIC, FINAL);
+        final TypeSpec.Builder builder = classBuilder("Builder").addModifiers(PUBLIC, FINAL, STATIC);
 
         valueDesc
             .getProperties()
@@ -58,6 +58,7 @@ public final class BuilderGenerator {
             .forEach(propertyDesc -> {
                 final ClassName type = ClassName.bestGuess(propertyDesc.getType());
                 final FieldSpec fieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build();
+                final FieldSpec builderFieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE).build();
 
                 final ParameterSpec constructorParameter = ParameterSpec.builder(type, propertyDesc.getName()).build();
 
@@ -69,14 +70,14 @@ public final class BuilderGenerator {
                     .addModifiers(PUBLIC)
                     .returns(ClassName.get(specDesc.getPackageName(), valueDesc.getName(), "Builder"))
                     .addParameter(constructorParameter)
-                    .addStatement("this.$N = $N", fieldSpec, constructorParameter)
+                    .addStatement("this.$N = $N", builderFieldSpec, constructorParameter)
                     .addStatement("return this")
                     .build();
 
-                builder.addField(fieldSpec).addMethod(configuator);
+                builder.addField(builderFieldSpec).addMethod(configuator);
             });
 
-        builder.addMethod(constructor.build());
+        builder.addMethod(constructorBuilder().addModifiers(PRIVATE).build());
 
         typeSpecBuilder
             .addMethod(methodBuilder("builder")
