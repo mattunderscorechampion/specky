@@ -27,6 +27,8 @@ package com.mattunderscore.specky;
 
 import static java.util.stream.Collectors.toList;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ConstructionDesc;
 import com.mattunderscore.specky.model.PropertySpec;
@@ -36,6 +38,7 @@ import com.mattunderscore.specky.model.ValueDesc;
 import com.mattunderscore.specky.parser.ValueSpecParser.PropertyContext;
 import com.mattunderscore.specky.parser.ValueSpecParser.SpecContext;
 import com.mattunderscore.specky.parser.ValueSpecParser.TypeSpecContext;
+import com.mattunderscore.specky.parser.ValueSpecParser.ConstructionContext;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 
 /**
@@ -70,7 +73,7 @@ public final class SpecBuilder {
                     .stream()
                     .map(this::createProperty)
                     .collect(toList()))
-                .construction(ConstructionDesc.CONSTRUCTOR)
+                .construction(toConstructionDesc(context))
                 .build();
         }
         else {
@@ -100,5 +103,24 @@ public final class SpecBuilder {
             .optional(false)
             .defaultValue(null)
             .build();
+    }
+
+    private ConstructionDesc toConstructionDesc(TypeSpecContext typeSpec) {
+        final ConstructionContext construction = typeSpec.construction();
+
+        if (construction == null) {
+            return ConstructionDesc.CONSTRUCTOR;
+        }
+
+        final String token = construction.getText();
+        if ("constructor".equals(token)) {
+            return ConstructionDesc.CONSTRUCTOR;
+        }
+        else if ("builder".equals(token)) {
+            return ConstructionDesc.MUTABLE_BUILDER;
+        }
+        else {
+            throw new IllegalArgumentException("Unsupported type");
+        }
     }
 }

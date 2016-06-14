@@ -1,3 +1,4 @@
+
 grammar ValueSpec;
 
 VALUE
@@ -6,6 +7,14 @@ VALUE
 
 BEAN
     : 'bean'
+    ;
+
+CONSTRUCTOR
+    : 'constructor'
+    ;
+
+MUTABLE_BUILDER
+    : 'builder'
     ;
 
 OPEN_BLOCK
@@ -62,6 +71,11 @@ PropertyName
     :   Letter LetterOrDigit*
     ;
 
+construction
+    : CONSTRUCTOR
+    | MUTABLE_BUILDER
+    ;
+
 property
     : TypeName PropertyName
     ;
@@ -75,7 +89,7 @@ r_package
     ;
 
 typeSpec
-    : (VALUE | BEAN) TypeName OPEN_BLOCK (property)+ CLOSE_BLOCK
+    : (VALUE | BEAN) TypeName OPEN_BLOCK construction? (property)+ CLOSE_BLOCK
     ;
 
 spec

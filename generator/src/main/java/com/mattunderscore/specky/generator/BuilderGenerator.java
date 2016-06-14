@@ -31,6 +31,7 @@ import static com.squareup.javapoet.TypeSpec.classBuilder;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
+import static javax.lang.model.element.Modifier.STATIC;
 
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
@@ -76,6 +77,13 @@ public final class BuilderGenerator {
             });
 
         builder.addMethod(constructor.build());
+
+        typeSpecBuilder
+            .addMethod(methodBuilder("builder")
+                .returns(ClassName.get(specDesc.getPackageName(), valueDesc.getName(), "Builder"))
+                .addModifiers(PUBLIC, STATIC)
+                .addStatement("return new Builder()")
+                .build());
 
         return typeSpecBuilder
             .addMethod(constructor.build())
