@@ -17,6 +17,10 @@ MUTABLE_BUILDER
     : 'builder'
     ;
 
+IMMUTABLE_BUILDER
+    : 'immutable builder'
+    ;
+
 OPEN_BLOCK
     : '{'
     ;
@@ -74,6 +78,7 @@ PropertyName
 construction
     : CONSTRUCTOR
     | MUTABLE_BUILDER
+    | IMMUTABLE_BUILDER
     ;
 
 property

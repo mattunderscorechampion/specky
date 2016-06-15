@@ -119,6 +119,9 @@ public final class SpecBuilder {
         else if ("builder".equals(token)) {
             return ConstructionDesc.MUTABLE_BUILDER;
         }
+        else if ("immutable builder".equals(token)) {
+            return ConstructionDesc.IMMUTABLE_BUILDER;
+        }
         else {
             throw new IllegalArgumentException("Unsupported type");
         }

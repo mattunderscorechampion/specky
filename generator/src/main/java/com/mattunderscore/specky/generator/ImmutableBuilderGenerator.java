@@ -33,8 +33,12 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
+import java.util.stream.Collectors;
+
+import com.mattunderscore.specky.model.PropertySpec;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.model.ValueDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
@@ -42,9 +46,9 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 
 /**
- * @author Matt Champion on 13/06/2016
+ * @author Matt Champion on 15/06/2016
  */
-public final class BuilderGenerator {
+public final class ImmutableBuilderGenerator {
     static TypeSpec.Builder build(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
         final MethodSpec.Builder constructor = constructorBuilder()
             .addModifiers(PRIVATE)
@@ -71,23 +75,43 @@ public final class BuilderGenerator {
                     .returns(ClassName.get(specDesc.getPackageName(), valueDesc.getName(), "Builder"))
                     .addParameter(constructorParameter)
                     .addStatement("this.$N = $N", builderFieldSpec, constructorParameter)
-                    .addStatement("return this")
+                    .addStatement(newBuilder(valueDesc))
                     .build();
 
                 builder.addField(builderFieldSpec).addMethod(configuator);
             });
 
-        builder.addMethod(constructorBuilder().addModifiers(PRIVATE).build());
+        builder.addMethod(constructor.build());
 
         typeSpecBuilder
             .addMethod(methodBuilder("builder")
                 .returns(ClassName.get(specDesc.getPackageName(), valueDesc.getName(), "Builder"))
                 .addModifiers(PUBLIC, STATIC)
-                .addStatement("return new Builder()")
+                .addStatement(defaultBuilder(valueDesc))
                 .build());
 
         return typeSpecBuilder
             .addMethod(constructor.build())
             .addType(builder.build());
+    }
+
+    private static String newBuilder(TypeDesc valueDesc) {
+        return "return new Builder(" +
+            valueDesc
+                .getProperties()
+                .stream()
+                .map(PropertySpec::getName)
+                .collect(Collectors.joining(", ")) +
+            ')';
+    }
+
+    private static String defaultBuilder(TypeDesc valueDesc) {
+        return "return new Builder(" +
+            valueDesc
+                .getProperties()
+                .stream()
+                .map(propertySpec -> "null")
+                .collect(Collectors.joining(", ")) +
+            ')';
     }
 }

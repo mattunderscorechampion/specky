@@ -2,7 +2,7 @@
 package com.example
 
 value PersonValue {
-  builder
+  immutable builder
   Integer id
   String name
 }
