@@ -100,7 +100,7 @@ public final class SpecBuilder {
                     .TypeName()
                     .getText())
                 .get())
-            .optional(false)
+            .optional(context.OPTIONAL() != null)
             .defaultValue(null)
             .build();
     }

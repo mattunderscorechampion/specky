@@ -21,6 +21,10 @@ IMMUTABLE_BUILDER
     : 'immutable builder'
     ;
 
+OPTIONAL
+    : 'optional'
+    ;
+
 OPEN_BLOCK
     : '{'
     ;
@@ -82,7 +86,7 @@ construction
     ;
 
 property
-    : TypeName PropertyName
+    : OPTIONAL? TypeName PropertyName
     ;
 
 qualifiedName
