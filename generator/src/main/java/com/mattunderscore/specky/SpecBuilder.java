@@ -27,18 +27,16 @@ package com.mattunderscore.specky;
 
 import static java.util.stream.Collectors.toList;
 
-import org.antlr.v4.runtime.tree.TerminalNode;
-
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ConstructionDesc;
 import com.mattunderscore.specky.model.PropertySpec;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ValueDesc;
+import com.mattunderscore.specky.parser.ValueSpecParser.ConstructionContext;
 import com.mattunderscore.specky.parser.ValueSpecParser.PropertyContext;
 import com.mattunderscore.specky.parser.ValueSpecParser.SpecContext;
 import com.mattunderscore.specky.parser.ValueSpecParser.TypeSpecContext;
-import com.mattunderscore.specky.parser.ValueSpecParser.ConstructionContext;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 
 /**
