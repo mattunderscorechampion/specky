@@ -75,7 +75,7 @@ import com.squareup.javapoet.TypeSpec;
                 final FieldSpec fieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build();
                 final MethodSpec methodSpec = methodBuilder(getAccessorName(propertyDesc.getName()))
                     .addModifiers(PUBLIC)
-                    .addJavadoc(GETTER_DOC, propertyDesc.getName(), propertyDesc.getName())
+                    .addJavadoc(GETTER_DOC, propertyDesc.getName())
                     .returns(type)
                     .addStatement("return $N", fieldSpec)
                     .build();

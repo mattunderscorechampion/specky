@@ -27,9 +27,9 @@ package com.mattunderscore.specky.generator;
 
 import static com.mattunderscore.specky.generator.GeneratorUtils.CONSTRUCTOR_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.GETTER_DOC;
+import static com.mattunderscore.specky.generator.GeneratorUtils.SETTER_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.TYPE_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getAccessorName;
-import static com.mattunderscore.specky.generator.GeneratorUtils.getMutatorJavadoc;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getMutatorName;
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
@@ -68,7 +68,7 @@ import com.squareup.javapoet.TypeSpec;
                 final FieldSpec fieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE).build();
                 final MethodSpec methodSpec = methodBuilder(getAccessorName(propertyDesc.getName()))
                     .addModifiers(PUBLIC)
-                    .addJavadoc(GETTER_DOC, propertyDesc.getName(), propertyDesc.getName())
+                    .addJavadoc(GETTER_DOC, propertyDesc.getName())
                     .returns(type)
                     .addStatement("return $N", fieldSpec)
                     .build();
@@ -77,7 +77,7 @@ import com.squareup.javapoet.TypeSpec;
                 final MethodSpec setterSpec = methodBuilder(getMutatorName(propertyDesc.getName()))
                     .addModifiers(PUBLIC)
                     .addParameter(parameterSpec)
-                    .addJavadoc(getMutatorJavadoc(), propertyDesc.getName(), propertyDesc.getName())
+                    .addJavadoc(SETTER_DOC, propertyDesc.getName(), propertyDesc.getName())
                     .returns(TypeName.VOID)
                     .addStatement("this.$N = $N", fieldSpec, parameterSpec)
                     .build();

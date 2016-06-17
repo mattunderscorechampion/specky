@@ -26,7 +26,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator;
 
 import static com.mattunderscore.specky.generator.BuildMethodGenerator.generateBuildMethod;
+import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_FACTORY;
+import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_TYPE_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.CONSTRUCTOR_DOC;
+import static com.mattunderscore.specky.generator.GeneratorUtils.IMMUTABLE_BUILDER_SETTER;
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static com.squareup.javapoet.TypeSpec.classBuilder;
@@ -57,7 +60,7 @@ public final class ImmutableBuilderGenerator {
 
         final TypeSpec.Builder builder = classBuilder("Builder")
             .addModifiers(PUBLIC, FINAL, STATIC)
-            .addJavadoc("The builder for $L.\n", valueDesc.getName());
+            .addJavadoc(BUILDER_TYPE_DOC, valueDesc.getName());
 
         valueDesc
             .getProperties()
@@ -75,7 +78,7 @@ public final class ImmutableBuilderGenerator {
 
                 final MethodSpec configuator = methodBuilder(propertyDesc.getName())
                     .addModifiers(PUBLIC)
-                    .addJavadoc("Method to configure property $L on the builder.\n@returns a new builder\n", propertyDesc.getName())
+                    .addJavadoc(IMMUTABLE_BUILDER_SETTER, propertyDesc.getName())
                     .returns(ClassName.get(specDesc.getPackageName(), valueDesc.getName(), "Builder"))
                     .addParameter(constructorParameter)
                     .addStatement("this.$N = $N", builderFieldSpec, constructorParameter)
@@ -93,7 +96,7 @@ public final class ImmutableBuilderGenerator {
             .addMethod(methodBuilder("builder")
                 .returns(ClassName.get(specDesc.getPackageName(), valueDesc.getName(), "Builder"))
                 .addModifiers(PUBLIC, STATIC)
-                .addJavadoc("Factory method for builder.\n@return a new builder for $L\n", valueDesc.getName())
+                .addJavadoc(BUILDER_FACTORY, valueDesc.getName())
                 .addStatement(defaultBuilder(valueDesc))
                 .build());
 
