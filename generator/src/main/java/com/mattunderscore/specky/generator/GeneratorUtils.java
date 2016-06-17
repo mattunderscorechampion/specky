@@ -25,12 +25,25 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
+import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
+import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
 import static java.lang.Character.toUpperCase;
 
 /**
  * @author Matt Champion on 11/06/2016
  */
 /*package*/ final class GeneratorUtils {
+    public final static String CONSTRUCTOR_DOC = docMethod()
+        .setMethodDescription("Constructor")
+        .toJavaDoc();
+    public final static String GETTER_DOC = docMethod()
+        .setMethodDescription("Getter for the property $L.")
+        .setReturnsDescription("the value of $L")
+        .toJavaDoc();
+    public final static String TYPE_DOC = docType()
+        .setDescription("$L type $L.\n\nAuto-generated from specification.\n")
+        .toJavaDoc();
+
     private GeneratorUtils() {
     }
 
@@ -40,14 +53,6 @@ import static java.lang.Character.toUpperCase;
 
     static String getMutatorName(String propertyName) {
         return "set" + toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
-    }
-
-    static String getTypeJavadoc() {
-        return "$L type $L.\n\nAuto-generated from specification.\n";
-    }
-
-    static String getAccessorJavadoc() {
-        return "Getter for the property $L.\n@returns the value of $L\n";
     }
 
     static String getMutatorJavadoc() {

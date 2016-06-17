@@ -25,6 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
+import static com.mattunderscore.specky.generator.GeneratorUtils.CONSTRUCTOR_DOC;
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
@@ -44,7 +45,7 @@ public final class ConstructorGenerator {
     static TypeSpec.Builder build(TypeSpec.Builder typeSpecBuilder, TypeDesc valueDesc) {
         final MethodSpec.Builder constructor = constructorBuilder()
             .addModifiers(PUBLIC)
-            .addJavadoc("Constructor.\n");
+            .addJavadoc(CONSTRUCTOR_DOC);
 
         valueDesc
             .getProperties()

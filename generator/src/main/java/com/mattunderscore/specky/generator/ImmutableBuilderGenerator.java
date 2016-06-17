@@ -26,6 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator;
 
 import static com.mattunderscore.specky.generator.BuildMethodGenerator.generateBuildMethod;
+import static com.mattunderscore.specky.generator.GeneratorUtils.CONSTRUCTOR_DOC;
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static com.squareup.javapoet.TypeSpec.classBuilder;
@@ -52,7 +53,7 @@ public final class ImmutableBuilderGenerator {
     static TypeSpec.Builder build(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
         final MethodSpec.Builder constructor = constructorBuilder()
             .addModifiers(PRIVATE)
-            .addJavadoc("Constructor.\n");
+            .addJavadoc(CONSTRUCTOR_DOC);
 
         final TypeSpec.Builder builder = classBuilder("Builder")
             .addModifiers(PUBLIC, FINAL, STATIC)

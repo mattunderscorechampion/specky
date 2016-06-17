@@ -25,11 +25,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.getAccessorJavadoc;
+import static com.mattunderscore.specky.generator.GeneratorUtils.CONSTRUCTOR_DOC;
+import static com.mattunderscore.specky.generator.GeneratorUtils.GETTER_DOC;
+import static com.mattunderscore.specky.generator.GeneratorUtils.TYPE_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getAccessorName;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getMutatorJavadoc;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getMutatorName;
-import static com.mattunderscore.specky.generator.GeneratorUtils.getTypeJavadoc;
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static javax.lang.model.element.Modifier.FINAL;
@@ -55,10 +56,10 @@ import com.squareup.javapoet.TypeSpec;
         final TypeSpec.Builder builder = TypeSpec
             .classBuilder(beanDesc.getName())
             .addModifiers(PUBLIC, FINAL)
-            .addJavadoc(getTypeJavadoc(), "Bean", beanDesc.getName());
+            .addJavadoc(TYPE_DOC, "Bean", beanDesc.getName());
         final MethodSpec.Builder constructor = constructorBuilder()
             .addModifiers(PUBLIC)
-            .addJavadoc("Constructor.\n");
+            .addJavadoc(CONSTRUCTOR_DOC);
         beanDesc
             .getProperties()
             .stream()
@@ -67,7 +68,7 @@ import com.squareup.javapoet.TypeSpec;
                 final FieldSpec fieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE).build();
                 final MethodSpec methodSpec = methodBuilder(getAccessorName(propertyDesc.getName()))
                     .addModifiers(PUBLIC)
-                    .addJavadoc(getAccessorJavadoc(), propertyDesc.getName(), propertyDesc.getName())
+                    .addJavadoc(GETTER_DOC, propertyDesc.getName(), propertyDesc.getName())
                     .returns(type)
                     .addStatement("return $N", fieldSpec)
                     .build();

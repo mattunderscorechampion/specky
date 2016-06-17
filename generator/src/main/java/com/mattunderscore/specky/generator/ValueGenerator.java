@@ -25,9 +25,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.getAccessorJavadoc;
+import static com.mattunderscore.specky.generator.GeneratorUtils.GETTER_DOC;
+import static com.mattunderscore.specky.generator.GeneratorUtils.TYPE_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getAccessorName;
-import static com.mattunderscore.specky.generator.GeneratorUtils.getTypeJavadoc;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
@@ -52,7 +52,7 @@ import com.squareup.javapoet.TypeSpec;
         final TypeSpec.Builder builder = TypeSpec
             .classBuilder(valueDesc.getName())
             .addModifiers(PUBLIC, FINAL)
-            .addJavadoc(getTypeJavadoc(), "Value", valueDesc.getName());
+            .addJavadoc(TYPE_DOC, "Value", valueDesc.getName());
 
         if (valueDesc.getConstruction() == ConstructionDesc.CONSTRUCTOR) {
             ConstructorGenerator.build(builder, valueDesc);
@@ -75,7 +75,7 @@ import com.squareup.javapoet.TypeSpec;
                 final FieldSpec fieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build();
                 final MethodSpec methodSpec = methodBuilder(getAccessorName(propertyDesc.getName()))
                     .addModifiers(PUBLIC)
-                    .addJavadoc(getAccessorJavadoc(), propertyDesc.getName(), propertyDesc.getName())
+                    .addJavadoc(GETTER_DOC, propertyDesc.getName(), propertyDesc.getName())
                     .returns(type)
                     .addStatement("return $N", fieldSpec)
                     .build();
