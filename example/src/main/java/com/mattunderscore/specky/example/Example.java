@@ -25,23 +25,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.example;
 
-import com.mattunderscore.specky.Writer;
-import com.mattunderscore.specky.parser.ValueSpecLexer;
-import com.mattunderscore.specky.parser.ValueSpecParser;
-import com.mattunderscore.specky.parser.ValueSpecParser.SpecContext;
-import com.mattunderscore.specky.generator.Generator;
-import com.mattunderscore.specky.SpecBuilder;
-import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.type.resolver.TypeResolver;
-import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
-import com.squareup.javapoet.JavaFile;
+import java.io.IOException;
+import java.util.List;
+
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.UnbufferedTokenStream;
 
-import java.io.IOException;
-import java.util.List;
+import com.mattunderscore.specky.SpecBuilder;
+import com.mattunderscore.specky.Writer;
+import com.mattunderscore.specky.generator.Generator;
+import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.parser.ValueSpecLexer;
+import com.mattunderscore.specky.parser.ValueSpecParser;
+import com.mattunderscore.specky.parser.ValueSpecParser.SpecContext;
+import com.mattunderscore.specky.type.resolver.TypeResolver;
+import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
+import com.squareup.javapoet.JavaFile;
 
 /**
  * @author Matt Champion on 10/06/16
