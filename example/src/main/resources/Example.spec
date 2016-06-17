@@ -7,6 +7,12 @@ value PersonValue {
   String name
 }
 
+value StrangePersonValue {
+  builder
+  Integer id
+  optional String name
+}
+
 bean PersonBean {
   Integer id
   String name

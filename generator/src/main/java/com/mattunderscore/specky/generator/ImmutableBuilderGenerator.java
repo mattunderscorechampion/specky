@@ -39,7 +39,6 @@ import java.util.stream.Collectors;
 import com.mattunderscore.specky.model.PropertySpec;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
-import com.mattunderscore.specky.model.ValueDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
@@ -55,7 +54,9 @@ public final class ImmutableBuilderGenerator {
             .addModifiers(PRIVATE)
             .addJavadoc("Constructor.\n");
 
-        final TypeSpec.Builder builder = classBuilder("Builder").addModifiers(PUBLIC, FINAL, STATIC);
+        final TypeSpec.Builder builder = classBuilder("Builder")
+            .addModifiers(PUBLIC, FINAL, STATIC)
+            .addJavadoc("The builder for $L.\n", valueDesc.getName());
 
         valueDesc
             .getProperties()
@@ -73,6 +74,7 @@ public final class ImmutableBuilderGenerator {
 
                 final MethodSpec configuator = methodBuilder(propertyDesc.getName())
                     .addModifiers(PUBLIC)
+                    .addJavadoc("Method to configure property $L on the builder.\n@returns a new builder\n", propertyDesc.getName())
                     .returns(ClassName.get(specDesc.getPackageName(), valueDesc.getName(), "Builder"))
                     .addParameter(constructorParameter)
                     .addStatement("this.$N = $N", builderFieldSpec, constructorParameter)
@@ -90,6 +92,7 @@ public final class ImmutableBuilderGenerator {
             .addMethod(methodBuilder("builder")
                 .returns(ClassName.get(specDesc.getPackageName(), valueDesc.getName(), "Builder"))
                 .addModifiers(PUBLIC, STATIC)
+                .addJavadoc("Factory method for builder.\n@return a new builder for $L\n", valueDesc.getName())
                 .addStatement(defaultBuilder(valueDesc))
                 .build());
 

@@ -45,7 +45,8 @@ public class BuildMethodGenerator {
     static MethodSpec generateBuildMethod(SpecDesc specDesc, TypeDesc valueDesc) {
         final MethodSpec.Builder buildMethod = methodBuilder("build")
             .addModifiers(PUBLIC)
-            .returns(ClassName.get(specDesc.getPackageName(), valueDesc.getName()));
+            .returns(ClassName.get(specDesc.getPackageName(), valueDesc.getName()))
+            .addJavadoc("Build an instance of $L.\n@returns a new instance of $L\n", valueDesc.getName(), valueDesc.getName());
         addValidationStatements(buildMethod, valueDesc);
         addReturnStatement(buildMethod, specDesc, valueDesc);
         return buildMethod.build();

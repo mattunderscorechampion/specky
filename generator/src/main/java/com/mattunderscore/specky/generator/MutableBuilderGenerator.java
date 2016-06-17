@@ -51,7 +51,9 @@ public final class MutableBuilderGenerator {
             .addModifiers(PRIVATE)
             .addJavadoc("Constructor.\n");
 
-        final TypeSpec.Builder builder = classBuilder("Builder").addModifiers(PUBLIC, FINAL, STATIC);
+        final TypeSpec.Builder builder = classBuilder("Builder")
+            .addModifiers(PUBLIC, FINAL, STATIC)
+            .addJavadoc("The builder for $L.\n", valueDesc.getName());
 
         valueDesc
             .getProperties()
@@ -69,6 +71,7 @@ public final class MutableBuilderGenerator {
 
                 final MethodSpec configuator = methodBuilder(propertyDesc.getName())
                     .addModifiers(PUBLIC)
+                    .addJavadoc("Method to configure property $L on the builder.\n@returns a new builder\n", propertyDesc.getName())
                     .returns(ClassName.get(specDesc.getPackageName(), valueDesc.getName(), "Builder"))
                     .addParameter(constructorParameter)
                     .addStatement("this.$N = $N", builderFieldSpec, constructorParameter)
@@ -86,6 +89,7 @@ public final class MutableBuilderGenerator {
             .addMethod(methodBuilder("builder")
                 .returns(ClassName.get(specDesc.getPackageName(), valueDesc.getName(), "Builder"))
                 .addModifiers(PUBLIC, STATIC)
+                .addJavadoc("Factory method for builder.\n@return a new builder for $L\n", valueDesc.getName())
                 .addStatement("return new Builder()")
                 .build());
 
