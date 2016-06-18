@@ -76,6 +76,7 @@ public final class SpecBuilderTest {
         final PropertySpec propertySpec4 = properties2.get(0);
         assertEquals("num", propertySpec4.getName());
         assertEquals("java.lang.Integer", propertySpec4.getType());
+        assertEquals("5", propertySpec4.getDefaultValue());
         final PropertySpec propertySpec5 = properties2.get(1);
         assertEquals("str", propertySpec5.getName());
         assertEquals("java.lang.String", propertySpec5.getType());

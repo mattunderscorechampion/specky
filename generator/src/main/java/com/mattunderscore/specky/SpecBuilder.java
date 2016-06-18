@@ -99,7 +99,7 @@ public final class SpecBuilder {
                     .getText())
                 .get())
             .optional(context.OPTIONAL() != null)
-            .defaultValue(null)
+            .defaultValue(context.r_default() == null ? null : context.r_default().ANYTHING().getText())
             .build();
     }
 

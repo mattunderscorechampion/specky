@@ -9,8 +9,12 @@ construction
     | IMMUTABLE_BUILDER
     ;
 
+r_default
+    : DEFAULT ANYTHING
+    ;
+
 property
-    : OPTIONAL? TypeName PropertyName
+    : OPTIONAL? TypeName PropertyName r_default?
     ;
 
 qualifiedName

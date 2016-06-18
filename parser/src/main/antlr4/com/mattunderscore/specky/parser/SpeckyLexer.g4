@@ -41,6 +41,10 @@ PACKAGE_SEPARATOR
     : '.'
     ;
 
+DEFAULT
+    : 'default' -> pushMode(LITERAL)
+    ;
+
 fragment
 UpperCaseLetter
     :   [A-Z]
@@ -81,4 +85,14 @@ TypeName
 
 PropertyName
     :   Letter LetterOrDigit*
+    ;
+
+mode LITERAL;
+
+INLINE_WS_2
+    : [ \t]+ -> skip
+    ;
+
+ANYTHING
+    : ~[ \t\r\n\u000C]+ -> popMode
     ;

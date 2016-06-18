@@ -14,6 +14,6 @@ value SecondValue {
 
 bean FirstBean {
   constructor
-  Integer num
+  Integer num default 5
   String str
 }
