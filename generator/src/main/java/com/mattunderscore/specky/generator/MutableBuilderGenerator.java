@@ -64,7 +64,10 @@ public final class MutableBuilderGenerator {
             .stream()
             .forEach(propertyDesc -> {
                 final ClassName type = ClassName.bestGuess(propertyDesc.getType());
-                final FieldSpec fieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build();
+                final FieldSpec fieldSpec = FieldSpec
+                    .builder(type, propertyDesc.getName(), PRIVATE, FINAL)
+                    .initializer(propertyDesc.getDefaultValue() == null ? "null" : propertyDesc.getDefaultValue())
+                    .build();
                 final FieldSpec builderFieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE).build();
 
                 final ParameterSpec constructorParameter = ParameterSpec.builder(type, propertyDesc.getName()).build();

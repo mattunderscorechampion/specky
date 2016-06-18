@@ -3,13 +3,13 @@ package com.example
 
 value PersonValue {
   immutable builder
-  Integer id
+  Integer id default 5
   String name
 }
 
 value StrangePersonValue {
   builder
-  Integer id
+  Integer id default 5
   optional String name
 }
 

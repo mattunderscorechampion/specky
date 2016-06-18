@@ -120,7 +120,7 @@ public final class ImmutableBuilderGenerator {
             valueDesc
                 .getProperties()
                 .stream()
-                .map(propertySpec -> "null")
+                .map(propertySpec -> propertySpec.getDefaultValue() == null ? "null" : propertySpec.getDefaultValue())
                 .collect(Collectors.joining(", ")) +
             ')';
     }
