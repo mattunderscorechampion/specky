@@ -25,7 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import static com.mattunderscore.specky.generator.BuildMethodGenerator.generateBuildMethod;
 import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_FACTORY;
 import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_TYPE_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.CONSTRUCTOR_DOC;
@@ -53,7 +52,13 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 15/06/2016
  */
 public final class ImmutableBuilderGenerator {
-    static TypeSpec.Builder build(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
+    private final BuildMethodGenerator buildMethodGenerator;
+
+    public ImmutableBuilderGenerator(BuildMethodGenerator buildMethodGenerator) {
+        this.buildMethodGenerator = buildMethodGenerator;
+    }
+
+    public TypeSpec.Builder build(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
         final MethodSpec.Builder constructor = constructorBuilder()
             .addModifiers(PRIVATE)
             .addJavadoc(CONSTRUCTOR_DOC);
@@ -90,7 +95,7 @@ public final class ImmutableBuilderGenerator {
 
         builder.addMethod(constructor.build());
 
-        builder.addMethod(generateBuildMethod(specDesc, valueDesc));
+        builder.addMethod(buildMethodGenerator.generateBuildMethod(specDesc, valueDesc));
 
         typeSpecBuilder
             .addMethod(methodBuilder("builder")
@@ -105,7 +110,7 @@ public final class ImmutableBuilderGenerator {
             .addType(builder.build());
     }
 
-    private static String newBuilder(TypeDesc valueDesc) {
+    private String newBuilder(TypeDesc valueDesc) {
         return "return new Builder(" +
             valueDesc
                 .getProperties()
@@ -115,7 +120,7 @@ public final class ImmutableBuilderGenerator {
             ')';
     }
 
-    private static String defaultBuilder(TypeDesc valueDesc) {
+    private String defaultBuilder(TypeDesc valueDesc) {
         return "return new Builder(" +
             valueDesc
                 .getProperties()

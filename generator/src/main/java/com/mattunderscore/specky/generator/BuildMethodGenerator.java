@@ -41,9 +41,9 @@ import com.squareup.javapoet.MethodSpec;
 /**
  * @author Matt Champion on 16/06/2016
  */
-public class BuildMethodGenerator {
+public final class BuildMethodGenerator {
 
-    static MethodSpec generateBuildMethod(SpecDesc specDesc, TypeDesc valueDesc) {
+    public MethodSpec generateBuildMethod(SpecDesc specDesc, TypeDesc valueDesc) {
         final MethodSpec.Builder buildMethod = methodBuilder("build")
             .addModifiers(PUBLIC)
             .returns(ClassName.get(specDesc.getPackageName(), valueDesc.getName()))
@@ -53,7 +53,7 @@ public class BuildMethodGenerator {
         return buildMethod.build();
     }
 
-    private static void addReturnStatement(MethodSpec.Builder buildMethod, SpecDesc specDesc, TypeDesc valueDesc) {
+    private void addReturnStatement(MethodSpec.Builder buildMethod, SpecDesc specDesc, TypeDesc valueDesc) {
         buildMethod.addStatement(
             "return new $T(" +
             valueDesc
@@ -65,7 +65,7 @@ public class BuildMethodGenerator {
             ClassName.get(specDesc.getPackageName(), valueDesc.getName()));
     }
 
-    private static void addValidationStatements(MethodSpec.Builder methodSpecBuilder, TypeDesc valueDesc) {
+    private void addValidationStatements(MethodSpec.Builder methodSpecBuilder, TypeDesc valueDesc) {
         valueDesc
             .getProperties()
             .stream()

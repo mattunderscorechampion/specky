@@ -38,9 +38,9 @@ import org.junit.Test;
 import com.mattunderscore.specky.SpecBuilder;
 import com.mattunderscore.specky.SpecBuilderTest;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.parser.SpeckyLexer;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
+import com.mattunderscore.specky.parser.SpeckyLexer;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
 import com.squareup.javapoet.JavaFile;
@@ -65,7 +65,7 @@ public class GeneratorTest {
 
         final SpecDesc specDesc = specBuilder.build(spec);
 
-        final Generator generator = new Generator();
+        final Generator generator = new Generator(new ValueGenerator(new MutableBuilderGenerator(new BuildMethodGenerator()), new ImmutableBuilderGenerator(new BuildMethodGenerator()), new ConstructorGenerator()), new BeanGenerator());
         final List<JavaFile> files = generator.generate(specDesc);
         assertEquals(3, files.size());
     }

@@ -44,24 +44,31 @@ import com.squareup.javapoet.TypeSpec;
 /**
  * @author Matt Champion on 11/06/2016
  */
-/*package*/ final class ValueGenerator {
-    private ValueGenerator() {
+public final class ValueGenerator {
+    private final MutableBuilderGenerator mutableBuilderGenerator;
+    private final ImmutableBuilderGenerator immutableBuilderGenerator;
+    private final ConstructorGenerator constructorGenerator;
+
+    public ValueGenerator(MutableBuilderGenerator mutableBuilderGenerator, ImmutableBuilderGenerator immutableBuilderGenerator, ConstructorGenerator constructorGenerator) {
+        this.mutableBuilderGenerator = mutableBuilderGenerator;
+        this.immutableBuilderGenerator = immutableBuilderGenerator;
+        this.constructorGenerator = constructorGenerator;
     }
 
-    static TypeSpec generateValue(SpecDesc specDesc, ValueDesc valueDesc) {
+    public TypeSpec generateValue(SpecDesc specDesc, ValueDesc valueDesc) {
         final TypeSpec.Builder builder = TypeSpec
             .classBuilder(valueDesc.getName())
             .addModifiers(PUBLIC, FINAL)
             .addJavadoc(TYPE_DOC, "Value", valueDesc.getName());
 
         if (valueDesc.getConstruction() == ConstructionDesc.CONSTRUCTOR) {
-            ConstructorGenerator.build(builder, valueDesc);
+            constructorGenerator.build(builder, valueDesc);
         }
         else if (valueDesc.getConstruction() == ConstructionDesc.MUTABLE_BUILDER) {
-            MutableBuilderGenerator.build(builder, specDesc, valueDesc);
+            mutableBuilderGenerator.build(builder, specDesc, valueDesc);
         }
         else if (valueDesc.getConstruction() == ConstructionDesc.IMMUTABLE_BUILDER) {
-            ImmutableBuilderGenerator.build(builder, specDesc, valueDesc);
+            immutableBuilderGenerator.build(builder, specDesc, valueDesc);
         }
         else {
             throw new IllegalArgumentException("Unsupported construction type");

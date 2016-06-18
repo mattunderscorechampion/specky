@@ -25,9 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import static com.mattunderscore.specky.generator.BeanGenerator.generateBean;
-import static com.mattunderscore.specky.generator.ValueGenerator.generateValue;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +40,14 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 05/06/16
  */
 public final class Generator {
+    private final ValueGenerator valueGenerator;
+    private final BeanGenerator beanGenerator;
+
+    public Generator(ValueGenerator valueGenerator, BeanGenerator beanGenerator) {
+        this.valueGenerator = valueGenerator;
+        this.beanGenerator = beanGenerator;
+    }
+
     public List<JavaFile> generate(SpecDesc specDesc) {
         return specDesc
             .getValues()
@@ -54,10 +59,10 @@ public final class Generator {
 
     private TypeSpec generateType(SpecDesc specDesc, TypeDesc typeDesc) {
         if (typeDesc instanceof ValueDesc) {
-            return generateValue(specDesc, (ValueDesc) typeDesc);
+            return valueGenerator.generateValue(specDesc, (ValueDesc) typeDesc);
         }
         else if (typeDesc instanceof BeanDesc) {
-            return generateBean((BeanDesc) typeDesc);
+            return beanGenerator.generateBean((BeanDesc) typeDesc);
         }
         else {
             throw new IllegalArgumentException("Unknown type to generate");

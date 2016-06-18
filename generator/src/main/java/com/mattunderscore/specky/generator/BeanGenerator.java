@@ -48,11 +48,11 @@ import com.squareup.javapoet.TypeSpec;
 /**
  * @author Matt Champion on 11/06/2016
  */
-/*package*/ final class BeanGenerator {
-    private BeanGenerator() {
+public final class BeanGenerator {
+    public BeanGenerator() {
     }
 
-    static TypeSpec generateBean(BeanDesc beanDesc) {
+    public TypeSpec generateBean(BeanDesc beanDesc) {
         final TypeSpec.Builder builder = TypeSpec
             .classBuilder(beanDesc.getName())
             .addModifiers(PUBLIC, FINAL)

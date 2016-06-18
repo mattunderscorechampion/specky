@@ -42,7 +42,7 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 13/06/2016
  */
 public final class ConstructorGenerator {
-    static TypeSpec.Builder build(TypeSpec.Builder typeSpecBuilder, TypeDesc valueDesc) {
+    public TypeSpec.Builder build(TypeSpec.Builder typeSpecBuilder, TypeDesc valueDesc) {
         final MethodSpec.Builder constructor = constructorBuilder()
             .addModifiers(PUBLIC)
             .addJavadoc(CONSTRUCTOR_DOC);

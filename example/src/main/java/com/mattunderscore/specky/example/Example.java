@@ -35,11 +35,17 @@ import org.antlr.v4.runtime.UnbufferedTokenStream;
 
 import com.mattunderscore.specky.SpecBuilder;
 import com.mattunderscore.specky.Writer;
+import com.mattunderscore.specky.generator.BeanGenerator;
+import com.mattunderscore.specky.generator.BuildMethodGenerator;
+import com.mattunderscore.specky.generator.ConstructorGenerator;
 import com.mattunderscore.specky.generator.Generator;
+import com.mattunderscore.specky.generator.ImmutableBuilderGenerator;
+import com.mattunderscore.specky.generator.MutableBuilderGenerator;
+import com.mattunderscore.specky.generator.ValueGenerator;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.parser.SpeckyLexer;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
+import com.mattunderscore.specky.parser.SpeckyLexer;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
 import com.squareup.javapoet.JavaFile;
@@ -61,7 +67,7 @@ public final class Example {
 
         final SpecDesc specDesc = specBuilder.build(spec);
 
-        final Generator generator = new Generator();
+        final Generator generator = new Generator(new ValueGenerator(new MutableBuilderGenerator(new BuildMethodGenerator()), new ImmutableBuilderGenerator(new BuildMethodGenerator()), new ConstructorGenerator()), new BeanGenerator());
         final List<JavaFile> files = generator.generate(specDesc);
 
         final Writer writer = new Writer("example/target/generated-sources/specky");
