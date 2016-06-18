@@ -33,10 +33,10 @@ import com.mattunderscore.specky.model.PropertySpec;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ValueDesc;
-import com.mattunderscore.specky.parser.ValueSpecParser.ConstructionContext;
-import com.mattunderscore.specky.parser.ValueSpecParser.PropertyContext;
-import com.mattunderscore.specky.parser.ValueSpecParser.SpecContext;
-import com.mattunderscore.specky.parser.ValueSpecParser.TypeSpecContext;
+import com.mattunderscore.specky.parser.Specky.ConstructionContext;
+import com.mattunderscore.specky.parser.Specky.PropertyContext;
+import com.mattunderscore.specky.parser.Specky.SpecContext;
+import com.mattunderscore.specky.parser.Specky.TypeSpecContext;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 
 /**

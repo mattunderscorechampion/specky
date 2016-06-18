@@ -1,5 +1,5 @@
 
-grammar ValueSpec;
+lexer grammar SpeckyLexer;
 
 VALUE
     : 'value'
@@ -35,6 +35,10 @@ CLOSE_BLOCK
 
 PACKAGE
     : 'package'
+    ;
+
+PACKAGE_SEPARATOR
+    : '.'
     ;
 
 fragment
@@ -77,30 +81,4 @@ TypeName
 
 PropertyName
     :   Letter LetterOrDigit*
-    ;
-
-construction
-    : CONSTRUCTOR
-    | MUTABLE_BUILDER
-    | IMMUTABLE_BUILDER
-    ;
-
-property
-    : OPTIONAL? TypeName PropertyName
-    ;
-
-qualifiedName
-    : PropertyName ('.' PropertyName)*
-    ;
-
-r_package
-    : PACKAGE qualifiedName
-    ;
-
-typeSpec
-    : (VALUE | BEAN) TypeName OPEN_BLOCK construction? (property)+ CLOSE_BLOCK
-    ;
-
-spec
-    : r_package typeSpec+
     ;

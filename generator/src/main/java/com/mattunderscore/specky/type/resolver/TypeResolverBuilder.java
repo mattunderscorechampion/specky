@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.type.resolver;
 
-import com.mattunderscore.specky.parser.ValueSpecParser.SpecContext;
+import com.mattunderscore.specky.parser.Specky.SpecContext;
 
 /**
  * Build a {@link TypeResolver} for specification.

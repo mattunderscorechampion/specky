@@ -38,9 +38,9 @@ import org.junit.Test;
 import com.mattunderscore.specky.SpecBuilder;
 import com.mattunderscore.specky.SpecBuilderTest;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.parser.ValueSpecLexer;
-import com.mattunderscore.specky.parser.ValueSpecParser;
-import com.mattunderscore.specky.parser.ValueSpecParser.SpecContext;
+import com.mattunderscore.specky.parser.SpeckyLexer;
+import com.mattunderscore.specky.parser.Specky;
+import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
 import com.squareup.javapoet.JavaFile;
@@ -57,8 +57,8 @@ public class GeneratorTest {
             .class
             .getClassLoader()
             .getResourceAsStream("Test.spec"));
-        final ValueSpecLexer lexer = new ValueSpecLexer(stream);
-        final ValueSpecParser parser = new ValueSpecParser(new UnbufferedTokenStream<CommonToken>(lexer));
+        final SpeckyLexer lexer = new SpeckyLexer(stream);
+        final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
         final SpecContext spec = parser.spec();
         final TypeResolver resolver = new TypeResolverBuilder().build(spec);
         final SpecBuilder specBuilder = new SpecBuilder(resolver);
