@@ -37,6 +37,8 @@ import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
+import java.util.Objects;
+
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ConstructionDesc;
 import com.mattunderscore.specky.model.SpecDesc;
@@ -82,18 +84,22 @@ public final class BeanGenerator {
                     .build();
 
                 final ParameterSpec parameterSpec = ParameterSpec.builder(type, propertyDesc.getName()).build();
-                final MethodSpec setterSpec = methodBuilder(getMutatorName(propertyDesc.getName()))
+                final MethodSpec.Builder setterSpec = methodBuilder(getMutatorName(propertyDesc.getName()))
                     .addModifiers(PUBLIC)
                     .addParameter(parameterSpec)
                     .addJavadoc(SETTER_DOC, propertyDesc.getName(), propertyDesc.getName())
-                    .returns(TypeName.VOID)
-                    .addStatement("this.$N = $N", fieldSpec, parameterSpec)
-                    .build();
+                    .returns(TypeName.VOID);
+
+                if (!propertyDesc.isOptional()) {
+                    setterSpec.addStatement("$T.requireNonNull($N)", ClassName.get(Objects.class), propertyDesc.getName());
+                }
+
+                setterSpec.addStatement("this.$N = $N", fieldSpec, parameterSpec);
 
                 builder
                     .addField(fieldSpec)
                     .addMethod(methodSpec)
-                    .addMethod(setterSpec);
+                    .addMethod(setterSpec.build());
             });
 
         if (beanDesc.getConstruction() == ConstructionDesc.CONSTRUCTOR) {
