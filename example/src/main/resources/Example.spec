@@ -14,6 +14,7 @@ value StrangePersonValue {
 }
 
 bean PersonBean {
+  constructor
   Integer id
   String name
 }

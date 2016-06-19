@@ -83,6 +83,7 @@ public final class SpecBuilder {
                     .stream()
                     .map(this::createProperty)
                     .collect(toList()))
+                .construction(toConstructionDesc(context))
                 .build();
         }
     }

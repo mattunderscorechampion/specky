@@ -62,7 +62,7 @@ public final class Generator {
             return valueGenerator.generateValue(specDesc, (ValueDesc) typeDesc);
         }
         else if (typeDesc instanceof BeanDesc) {
-            return beanGenerator.generateBean((BeanDesc) typeDesc);
+            return beanGenerator.generateBean(specDesc, (BeanDesc) typeDesc);
         }
         else {
             throw new IllegalArgumentException("Unknown type to generate");

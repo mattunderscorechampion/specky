@@ -58,12 +58,14 @@ public final class DSLSpecky {
 
     public DSLSpecky() {
         final BuildMethodGenerator buildMethodGenerator = new BuildMethodGenerator();
+        final MutableBuilderGenerator mutableBuilderGenerator = new MutableBuilderGenerator(buildMethodGenerator);
+        final ImmutableBuilderGenerator immutableBuilderGenerator = new ImmutableBuilderGenerator(buildMethodGenerator);
         generator = new Generator(
             new ValueGenerator(
-                new MutableBuilderGenerator(buildMethodGenerator),
-                new ImmutableBuilderGenerator(buildMethodGenerator),
+                mutableBuilderGenerator,
+                immutableBuilderGenerator,
                 new ConstructorGenerator()),
-            new BeanGenerator());
+            new BeanGenerator(mutableBuilderGenerator, immutableBuilderGenerator));
     }
 
     public List<JavaFile> generate(InputStream inputStream) throws IOException {

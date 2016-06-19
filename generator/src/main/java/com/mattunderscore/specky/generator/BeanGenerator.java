@@ -38,6 +38,8 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 import com.mattunderscore.specky.model.BeanDesc;
+import com.mattunderscore.specky.model.ConstructionDesc;
+import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
@@ -49,17 +51,23 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 11/06/2016
  */
 public final class BeanGenerator {
-    public BeanGenerator() {
+    private final MutableBuilderGenerator mutableBuilderGenerator;
+    private final ImmutableBuilderGenerator immutableBuilderGenerator;
+
+    public BeanGenerator(
+            MutableBuilderGenerator mutableBuilderGenerator,
+            ImmutableBuilderGenerator immutableBuilderGenerator) {
+
+        this.mutableBuilderGenerator = mutableBuilderGenerator;
+        this.immutableBuilderGenerator = immutableBuilderGenerator;
     }
 
-    public TypeSpec generateBean(BeanDesc beanDesc) {
+    public TypeSpec generateBean(SpecDesc specDesc, BeanDesc beanDesc) {
         final TypeSpec.Builder builder = TypeSpec
             .classBuilder(beanDesc.getName())
             .addModifiers(PUBLIC, FINAL)
             .addJavadoc(TYPE_DOC, "Bean", beanDesc.getName());
-        final MethodSpec.Builder constructor = constructorBuilder()
-            .addModifiers(PUBLIC)
-            .addJavadoc(CONSTRUCTOR_DOC);
+
         beanDesc
             .getProperties()
             .stream()
@@ -88,7 +96,24 @@ public final class BeanGenerator {
                     .addMethod(setterSpec);
             });
 
-        return builder.addMethod(constructor.build()).build();
+        if (beanDesc.getConstruction() == ConstructionDesc.CONSTRUCTOR) {
+            final MethodSpec constructor = constructorBuilder()
+                .addModifiers(PUBLIC)
+                .addJavadoc(CONSTRUCTOR_DOC)
+                .build();
+            builder.addMethod(constructor);
+        }
+        else if (beanDesc.getConstruction() == ConstructionDesc.MUTABLE_BUILDER) {
+            mutableBuilderGenerator.build(builder, specDesc, beanDesc);
+        }
+        else if (beanDesc.getConstruction() == ConstructionDesc.IMMUTABLE_BUILDER) {
+            immutableBuilderGenerator.build(builder, specDesc, beanDesc);
+        }
+        else {
+            throw new IllegalArgumentException("Unsupported construction type");
+        }
+
+        return builder.build();
     }
 
 }
