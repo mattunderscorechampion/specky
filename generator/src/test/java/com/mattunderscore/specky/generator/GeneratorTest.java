@@ -29,20 +29,10 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CommonToken;
-import org.antlr.v4.runtime.UnbufferedTokenStream;
 import org.junit.Test;
 
-import com.mattunderscore.specky.SpecBuilder;
+import com.mattunderscore.specky.DSLSpecky;
 import com.mattunderscore.specky.SpecBuilderTest;
-import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.parser.Specky;
-import com.mattunderscore.specky.parser.Specky.SpecContext;
-import com.mattunderscore.specky.parser.SpeckyLexer;
-import com.mattunderscore.specky.type.resolver.TypeResolver;
-import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
 import com.squareup.javapoet.JavaFile;
 
 /**
@@ -53,20 +43,14 @@ public class GeneratorTest {
 
     @Test
     public void testGenerate() throws Exception {
-        final CharStream stream = new ANTLRInputStream(SpecBuilderTest
-            .class
-            .getClassLoader()
-            .getResourceAsStream("Test.spec"));
-        final SpeckyLexer lexer = new SpeckyLexer(stream);
-        final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
-        final SpecContext spec = parser.spec();
-        final TypeResolver resolver = new TypeResolverBuilder().build(spec);
-        final SpecBuilder specBuilder = new SpecBuilder(resolver);
 
-        final SpecDesc specDesc = specBuilder.build(spec);
+        final DSLSpecky specky = new DSLSpecky();
+        final List<JavaFile> files = specky.generate(
+            SpecBuilderTest
+                .class
+                .getClassLoader()
+                .getResourceAsStream("Test.spec"));
 
-        final Generator generator = new Generator(new ValueGenerator(new MutableBuilderGenerator(new BuildMethodGenerator()), new ImmutableBuilderGenerator(new BuildMethodGenerator()), new ConstructorGenerator()), new BeanGenerator());
-        final List<JavaFile> files = generator.generate(specDesc);
         assertEquals(3, files.size());
     }
 }
