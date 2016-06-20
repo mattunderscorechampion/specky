@@ -12,6 +12,12 @@ value SecondValue {
   Double dbl
 }
 
+value ValueWithBooleans {
+  immutable builder
+  Integer num
+  Boolean boolVal
+}
+
 bean FirstBean {
   constructor
   Integer num default 5

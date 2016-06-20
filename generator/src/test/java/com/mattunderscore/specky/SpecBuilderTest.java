@@ -43,7 +43,7 @@ public final class SpecBuilderTest {
 
         assertEquals("com.example", specDesc.getPackageName());
         final List<TypeDesc> values = specDesc.getValues();
-        assertEquals(3, values.size());
+        assertEquals(4, values.size());
 
         final TypeDesc valueDesc0 = values.get(0);
         assertEquals("FirstValue", valueDesc0.getName());
@@ -69,17 +69,29 @@ public final class SpecBuilderTest {
         assertEquals("dbl", propertySpec3.getName());
         assertEquals("java.lang.Double", propertySpec3.getType());
 
-        final TypeDesc beanSpec0 = values.get(2);
-        assertEquals("FirstBean", beanSpec0.getName());
-        final List<PropertySpec> properties2 = beanSpec0.getProperties();
+        final TypeDesc valueDesc2 = values.get(2);
+        assertEquals("ValueWithBooleans", valueDesc2.getName());
+        final List<PropertySpec> properties2 = valueDesc2.getProperties();
         assertEquals(2, properties0.size());
 
         final PropertySpec propertySpec4 = properties2.get(0);
         assertEquals("num", propertySpec4.getName());
         assertEquals("java.lang.Integer", propertySpec4.getType());
-        assertEquals("5", propertySpec4.getDefaultValue());
         final PropertySpec propertySpec5 = properties2.get(1);
-        assertEquals("str", propertySpec5.getName());
-        assertEquals("java.lang.String", propertySpec5.getType());
+        assertEquals("boolVal", propertySpec5.getName());
+        assertEquals("java.lang.Boolean", propertySpec5.getType());
+
+        final TypeDesc beanSpec0 = values.get(3);
+        assertEquals("FirstBean", beanSpec0.getName());
+        final List<PropertySpec> properties3 = beanSpec0.getProperties();
+        assertEquals(2, properties0.size());
+
+        final PropertySpec propertySpec6 = properties3.get(0);
+        assertEquals("num", propertySpec6.getName());
+        assertEquals("java.lang.Integer", propertySpec6.getType());
+        assertEquals("5", propertySpec6.getDefaultValue());
+        final PropertySpec propertySpec7 = properties3.get(1);
+        assertEquals("str", propertySpec7.getName());
+        assertEquals("java.lang.String", propertySpec7.getType());
     }
 }
