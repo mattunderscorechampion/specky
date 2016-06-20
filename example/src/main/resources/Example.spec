@@ -18,3 +18,8 @@ bean PersonBean {
   Integer id
   String name
 }
+
+bean StrangePersonBean {
+  Integer id default 5
+  String name
+}
