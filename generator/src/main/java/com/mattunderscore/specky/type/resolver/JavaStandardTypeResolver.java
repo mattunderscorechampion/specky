@@ -39,11 +39,17 @@ import java.util.Optional;
 
     public JavaStandardTypeResolver() {
         nameToType.put("Integer", "java.lang.Integer");
+        nameToType.put("BigInteger", "java.math.BigInteger");
         nameToType.put("Double", "java.lang.Double");
+        nameToType.put("BigDecimal", "java.math.BigDecimal");
         nameToType.put("String", "java.lang.String");
+        nameToType.put("Boolean", "java.lang.Boolean");
         nameToType.put("java.lang.Integer", "java.lang.Integer");
+        nameToType.put("java.math.BigInteger", "java.math.BigInteger");
         nameToType.put("java.lang.Double", "java.lang.Double");
+        nameToType.put("java.math.BigDecimal", "java.math.BigDecimal");
         nameToType.put("java.lang.String", "java.lang.String");
+        nameToType.put("java.lang.Boolean", "java.lang.Boolean");
     }
 
     @Override
