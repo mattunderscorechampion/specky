@@ -20,6 +20,7 @@ bean PersonBean {
 }
 
 bean StrangePersonBean {
+  builder
   Integer id default 5
   String name
 }

@@ -70,10 +70,9 @@ public final class MutableBuilderGenerator {
             .forEach(propertyDesc -> {
                 final ClassName type = ClassName.bestGuess(propertyDesc.getType());
                 final FieldSpec fieldSpec = FieldSpec
-                    .builder(type, propertyDesc.getName(), PRIVATE, FINAL)
+                    .builder(type, propertyDesc.getName(), PRIVATE)
                     .initializer(propertyDesc.getDefaultValue() == null ? "null" : propertyDesc.getDefaultValue())
                     .build();
-                final FieldSpec builderFieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE).build();
 
                 final ParameterSpec constructorParameter = ParameterSpec.builder(type, propertyDesc.getName()).build();
 
@@ -86,11 +85,11 @@ public final class MutableBuilderGenerator {
                     .addJavadoc(MUTABLE_BUILDER_SETTER, propertyDesc.getName())
                     .returns(ClassName.get(specDesc.getPackageName(), valueDesc.getName(), "Builder"))
                     .addParameter(constructorParameter)
-                    .addStatement("this.$N = $N", builderFieldSpec, constructorParameter)
+                    .addStatement("this.$N = $N", fieldSpec, constructorParameter)
                     .addStatement("return this")
                     .build();
 
-                builder.addField(builderFieldSpec).addMethod(configuator);
+                builder.addField(fieldSpec).addMethod(configuator);
             });
 
         builder.addMethod(constructorBuilder().addModifiers(PRIVATE).build());
