@@ -34,4 +34,6 @@ public interface TypeDesc {
     String getName();
 
     List<PropertyDesc> getProperties();
+
+    ConstructionDesc getConstruction();
 }
