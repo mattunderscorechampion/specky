@@ -32,7 +32,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.mattunderscore.specky.model.PropertySpec;
+import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.ClassName;
@@ -59,7 +59,7 @@ public final class BuildMethodGenerator {
             valueDesc
                 .getProperties()
                 .stream()
-                .map(PropertySpec::getName)
+                .map(PropertyDesc::getName)
                 .collect(Collectors.joining(", ")) +
             ')',
             ClassName.get(specDesc.getPackageName(), valueDesc.getName()));

@@ -39,6 +39,6 @@ import java.util.List;
 @Builder
 public class ValueDesc implements TypeDesc {
     String name;
-    List<PropertySpec> properties;
+    List<PropertyDesc> properties;
     ConstructionDesc construction;
 }

@@ -35,7 +35,7 @@ import lombok.Value;
  */
 @Value
 @Builder
-public class PropertySpec {
+public class PropertyDesc {
     String type;
     String name;
     boolean optional;

@@ -29,7 +29,7 @@ import static java.util.stream.Collectors.toList;
 
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ConstructionDesc;
-import com.mattunderscore.specky.model.PropertySpec;
+import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ValueDesc;
@@ -88,8 +88,8 @@ public final class SpecBuilder {
         }
     }
 
-    private PropertySpec createProperty(PropertyContext context) {
-        return PropertySpec
+    private PropertyDesc createProperty(PropertyContext context) {
+        return PropertyDesc
             .builder()
             .name(context
                 .PropertyName()

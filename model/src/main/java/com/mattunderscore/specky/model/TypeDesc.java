@@ -33,5 +33,5 @@ import java.util.List;
 public interface TypeDesc {
     String getName();
 
-    List<PropertySpec> getProperties();
+    List<PropertyDesc> getProperties();
 }

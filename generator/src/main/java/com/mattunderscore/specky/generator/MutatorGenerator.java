@@ -25,7 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.GETTER_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.SETTER_DOC;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static java.lang.Character.toUpperCase;
@@ -33,7 +32,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 
 import java.util.Objects;
 
-import com.mattunderscore.specky.model.PropertySpec;
+import com.mattunderscore.specky.model.PropertyDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
@@ -49,7 +48,7 @@ public final class MutatorGenerator {
      * Generate accessor.
      * @return the method spec for the accessor
      */
-    public MethodSpec generateMutator(FieldSpec fieldToMutate, PropertySpec propertyDesc) {
+    public MethodSpec generateMutator(FieldSpec fieldToMutate, PropertyDesc propertyDesc) {
         final ParameterSpec parameterSpec = ParameterSpec.builder(fieldToMutate.type, propertyDesc.getName()).build();
         final MethodSpec.Builder setterSpec = methodBuilder(getMutatorName(propertyDesc.getName()))
             .addModifiers(PUBLIC)
