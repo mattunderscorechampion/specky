@@ -26,16 +26,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator;
 
 import static com.mattunderscore.specky.generator.GeneratorUtils.CONSTRUCTOR_DOC;
-import static com.mattunderscore.specky.generator.GeneratorUtils.SETTER_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.TYPE_DOC;
-import static com.mattunderscore.specky.generator.GeneratorUtils.getMutatorName;
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
-import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
-
-import java.util.Objects;
 
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ConstructionDesc;
@@ -44,8 +39,6 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.FieldSpec.Builder;
 import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterSpec;
-import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 /**
@@ -55,14 +48,16 @@ public final class BeanGenerator {
     private final MutableBuilderGenerator mutableBuilderGenerator;
     private final ImmutableBuilderGenerator immutableBuilderGenerator;
     private final AccessorGenerator accessorGenerator;
+    private final MutatorGenerator mutatorGenerator;
 
     public BeanGenerator(
         MutableBuilderGenerator mutableBuilderGenerator,
-        ImmutableBuilderGenerator immutableBuilderGenerator, AccessorGenerator accessorGenerator) {
+        ImmutableBuilderGenerator immutableBuilderGenerator, AccessorGenerator accessorGenerator, MutatorGenerator mutatorGenerator) {
 
         this.mutableBuilderGenerator = mutableBuilderGenerator;
         this.immutableBuilderGenerator = immutableBuilderGenerator;
         this.accessorGenerator = accessorGenerator;
+        this.mutatorGenerator = mutatorGenerator;
     }
 
     public TypeSpec generateBean(SpecDesc specDesc, BeanDesc beanDesc) {
@@ -85,23 +80,10 @@ public final class BeanGenerator {
                 final FieldSpec fieldSpec = fieldSpecBuilder.build();
                 final MethodSpec methodSpec = accessorGenerator.generateAccessor(fieldSpec, propertyDesc);
 
-                final ParameterSpec parameterSpec = ParameterSpec.builder(type, propertyDesc.getName()).build();
-                final MethodSpec.Builder setterSpec = methodBuilder(getMutatorName(propertyDesc.getName()))
-                    .addModifiers(PUBLIC)
-                    .addParameter(parameterSpec)
-                    .addJavadoc(SETTER_DOC, propertyDesc.getName(), propertyDesc.getName())
-                    .returns(TypeName.VOID);
-
-                if (!propertyDesc.isOptional()) {
-                    setterSpec.addStatement("$T.requireNonNull($N)", ClassName.get(Objects.class), propertyDesc.getName());
-                }
-
-                setterSpec.addStatement("this.$N = $N", fieldSpec, parameterSpec);
-
                 builder
                     .addField(fieldSpec)
                     .addMethod(methodSpec)
-                    .addMethod(setterSpec.build());
+                    .addMethod(mutatorGenerator.generateMutator(fieldSpec, propertyDesc));
             });
 
         if (beanDesc.getConstruction() == ConstructionDesc.CONSTRUCTOR) {

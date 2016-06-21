@@ -69,8 +69,4 @@ import static java.lang.Character.toUpperCase;
 
     private GeneratorUtils() {
     }
-
-    static String getMutatorName(String propertyName) {
-        return "set" + toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
-    }
 }

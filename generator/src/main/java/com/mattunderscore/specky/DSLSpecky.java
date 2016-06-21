@@ -42,6 +42,7 @@ import com.mattunderscore.specky.generator.ConstructorGenerator;
 import com.mattunderscore.specky.generator.Generator;
 import com.mattunderscore.specky.generator.ImmutableBuilderGenerator;
 import com.mattunderscore.specky.generator.MutableBuilderGenerator;
+import com.mattunderscore.specky.generator.MutatorGenerator;
 import com.mattunderscore.specky.generator.ValueGenerator;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.output.Writer;
@@ -67,7 +68,11 @@ public final class DSLSpecky {
                 mutableBuilderGenerator,
                 immutableBuilderGenerator,
                 new ConstructorGenerator(), accessorGenerator),
-            new BeanGenerator(mutableBuilderGenerator, immutableBuilderGenerator, accessorGenerator));
+            new BeanGenerator(
+                mutableBuilderGenerator,
+                immutableBuilderGenerator,
+                accessorGenerator,
+                new MutatorGenerator()));
     }
 
     public List<JavaFile> generate(InputStream inputStream) throws IOException {
