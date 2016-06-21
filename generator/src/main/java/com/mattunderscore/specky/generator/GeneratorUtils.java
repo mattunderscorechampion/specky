@@ -70,10 +70,6 @@ import static java.lang.Character.toUpperCase;
     private GeneratorUtils() {
     }
 
-    static String getAccessorName(String propertyName) {
-        return "get" + toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
-    }
-
     static String getMutatorName(String propertyName) {
         return "set" + toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
     }

@@ -26,8 +26,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator;
 
 import static com.mattunderscore.specky.generator.GeneratorUtils.GETTER_DOC;
-import static com.mattunderscore.specky.generator.GeneratorUtils.getAccessorName;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
+import static java.lang.Character.toUpperCase;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 import com.mattunderscore.specky.model.PropertySpec;
@@ -53,5 +53,9 @@ public final class AccessorGenerator {
             .returns(fieldToAccess.type)
             .addStatement("return $N", fieldToAccess)
             .build();
+    }
+
+    private static String getAccessorName(String propertyName) {
+        return "get" + toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
     }
 }

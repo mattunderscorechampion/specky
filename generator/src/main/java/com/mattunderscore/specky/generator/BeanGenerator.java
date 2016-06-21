@@ -26,10 +26,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator;
 
 import static com.mattunderscore.specky.generator.GeneratorUtils.CONSTRUCTOR_DOC;
-import static com.mattunderscore.specky.generator.GeneratorUtils.GETTER_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.SETTER_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.TYPE_DOC;
-import static com.mattunderscore.specky.generator.GeneratorUtils.getAccessorName;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getMutatorName;
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
@@ -85,12 +83,7 @@ public final class BeanGenerator {
                 }
 
                 final FieldSpec fieldSpec = fieldSpecBuilder.build();
-                final MethodSpec methodSpec = methodBuilder(getAccessorName(propertyDesc.getName()))
-                    .addModifiers(PUBLIC)
-                    .addJavadoc(GETTER_DOC, propertyDesc.getName())
-                    .returns(type)
-                    .addStatement("return $N", fieldSpec)
-                    .build();
+                final MethodSpec methodSpec = accessorGenerator.generateAccessor(fieldSpec, propertyDesc);
 
                 final ParameterSpec parameterSpec = ParameterSpec.builder(type, propertyDesc.getName()).build();
                 final MethodSpec.Builder setterSpec = methodBuilder(getMutatorName(propertyDesc.getName()))
