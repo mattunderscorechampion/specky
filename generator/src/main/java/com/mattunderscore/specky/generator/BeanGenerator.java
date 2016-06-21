@@ -51,8 +51,10 @@ public final class BeanGenerator {
     private final MutatorGenerator mutatorGenerator;
 
     public BeanGenerator(
-        MutableBuilderGenerator mutableBuilderGenerator,
-        ImmutableBuilderGenerator immutableBuilderGenerator, AccessorGenerator accessorGenerator, MutatorGenerator mutatorGenerator) {
+            MutableBuilderGenerator mutableBuilderGenerator,
+            ImmutableBuilderGenerator immutableBuilderGenerator,
+            AccessorGenerator accessorGenerator,
+            MutatorGenerator mutatorGenerator) {
 
         this.mutableBuilderGenerator = mutableBuilderGenerator;
         this.immutableBuilderGenerator = immutableBuilderGenerator;

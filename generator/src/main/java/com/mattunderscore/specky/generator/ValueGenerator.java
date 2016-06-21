@@ -46,7 +46,12 @@ public final class ValueGenerator {
     private final ConstructorGenerator constructorGenerator;
     private final AccessorGenerator accessorGenerator;
 
-    public ValueGenerator(MutableBuilderGenerator mutableBuilderGenerator, ImmutableBuilderGenerator immutableBuilderGenerator, ConstructorGenerator constructorGenerator, AccessorGenerator accessorGenerator) {
+    public ValueGenerator(
+            MutableBuilderGenerator mutableBuilderGenerator,
+            ImmutableBuilderGenerator immutableBuilderGenerator,
+            ConstructorGenerator constructorGenerator,
+            AccessorGenerator accessorGenerator) {
+
         this.mutableBuilderGenerator = mutableBuilderGenerator;
         this.immutableBuilderGenerator = immutableBuilderGenerator;
         this.constructorGenerator = constructorGenerator;
