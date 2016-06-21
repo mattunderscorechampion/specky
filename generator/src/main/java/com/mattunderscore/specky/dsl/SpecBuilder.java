@@ -28,7 +28,7 @@ package com.mattunderscore.specky.dsl;
 import static java.util.stream.Collectors.toList;
 
 import com.mattunderscore.specky.model.BeanDesc;
-import com.mattunderscore.specky.model.ConstructionDesc;
+import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
@@ -71,7 +71,7 @@ public final class SpecBuilder {
                     .stream()
                     .map(this::createProperty)
                     .collect(toList()))
-                .construction(toConstructionDesc(context))
+                .constructionMethod(toConstructionDesc(context))
                 .build();
         }
         else {
@@ -83,7 +83,7 @@ public final class SpecBuilder {
                     .stream()
                     .map(this::createProperty)
                     .collect(toList()))
-                .construction(toConstructionDesc(context))
+                .constructionMethod(toConstructionDesc(context))
                 .build();
         }
     }
@@ -104,22 +104,22 @@ public final class SpecBuilder {
             .build();
     }
 
-    private ConstructionDesc toConstructionDesc(TypeSpecContext typeSpec) {
+    private ConstructionMethod toConstructionDesc(TypeSpecContext typeSpec) {
         final ConstructionContext construction = typeSpec.construction();
 
         if (construction == null) {
-            return ConstructionDesc.CONSTRUCTOR;
+            return ConstructionMethod.CONSTRUCTOR;
         }
 
         final String token = construction.getText();
         if ("constructor".equals(token)) {
-            return ConstructionDesc.CONSTRUCTOR;
+            return ConstructionMethod.CONSTRUCTOR;
         }
         else if ("builder".equals(token)) {
-            return ConstructionDesc.MUTABLE_BUILDER;
+            return ConstructionMethod.MUTABLE_BUILDER;
         }
         else if ("immutable builder".equals(token)) {
-            return ConstructionDesc.IMMUTABLE_BUILDER;
+            return ConstructionMethod.IMMUTABLE_BUILDER;
         }
         else {
             throw new IllegalArgumentException("Unsupported type");

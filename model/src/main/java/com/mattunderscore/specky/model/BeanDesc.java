@@ -40,5 +40,5 @@ import java.util.List;
 public class BeanDesc implements TypeDesc {
     String name;
     List<PropertyDesc> properties;
-    ConstructionDesc construction;
+    ConstructionMethod constructionMethod;
 }

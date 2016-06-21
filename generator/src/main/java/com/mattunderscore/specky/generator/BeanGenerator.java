@@ -33,7 +33,7 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 import com.mattunderscore.specky.model.BeanDesc;
-import com.mattunderscore.specky.model.ConstructionDesc;
+import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
@@ -73,7 +73,7 @@ public final class BeanGenerator {
                 final ClassName type = ClassName.bestGuess(propertyDesc.getType());
                 final Builder fieldSpecBuilder = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE);
 
-                if (beanDesc.getConstruction() == ConstructionDesc.CONSTRUCTOR && propertyDesc.getDefaultValue() != null) {
+                if (beanDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR && propertyDesc.getDefaultValue() != null) {
                     fieldSpecBuilder.initializer(propertyDesc.getDefaultValue());
                 }
 
@@ -86,17 +86,17 @@ public final class BeanGenerator {
                     .addMethod(mutatorGenerator.generateMutator(fieldSpec, propertyDesc));
             });
 
-        if (beanDesc.getConstruction() == ConstructionDesc.CONSTRUCTOR) {
+        if (beanDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR) {
             final MethodSpec constructor = constructorBuilder()
                 .addModifiers(PUBLIC)
                 .addJavadoc(CONSTRUCTOR_DOC)
                 .build();
             builder.addMethod(constructor);
         }
-        else if (beanDesc.getConstruction() == ConstructionDesc.MUTABLE_BUILDER) {
+        else if (beanDesc.getConstructionMethod() == ConstructionMethod.MUTABLE_BUILDER) {
             mutableBuilderGenerator.build(builder, specDesc, beanDesc);
         }
-        else if (beanDesc.getConstruction() == ConstructionDesc.IMMUTABLE_BUILDER) {
+        else if (beanDesc.getConstructionMethod() == ConstructionMethod.IMMUTABLE_BUILDER) {
             immutableBuilderGenerator.build(builder, specDesc, beanDesc);
         }
         else {

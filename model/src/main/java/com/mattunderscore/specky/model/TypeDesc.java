@@ -35,5 +35,5 @@ public interface TypeDesc {
 
     List<PropertyDesc> getProperties();
 
-    ConstructionDesc getConstruction();
+    ConstructionMethod getConstructionMethod();
 }

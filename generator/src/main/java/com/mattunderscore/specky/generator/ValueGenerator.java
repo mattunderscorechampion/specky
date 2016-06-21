@@ -30,7 +30,7 @@ import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.model.ConstructionDesc;
+import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.ValueDesc;
 import com.squareup.javapoet.ClassName;
@@ -59,13 +59,13 @@ public final class ValueGenerator {
             .addModifiers(PUBLIC, FINAL)
             .addJavadoc(TYPE_DOC, "Value", valueDesc.getName());
 
-        if (valueDesc.getConstruction() == ConstructionDesc.CONSTRUCTOR) {
+        if (valueDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR) {
             constructorGenerator.build(builder, valueDesc);
         }
-        else if (valueDesc.getConstruction() == ConstructionDesc.MUTABLE_BUILDER) {
+        else if (valueDesc.getConstructionMethod() == ConstructionMethod.MUTABLE_BUILDER) {
             mutableBuilderGenerator.build(builder, specDesc, valueDesc);
         }
-        else if (valueDesc.getConstruction() == ConstructionDesc.IMMUTABLE_BUILDER) {
+        else if (valueDesc.getConstructionMethod() == ConstructionMethod.IMMUTABLE_BUILDER) {
             immutableBuilderGenerator.build(builder, specDesc, valueDesc);
         }
         else {

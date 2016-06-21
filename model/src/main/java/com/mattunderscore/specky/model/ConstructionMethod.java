@@ -26,13 +26,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.model;
 
 /**
- * Description of creation method.
+ * Description of construction method for a type.
  *
  * @author Matt Champion
  */
-public enum ConstructionDesc {
+public enum ConstructionMethod {
     CONSTRUCTOR,
-    FACTORY,
     MUTABLE_BUILDER,
     IMMUTABLE_BUILDER;
 }
