@@ -1,4 +1,6 @@
 
+// Copyright © 2016 Matthew Champion
+
 package com.example
 
 value PersonValue {

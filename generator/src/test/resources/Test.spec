@@ -1,4 +1,6 @@
 
+// Copyright © 2016 Matthew Champions
+
 package com.example
 
 value FirstValue {
