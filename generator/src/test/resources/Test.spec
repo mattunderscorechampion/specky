@@ -9,19 +9,25 @@ value FirstValue {
 }
 
 value SecondValue {
-  builder
   Integer num
   Double dbl
+  options {
+      builder
+    }
 }
 
 value ValueWithBooleans {
-  immutable builder
   Integer num
   Boolean boolVal
+  options {
+    immutable builder
+  }
 }
 
 bean FirstBean {
-  constructor
   Integer num default 5
   String str
+  options {
+    constructor
+  }
 }

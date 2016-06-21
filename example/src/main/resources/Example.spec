@@ -4,25 +4,33 @@
 package com.example
 
 value PersonValue {
-  immutable builder
   Integer id default 5
   String name
+  options {
+    immutable builder
+  }
 }
 
 value StrangePersonValue {
-  builder
   Integer id default 5
   optional String name
+  options {
+    builder
+  }
 }
 
 bean PersonBean {
-  constructor
   Integer id
   String name
+  options {
+    constructor
+  }
 }
 
 bean StrangePersonBean {
-  builder
   Integer id default 5
   String name
+  options {
+    builder
+  }
 }

@@ -33,6 +33,7 @@ import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ValueDesc;
+import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.ConstructionContext;
 import com.mattunderscore.specky.parser.Specky.PropertyContext;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
@@ -105,13 +106,13 @@ public final class SpecBuilder {
     }
 
     private ConstructionMethod toConstructionDesc(TypeSpecContext typeSpec) {
-        final ConstructionContext construction = typeSpec.construction();
+        final Specky.OptsContext options = typeSpec.opts();
 
-        if (construction == null) {
+        if (options == null || options.construction() == null) {
             return ConstructionMethod.CONSTRUCTOR;
         }
 
-        final String token = construction.getText();
+        final String token = options.construction().getText();
         if ("constructor".equals(token)) {
             return ConstructionMethod.CONSTRUCTOR;
         }

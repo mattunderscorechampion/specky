@@ -25,8 +25,12 @@ r_package
     : PACKAGE qualifiedName
     ;
 
+opts
+    : OPTIONS OPEN_BLOCK construction? CLOSE_BLOCK
+    ;
+
 typeSpec
-    : (VALUE | BEAN) TypeName OPEN_BLOCK construction? (property)+ CLOSE_BLOCK
+    : (VALUE | BEAN) TypeName OPEN_BLOCK (property)+ opts? CLOSE_BLOCK
     ;
 
 spec

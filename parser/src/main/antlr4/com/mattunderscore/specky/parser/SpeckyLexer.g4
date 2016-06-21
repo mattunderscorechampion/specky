@@ -45,6 +45,10 @@ DEFAULT
     : 'default' -> pushMode(LITERAL)
     ;
 
+OPTIONS
+    : 'options'
+    ;
+
 fragment
 UpperCaseLetter
     :   [A-Z]
