@@ -25,10 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.GETTER_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.TYPE_DOC;
-import static com.mattunderscore.specky.generator.GeneratorUtils.getAccessorName;
-import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
@@ -38,7 +35,6 @@ import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.ValueDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 /**
@@ -48,11 +44,13 @@ public final class ValueGenerator {
     private final MutableBuilderGenerator mutableBuilderGenerator;
     private final ImmutableBuilderGenerator immutableBuilderGenerator;
     private final ConstructorGenerator constructorGenerator;
+    private final AccessorGenerator accessorGenerator;
 
-    public ValueGenerator(MutableBuilderGenerator mutableBuilderGenerator, ImmutableBuilderGenerator immutableBuilderGenerator, ConstructorGenerator constructorGenerator) {
+    public ValueGenerator(MutableBuilderGenerator mutableBuilderGenerator, ImmutableBuilderGenerator immutableBuilderGenerator, ConstructorGenerator constructorGenerator, AccessorGenerator accessorGenerator) {
         this.mutableBuilderGenerator = mutableBuilderGenerator;
         this.immutableBuilderGenerator = immutableBuilderGenerator;
         this.constructorGenerator = constructorGenerator;
+        this.accessorGenerator = accessorGenerator;
     }
 
     public TypeSpec generateValue(SpecDesc specDesc, ValueDesc valueDesc) {
@@ -80,16 +78,10 @@ public final class ValueGenerator {
             .forEach(propertyDesc -> {
                 final ClassName type = ClassName.bestGuess(propertyDesc.getType());
                 final FieldSpec fieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build();
-                final MethodSpec methodSpec = methodBuilder(getAccessorName(propertyDesc.getName()))
-                    .addModifiers(PUBLIC)
-                    .addJavadoc(GETTER_DOC, propertyDesc.getName())
-                    .returns(type)
-                    .addStatement("return $N", fieldSpec)
-                    .build();
 
                 builder
                     .addField(fieldSpec)
-                    .addMethod(methodSpec);
+                    .addMethod(accessorGenerator.generateAccessor(fieldSpec, propertyDesc));
             });
 
         return builder.build();

@@ -56,13 +56,15 @@ import com.squareup.javapoet.TypeSpec;
 public final class BeanGenerator {
     private final MutableBuilderGenerator mutableBuilderGenerator;
     private final ImmutableBuilderGenerator immutableBuilderGenerator;
+    private final AccessorGenerator accessorGenerator;
 
     public BeanGenerator(
-            MutableBuilderGenerator mutableBuilderGenerator,
-            ImmutableBuilderGenerator immutableBuilderGenerator) {
+        MutableBuilderGenerator mutableBuilderGenerator,
+        ImmutableBuilderGenerator immutableBuilderGenerator, AccessorGenerator accessorGenerator) {
 
         this.mutableBuilderGenerator = mutableBuilderGenerator;
         this.immutableBuilderGenerator = immutableBuilderGenerator;
+        this.accessorGenerator = accessorGenerator;
     }
 
     public TypeSpec generateBean(SpecDesc specDesc, BeanDesc beanDesc) {

@@ -35,6 +35,7 @@ import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.UnbufferedTokenStream;
 
 import com.mattunderscore.specky.dsl.SpecBuilder;
+import com.mattunderscore.specky.generator.AccessorGenerator;
 import com.mattunderscore.specky.generator.BeanGenerator;
 import com.mattunderscore.specky.generator.BuildMethodGenerator;
 import com.mattunderscore.specky.generator.ConstructorGenerator;
@@ -60,12 +61,13 @@ public final class DSLSpecky {
         final BuildMethodGenerator buildMethodGenerator = new BuildMethodGenerator();
         final MutableBuilderGenerator mutableBuilderGenerator = new MutableBuilderGenerator(buildMethodGenerator);
         final ImmutableBuilderGenerator immutableBuilderGenerator = new ImmutableBuilderGenerator(buildMethodGenerator);
+        final AccessorGenerator accessorGenerator = new AccessorGenerator();
         generator = new Generator(
             new ValueGenerator(
                 mutableBuilderGenerator,
                 immutableBuilderGenerator,
-                new ConstructorGenerator()),
-            new BeanGenerator(mutableBuilderGenerator, immutableBuilderGenerator));
+                new ConstructorGenerator(), accessorGenerator),
+            new BeanGenerator(mutableBuilderGenerator, immutableBuilderGenerator, accessorGenerator));
     }
 
     public List<JavaFile> generate(InputStream inputStream) throws IOException {
