@@ -50,6 +50,9 @@ import java.util.Optional;
         nameToType.put("java.math.BigDecimal", "java.math.BigDecimal");
         nameToType.put("java.lang.String", "java.lang.String");
         nameToType.put("java.lang.Boolean", "java.lang.Boolean");
+        nameToType.put("int", "int");
+        nameToType.put("double", "double");
+        nameToType.put("boolean", "boolean");
     }
 
     @Override
