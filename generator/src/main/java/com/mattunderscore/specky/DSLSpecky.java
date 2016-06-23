@@ -50,12 +50,15 @@ import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyLexer;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
+import com.mattunderscore.specky.value.resolver.BasicValueResolver;
+import com.mattunderscore.specky.value.resolver.ValueResolver;
 import com.squareup.javapoet.JavaFile;
 
 /**
  * @author Matt Champion on 18/06/2016
  */
 public final class DSLSpecky {
+    private final ValueResolver valueResolver;
     private final Generator generator;
 
     public DSLSpecky() {
@@ -73,6 +76,7 @@ public final class DSLSpecky {
                 immutableBuilderGenerator,
                 accessorGenerator,
                 new MutatorGenerator()));
+        valueResolver = new BasicValueResolver();
     }
 
     public List<JavaFile> generate(InputStream inputStream) throws IOException {
@@ -81,7 +85,7 @@ public final class DSLSpecky {
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
         final Specky.SpecContext spec = parser.spec();
         final TypeResolver resolver = new TypeResolverBuilder().build(spec);
-        final SpecBuilder specBuilder = new SpecBuilder(resolver);
+        final SpecBuilder specBuilder = new SpecBuilder(resolver, valueResolver);
 
         final SpecDesc specDesc = specBuilder.build(spec);
 

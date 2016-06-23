@@ -34,20 +34,22 @@ import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ValueDesc;
 import com.mattunderscore.specky.parser.Specky;
-import com.mattunderscore.specky.parser.Specky.ConstructionContext;
 import com.mattunderscore.specky.parser.Specky.PropertyContext;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.Specky.TypeSpecContext;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
+import com.mattunderscore.specky.value.resolver.ValueResolver;
 
 /**
  * @author Matt Champion on 05/06/16
  */
 public final class SpecBuilder {
     private final TypeResolver resolver;
+    private final ValueResolver valueResolver;
 
-    public SpecBuilder(TypeResolver resolver) {
+    public SpecBuilder(TypeResolver resolver, ValueResolver valueResolver) {
         this.resolver = resolver;
+        this.valueResolver = valueResolver;
     }
 
     public SpecDesc build(SpecContext context) {
@@ -90,18 +92,22 @@ public final class SpecBuilder {
     }
 
     private PropertyDesc createProperty(PropertyContext context) {
+        final String type = resolver
+            .resolve(context
+                .TypeName()
+                .getText())
+            .get();
+        final String defaultValue = context.r_default() == null ?
+            valueResolver.resolve(type, null) :
+            valueResolver.resolve(type, context.r_default().ANYTHING().getText());
         return PropertyDesc
             .builder()
             .name(context
                 .PropertyName()
                 .getText())
-            .type(resolver
-                .resolve(context
-                    .TypeName()
-                    .getText())
-                .get())
+            .type(type)
             .optional(context.OPTIONAL() != null)
-            .defaultValue(context.r_default() == null ? null : context.r_default().ANYTHING().getText())
+            .defaultValue(defaultValue)
             .build();
     }
 

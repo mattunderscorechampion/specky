@@ -20,6 +20,7 @@ import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.SpeckyLexer;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
+import com.mattunderscore.specky.value.resolver.BasicValueResolver;
 
 /**
  * Tests for {@link SpecBuilder}.
@@ -37,7 +38,7 @@ public final class SpecBuilderTest {
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
         final SpecContext spec = parser.spec();
         final TypeResolver resolver = new TypeResolverBuilder().build(spec);
-        final SpecBuilder specBuilder = new SpecBuilder(resolver);
+        final SpecBuilder specBuilder = new SpecBuilder(resolver, new BasicValueResolver());
 
         final SpecDesc specDesc = specBuilder.build(spec);
 
