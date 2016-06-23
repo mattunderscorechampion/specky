@@ -56,7 +56,7 @@ public final class MutatorGenerator {
             .addJavadoc(SETTER_DOC, propertyDesc.getName(), propertyDesc.getName())
             .returns(TypeName.VOID);
 
-        if (!propertyDesc.isOptional()) {
+        if (!propertyDesc.isOptional() && !fieldToMutate.type.isPrimitive()) {
             setterSpec.addStatement("$T.requireNonNull($N)", ClassName.get(Objects.class), propertyDesc.getName());
         }
 

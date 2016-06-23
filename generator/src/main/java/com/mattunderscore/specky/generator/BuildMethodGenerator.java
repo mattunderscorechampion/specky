@@ -26,6 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator;
 
 import static com.mattunderscore.specky.generator.GeneratorUtils.BUILD_DOC;
+import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
@@ -37,6 +38,7 @@ import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeName;
 
 /**
  * @author Matt Champion on 16/06/2016
@@ -70,7 +72,8 @@ public final class BuildMethodGenerator {
             .getProperties()
             .stream()
             .forEach(propertySpec -> {
-                if (!propertySpec.isOptional()) {
+                final TypeName typeName = getType(propertySpec.getType());
+                if (!propertySpec.isOptional() && !typeName.isPrimitive()) {
                     methodSpecBuilder.addStatement("$T.requireNonNull($N)", ClassName.get(Objects.class), propertySpec.getName());
                 }
             });
