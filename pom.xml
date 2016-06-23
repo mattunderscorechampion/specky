@@ -13,6 +13,8 @@
         <module>parser</module>
         <module>generator</module>
         <module>example</module>
+        <module>specky-maven-plugin</module>
+        <module>plugin-example</module>
     </modules>
 
     <dependencyManagement>
@@ -30,6 +32,11 @@
             <dependency>
                 <groupId>com.mattunderscore.code.generation.specky</groupId>
                 <artifactId>generator</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mattunderscore.code.generation.specky</groupId>
+                <artifactId>specky-maven-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
