@@ -29,6 +29,10 @@ import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMetho
 import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
 import static java.lang.Character.toUpperCase;
 
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.TypeSpec;
+
 /**
  * @author Matt Champion on 11/06/2016
  */
@@ -68,5 +72,20 @@ import static java.lang.Character.toUpperCase;
         .toJavaDoc();
 
     private GeneratorUtils() {
+    }
+
+    public static TypeName getType(String type) {
+
+        if ("int".equals(type)) {
+            return TypeName.INT;
+        }
+        else if ("boolean".equals(type)) {
+            return TypeName.BOOLEAN;
+        }
+        else if ("double".equals(type)) {
+            return TypeName.DOUBLE;
+        }
+
+        return ClassName.bestGuess(type);
     }
 }

@@ -14,11 +14,11 @@ r_default
     ;
 
 property
-    : OPTIONAL? TypeName PropertyName r_default?
+    : OPTIONAL? Identifier Identifier r_default?
     ;
 
 qualifiedName
-    : PropertyName (PACKAGE_SEPARATOR PropertyName)*
+    : Identifier (PACKAGE_SEPARATOR Identifier)*
     ;
 
 r_package
@@ -30,7 +30,7 @@ opts
     ;
 
 typeSpec
-    : (VALUE | BEAN) TypeName OPEN_BLOCK (property)+ opts? CLOSE_BLOCK
+    : (VALUE | BEAN) Identifier OPEN_BLOCK (property)+ opts? CLOSE_BLOCK
     ;
 
 spec

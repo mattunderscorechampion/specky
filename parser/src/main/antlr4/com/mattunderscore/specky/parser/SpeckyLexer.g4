@@ -83,11 +83,7 @@ LINE_COMMENT
     :   '//' ~[\r\n]* -> skip
     ;
 
-TypeName
-    : UpperCaseLetter LetterOrDigit*
-    ;
-
-PropertyName
+Identifier
     :   Letter LetterOrDigit*
     ;
 

@@ -12,7 +12,7 @@ value PersonValue {
 }
 
 value StrangePersonValue {
-  Integer id default 5
+  int id default 5
   optional String name
   options {
     builder
@@ -20,7 +20,7 @@ value StrangePersonValue {
 }
 
 bean PersonBean {
-  Integer id
+  int id
   String name
   options {
     constructor

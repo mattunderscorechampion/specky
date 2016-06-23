@@ -50,7 +50,7 @@ public final class TypeResolverBuilder {
             .stream()
             .collect(
                 () -> new SpecTypeResolver(packageName),
-                (resolver, value) -> resolver.registerTypeName(value.TypeName().getText()),
+                (resolver, value) -> resolver.registerTypeName(value.Identifier().getText()),
                 (resolver0, resolver1) -> resolver0.merge(resolver1));
     }
 }

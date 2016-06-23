@@ -29,6 +29,7 @@ import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_FACTORY
 import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_TYPE_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.CONSTRUCTOR_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.MUTABLE_BUILDER_SETTER;
+import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static com.squareup.javapoet.TypeSpec.classBuilder;
@@ -43,6 +44,7 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 /**
@@ -68,7 +70,7 @@ public final class MutableBuilderGenerator {
             .getProperties()
             .stream()
             .forEach(propertyDesc -> {
-                final ClassName type = ClassName.bestGuess(propertyDesc.getType());
+                final TypeName type = getType(propertyDesc.getType());
                 final FieldSpec fieldSpec = FieldSpec
                     .builder(type, propertyDesc.getName(), PRIVATE)
                     .initializer(propertyDesc.getDefaultValue() == null ? "null" : propertyDesc.getDefaultValue())

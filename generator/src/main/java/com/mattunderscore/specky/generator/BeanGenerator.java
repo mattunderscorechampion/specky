@@ -27,6 +27,7 @@ package com.mattunderscore.specky.generator;
 
 import static com.mattunderscore.specky.generator.GeneratorUtils.CONSTRUCTOR_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.TYPE_DOC;
+import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
@@ -35,10 +36,10 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.FieldSpec.Builder;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 /**
@@ -72,7 +73,7 @@ public final class BeanGenerator {
             .getProperties()
             .stream()
             .forEach(propertyDesc -> {
-                final ClassName type = ClassName.bestGuess(propertyDesc.getType());
+                final TypeName type = getType(propertyDesc.getType());
                 final Builder fieldSpecBuilder = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE);
 
                 if (beanDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR && propertyDesc.getDefaultValue() != null) {

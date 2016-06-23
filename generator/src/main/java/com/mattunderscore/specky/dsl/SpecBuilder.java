@@ -68,7 +68,7 @@ public final class SpecBuilder {
         if (context.BEAN() == null) {
             return ValueDesc
                 .builder()
-                .name(context.TypeName().getText())
+                .name(context.Identifier().getText())
                 .properties(context
                     .property()
                     .stream()
@@ -80,7 +80,7 @@ public final class SpecBuilder {
         else {
             return BeanDesc
                 .builder()
-                .name(context.TypeName().getText())
+                .name(context.Identifier().getText())
                 .properties(context
                     .property()
                     .stream()
@@ -94,7 +94,8 @@ public final class SpecBuilder {
     private PropertyDesc createProperty(PropertyContext context) {
         final String type = resolver
             .resolve(context
-                .TypeName()
+                .Identifier()
+                .get(0)
                 .getText())
             .get();
         final String defaultValue = context.r_default() == null ?
@@ -103,7 +104,8 @@ public final class SpecBuilder {
         return PropertyDesc
             .builder()
             .name(context
-                .PropertyName()
+                .Identifier()
+                .get(1)
                 .getText())
             .type(type)
             .optional(context.OPTIONAL() != null)
