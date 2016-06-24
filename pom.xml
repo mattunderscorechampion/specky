@@ -12,7 +12,6 @@
         <module>model</module>
         <module>parser</module>
         <module>generator</module>
-        <module>example</module>
         <module>specky-maven-plugin</module>
         <module>plugin-example</module>
     </modules>
