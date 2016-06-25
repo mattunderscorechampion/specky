@@ -25,9 +25,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <sourceFile>src/main/specky/Example.spec</sourceFile>
-                </configuration>
             </plugin>
         </plugins>
     </build>

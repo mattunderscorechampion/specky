@@ -25,8 +25,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.code.generation.specky;
 
+import static java.util.Collections.singletonList;
+
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,6 +36,9 @@ import java.nio.file.Paths;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.model.fileset.FileSet;
+import org.apache.maven.shared.model.fileset.util.FileSetManager;
 
 import com.mattunderscore.specky.DSLSpecky;
 
@@ -44,40 +48,60 @@ import com.mattunderscore.specky.DSLSpecky;
  * @author Matt Champion on 23/06/2016
  */
 public class GenerateMojo extends AbstractMojo {
-
     /**
-     * @parameter name="sourceFile"
+     * @component
      */
-    private String sourceFile;
+    private MavenProject project;
 
     /**
-     * @parameter default-value="${project.basedir}"
-     * @readonly
+     * @parameter
      */
-    private File basedir;
+    private FileSet fileset;
 
     /**
-     * @parameter default-value="${project.build.directory}"
-     * @readonly
+     * @parameter default-value="${project.build.directory}/generated-sources/specky"
      */
     private File target;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         final DSLSpecky specky = new DSLSpecky();
-        final Path path = basedir.toPath().resolve(sourceFile).toAbsolutePath();
-        try {
-            specky.write(
-                Files.newInputStream(path),
-                target
-                    .toPath()
-                    .resolve("generated-sources")
-                    .resolve("specky")
-                    .toAbsolutePath()
-                    .toString());
+
+        final FileSet currentFileset = getFileSet();
+
+        final FileSetManager fileSetManager = new FileSetManager(getLog(), true);
+        final String[] files = fileSetManager.getIncludedFiles(currentFileset);
+
+        if (files.length == 0) {
+            throw new MojoFailureException("No files found");
         }
-        catch (IOException e) {
-            throw new MojoFailureException("Failed to read file " + path);
+
+        final Path basePath = Paths.get(currentFileset.getDirectory());
+        for (String file : files) {
+            final Path path = basePath.resolve(file);
+            getLog().info("Processing " + path.toString());
+            try {
+                specky.write(
+                    Files.newInputStream(path),
+                    target
+                        .toPath()
+                        .toAbsolutePath()
+                        .toString());
+            }
+            catch (IOException e) {
+                throw new MojoFailureException("Failed to read file " + path);
+            }
         }
+    }
+
+    public FileSet getFileSet() {
+        if (fileset != null) {
+            return fileset;
+        }
+
+        final FileSet defaultFileset = new FileSet();
+        defaultFileset.setDirectory(project.getBasedir() + "/src/main/specky");
+        defaultFileset.setIncludes(singletonList("*.spec"));
+        return defaultFileset;
     }
 }
