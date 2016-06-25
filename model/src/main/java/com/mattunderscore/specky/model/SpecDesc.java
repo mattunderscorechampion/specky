@@ -40,4 +40,5 @@ import java.util.List;
 public class SpecDesc {
     String packageName;
     List<TypeDesc> values;
+    List<ViewDesc> views;
 }

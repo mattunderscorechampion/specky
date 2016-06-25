@@ -25,47 +25,42 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.SETTER_DOC;
+import static com.mattunderscore.specky.generator.GeneratorUtils.GETTER_DOC;
+import static com.mattunderscore.specky.generator.GeneratorUtils.TYPE_DOC;
+import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
+import static com.squareup.javapoet.TypeSpec.interfaceBuilder;
 import static java.lang.Character.toUpperCase;
+import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import java.util.Objects;
-
-import com.mattunderscore.specky.model.PropertyImplementationDesc;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterSpec;
-import com.squareup.javapoet.TypeName;
+import com.mattunderscore.specky.model.PropertyDesc;
+import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.ViewDesc;
+import com.squareup.javapoet.TypeSpec;
 
 /**
- * Generator for mutator method.
- * @author Matt Champion on 21/06/2016
+ * Generator for views.
+ * @author Matt Champion on 25/06/2016
  */
-public final class MutatorGenerator {
-    /**
-     * Generate accessor.
-     * @return the method spec for the accessor
-     */
-    public MethodSpec generateMutator(FieldSpec fieldToMutate, PropertyImplementationDesc propertyDesc) {
-        final ParameterSpec parameterSpec = ParameterSpec.builder(fieldToMutate.type, propertyDesc.getName()).build();
-        final MethodSpec.Builder setterSpec = methodBuilder(getMutatorName(propertyDesc.getName()))
-            .addModifiers(PUBLIC)
-            .addParameter(parameterSpec)
-            .addJavadoc(SETTER_DOC, propertyDesc.getName(), propertyDesc.getName())
-            .returns(TypeName.VOID);
+public final class ViewGenerator {
+    public TypeSpec generateView(SpecDesc specDesc, ViewDesc typeDesc) {
+        final TypeSpec.Builder builder = interfaceBuilder(typeDesc.getName())
+            .addJavadoc(TYPE_DOC, "View", typeDesc.getName());
 
-        if (!propertyDesc.isOptional() && !fieldToMutate.type.isPrimitive()) {
-            setterSpec.addStatement("$T.requireNonNull($N)", ClassName.get(Objects.class), propertyDesc.getName());
+        for (PropertyDesc view : typeDesc.getProperties()) {
+            builder
+                .addMethod(methodBuilder(getAccessorName(view.getName()))
+                    .addJavadoc(GETTER_DOC, view.getName())
+                    .addModifiers(ABSTRACT, PUBLIC)
+                    .returns(getType(view.getType()))
+                    .build());
         }
 
-        setterSpec.addStatement("this.$N = $N", fieldToMutate, parameterSpec);
-
-        return setterSpec.build();
+        return builder.build();
     }
 
-    private static String getMutatorName(String propertyName) {
-        return "set" + toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
+    private static String getAccessorName(String propertyName) {
+        return "get" + toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
     }
 }

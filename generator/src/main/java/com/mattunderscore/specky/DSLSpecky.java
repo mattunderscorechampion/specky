@@ -44,6 +44,7 @@ import com.mattunderscore.specky.generator.ImmutableBuilderGenerator;
 import com.mattunderscore.specky.generator.MutableBuilderGenerator;
 import com.mattunderscore.specky.generator.MutatorGenerator;
 import com.mattunderscore.specky.generator.ValueGenerator;
+import com.mattunderscore.specky.generator.ViewGenerator;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.output.Writer;
 import com.mattunderscore.specky.parser.Specky;
@@ -77,7 +78,8 @@ public final class DSLSpecky {
                 mutableBuilderGenerator,
                 immutableBuilderGenerator,
                 accessorGenerator,
-                new MutatorGenerator()));
+                new MutatorGenerator()),
+            new ViewGenerator());
         valueResolver = new CompositeValueResolver()
             .with(new JavaStandardDefaultValueResolver())
             .with(new NullValueResolver());

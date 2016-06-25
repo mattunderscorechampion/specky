@@ -25,19 +25,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model;
 
-import lombok.Builder;
-import lombok.Value;
-
 /**
  * Property model.
- *
- * @author Matt Champion on 05/06/16
+ * @author Matt Champion on 25/06/2016
  */
-@Value
-@Builder
-public class PropertyDesc {
-    String type;
-    String name;
-    boolean optional;
-    String defaultValue;
+public interface PropertyDesc {
+    String getType();
+    String getName();
 }

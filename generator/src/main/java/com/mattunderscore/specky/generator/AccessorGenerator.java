@@ -30,7 +30,7 @@ import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static java.lang.Character.toUpperCase;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.model.PropertyDesc;
+import com.mattunderscore.specky.model.PropertyImplementationDesc;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 
@@ -46,7 +46,7 @@ public final class AccessorGenerator {
      * Generate accessor.
      * @return the method spec for the accessor
      */
-    public MethodSpec generateAccessor(FieldSpec fieldToAccess, PropertyDesc propertyDesc) {
+    public MethodSpec generateAccessor(FieldSpec fieldToAccess, PropertyImplementationDesc propertyDesc) {
         return methodBuilder(getAccessorName(propertyDesc.getName()))
             .addModifiers(PUBLIC)
             .addJavadoc(GETTER_DOC, propertyDesc.getName())

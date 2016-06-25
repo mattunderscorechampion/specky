@@ -9,6 +9,10 @@ BEAN
     : 'bean'
     ;
 
+TYPE
+    : 'type'
+    ;
+
 CONSTRUCTOR
     : 'constructor'
     ;

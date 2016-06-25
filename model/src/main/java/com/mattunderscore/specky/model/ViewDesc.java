@@ -25,20 +25,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model;
 
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Value;
 
-import java.util.List;
-
 /**
- * Bean model.
- *
- * @author Matt Champion on 05/06/16
+ * View model.
+ * @author Matt Champion on 25/06/2016
  */
 @Value
 @Builder
-public class BeanDesc implements TypeDesc {
+public class ViewDesc {
     String name;
-    List<PropertyImplementationDesc> properties;
-    ConstructionMethod constructionMethod;
+    List<? extends PropertyDesc> properties;
 }

@@ -28,17 +28,13 @@ package com.mattunderscore.specky.model;
 import lombok.Builder;
 import lombok.Value;
 
-import java.util.List;
-
 /**
- * Bean model.
- *
- * @author Matt Champion on 05/06/16
+ * Property view model.
+ * @author Matt Champion on 25/06/2016
  */
 @Value
 @Builder
-public class BeanDesc implements TypeDesc {
-    String name;
-    List<PropertyImplementationDesc> properties;
-    ConstructionMethod constructionMethod;
+public class PropertyViewDesc implements PropertyDesc {
+    final String type;
+    final String name;
 }

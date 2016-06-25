@@ -25,10 +25,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model;
 
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Value;
-
-import java.util.List;
 
 /**
  * Value model.
@@ -39,6 +39,6 @@ import java.util.List;
 @Builder
 public class ValueDesc implements TypeDesc {
     String name;
-    List<PropertyDesc> properties;
+    List<PropertyImplementationDesc> properties;
     ConstructionMethod constructionMethod;
 }

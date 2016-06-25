@@ -25,6 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,7 @@ import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ValueDesc;
+import com.mattunderscore.specky.model.ViewDesc;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 
@@ -42,19 +44,31 @@ import com.squareup.javapoet.TypeSpec;
 public final class Generator {
     private final ValueGenerator valueGenerator;
     private final BeanGenerator beanGenerator;
+    private final ViewGenerator viewGenerator;
 
-    public Generator(ValueGenerator valueGenerator, BeanGenerator beanGenerator) {
+    public Generator(ValueGenerator valueGenerator, BeanGenerator beanGenerator, ViewGenerator viewGenerator) {
         this.valueGenerator = valueGenerator;
         this.beanGenerator = beanGenerator;
+        this.viewGenerator = viewGenerator;
     }
 
     public List<JavaFile> generate(SpecDesc specDesc) {
-        return specDesc
+        final List<JavaFile> result = new ArrayList<>();
+        result.addAll(specDesc
             .getValues()
             .stream()
             .map(valueSpec -> generateType(specDesc, valueSpec))
             .map(typeSpec -> JavaFile.builder(specDesc.getPackageName(), typeSpec).build())
-            .collect(Collectors.toList());
+            .collect(Collectors.toList()));
+
+        result.addAll(specDesc
+            .getViews()
+            .stream()
+            .map(valueSpec -> generateView(specDesc, valueSpec))
+            .map(typeSpec -> JavaFile.builder(specDesc.getPackageName(), typeSpec).build())
+            .collect(Collectors.toList()));
+
+        return result;
     }
 
     private TypeSpec generateType(SpecDesc specDesc, TypeDesc typeDesc) {
@@ -67,5 +81,9 @@ public final class Generator {
         else {
             throw new IllegalArgumentException("Unknown type to generate");
         }
+    }
+
+    private TypeSpec generateView(SpecDesc specDesc, ViewDesc typeDesc) {
+        return viewGenerator.generateView(specDesc, typeDesc);
     }
 }

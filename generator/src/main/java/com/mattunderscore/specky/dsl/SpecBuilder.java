@@ -29,12 +29,16 @@ import static java.util.stream.Collectors.toList;
 
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;
-import com.mattunderscore.specky.model.PropertyDesc;
+import com.mattunderscore.specky.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.model.PropertyViewDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ValueDesc;
+import com.mattunderscore.specky.model.ViewDesc;
 import com.mattunderscore.specky.parser.Specky;
+import com.mattunderscore.specky.parser.Specky.ImplSpecContext;
 import com.mattunderscore.specky.parser.Specky.PropertyContext;
+import com.mattunderscore.specky.parser.Specky.PropertyViewContext;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.Specky.TypeSpecContext;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
@@ -56,15 +60,20 @@ public final class SpecBuilder {
         return SpecDesc
             .builder()
             .packageName(context.r_package().qualifiedName().getText())
-            .values(context
+            .views(context
                 .typeSpec()
+                .stream()
+                .map(this::createValue)
+                .collect(toList()))
+            .values(context
+                .implSpec()
                 .stream()
                 .map(this::createValue)
                 .collect(toList()))
             .build();
     }
 
-    private TypeDesc createValue(TypeSpecContext context) {
+    private TypeDesc createValue(ImplSpecContext context) {
         if (context.BEAN() == null) {
             return ValueDesc
                 .builder()
@@ -91,7 +100,27 @@ public final class SpecBuilder {
         }
     }
 
-    private PropertyDesc createProperty(PropertyContext context) {
+    private ViewDesc createValue(TypeSpecContext context) {
+            return ViewDesc
+                .builder()
+                .name(context.Identifier().getText())
+                .properties(context
+                    .propertyView()
+                    .stream()
+                    .map(this::createPropertyView)
+                    .collect(toList()))
+                .build();
+        }
+
+    private PropertyViewDesc createPropertyView(PropertyViewContext propertyViewContext) {
+        return PropertyViewDesc
+            .builder()
+            .name(propertyViewContext.Identifier().get(1).getText())
+            .type(propertyViewContext.Identifier().get(0).getText())
+            .build();
+    }
+
+    private PropertyImplementationDesc createProperty(PropertyContext context) {
         final String type = resolver
             .resolve(context
                 .Identifier()
@@ -101,7 +130,7 @@ public final class SpecBuilder {
         final String defaultValue = context.r_default() == null ?
             valueResolver.resolve(type).get() :
             context.r_default().ANYTHING().getText();
-        return PropertyDesc
+        return PropertyImplementationDesc
             .builder()
             .name(context
                 .Identifier()
@@ -113,7 +142,7 @@ public final class SpecBuilder {
             .build();
     }
 
-    private ConstructionMethod toConstructionDesc(TypeSpecContext typeSpec) {
+    private ConstructionMethod toConstructionDesc(ImplSpecContext typeSpec) {
         final Specky.OptsContext options = typeSpec.opts();
 
         if (options == null || options.construction() == null) {

@@ -33,7 +33,7 @@ import java.util.List;
 public interface TypeDesc {
     String getName();
 
-    List<PropertyDesc> getProperties();
+    List<PropertyImplementationDesc> getProperties();
 
     ConstructionMethod getConstructionMethod();
 }
