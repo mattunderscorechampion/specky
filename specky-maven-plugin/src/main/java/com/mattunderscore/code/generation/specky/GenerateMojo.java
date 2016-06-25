@@ -76,22 +76,23 @@ public class GenerateMojo extends AbstractMojo {
             throw new MojoFailureException("No files found");
         }
 
+        final String targetPath = target
+            .toPath()
+            .toAbsolutePath()
+            .toString();
         final Path basePath = Paths.get(currentFileset.getDirectory());
         for (String file : files) {
             final Path path = basePath.resolve(file);
             getLog().info("Processing " + path.toString());
             try {
-                specky.write(
-                    Files.newInputStream(path),
-                    target
-                        .toPath()
-                        .toAbsolutePath()
-                        .toString());
+                specky.write(Files.newInputStream(path), targetPath);
             }
             catch (IOException e) {
                 throw new MojoFailureException("Failed to read file " + path);
             }
         }
+
+        project.addCompileSourceRoot(targetPath);
     }
 
     public FileSet getFileSet() {
