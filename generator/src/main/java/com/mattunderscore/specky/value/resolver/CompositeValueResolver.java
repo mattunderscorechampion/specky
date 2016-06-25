@@ -25,14 +25,39 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
+import static java.util.Arrays.copyOf;
+
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
+ * Composite value resolver.
  * @author Matt Champion on 23/06/2016
  */
-public final class RequestedValueResolver implements DefaultValueResolver {
+public final class CompositeValueResolver implements DefaultValueResolver {
+    private final DefaultValueResolver[] resolvers;
+
+    public CompositeValueResolver() {
+        this(new DefaultValueResolver[0]);
+    }
+
+    private CompositeValueResolver(DefaultValueResolver[] resolvers) {
+        this.resolvers = resolvers;
+    }
+
     @Override
-    public Optional<String> resolve(String type, String value) {
-        return Optional.ofNullable(value);
+    public Optional<String> resolve(String type) {
+        return Stream
+            .of(resolvers)
+            .map(resolver -> resolver.resolve(type))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .findFirst();
+    }
+
+    public CompositeValueResolver with(DefaultValueResolver resolver) {
+        final DefaultValueResolver[] newResolvers = copyOf(resolvers, resolvers.length + 1);
+        newResolvers[resolvers.length] = resolver;
+        return new CompositeValueResolver(newResolvers);
     }
 }

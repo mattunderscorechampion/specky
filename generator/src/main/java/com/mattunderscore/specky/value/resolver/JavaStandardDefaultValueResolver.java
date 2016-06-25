@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
+ * Resolve the default value for standard Java types.
  * @author Matt Champion on 23/06/2016
  */
 public final class JavaStandardDefaultValueResolver implements DefaultValueResolver {
@@ -48,7 +49,7 @@ public final class JavaStandardDefaultValueResolver implements DefaultValueResol
     }
 
     @Override
-    public Optional<String> resolve(String type, String value) {
+    public Optional<String> resolve(String type) {
         return Optional.ofNullable(typeToDefault.get(type));
     }
 }

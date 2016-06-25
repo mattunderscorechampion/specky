@@ -28,8 +28,12 @@ package com.mattunderscore.specky.value.resolver;
 import java.util.Optional;
 
 /**
+ * Resolve default value for a type.
  * @author Matt Champion on 23/06/2016
  */
 public interface DefaultValueResolver {
-    Optional<String> resolve(String type, String value);
+    /**
+     * @return A default value or empty if it could not be resolved
+     */
+    Optional<String> resolve(String type);
 }

@@ -25,9 +25,25 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
+import static java.util.Arrays.asList;
+
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+
 /**
- * @author Matt Champion on 23/06/2016
+ * A value resolver that returns null unless the value if a primitive.
+ * @author Matt Champion on 25/06/2016
  */
-public interface ValueResolver {
-    String resolve(String type, String value);
+public final class NullValueResolver implements DefaultValueResolver {
+    private static final Set<String> PRIMITIVE_TYPES = new HashSet<>(asList("int", "boolean", "double"));
+
+    @Override
+    public Optional<String> resolve(String type) {
+        if (PRIMITIVE_TYPES.contains(type)) {
+            return Optional.empty();
+        }
+
+        return Optional.of("null");
+    }
 }

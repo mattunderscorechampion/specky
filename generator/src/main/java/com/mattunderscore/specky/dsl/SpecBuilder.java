@@ -38,16 +38,16 @@ import com.mattunderscore.specky.parser.Specky.PropertyContext;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.Specky.TypeSpecContext;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
-import com.mattunderscore.specky.value.resolver.ValueResolver;
+import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 
 /**
  * @author Matt Champion on 05/06/16
  */
 public final class SpecBuilder {
     private final TypeResolver resolver;
-    private final ValueResolver valueResolver;
+    private final DefaultValueResolver valueResolver;
 
-    public SpecBuilder(TypeResolver resolver, ValueResolver valueResolver) {
+    public SpecBuilder(TypeResolver resolver, DefaultValueResolver valueResolver) {
         this.resolver = resolver;
         this.valueResolver = valueResolver;
     }
@@ -99,8 +99,8 @@ public final class SpecBuilder {
                 .getText())
             .get();
         final String defaultValue = context.r_default() == null ?
-            valueResolver.resolve(type, null) :
-            valueResolver.resolve(type, context.r_default().ANYTHING().getText());
+            valueResolver.resolve(type).get() :
+            context.r_default().ANYTHING().getText();
         return PropertyDesc
             .builder()
             .name(context
