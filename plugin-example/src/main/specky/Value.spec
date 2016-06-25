@@ -18,19 +18,3 @@ value StrangePersonValue {
     builder
   }
 }
-
-bean PersonBean {
-  int id
-  String name
-  options {
-    constructor
-  }
-}
-
-bean StrangePersonBean {
-  Integer id default 5
-  String name
-  options {
-    builder
-  }
-}
