@@ -1,10 +1,10 @@
 package com.mattunderscore.specky.type.resolver;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 /**
  * Unit tests for {@link SpecTypeResolver}.
@@ -35,10 +35,18 @@ public class SpecTypeResolverTest {
 
     @Test
     public void merge() {
-        final TypeResolver resolver = new SpecTypeResolver("com.example")
-            .registerTypeName("Test")
-            .merge(new SpecTypeResolver("com.example").registerTypeName("XTest"));
+        final SpecTypeResolver firstResolver = new SpecTypeResolver("com.example").registerTypeName("Test");
+        final SpecTypeResolver secondResolver = new SpecTypeResolver("com.example").registerTypeName("XTest");
+        final TypeResolver resolver = firstResolver.merge(secondResolver);
 
+        assertTrue(resolver.resolve("Test").isPresent());
         assertTrue(resolver.resolve("XTest").isPresent());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void failToMergeDifferentPackages() {
+        final SpecTypeResolver firstResolver = new SpecTypeResolver("com.example").registerTypeName("Test");
+        final SpecTypeResolver secondResolver = new SpecTypeResolver("com.example.other").registerTypeName("XTest");
+        firstResolver.merge(secondResolver);
     }
 }

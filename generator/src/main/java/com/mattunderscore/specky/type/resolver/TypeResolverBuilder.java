@@ -51,6 +51,6 @@ public final class TypeResolverBuilder {
             .collect(
                 () -> new SpecTypeResolver(packageName),
                 (resolver, value) -> resolver.registerTypeName(value.Identifier().getText()),
-                (resolver0, resolver1) -> resolver0.merge(resolver1));
+                SpecTypeResolver::merge);
     }
 }

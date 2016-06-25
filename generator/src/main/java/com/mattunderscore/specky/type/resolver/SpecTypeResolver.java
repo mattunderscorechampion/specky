@@ -25,11 +25,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.type.resolver;
 
+import static java.util.Optional.ofNullable;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
-import static java.util.Optional.ofNullable;
 
 /**
  * {@link TypeResolver} for specified types.
@@ -51,9 +51,15 @@ import static java.util.Optional.ofNullable;
         return this;
     }
 
-    public SpecTypeResolver merge(SpecTypeResolver otherResolver) {
-        specs.putAll(otherResolver.specs);
-        return this;
+    /*package*/ SpecTypeResolver merge(SpecTypeResolver otherResolver) {
+        if (!this.packageName.equals(otherResolver.packageName)) {
+            throw new IllegalArgumentException("Packages do not match");
+        }
+
+        final SpecTypeResolver newResolver = new SpecTypeResolver(packageName);
+        newResolver.specs.putAll(specs);
+        newResolver.specs.putAll(otherResolver.specs);
+        return newResolver;
     }
 
     @Override
