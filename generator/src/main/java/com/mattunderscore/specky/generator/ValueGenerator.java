@@ -46,17 +46,20 @@ public final class ValueGenerator {
     private final ImmutableBuilderGenerator immutableBuilderGenerator;
     private final ConstructorGenerator constructorGenerator;
     private final AccessorGenerator accessorGenerator;
+    private final ToStringGenerator toStringGenerator;
 
     public ValueGenerator(
             MutableBuilderGenerator mutableBuilderGenerator,
             ImmutableBuilderGenerator immutableBuilderGenerator,
             ConstructorGenerator constructorGenerator,
-            AccessorGenerator accessorGenerator) {
+            AccessorGenerator accessorGenerator,
+            ToStringGenerator toStringGenerator) {
 
         this.mutableBuilderGenerator = mutableBuilderGenerator;
         this.immutableBuilderGenerator = immutableBuilderGenerator;
         this.constructorGenerator = constructorGenerator;
         this.accessorGenerator = accessorGenerator;
+        this.toStringGenerator = toStringGenerator;
     }
 
     public TypeSpec generateValue(SpecDesc specDesc, ValueDesc valueDesc) {
@@ -90,6 +93,8 @@ public final class ValueGenerator {
                     .addMethod(accessorGenerator.generateAccessor(fieldSpec, propertyDesc));
             });
 
-        return builder.build();
+        return builder
+                .addMethod(toStringGenerator.generate(valueDesc))
+                .build();
     }
 }

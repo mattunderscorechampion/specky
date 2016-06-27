@@ -50,17 +50,20 @@ public final class BeanGenerator {
     private final ImmutableBuilderGenerator immutableBuilderGenerator;
     private final AccessorGenerator accessorGenerator;
     private final MutatorGenerator mutatorGenerator;
+    private final ToStringGenerator toStringGenerator;
 
     public BeanGenerator(
             MutableBuilderGenerator mutableBuilderGenerator,
             ImmutableBuilderGenerator immutableBuilderGenerator,
             AccessorGenerator accessorGenerator,
-            MutatorGenerator mutatorGenerator) {
+            MutatorGenerator mutatorGenerator,
+            ToStringGenerator toStringGenerator) {
 
         this.mutableBuilderGenerator = mutableBuilderGenerator;
         this.immutableBuilderGenerator = immutableBuilderGenerator;
         this.accessorGenerator = accessorGenerator;
         this.mutatorGenerator = mutatorGenerator;
+        this.toStringGenerator = toStringGenerator;
     }
 
     public TypeSpec generateBean(SpecDesc specDesc, BeanDesc beanDesc) {
@@ -106,7 +109,9 @@ public final class BeanGenerator {
             throw new IllegalArgumentException("Unsupported construction type");
         }
 
-        return builder.build();
+        return builder
+            .addMethod(toStringGenerator.generate(beanDesc))
+            .build();
     }
 
 }

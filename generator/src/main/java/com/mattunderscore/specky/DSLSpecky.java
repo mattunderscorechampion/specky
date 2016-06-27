@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import com.mattunderscore.specky.generator.ToStringGenerator;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonToken;
@@ -69,16 +70,20 @@ public final class DSLSpecky {
         final MutableBuilderGenerator mutableBuilderGenerator = new MutableBuilderGenerator(buildMethodGenerator);
         final ImmutableBuilderGenerator immutableBuilderGenerator = new ImmutableBuilderGenerator(buildMethodGenerator);
         final AccessorGenerator accessorGenerator = new AccessorGenerator();
+        final ToStringGenerator toStringGenerator = new ToStringGenerator();
         generator = new Generator(
             new ValueGenerator(
                 mutableBuilderGenerator,
                 immutableBuilderGenerator,
-                new ConstructorGenerator(), accessorGenerator),
+                new ConstructorGenerator(),
+                accessorGenerator,
+                    toStringGenerator),
             new BeanGenerator(
                 mutableBuilderGenerator,
                 immutableBuilderGenerator,
                 accessorGenerator,
-                new MutatorGenerator()),
+                new MutatorGenerator(),
+                toStringGenerator),
             new ViewGenerator());
         valueResolver = new CompositeValueResolver()
             .with(new JavaStandardDefaultValueResolver())
