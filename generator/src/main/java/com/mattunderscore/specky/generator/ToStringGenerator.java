@@ -32,16 +32,42 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 
-import java.util.stream.Collectors;
-
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 /**
  * Generator for toString implementation.
  * @author Matt Champion on 27/06/16
  */
-public class ToStringGenerator {
+public final class ToStringGenerator {
+    public static final ToStringGenerator SQUARE_BRACKET_COMMA_AND_SPACE_SEPARATED =
+            new ToStringGenerator("[", "]", ", ", "%1$s=\" + %1$s + \"");
+    public static final ToStringGenerator ROUND_BRACKET_COMMA_AND_SPACE_SEPARATED =
+            new ToStringGenerator("(", ")", ", ", "%1$s=\" + %1$s + \"");
+    public static final ToStringGenerator SQUARE_BRACKET_COMMA_SEPARATED =
+            new ToStringGenerator("[", "]", ",", "%1$s=\" + %1$s + \"");
+    public static final ToStringGenerator ROUND_BRACKET_COMMA_SEPARATED =
+            new ToStringGenerator("(", ")", ",", "%1$s=\" + %1$s + \"");
+
+    private final String propertyListPrefix;
+    private final String propertyListSuffix;
+    private final String propertySeparator;
+    private final String propertyFormat;
+
+    private ToStringGenerator(
+            String propertyListPrefix,
+            String propertyListSuffix,
+            String propertySeparator,
+            String propertyFormat) {
+
+        this.propertyListPrefix = propertyListPrefix;
+        this.propertyListSuffix = propertyListSuffix;
+        this.propertySeparator = propertySeparator;
+        this.propertyFormat = propertyFormat;
+    }
+
     public MethodSpec generate(TypeDesc typeDesc) {
         return methodBuilder("toString")
                 .returns(ClassName.get(String.class))
@@ -56,14 +82,19 @@ public class ToStringGenerator {
                 .getProperties()
                 .stream()
                 .map(this::formatProperty)
-                .collect(Collectors.joining(", "));
+                .collect(joining(propertySeparator));
         return CodeBlock
                 .builder()
-                .addStatement("return $S + \"(" + properties + ")\"", typeDesc.getName())
+                .addStatement(
+                        "return \"$L$L$L$L\"",
+                        typeDesc.getName(),
+                        propertyListPrefix,
+                        properties,
+                        propertyListSuffix)
                 .build();
     }
 
     private String formatProperty(PropertyDesc propertyDesc) {
-        return propertyDesc.getName() + "=\" + " + propertyDesc.getName() + " + \"";
+        return format(propertyFormat, propertyDesc.getName());
     }
 }

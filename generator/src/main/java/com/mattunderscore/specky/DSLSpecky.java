@@ -25,16 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
-import com.mattunderscore.specky.generator.ToStringGenerator;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CommonToken;
-import org.antlr.v4.runtime.UnbufferedTokenStream;
-
 import com.mattunderscore.specky.dsl.SpecBuilder;
 import com.mattunderscore.specky.generator.AccessorGenerator;
 import com.mattunderscore.specky.generator.BeanGenerator;
@@ -44,6 +34,7 @@ import com.mattunderscore.specky.generator.Generator;
 import com.mattunderscore.specky.generator.ImmutableBuilderGenerator;
 import com.mattunderscore.specky.generator.MutableBuilderGenerator;
 import com.mattunderscore.specky.generator.MutatorGenerator;
+import com.mattunderscore.specky.generator.ToStringGenerator;
 import com.mattunderscore.specky.generator.ValueGenerator;
 import com.mattunderscore.specky.generator.ViewGenerator;
 import com.mattunderscore.specky.model.SpecDesc;
@@ -57,6 +48,14 @@ import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver;
 import com.mattunderscore.specky.value.resolver.NullValueResolver;
 import com.squareup.javapoet.JavaFile;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CommonToken;
+import org.antlr.v4.runtime.UnbufferedTokenStream;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 /**
  * @author Matt Champion on 18/06/2016
@@ -70,7 +69,7 @@ public final class DSLSpecky {
         final MutableBuilderGenerator mutableBuilderGenerator = new MutableBuilderGenerator(buildMethodGenerator);
         final ImmutableBuilderGenerator immutableBuilderGenerator = new ImmutableBuilderGenerator(buildMethodGenerator);
         final AccessorGenerator accessorGenerator = new AccessorGenerator();
-        final ToStringGenerator toStringGenerator = new ToStringGenerator();
+        final ToStringGenerator toStringGenerator = ToStringGenerator.SQUARE_BRACKET_COMMA_AND_SPACE_SEPARATED;
         generator = new Generator(
             new ValueGenerator(
                 mutableBuilderGenerator,
