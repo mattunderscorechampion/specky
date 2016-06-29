@@ -42,59 +42,103 @@ import static javax.lang.model.element.Modifier.PUBLIC;
  * @author Matt Champion on 27/06/16
  */
 public final class ToStringGenerator {
-    public static final ToStringGenerator SQUARE_BRACKET_COMMA_AND_SPACE_SEPARATED =
-            new ToStringGenerator("[", "]", ", ", "%1$s=\" + %1$s + \"");
-    public static final ToStringGenerator ROUND_BRACKET_COMMA_AND_SPACE_SEPARATED =
-            new ToStringGenerator("(", ")", ", ", "%1$s=\" + %1$s + \"");
-    public static final ToStringGenerator SQUARE_BRACKET_COMMA_SEPARATED =
-            new ToStringGenerator("[", "]", ",", "%1$s=\" + %1$s + \"");
-    public static final ToStringGenerator ROUND_BRACKET_COMMA_SEPARATED =
-            new ToStringGenerator("(", ")", ",", "%1$s=\" + %1$s + \"");
+    public static final String COMMA_AND_SPACE_SEPARATOR = ", ";
+    public static final String COMMA_SEPARATOR = ",";
+    public static final PropertyListBookend SQUARE_BRACKETS = new SquareBrackets();
+    public static final PropertyListBookend ROUND_BRACKETS = new RoundBrackets();
+    public static final SimplePropertyFormatter SIMPLE_PROPERTY_FORMATTER = new SimplePropertyFormatter();
+    public static final ToStringGenerator SQUARE_BRACKET_COMMA_AND_SPACE_SEPARATED = new ToStringGenerator(
+        SQUARE_BRACKETS,
+        COMMA_AND_SPACE_SEPARATOR,
+        SIMPLE_PROPERTY_FORMATTER);
 
-    private final String propertyListPrefix;
-    private final String propertyListSuffix;
+    private final PropertyListBookend propertyListBookend;
     private final String propertySeparator;
-    private final String propertyFormat;
+    private final PropertyFormatter propertyFormatter;
 
     private ToStringGenerator(
-            String propertyListPrefix,
-            String propertyListSuffix,
+            PropertyListBookend propertyListBookend,
             String propertySeparator,
-            String propertyFormat) {
+            PropertyFormatter propertyFormatter) {
 
-        this.propertyListPrefix = propertyListPrefix;
-        this.propertyListSuffix = propertyListSuffix;
+        this.propertyListBookend = propertyListBookend;
         this.propertySeparator = propertySeparator;
-        this.propertyFormat = propertyFormat;
+        this.propertyFormatter = propertyFormatter;
     }
 
     public MethodSpec generate(TypeDesc typeDesc) {
         return methodBuilder("toString")
-                .returns(ClassName.get(String.class))
-                .addModifiers(PUBLIC)
-                .addAnnotation(AnnotationSpec.builder(Override.class).build())
-                .addCode(generateImplementation(typeDesc))
-                .build();
+            .returns(ClassName.get(String.class))
+            .addModifiers(PUBLIC)
+            .addAnnotation(AnnotationSpec.builder(Override.class).build())
+            .addCode(generateImplementation(typeDesc))
+            .build();
     }
 
     private CodeBlock generateImplementation(TypeDesc typeDesc) {
         final String properties = typeDesc
-                .getProperties()
-                .stream()
-                .map(this::formatProperty)
-                .collect(joining(propertySeparator));
+            .getProperties()
+            .stream()
+            .map(propertyFormatter::formatProperty)
+            .collect(joining(propertySeparator));
         return CodeBlock
-                .builder()
-                .addStatement(
-                        "return \"$L$L$L$L\"",
-                        typeDesc.getName(),
-                        propertyListPrefix,
-                        properties,
-                        propertyListSuffix)
-                .build();
+            .builder()
+            .addStatement(
+                "return \"$L$L$L$L\"",
+                typeDesc.getName(),
+                propertyListBookend.getPrefix(),
+                properties,
+                propertyListBookend.getSuffix())
+            .build();
     }
 
-    private String formatProperty(PropertyDesc propertyDesc) {
-        return format(propertyFormat, propertyDesc.getName());
+    public interface PropertyFormatter {
+        /**
+         * Generate the code for the property. Starts within a string literal.
+         */
+        String formatProperty(PropertyDesc propertyDesc);
+    }
+
+    public interface PropertyListBookend {
+        /**
+         * @return the prefix, starts within a string literal
+         */
+        String getPrefix();
+
+        /**
+         * @return the suffix, starts within a string literal
+         */
+        String getSuffix();
+    }
+
+    private static final class SimplePropertyFormatter implements PropertyFormatter {
+        @Override
+        public String formatProperty(PropertyDesc propertyDesc) {
+            return format("%1$s=\" + %1$s + \"", propertyDesc.getName());
+        }
+    }
+
+    private static final class RoundBrackets implements PropertyListBookend {
+        @Override
+        public String getPrefix() {
+            return "(";
+        }
+
+        @Override
+        public String getSuffix() {
+            return ")";
+        }
+    }
+
+    private static final class SquareBrackets implements PropertyListBookend {
+        @Override
+        public String getPrefix() {
+            return "[";
+        }
+
+        @Override
+        public String getSuffix() {
+            return "]";
+        }
     }
 }
