@@ -47,16 +47,12 @@ public final class ToStringGenerator {
     public static final PropertyListBookend SQUARE_BRACKETS = new SquareBrackets();
     public static final PropertyListBookend ROUND_BRACKETS = new RoundBrackets();
     public static final SimplePropertyFormatter SIMPLE_PROPERTY_FORMATTER = new SimplePropertyFormatter();
-    public static final ToStringGenerator SQUARE_BRACKET_COMMA_AND_SPACE_SEPARATED = new ToStringGenerator(
-        SQUARE_BRACKETS,
-        COMMA_AND_SPACE_SEPARATOR,
-        SIMPLE_PROPERTY_FORMATTER);
 
     private final PropertyListBookend propertyListBookend;
     private final String propertySeparator;
     private final PropertyFormatter propertyFormatter;
 
-    private ToStringGenerator(
+    public ToStringGenerator(
             PropertyListBookend propertyListBookend,
             String propertySeparator,
             PropertyFormatter propertyFormatter) {

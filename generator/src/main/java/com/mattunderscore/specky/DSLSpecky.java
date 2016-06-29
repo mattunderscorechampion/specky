@@ -57,6 +57,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import static com.mattunderscore.specky.generator.ToStringGenerator.COMMA_AND_SPACE_SEPARATOR;
+import static com.mattunderscore.specky.generator.ToStringGenerator.SIMPLE_PROPERTY_FORMATTER;
+import static com.mattunderscore.specky.generator.ToStringGenerator.SQUARE_BRACKETS;
+
 /**
  * @author Matt Champion on 18/06/2016
  */
@@ -69,7 +73,10 @@ public final class DSLSpecky {
         final MutableBuilderGenerator mutableBuilderGenerator = new MutableBuilderGenerator(buildMethodGenerator);
         final ImmutableBuilderGenerator immutableBuilderGenerator = new ImmutableBuilderGenerator(buildMethodGenerator);
         final AccessorGenerator accessorGenerator = new AccessorGenerator();
-        final ToStringGenerator toStringGenerator = ToStringGenerator.SQUARE_BRACKET_COMMA_AND_SPACE_SEPARATED;
+        final ToStringGenerator toStringGenerator = new ToStringGenerator(
+                SQUARE_BRACKETS,
+                COMMA_AND_SPACE_SEPARATOR,
+                SIMPLE_PROPERTY_FORMATTER);
         generator = new Generator(
             new ValueGenerator(
                 mutableBuilderGenerator,
