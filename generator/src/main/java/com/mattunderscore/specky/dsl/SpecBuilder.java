@@ -27,6 +27,9 @@ package com.mattunderscore.specky.dsl;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.Optional;
+import java.util.stream.Stream;
+
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.mattunderscore.specky.model.BeanDesc;
@@ -94,6 +97,8 @@ public final class SpecBuilder {
                         .subList(1, context.Identifier().size())
                         .stream()
                         .map(TerminalNode::getText)
+                        .map(resolver::resolve)
+                        .map(Optional::get)
                         .collect(toList()));
             }
 

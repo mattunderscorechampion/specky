@@ -3,7 +3,12 @@
 
 package com.example
 
-bean PersonBean : PersonType {
+type QuickType {
+  int id
+  String name
+}
+
+bean PersonBean : QuickType {
   int id
   String name
   options {

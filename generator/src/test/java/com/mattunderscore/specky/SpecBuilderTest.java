@@ -67,6 +67,9 @@ public final class SpecBuilderTest {
         assertEquals("FirstValue", valueDesc0.getName());
         final List<PropertyImplementationDesc> properties1 = valueDesc0.getProperties();
         assertEquals(2, properties1.size());
+        final List<String> extend = valueDesc0.getExtend();
+        assertEquals(1, extend.size());
+        assertEquals("com.example.TestType", extend.get(0));
 
         final PropertyImplementationDesc propertyDesc1 = properties1.get(0);
         assertEquals("num", propertyDesc1.getName());

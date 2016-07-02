@@ -44,7 +44,7 @@ public final class TypeResolverBuilder {
     }
 
     private static SpecTypeResolver getSpecTypeResolver(SpecContext spec) {
-        final String packageName = spec.r_package().PACKAGE().getText();
+        final String packageName = spec.r_package().qualifiedName().getText();
         return spec
             .typeSpec()
             .stream()
