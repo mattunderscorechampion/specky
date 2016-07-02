@@ -33,7 +33,7 @@ import com.example.PersonBean;
 import com.example.PersonValue;
 
 /**
- * Unit tests for {@link PersonBean}.
+ * Unit tests for {@link PersonValue}.
  * @author Matt Champion on 25/06/2016
  */
 public final class PersonValueTest {
