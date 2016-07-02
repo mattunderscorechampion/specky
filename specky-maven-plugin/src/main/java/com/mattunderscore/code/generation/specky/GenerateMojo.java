@@ -29,9 +29,9 @@ import static java.util.Collections.singletonList;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -40,7 +40,7 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.model.fileset.FileSet;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
 
-import com.mattunderscore.specky.DSLSpecky;
+import com.mattunderscore.specky.SpeckyDSLParsingContext;
 
 /**
  * @goal generate
@@ -65,8 +65,6 @@ public class GenerateMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        final DSLSpecky specky = new DSLSpecky();
-
         final FileSet currentFileset = getFileSet();
 
         final FileSetManager fileSetManager = new FileSetManager(getLog(), true);
@@ -76,23 +74,29 @@ public class GenerateMojo extends AbstractMojo {
             throw new MojoFailureException("No files found");
         }
 
-        final String targetPath = target
+        final Path targetPath = target
             .toPath()
-            .toAbsolutePath()
-            .toString();
+            .toAbsolutePath();
+
         final Path basePath = Paths.get(currentFileset.getDirectory());
-        for (String file : files) {
-            final Path path = basePath.resolve(file);
-            getLog().info("Processing " + path.toString());
-            try {
-                specky.write(Files.newInputStream(path), targetPath);
-            }
-            catch (IOException e) {
-                throw new MojoFailureException("Failed to read file " + path);
-            }
+        final SpeckyDSLParsingContext parsingContext = new SpeckyDSLParsingContext();
+
+        Stream.of(files)
+            .map(basePath::resolve)
+            .forEach(parsingContext::addFileToParse);
+
+        try {
+            parsingContext
+                .parse()
+                .generate()
+                .targetPath(targetPath)
+                .write();
+        }
+        catch (IOException e) {
+            throw new MojoFailureException("Failure", e);
         }
 
-        project.addCompileSourceRoot(targetPath);
+        project.addCompileSourceRoot(targetPath.toString());
     }
 
     public FileSet getFileSet() {

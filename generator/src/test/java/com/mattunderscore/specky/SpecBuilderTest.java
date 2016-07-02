@@ -41,7 +41,7 @@ public final class SpecBuilderTest {
         final SpeckyLexer lexer = new SpeckyLexer(stream);
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
         final SpecContext spec = parser.spec();
-        final TypeResolver resolver = new TypeResolverBuilder().build(spec);
+        final TypeResolver resolver = new TypeResolverBuilder().addSpecContext(spec).build();
         final SpecBuilder specBuilder = new SpecBuilder(resolver, new CompositeValueResolver()
             .with(new JavaStandardDefaultValueResolver())
             .with(new NullValueResolver()));

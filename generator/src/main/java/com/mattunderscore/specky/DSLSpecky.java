@@ -25,6 +25,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import static com.mattunderscore.specky.generator.ToStringGenerator.COMMA_AND_SPACE_SEPARATOR;
+import static com.mattunderscore.specky.generator.ToStringGenerator.SIMPLE_PROPERTY_FORMATTER;
+import static com.mattunderscore.specky.generator.ToStringGenerator.SQUARE_BRACKETS;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CommonToken;
+import org.antlr.v4.runtime.UnbufferedTokenStream;
+
 import com.mattunderscore.specky.dsl.SpecBuilder;
 import com.mattunderscore.specky.generator.AccessorGenerator;
 import com.mattunderscore.specky.generator.BeanGenerator;
@@ -48,18 +61,6 @@ import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver;
 import com.mattunderscore.specky.value.resolver.NullValueResolver;
 import com.squareup.javapoet.JavaFile;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CommonToken;
-import org.antlr.v4.runtime.UnbufferedTokenStream;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
-import static com.mattunderscore.specky.generator.ToStringGenerator.COMMA_AND_SPACE_SEPARATOR;
-import static com.mattunderscore.specky.generator.ToStringGenerator.SIMPLE_PROPERTY_FORMATTER;
-import static com.mattunderscore.specky.generator.ToStringGenerator.SQUARE_BRACKETS;
 
 /**
  * @author Matt Champion on 18/06/2016
@@ -101,7 +102,7 @@ public final class DSLSpecky {
         final SpeckyLexer lexer = new SpeckyLexer(stream);
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
         final Specky.SpecContext spec = parser.spec();
-        final TypeResolver resolver = new TypeResolverBuilder().build(spec);
+        final TypeResolver resolver = new TypeResolverBuilder().addSpecContext(spec).build();
         final SpecBuilder specBuilder = new SpecBuilder(resolver, valueResolver);
 
         final SpecDesc specDesc = specBuilder.build(spec);

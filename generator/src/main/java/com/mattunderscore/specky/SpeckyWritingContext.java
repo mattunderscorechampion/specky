@@ -23,38 +23,40 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.type.resolver;
+package com.mattunderscore.specky;
 
-import com.mattunderscore.specky.parser.Specky.SpecContext;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.squareup.javapoet.JavaFile;
 
 /**
- * Build a {@link TypeResolver} for specification.
- * @author Matt Champion on 08/06/16
+ * @author Matt Champion on 02/07/2016
  */
-public final class TypeResolverBuilder {
-    private final CompositeTypeResolver compositeTypeResolver =
-        new CompositeTypeResolver().registerResolver(new JavaStandardTypeResolver());
+public class SpeckyWritingContext {
+    private final AtomicBoolean consumed = new AtomicBoolean(false);
+    private final List<JavaFile> javaFiles;
+    private volatile Path targetPath;
 
-    public TypeResolverBuilder addSpecContext(SpecContext spec) {
-        compositeTypeResolver.registerResolver(getSpecTypeResolver(spec));
+    /*package*/ SpeckyWritingContext(List<JavaFile> javaFiles) {
+        this.javaFiles = javaFiles;
+    }
+
+    public SpeckyWritingContext targetPath(Path path) {
+        targetPath = path;
         return this;
     }
 
-    /**
-     * @return The type resolver
-     */
-    public TypeResolver build() {
-        return compositeTypeResolver;
-    }
-
-    private static SpecTypeResolver getSpecTypeResolver(SpecContext spec) {
-        final String packageName = spec.r_package().qualifiedName().getText();
-        return spec
-            .typeSpec()
-            .stream()
-            .collect(
-                () -> new SpecTypeResolver(packageName),
-                (resolver, value) -> resolver.registerTypeName(value.Identifier().getText()),
-                SpecTypeResolver::merge);
+    public void write() throws IOException {
+        if (consumed.compareAndSet(false, true)) {
+            for (JavaFile file : javaFiles) {
+                file.writeTo(targetPath);
+            }
+        }
+        else {
+            throw new IllegalStateException("Context has already been generated");
+        }
     }
 }
