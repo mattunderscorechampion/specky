@@ -29,7 +29,6 @@ import static com.mattunderscore.specky.generator.ToStringGenerator.COMMA_AND_SP
 import static com.mattunderscore.specky.generator.ToStringGenerator.SIMPLE_PROPERTY_FORMATTER;
 import static com.mattunderscore.specky.generator.ToStringGenerator.SQUARE_BRACKETS;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -49,9 +48,11 @@ import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.JavaFile;
 
 /**
+ * Generates Java code.
+ *
  * @author Matt Champion on 02/07/2016
  */
-public class SpeckyGeneratingContext {
+public final class SpeckyGeneratingContext {
     private final List<SpecDesc> specs;
     private final AtomicBoolean consumed = new AtomicBoolean(false);
 
@@ -59,6 +60,10 @@ public class SpeckyGeneratingContext {
         this.specs = specs;
     }
 
+    /**
+     * Generate the Java code.
+     * @throws IllegalStateException if has been called before
+     */
     public SpeckyWritingContext generate() {
         if (consumed.compareAndSet(false, true)) {
             final BuildMethodGenerator buildMethodGenerator = new BuildMethodGenerator();

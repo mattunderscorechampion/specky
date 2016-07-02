@@ -50,17 +50,29 @@ import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver
 import com.mattunderscore.specky.value.resolver.NullValueResolver;
 
 /**
+ * Parses files to the model.
+ *
  * @author Matt Champion on 02/07/2016
  */
 public final class SpeckyDSLParsingContext {
     private final List<Path> filesToParse = new ArrayList<>();
     private final AtomicBoolean consumed = new AtomicBoolean(false);
 
+    public SpeckyDSLParsingContext() {
+    }
+
+    /**
+     * Add path to parse.
+     */
     public synchronized SpeckyDSLParsingContext addFileToParse(Path path) {
         filesToParse.add(path);
         return this;
     }
 
+    /**
+     * Parse files.
+     * @throws IllegalStateException if has been called before
+     */
     public SpeckyGeneratingContext parse() throws IOException {
         if (consumed.compareAndSet(false, true)) {
             final DefaultValueResolver valueResolver = new CompositeValueResolver()

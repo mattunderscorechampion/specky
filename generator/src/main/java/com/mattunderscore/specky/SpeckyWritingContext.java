@@ -33,9 +33,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.squareup.javapoet.JavaFile;
 
 /**
+ * Writes generated Java code to file system.
+ *
  * @author Matt Champion on 02/07/2016
  */
-public class SpeckyWritingContext {
+public final class SpeckyWritingContext {
     private final AtomicBoolean consumed = new AtomicBoolean(false);
     private final List<JavaFile> javaFiles;
     private volatile Path targetPath;
@@ -44,11 +46,18 @@ public class SpeckyWritingContext {
         this.javaFiles = javaFiles;
     }
 
+    /**
+     * Set the target path to write to.
+     */
     public SpeckyWritingContext targetPath(Path path) {
         targetPath = path;
         return this;
     }
 
+    /**
+     * Write files.
+     * @throws IllegalStateException if has been called before
+     */
     public void write() throws IOException {
         if (consumed.compareAndSet(false, true)) {
             for (JavaFile file : javaFiles) {
