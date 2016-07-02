@@ -11,7 +11,7 @@ value PersonValue {
   }
 }
 
-value StrangePersonValue {
+value StrangePersonValue : PersonType {
   int id default 5
   optional String name
   options {

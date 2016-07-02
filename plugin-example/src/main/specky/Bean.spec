@@ -3,7 +3,7 @@
 
 package com.example
 
-bean PersonBean {
+bean PersonBean : PersonType {
   int id
   String name
   options {
