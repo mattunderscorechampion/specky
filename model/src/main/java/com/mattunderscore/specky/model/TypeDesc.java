@@ -36,4 +36,6 @@ public interface TypeDesc {
     List<PropertyImplementationDesc> getProperties();
 
     ConstructionMethod getConstructionMethod();
+
+    List<String> getExtend();
 }
