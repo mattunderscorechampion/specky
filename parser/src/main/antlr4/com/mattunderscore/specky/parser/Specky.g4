@@ -34,7 +34,7 @@ opts
     ;
 
 implSpec
-    : (VALUE | BEAN ) Identifier OPEN_BLOCK (property)+ opts? CLOSE_BLOCK
+    : (VALUE | BEAN ) Identifier (EXTENDS Identifier)? OPEN_BLOCK (property)+ opts? CLOSE_BLOCK
     ;
 
 typeSpec

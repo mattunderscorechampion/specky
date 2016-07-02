@@ -53,6 +53,10 @@ OPTIONS
     : 'options'
     ;
 
+EXTENDS
+    : ':'
+    ;
+
 fragment
 UpperCaseLetter
     :   [A-Z]

@@ -77,7 +77,7 @@ public final class SpecBuilder {
         if (context.BEAN() == null) {
             return ValueDesc
                 .builder()
-                .name(context.Identifier().getText())
+                .name(context.Identifier().get(0).getText())
                 .properties(context
                     .property()
                     .stream()
@@ -89,7 +89,7 @@ public final class SpecBuilder {
         else {
             return BeanDesc
                 .builder()
-                .name(context.Identifier().getText())
+                .name(context.Identifier().get(0).getText())
                 .properties(context
                     .property()
                     .stream()
