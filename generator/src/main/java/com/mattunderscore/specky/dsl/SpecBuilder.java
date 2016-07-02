@@ -27,6 +27,8 @@ package com.mattunderscore.specky.dsl;
 
 import static java.util.stream.Collectors.toList;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.PropertyImplementationDesc;
@@ -75,7 +77,7 @@ public final class SpecBuilder {
 
     private TypeDesc createValue(ImplSpecContext context) {
         if (context.BEAN() == null) {
-            return ValueDesc
+            final ValueDesc.ValueDescBuilder valueDescBuilder = ValueDesc
                 .builder()
                 .name(context.Identifier().get(0).getText())
                 .properties(context
@@ -83,8 +85,19 @@ public final class SpecBuilder {
                     .stream()
                     .map(this::createProperty)
                     .collect(toList()))
-                .constructionMethod(toConstructionDesc(context))
-                .build();
+                .constructionMethod(toConstructionDesc(context));
+
+            if (context.Identifier().size() > 1) {
+                valueDescBuilder
+                    .extend(context
+                        .Identifier()
+                        .subList(1, context.Identifier().size())
+                        .stream()
+                        .map(TerminalNode::getText)
+                        .collect(toList()));
+            }
+
+            return valueDescBuilder.build();
         }
         else {
             return BeanDesc
@@ -116,7 +129,7 @@ public final class SpecBuilder {
         return PropertyViewDesc
             .builder()
             .name(propertyViewContext.Identifier().get(1).getText())
-            .type(propertyViewContext.Identifier().get(0).getText())
+            .type(resolver.resolve(propertyViewContext.Identifier().get(0).getText()).get())
             .build();
     }
 

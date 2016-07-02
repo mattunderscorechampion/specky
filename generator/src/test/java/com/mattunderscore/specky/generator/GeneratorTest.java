@@ -51,6 +51,6 @@ public class GeneratorTest {
                 .getClassLoader()
                 .getResourceAsStream("Test.spec"));
 
-        assertEquals(4, files.size());
+        assertEquals(5, files.size());
     }
 }

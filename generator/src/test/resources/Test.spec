@@ -3,7 +3,11 @@
 
 package com.example
 
-value FirstValue {
+type TestType {
+  Integer num
+}
+
+value FirstValue : TestType {
   Integer num
   String str
 }
