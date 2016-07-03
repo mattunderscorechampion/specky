@@ -23,38 +23,22 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.type.resolver;
+package com.mattunderscore.specky;
 
-import com.mattunderscore.specky.parser.Specky.SpecContext;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
+import java.util.stream.Stream;
 
 /**
- * Build a {@link TypeResolver} for specification.
- * @author Matt Champion on 08/06/16
+ * A combinable value.
+ * @author Matt Champion on 03/07/2016
  */
-public final class TypeResolverBuilder {
-    private final CompositeTypeResolver compositeTypeResolver =
-        new CompositeTypeResolver().registerResolver(new JavaStandardTypeResolver());
-
-    public TypeResolverBuilder addSpecContext(SpecContext spec) {
-        compositeTypeResolver.registerResolver(getSpecTypeResolver(spec));
-        return this;
-    }
-
+public interface Combinable<T extends Combinable<T>> {
     /**
-     * @return The type resolver
+     * Combines this with another value to create a new value.
+     * <p>
+     * A method reference to this can be used as a {@link BinaryOperator} for T in a
+     * {@link Stream#reduce(Object, BiFunction, BinaryOperator)} method call.
      */
-    public TypeResolver build() {
-        return compositeTypeResolver;
-    }
-
-    private static SpecTypeResolver getSpecTypeResolver(SpecContext spec) {
-        final String packageName = spec.r_package().qualifiedName().getText();
-        return spec
-            .typeSpec()
-            .stream()
-            .reduce(
-                new SpecTypeResolver(packageName),
-                (resolver, value) -> resolver.registerTypeName(value.Identifier().getText()),
-                SpecTypeResolver::combine);
-    }
+    T combine(T other);
 }

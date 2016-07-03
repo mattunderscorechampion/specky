@@ -31,12 +31,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.mattunderscore.specky.Combinable;
+
 /**
  * {@link TypeResolver} for specified types.
  *
  * @author Matt Champion on 08/06/16
  */
-/*package*/ final class SpecTypeResolver implements TypeResolver {
+/*package*/ final class SpecTypeResolver implements TypeResolver, Combinable<SpecTypeResolver> {
     private final String packageName;
     private final Map<String, String> specs = new HashMap<>();
 
@@ -51,7 +53,8 @@ import java.util.Optional;
         return this;
     }
 
-    /*package*/ SpecTypeResolver merge(SpecTypeResolver otherResolver) {
+    @Override
+    public SpecTypeResolver combine(SpecTypeResolver otherResolver) {
         if (!this.packageName.equals(otherResolver.packageName)) {
             throw new IllegalArgumentException("Packages do not match");
         }

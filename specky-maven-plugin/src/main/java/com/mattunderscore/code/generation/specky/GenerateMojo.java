@@ -79,14 +79,14 @@ public class GenerateMojo extends AbstractMojo {
             .toAbsolutePath();
 
         final Path basePath = Paths.get(currentFileset.getDirectory());
-        final SpeckyDSLParsingContext parsingContext = new SpeckyDSLParsingContext();
-
-        Stream.of(files)
-            .map(basePath::resolve)
-            .forEach(parsingContext::addFileToParse);
-
         try {
-            parsingContext
+            Stream
+                .of(files)
+                .map(basePath::resolve)
+                .reduce(
+                    new SpeckyDSLParsingContext(),
+                    SpeckyDSLParsingContext::addFileToParse,
+                    SpeckyDSLParsingContext::combine)
                 .parse()
                 .generate()
                 .targetPath(targetPath)

@@ -54,7 +54,7 @@ import com.mattunderscore.specky.value.resolver.NullValueResolver;
  *
  * @author Matt Champion on 02/07/2016
  */
-public final class SpeckyDSLParsingContext {
+public final class SpeckyDSLParsingContext implements Combinable<SpeckyDSLParsingContext> {
     private final List<Path> filesToParse = new ArrayList<>();
     private final AtomicBoolean consumed = new AtomicBoolean(false);
 
@@ -103,5 +103,15 @@ public final class SpeckyDSLParsingContext {
         else {
             throw new IllegalStateException("Context has already been parsed");
         }
+    }
+
+    @Override
+    public SpeckyDSLParsingContext combine(SpeckyDSLParsingContext other) {
+        final SpeckyDSLParsingContext newContext = new SpeckyDSLParsingContext();
+
+        filesToParse.forEach(newContext::addFileToParse);
+        other.filesToParse.forEach(newContext::addFileToParse);
+
+        return newContext;
     }
 }

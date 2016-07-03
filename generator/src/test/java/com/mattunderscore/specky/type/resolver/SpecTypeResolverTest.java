@@ -37,7 +37,7 @@ public class SpecTypeResolverTest {
     public void merge() {
         final SpecTypeResolver firstResolver = new SpecTypeResolver("com.example").registerTypeName("Test");
         final SpecTypeResolver secondResolver = new SpecTypeResolver("com.example").registerTypeName("XTest");
-        final TypeResolver resolver = firstResolver.merge(secondResolver);
+        final TypeResolver resolver = firstResolver.combine(secondResolver);
 
         assertTrue(resolver.resolve("Test").isPresent());
         assertTrue(resolver.resolve("XTest").isPresent());
@@ -47,6 +47,6 @@ public class SpecTypeResolverTest {
     public void failToMergeDifferentPackages() {
         final SpecTypeResolver firstResolver = new SpecTypeResolver("com.example").registerTypeName("Test");
         final SpecTypeResolver secondResolver = new SpecTypeResolver("com.example.other").registerTypeName("XTest");
-        firstResolver.merge(secondResolver);
+        firstResolver.combine(secondResolver);
     }
 }
