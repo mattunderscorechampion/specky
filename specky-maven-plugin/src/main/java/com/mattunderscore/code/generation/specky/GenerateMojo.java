@@ -40,7 +40,7 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.model.fileset.FileSet;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
 
-import com.mattunderscore.specky.SpeckyDSLParsingContext;
+import com.mattunderscore.specky.SpeckyDSLFileStreamingContext;
 
 /**
  * @goal generate
@@ -93,9 +93,10 @@ public class GenerateMojo extends AbstractMojo {
                 .of(files)
                 .map(basePath::resolve)
                 .reduce(
-                    new SpeckyDSLParsingContext(),
-                    SpeckyDSLParsingContext::addFileToParse,
-                    SpeckyDSLParsingContext::combine)
+                    new SpeckyDSLFileStreamingContext(),
+                    SpeckyDSLFileStreamingContext::addFileToParse,
+                    SpeckyDSLFileStreamingContext::combine)
+                .stream()
                 .parse()
                 .generate()
                 .targetPath(targetPath)

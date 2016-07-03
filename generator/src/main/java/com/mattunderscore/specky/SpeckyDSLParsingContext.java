@@ -27,8 +27,6 @@ package com.mattunderscore.specky;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -41,7 +39,6 @@ import org.antlr.v4.runtime.UnbufferedTokenStream;
 import com.mattunderscore.specky.dsl.SpecBuilder;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.parser.Specky;
-import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.SpeckyLexer;
 import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
 import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
@@ -50,29 +47,16 @@ import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver
 import com.mattunderscore.specky.value.resolver.NullValueResolver;
 
 /**
- * Parses files to the model.
- *
- * @author Matt Champion on 02/07/2016
+ * @author Matt Champion on 03/07/2016
  */
-public final class SpeckyDSLParsingContext implements Combinable<SpeckyDSLParsingContext> {
-    private final List<Path> filesToParse = new ArrayList<>();
+public final class SpeckyDSLParsingContext {
     private final AtomicBoolean consumed = new AtomicBoolean(false);
+    private final List<InputStream> streamsToParse;
 
-    public SpeckyDSLParsingContext() {
+    /*package*/ SpeckyDSLParsingContext(List<InputStream> streamsToParse) {
+        this.streamsToParse = streamsToParse;
     }
 
-    /**
-     * Add path to parse.
-     */
-    public synchronized SpeckyDSLParsingContext addFileToParse(Path path) {
-        filesToParse.add(path);
-        return this;
-    }
-
-    /**
-     * Parse files.
-     * @throws IllegalStateException if has been called before
-     */
     public SpeckyGeneratingContext parse() throws IOException {
         if (consumed.compareAndSet(false, true)) {
             final DefaultValueResolver valueResolver = new CompositeValueResolver()
@@ -80,19 +64,23 @@ public final class SpeckyDSLParsingContext implements Combinable<SpeckyDSLParsin
                 .with(new NullValueResolver());
 
             final TypeResolverBuilder resolver = new TypeResolverBuilder();
-            final List<SpecContext> specContexts = new ArrayList<>();
-            for (Path path : filesToParse) {
-                final InputStream inputStream = Files.newInputStream(path);
-                final CharStream stream = new ANTLRInputStream(inputStream);
-                final SpeckyLexer lexer = new SpeckyLexer(stream);
-                final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
-                final SpecContext specContext = parser.spec();
-                specContexts.add(specContext);
-                resolver.addSpecContext(specContext);
+            final List<Specky.SpecContext> specContexts = new ArrayList<>();
+            for (InputStream inputStream : streamsToParse) {
+                try {
+                    final CharStream stream = new ANTLRInputStream(inputStream);
+                    final SpeckyLexer lexer = new SpeckyLexer(stream);
+                    final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
+                    final Specky.SpecContext specContext = parser.spec();
+                    specContexts.add(specContext);
+                    resolver.addSpecContext(specContext);
+                }
+                finally {
+                    inputStream.close();
+                }
             }
 
             final List<SpecDesc> specs = new ArrayList<>();
-            for (SpecContext specContext : specContexts) {
+            for (Specky.SpecContext specContext : specContexts) {
                 final SpecBuilder specBuilder = new SpecBuilder(resolver.build(), valueResolver);
                 final SpecDesc specDesc = specBuilder.build(specContext);
                 specs.add(specDesc);
@@ -103,15 +91,5 @@ public final class SpeckyDSLParsingContext implements Combinable<SpeckyDSLParsin
         else {
             throw new IllegalStateException("Context has already been parsed");
         }
-    }
-
-    @Override
-    public SpeckyDSLParsingContext combine(SpeckyDSLParsingContext other) {
-        final SpeckyDSLParsingContext newContext = new SpeckyDSLParsingContext();
-
-        filesToParse.forEach(newContext::addFileToParse);
-        other.filesToParse.forEach(newContext::addFileToParse);
-
-        return newContext;
     }
 }
