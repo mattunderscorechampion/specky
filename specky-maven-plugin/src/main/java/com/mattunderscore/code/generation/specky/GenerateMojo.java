@@ -78,6 +78,15 @@ public class GenerateMojo extends AbstractMojo {
             .toPath()
             .toAbsolutePath();
 
+        final File targetDirectory = targetPath.toFile();
+        if (targetDirectory.exists() && !targetDirectory.isDirectory()) {
+            throw new MojoExecutionException("The target path " + targetPath + " exists but is not a directory");
+        }
+
+        if (!targetDirectory.exists() && !targetDirectory.mkdirs()) {
+            throw new MojoExecutionException("The target path " + targetPath + " could not be created");
+        }
+
         final Path basePath = Paths.get(currentFileset.getDirectory());
         try {
             Stream
