@@ -57,7 +57,7 @@ public final class SpeckyDSLFileStreamingContext implements Combinable<SpeckyDSL
      * Parse files.
      * @throws IllegalStateException if has been called before
      */
-    public SpeckyDSLParsingContext stream() throws IOException {
+    public SpeckyDSLParsingContext open() throws IOException {
         if (consumed.compareAndSet(false, true)) {
 
             final List<InputStream> streamsToParse = new ArrayList<>();

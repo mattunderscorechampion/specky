@@ -96,7 +96,7 @@ public class GenerateMojo extends AbstractMojo {
                     new SpeckyDSLFileStreamingContext(),
                     SpeckyDSLFileStreamingContext::addFileToParse,
                     SpeckyDSLFileStreamingContext::combine)
-                .stream()
+                .open()
                 .parse()
                 .generate()
                 .targetPath(targetPath)
