@@ -55,9 +55,40 @@ import com.squareup.javapoet.JavaFile;
 public final class SpeckyGeneratingContext {
     private final List<SpecDesc> specs;
     private final AtomicBoolean consumed = new AtomicBoolean(false);
+    private volatile ToStringGenerator toStringGenerator =
+        new ToStringGenerator(
+            SQUARE_BRACKETS,
+            COMMA_AND_SPACE_SEPARATOR,
+            SIMPLE_PROPERTY_FORMATTER);
+    private AccessorGenerator accessorGenerator = new AccessorGenerator();;
+    private MutatorGenerator mutatorGenerator = new MutatorGenerator();
 
     /*package*/ SpeckyGeneratingContext(List<SpecDesc> specs) {
         this.specs = specs;
+    }
+
+    /**
+     * Set the toString generator.
+     */
+    public SpeckyGeneratingContext toStringGenerator(ToStringGenerator toStringGenerator) {
+        this.toStringGenerator = toStringGenerator;
+        return this;
+    }
+
+    /**
+     * Set the accessor generator.
+     */
+    public SpeckyGeneratingContext accessorGenerator(AccessorGenerator accessorGenerator) {
+        this.accessorGenerator = accessorGenerator;
+        return this;
+    }
+
+    /**
+     * Set the mutator generator.
+     */
+    public SpeckyGeneratingContext mutatorGenerator(MutatorGenerator mutatorGenerator) {
+        this.mutatorGenerator = mutatorGenerator;
+        return this;
     }
 
     /**
@@ -69,11 +100,6 @@ public final class SpeckyGeneratingContext {
             final BuildMethodGenerator buildMethodGenerator = new BuildMethodGenerator();
             final MutableBuilderGenerator mutableBuilderGenerator = new MutableBuilderGenerator(buildMethodGenerator);
             final ImmutableBuilderGenerator immutableBuilderGenerator = new ImmutableBuilderGenerator(buildMethodGenerator);
-            final AccessorGenerator accessorGenerator = new AccessorGenerator();
-            final ToStringGenerator toStringGenerator = new ToStringGenerator(
-                SQUARE_BRACKETS,
-                COMMA_AND_SPACE_SEPARATOR,
-                SIMPLE_PROPERTY_FORMATTER);
             final Generator generator = new Generator(
                 new ValueGenerator(
                     mutableBuilderGenerator,
@@ -85,7 +111,7 @@ public final class SpeckyGeneratingContext {
                     mutableBuilderGenerator,
                     immutableBuilderGenerator,
                     accessorGenerator,
-                    new MutatorGenerator(),
+                    mutatorGenerator,
                     toStringGenerator),
                 new ViewGenerator());
 
