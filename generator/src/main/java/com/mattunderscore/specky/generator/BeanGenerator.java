@@ -51,19 +51,22 @@ public final class BeanGenerator {
     private final AccessorGenerator accessorGenerator;
     private final MutatorGenerator mutatorGenerator;
     private final ToStringGenerator toStringGenerator;
+    private final HashCodeGenerator hashCodeGenerator;
 
     public BeanGenerator(
             MutableBuilderGenerator mutableBuilderGenerator,
             ImmutableBuilderGenerator immutableBuilderGenerator,
             AccessorGenerator accessorGenerator,
             MutatorGenerator mutatorGenerator,
-            ToStringGenerator toStringGenerator) {
+            ToStringGenerator toStringGenerator,
+            HashCodeGenerator hashCodeGenerator) {
 
         this.mutableBuilderGenerator = mutableBuilderGenerator;
         this.immutableBuilderGenerator = immutableBuilderGenerator;
         this.accessorGenerator = accessorGenerator;
         this.mutatorGenerator = mutatorGenerator;
         this.toStringGenerator = toStringGenerator;
+        this.hashCodeGenerator = hashCodeGenerator;
     }
 
     public TypeSpec generateBean(SpecDesc specDesc, BeanDesc beanDesc) {
@@ -111,6 +114,7 @@ public final class BeanGenerator {
 
         return builder
             .addMethod(toStringGenerator.generate(beanDesc))
+            .addMethod(hashCodeGenerator.generate(beanDesc))
             .build();
     }
 

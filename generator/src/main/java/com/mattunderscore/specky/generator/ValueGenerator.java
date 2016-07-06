@@ -47,19 +47,22 @@ public final class ValueGenerator {
     private final ConstructorGenerator constructorGenerator;
     private final AccessorGenerator accessorGenerator;
     private final ToStringGenerator toStringGenerator;
+    private final HashCodeGenerator hashCodeGenerator;
 
     public ValueGenerator(
             MutableBuilderGenerator mutableBuilderGenerator,
             ImmutableBuilderGenerator immutableBuilderGenerator,
             ConstructorGenerator constructorGenerator,
             AccessorGenerator accessorGenerator,
-            ToStringGenerator toStringGenerator) {
+            ToStringGenerator toStringGenerator,
+            HashCodeGenerator hashCodeGenerator) {
 
         this.mutableBuilderGenerator = mutableBuilderGenerator;
         this.immutableBuilderGenerator = immutableBuilderGenerator;
         this.constructorGenerator = constructorGenerator;
         this.accessorGenerator = accessorGenerator;
         this.toStringGenerator = toStringGenerator;
+        this.hashCodeGenerator = hashCodeGenerator;
     }
 
     public TypeSpec generateValue(SpecDesc specDesc, ValueDesc valueDesc) {
@@ -94,7 +97,8 @@ public final class ValueGenerator {
             });
 
         return builder
-                .addMethod(toStringGenerator.generate(valueDesc))
-                .build();
+            .addMethod(toStringGenerator.generate(valueDesc))
+            .addMethod(hashCodeGenerator.generate(valueDesc))
+            .build();
     }
 }
