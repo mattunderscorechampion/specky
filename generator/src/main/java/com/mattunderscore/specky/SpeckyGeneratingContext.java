@@ -37,6 +37,7 @@ import com.mattunderscore.specky.generator.AccessorGenerator;
 import com.mattunderscore.specky.generator.BeanGenerator;
 import com.mattunderscore.specky.generator.BuildMethodGenerator;
 import com.mattunderscore.specky.generator.ConstructorGenerator;
+import com.mattunderscore.specky.generator.EqualsGenerator;
 import com.mattunderscore.specky.generator.Generator;
 import com.mattunderscore.specky.generator.HashCodeGenerator;
 import com.mattunderscore.specky.generator.ImmutableBuilderGenerator;
@@ -102,6 +103,7 @@ public final class SpeckyGeneratingContext {
             final MutableBuilderGenerator mutableBuilderGenerator = new MutableBuilderGenerator(buildMethodGenerator);
             final ImmutableBuilderGenerator immutableBuilderGenerator = new ImmutableBuilderGenerator(buildMethodGenerator);
             final HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
+            final EqualsGenerator equalsGenerator = new EqualsGenerator();
             final Generator generator = new Generator(
                 new ValueGenerator(
                     mutableBuilderGenerator,
@@ -109,14 +111,16 @@ public final class SpeckyGeneratingContext {
                     new ConstructorGenerator(),
                     accessorGenerator,
                     toStringGenerator,
-                    hashCodeGenerator),
+                    hashCodeGenerator,
+                    equalsGenerator),
                 new BeanGenerator(
                     mutableBuilderGenerator,
                     immutableBuilderGenerator,
                     accessorGenerator,
                     mutatorGenerator,
                     toStringGenerator,
-                    hashCodeGenerator),
+                    hashCodeGenerator,
+                    equalsGenerator),
                 new ViewGenerator());
 
             final List<JavaFile> javaFiles = new ArrayList<>();
