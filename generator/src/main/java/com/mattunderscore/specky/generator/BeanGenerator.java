@@ -36,6 +36,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.SpecDesc;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.FieldSpec.Builder;
 import com.squareup.javapoet.MethodSpec;
@@ -77,6 +78,12 @@ public final class BeanGenerator {
             .classBuilder(beanDesc.getName())
             .addModifiers(PUBLIC, FINAL)
             .addJavadoc(TYPE_DOC, "Bean", beanDesc.getName());
+
+        beanDesc
+            .getExtend()
+            .stream()
+            .map(ClassName::bestGuess)
+            .forEach(builder::addSuperinterface);
 
         beanDesc
             .getProperties()

@@ -34,6 +34,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.ValueDesc;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
@@ -73,6 +74,12 @@ public final class ValueGenerator {
             .classBuilder(valueDesc.getName())
             .addModifiers(PUBLIC, FINAL)
             .addJavadoc(TYPE_DOC, "Value", valueDesc.getName());
+
+        valueDesc
+            .getExtend()
+            .stream()
+            .map(ClassName::bestGuess)
+            .forEach(builder::addSuperinterface);
 
         if (valueDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR) {
             constructorGenerator.build(builder, valueDesc);
