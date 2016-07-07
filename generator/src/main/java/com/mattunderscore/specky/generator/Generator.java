@@ -75,7 +75,10 @@ public final class Generator {
             .getViews()
             .stream()
             .map(valueSpec -> generateView(specDesc, valueSpec))
-            .map(typeSpec -> JavaFile.builder(specDesc.getPackageName(), typeSpec).build())
+            .map(typeSpec -> JavaFile
+                .builder(specDesc.getPackageName(), typeSpec)
+                .indent(codeStyle.getIndent())
+                .build())
             .collect(Collectors.toList()));
 
         return result;
