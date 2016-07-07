@@ -29,7 +29,6 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -109,7 +108,7 @@ public final class SpecBuilder {
             return valueDescBuilder.build();
         }
         else {
-            return BeanDesc
+            final BeanDesc.BeanDescBuilder beanDescBuilder = BeanDesc
                 .builder()
                 .name(context.Identifier().get(0).getText())
                 .properties(context
@@ -117,7 +116,24 @@ public final class SpecBuilder {
                     .stream()
                     .map(this::createProperty)
                     .collect(toList()))
-                .constructionMethod(toConstructionDesc(context))
+                .constructionMethod(toConstructionDesc(context));
+
+            if (context.Identifier().size() > 1) {
+                beanDescBuilder
+                    .extend(context
+                        .Identifier()
+                        .subList(1, context.Identifier().size())
+                        .stream()
+                        .map(TerminalNode::getText)
+                        .map(resolver::resolve)
+                        .map(Optional::get)
+                        .collect(toList()));
+            }
+            else {
+                beanDescBuilder.extend(Collections.emptyList());
+            }
+
+            return beanDescBuilder
                 .build();
         }
     }
