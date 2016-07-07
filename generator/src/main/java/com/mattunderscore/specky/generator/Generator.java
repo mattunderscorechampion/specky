@@ -45,11 +45,18 @@ public final class Generator {
     private final ValueGenerator valueGenerator;
     private final BeanGenerator beanGenerator;
     private final ViewGenerator viewGenerator;
+    private final CodeStyle codeStyle;
 
-    public Generator(ValueGenerator valueGenerator, BeanGenerator beanGenerator, ViewGenerator viewGenerator) {
+    public Generator(
+            ValueGenerator valueGenerator,
+            BeanGenerator beanGenerator,
+            ViewGenerator viewGenerator,
+            CodeStyle codeStyle) {
+
         this.valueGenerator = valueGenerator;
         this.beanGenerator = beanGenerator;
         this.viewGenerator = viewGenerator;
+        this.codeStyle = codeStyle;
     }
 
     public List<JavaFile> generate(SpecDesc specDesc) {
@@ -58,7 +65,10 @@ public final class Generator {
             .getValues()
             .stream()
             .map(valueSpec -> generateType(specDesc, valueSpec))
-            .map(typeSpec -> JavaFile.builder(specDesc.getPackageName(), typeSpec).build())
+            .map(typeSpec -> JavaFile
+                .builder(specDesc.getPackageName(), typeSpec)
+                .indent(codeStyle.getIndent())
+                .build())
             .collect(Collectors.toList()));
 
         result.addAll(specDesc
