@@ -27,6 +27,7 @@ package com.mattunderscore.specky.dsl;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -100,6 +101,9 @@ public final class SpecBuilder {
                         .map(resolver::resolve)
                         .map(Optional::get)
                         .collect(toList()));
+            }
+            else {
+                valueDescBuilder.extend(Collections.emptyList());
             }
 
             return valueDescBuilder.build();
