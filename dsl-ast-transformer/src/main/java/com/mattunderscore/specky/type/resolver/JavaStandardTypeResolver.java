@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.mattunderscore.specky.type.resolver.TypeResolver;
+
 /**
  * {@link TypeResolver} for types in the standard Java library.
  *

@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.mattunderscore.code.generation.specky</groupId>
         <artifactId>specky-parent</artifactId>
+        <groupId>com.mattunderscore.code.generation.specky</groupId>
         <version>0.1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>generator</artifactId>
+    <artifactId>dsl-ast-transformer</artifactId>
 
     <dependencies>
         <dependency>
@@ -20,17 +20,11 @@
             <groupId>com.mattunderscore.code.generation.specky</groupId>
             <artifactId>parser</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.mattunderscore.code.generation.specky</groupId>
-            <artifactId>dsl-ast-transformer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup</groupId>
-            <artifactId>javapoet</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
+
 </project>

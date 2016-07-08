@@ -14,6 +14,7 @@
         <module>generator</module>
         <module>specky-maven-plugin</module>
         <module>plugin-example</module>
+        <module>dsl-ast-transformer</module>
     </modules>
 
     <dependencyManagement>
@@ -21,6 +22,11 @@
             <dependency>
                 <groupId>com.mattunderscore.code.generation.specky</groupId>
                 <artifactId>model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mattunderscore.code.generation.specky</groupId>
+                <artifactId>dsl-ast-transformer</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
