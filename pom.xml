@@ -10,7 +10,7 @@
     <version>0.1.0-SNAPSHOT</version>
     <modules>
         <module>model</module>
-        <module>parser</module>
+        <module>dsl-parser</module>
         <module>generator</module>
         <module>specky-maven-plugin</module>
         <module>plugin-example</module>
@@ -37,7 +37,7 @@
             </dependency>
             <dependency>
                 <groupId>com.mattunderscore.code.generation.specky</groupId>
-                <artifactId>parser</artifactId>
+                <artifactId>dsl-parser</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

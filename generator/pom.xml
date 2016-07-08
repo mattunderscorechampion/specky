@@ -18,10 +18,6 @@
         </dependency>
         <dependency>
             <groupId>com.mattunderscore.code.generation.specky</groupId>
-            <artifactId>parser</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.mattunderscore.code.generation.specky</groupId>
             <artifactId>dsl-ast-transformer</artifactId>
         </dependency>
         <dependency>
