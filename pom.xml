@@ -16,6 +16,7 @@
         <module>plugin-example</module>
         <module>dsl-ast-transformer</module>
         <module>javapoet-utils</module>
+        <module>code-generation</module>
     </modules>
 
     <dependencyManagement>
@@ -38,6 +39,11 @@
             <dependency>
                 <groupId>com.mattunderscore.code.generation.specky</groupId>
                 <artifactId>dsl-parser</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mattunderscore.code.generation.specky</groupId>
+                <artifactId>code-generation</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
