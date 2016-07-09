@@ -57,7 +57,7 @@ public final class MutableBuilderGenerator {
         this.buildMethodGenerator = buildMethodGenerator;
     }
 
-    public TypeSpec.Builder build(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
+    public void build(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
         final MethodSpec.Builder constructor = constructorBuilder()
             .addModifiers(PRIVATE)
             .addJavadoc(CONSTRUCTOR_DOC);
@@ -94,9 +94,9 @@ public final class MutableBuilderGenerator {
                 builder.addField(fieldSpec).addMethod(configuator);
             });
 
-        builder.addMethod(constructorBuilder().addModifiers(PRIVATE).build());
-
-        builder.addMethod(buildMethodGenerator.generate(specDesc, valueDesc));
+        builder
+            .addMethod(constructorBuilder().addModifiers(PRIVATE).build())
+            .addMethod(buildMethodGenerator.generate(specDesc, valueDesc));
 
         typeSpecBuilder
             .addMethod(methodBuilder("builder")
@@ -104,9 +104,7 @@ public final class MutableBuilderGenerator {
                 .addModifiers(PUBLIC, STATIC)
                 .addJavadoc(BUILDER_FACTORY, valueDesc.getName())
                 .addStatement("return new Builder()")
-                .build());
-
-        return typeSpecBuilder
+                .build())
             .addMethod(constructor.build())
             .addType(builder.build());
     }

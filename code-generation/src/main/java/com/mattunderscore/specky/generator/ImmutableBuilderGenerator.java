@@ -60,7 +60,7 @@ public final class ImmutableBuilderGenerator {
         this.buildMethodGenerator = buildMethodGenerator;
     }
 
-    public TypeSpec.Builder build(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
+    public void build(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
         final MethodSpec.Builder constructor = constructorBuilder()
             .addModifiers(PRIVATE)
             .addJavadoc(CONSTRUCTOR_DOC);
@@ -95,9 +95,9 @@ public final class ImmutableBuilderGenerator {
                 builder.addField(builderFieldSpec).addMethod(configuator);
             });
 
-        builder.addMethod(constructor.build());
-
-        builder.addMethod(buildMethodGenerator.generate(specDesc, valueDesc));
+        builder
+            .addMethod(constructor.build())
+            .addMethod(buildMethodGenerator.generate(specDesc, valueDesc));
 
         typeSpecBuilder
             .addMethod(methodBuilder("builder")
@@ -105,9 +105,7 @@ public final class ImmutableBuilderGenerator {
                 .addModifiers(PUBLIC, STATIC)
                 .addJavadoc(BUILDER_FACTORY, valueDesc.getName())
                 .addStatement(defaultBuilder(valueDesc))
-                .build());
-
-        return typeSpecBuilder
+                .build())
             .addMethod(constructor.build())
             .addType(builder.build());
     }
