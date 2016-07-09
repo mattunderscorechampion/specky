@@ -47,14 +47,14 @@ import com.squareup.javapoet.TypeSpec;
 public final class ValueGenerator {
     private final MutableBuilderGenerator mutableBuilderGenerator;
     private final ImmutableBuilderGenerator immutableBuilderGenerator;
-    private final ConstructorGenerator constructorGenerator;
+    private final ValueConstructorGenerator constructorGenerator;
     private final List<MethodGeneratorForType> forTypeGenerators;
     private final List<MethodGeneratorForProperty> forPropertyGenerators;
 
     public ValueGenerator(
             MutableBuilderGenerator mutableBuilderGenerator,
             ImmutableBuilderGenerator immutableBuilderGenerator,
-            ConstructorGenerator constructorGenerator,
+            ValueConstructorGenerator constructorGenerator,
             List<MethodGeneratorForProperty> methodGeneratorForProperties,
             List<MethodGeneratorForType> methodGeneratorForTypes) {
 

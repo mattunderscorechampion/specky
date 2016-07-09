@@ -27,10 +27,8 @@ package com.mattunderscore.specky.generator;
 
 import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_FACTORY;
 import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_TYPE_DOC;
-import static com.mattunderscore.specky.generator.GeneratorUtils.CONSTRUCTOR_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.IMMUTABLE_BUILDER_SETTER;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
-import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static com.squareup.javapoet.TypeSpec.classBuilder;
 import static javax.lang.model.element.Modifier.FINAL;
@@ -54,6 +52,7 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 15/06/2016
  */
 public final class ImmutableBuilderGenerator {
+    private final MethodGeneratorForType constructorGenerator = new ConstructorForBuiltTypeGenerator();
     private final BuildMethodGenerator buildMethodGenerator;
 
     public ImmutableBuilderGenerator(BuildMethodGenerator buildMethodGenerator) {
@@ -61,10 +60,6 @@ public final class ImmutableBuilderGenerator {
     }
 
     public void build(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
-        final MethodSpec.Builder constructor = constructorBuilder()
-            .addModifiers(PRIVATE)
-            .addJavadoc(CONSTRUCTOR_DOC);
-
         final TypeSpec.Builder builder = classBuilder("Builder")
             .addModifiers(PUBLIC, FINAL, STATIC)
             .addJavadoc(BUILDER_TYPE_DOC, valueDesc.getName());
@@ -74,14 +69,9 @@ public final class ImmutableBuilderGenerator {
             .stream()
             .forEach(propertyDesc -> {
                 final TypeName type = getType(propertyDesc.getType());
-                final FieldSpec fieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build();
                 final FieldSpec builderFieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE).build();
 
                 final ParameterSpec constructorParameter = ParameterSpec.builder(type, propertyDesc.getName()).build();
-
-                constructor
-                    .addParameter(constructorParameter)
-                    .addStatement("this.$N = $N", fieldSpec, constructorParameter);
 
                 final MethodSpec configuator = methodBuilder(propertyDesc.getName())
                     .addModifiers(PUBLIC)
@@ -96,7 +86,7 @@ public final class ImmutableBuilderGenerator {
             });
 
         builder
-            .addMethod(constructor.build())
+            .addMethod(constructorGenerator.generate(specDesc, valueDesc))
             .addMethod(buildMethodGenerator.generate(specDesc, valueDesc));
 
         typeSpecBuilder
@@ -106,7 +96,7 @@ public final class ImmutableBuilderGenerator {
                 .addJavadoc(BUILDER_FACTORY, valueDesc.getName())
                 .addStatement(defaultBuilder(valueDesc))
                 .build())
-            .addMethod(constructor.build())
+            .addMethod(constructorGenerator.generate(specDesc, valueDesc))
             .addType(builder.build());
     }
 

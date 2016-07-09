@@ -27,7 +27,6 @@ package com.mattunderscore.specky.generator;
 
 import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_FACTORY;
 import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_TYPE_DOC;
-import static com.mattunderscore.specky.generator.GeneratorUtils.CONSTRUCTOR_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.MUTABLE_BUILDER_SETTER;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
@@ -51,6 +50,7 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 13/06/2016
  */
 public final class MutableBuilderGenerator {
+    private final MethodGeneratorForType constructorGenerator = new ConstructorForBuiltTypeGenerator();
     private final BuildMethodGenerator buildMethodGenerator;
 
     public MutableBuilderGenerator(BuildMethodGenerator buildMethodGenerator) {
@@ -58,10 +58,6 @@ public final class MutableBuilderGenerator {
     }
 
     public void build(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
-        final MethodSpec.Builder constructor = constructorBuilder()
-            .addModifiers(PRIVATE)
-            .addJavadoc(CONSTRUCTOR_DOC);
-
         final TypeSpec.Builder builder = classBuilder("Builder")
             .addModifiers(PUBLIC, FINAL, STATIC)
             .addJavadoc(BUILDER_TYPE_DOC, valueDesc.getName());
@@ -77,10 +73,6 @@ public final class MutableBuilderGenerator {
                     .build();
 
                 final ParameterSpec constructorParameter = ParameterSpec.builder(type, propertyDesc.getName()).build();
-
-                constructor
-                    .addParameter(constructorParameter)
-                    .addStatement("this.$N = $N", fieldSpec, constructorParameter);
 
                 final MethodSpec configuator = methodBuilder(propertyDesc.getName())
                     .addModifiers(PUBLIC)
@@ -105,7 +97,7 @@ public final class MutableBuilderGenerator {
                 .addJavadoc(BUILDER_FACTORY, valueDesc.getName())
                 .addStatement("return new Builder()")
                 .build())
-            .addMethod(constructor.build())
+            .addMethod(constructorGenerator.generate(specDesc, valueDesc))
             .addType(builder.build());
     }
 }

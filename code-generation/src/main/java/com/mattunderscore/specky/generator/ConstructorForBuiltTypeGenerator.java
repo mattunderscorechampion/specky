@@ -30,8 +30,8 @@ import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
-import static javax.lang.model.element.Modifier.PUBLIC;
 
+import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.FieldSpec;
@@ -40,31 +40,28 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 
 /**
- * Constructor generator.
- * @author Matt Champion on 13/06/2016
+ * @author Matt Champion on 09/07/2016
  */
-public final class ConstructorGenerator implements MethodGeneratorForType {
-
+public class ConstructorForBuiltTypeGenerator implements MethodGeneratorForType {
     @Override
-    public MethodSpec generate(SpecDesc specDesc, TypeDesc valueDesc) {
+    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
         final MethodSpec.Builder constructor = constructorBuilder()
-            .addModifiers(PUBLIC)
+            .addModifiers(PRIVATE)
             .addJavadoc(CONSTRUCTOR_DOC);
 
-        valueDesc
-            .getProperties()
-            .stream()
-            .forEach(propertyDesc -> {
-                final TypeName type = getType(propertyDesc.getType());
-                final FieldSpec fieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build();
-
-                final ParameterSpec constructorParameter = ParameterSpec.builder(type, propertyDesc.getName()).build();
-
-                constructor
-                    .addParameter(constructorParameter)
-                    .addStatement("this.$N = $N", fieldSpec, constructorParameter);
-            });
+        typeDesc.getProperties().forEach(property -> addProperty(constructor, property));
 
         return constructor.build();
+    }
+
+    private void addProperty(MethodSpec.Builder constructor, PropertyDesc property) {
+        final TypeName type = getType(property.getType());
+        final ParameterSpec constructorParameter = ParameterSpec.builder(type, property.getName()).build();
+        constructor
+            .addParameter(constructorParameter)
+            .addStatement(
+                "this.$N = $N",
+                FieldSpec.builder(type, property.getName(), PRIVATE, FINAL).build(),
+                constructorParameter);
     }
 }
