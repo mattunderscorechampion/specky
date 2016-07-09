@@ -26,6 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator;
 
 import static com.mattunderscore.specky.generator.GeneratorUtils.SETTER_DOC;
+import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static java.lang.Character.toUpperCase;
 import static javax.lang.model.element.Modifier.PUBLIC;
@@ -33,6 +34,8 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import java.util.Objects;
 
 import com.mattunderscore.specky.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
@@ -43,24 +46,22 @@ import com.squareup.javapoet.TypeName;
  * Generator for mutator method.
  * @author Matt Champion on 21/06/2016
  */
-public final class MutatorGenerator {
-    /**
-     * Generate accessor.
-     * @return the method spec for the accessor
-     */
-    public MethodSpec generateMutator(FieldSpec fieldToMutate, PropertyImplementationDesc propertyDesc) {
-        final ParameterSpec parameterSpec = ParameterSpec.builder(fieldToMutate.type, propertyDesc.getName()).build();
+public final class MutatorGenerator implements MethodGeneratorForProperty {
+    @Override
+    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc, PropertyImplementationDesc propertyDesc) {
+        final TypeName type = getType(propertyDesc.getType());
+        final ParameterSpec parameterSpec = ParameterSpec.builder(type, propertyDesc.getName()).build();
         final MethodSpec.Builder setterSpec = methodBuilder(getMutatorName(propertyDesc.getName()))
             .addModifiers(PUBLIC)
             .addParameter(parameterSpec)
             .addJavadoc(SETTER_DOC, propertyDesc.getName(), propertyDesc.getName())
             .returns(TypeName.VOID);
 
-        if (!propertyDesc.isOptional() && !fieldToMutate.type.isPrimitive()) {
+        if (!propertyDesc.isOptional() && !type.isPrimitive()) {
             setterSpec.addStatement("$T.requireNonNull($N)", ClassName.get(Objects.class), propertyDesc.getName());
         }
 
-        setterSpec.addStatement("this.$N = $N", fieldToMutate, parameterSpec);
+        setterSpec.addStatement("this.$N = $N", propertyDesc.getName(), parameterSpec);
 
         return setterSpec.build();
     }

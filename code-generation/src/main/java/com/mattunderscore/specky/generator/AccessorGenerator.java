@@ -26,32 +26,32 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator;
 
 import static com.mattunderscore.specky.generator.GeneratorUtils.GETTER_DOC;
+import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static java.lang.Character.toUpperCase;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 import com.mattunderscore.specky.model.PropertyImplementationDesc;
-import com.squareup.javapoet.FieldSpec;
+import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.TypeDesc;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 
 /**
  * Generator for accessor method.
  * @author Matt Champion on 21/06/2016
  */
-public final class AccessorGenerator {
+public final class AccessorGenerator implements MethodGeneratorForProperty {
     public AccessorGenerator() {
     }
 
-    /**
-     * Generate accessor.
-     * @return the method spec for the accessor
-     */
-    public MethodSpec generateAccessor(FieldSpec fieldToAccess, PropertyImplementationDesc propertyDesc) {
+    @Override
+    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc, PropertyImplementationDesc propertyDesc) {
         return methodBuilder(getAccessorName(propertyDesc.getName()))
             .addModifiers(PUBLIC)
             .addJavadoc(GETTER_DOC, propertyDesc.getName())
-            .returns(fieldToAccess.type)
-            .addStatement("return $N", fieldToAccess)
+            .returns(getType(propertyDesc.getType()))
+            .addStatement("return $N", propertyDesc.getName())
             .build();
     }
 

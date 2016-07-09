@@ -97,12 +97,12 @@ public final class BeanGenerator {
                 }
 
                 final FieldSpec fieldSpec = fieldSpecBuilder.build();
-                final MethodSpec methodSpec = accessorGenerator.generateAccessor(fieldSpec, propertyDesc);
+                final MethodSpec methodSpec = accessorGenerator.generate(specDesc, beanDesc, propertyDesc);
 
                 builder
                     .addField(fieldSpec)
                     .addMethod(methodSpec)
-                    .addMethod(mutatorGenerator.generateMutator(fieldSpec, propertyDesc));
+                    .addMethod(mutatorGenerator.generate(specDesc, beanDesc, propertyDesc));
             });
 
         if (beanDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR) {

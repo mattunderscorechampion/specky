@@ -103,7 +103,7 @@ public final class ValueGenerator {
 
                 builder
                     .addField(fieldSpec)
-                    .addMethod(accessorGenerator.generateAccessor(fieldSpec, propertyDesc));
+                    .addMethod(accessorGenerator.generate(specDesc, valueDesc, propertyDesc));
             });
 
         return builder
