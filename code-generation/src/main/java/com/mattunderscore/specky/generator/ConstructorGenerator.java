@@ -32,18 +32,21 @@ import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
+import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeSpec;
 
 /**
+ * Constructor generator.
  * @author Matt Champion on 13/06/2016
  */
-public final class ConstructorGenerator {
-    public TypeSpec.Builder build(TypeSpec.Builder typeSpecBuilder, TypeDesc valueDesc) {
+public final class ConstructorGenerator implements MethodGeneratorForType {
+
+    @Override
+    public MethodSpec generate(SpecDesc specDesc, TypeDesc valueDesc) {
         final MethodSpec.Builder constructor = constructorBuilder()
             .addModifiers(PUBLIC)
             .addJavadoc(CONSTRUCTOR_DOC);
@@ -62,6 +65,6 @@ public final class ConstructorGenerator {
                     .addStatement("this.$N = $N", fieldSpec, constructorParameter);
             });
 
-        return typeSpecBuilder.addMethod(constructor.build());
+        return constructor.build();
     }
 }

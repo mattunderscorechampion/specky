@@ -82,7 +82,7 @@ public final class ValueGenerator {
             .forEach(builder::addSuperinterface);
 
         if (valueDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR) {
-            constructorGenerator.build(builder, valueDesc);
+            builder.addMethod(constructorGenerator.generate(specDesc, valueDesc));
         }
         else if (valueDesc.getConstructionMethod() == ConstructionMethod.MUTABLE_BUILDER) {
             mutableBuilderGenerator.build(builder, specDesc, valueDesc);
