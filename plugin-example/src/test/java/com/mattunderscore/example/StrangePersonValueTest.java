@@ -44,5 +44,6 @@ public final class StrangePersonValueTest {
 
         assertEquals(5, (int) person.getId());
         assertEquals("Matt", person.getName());
+        assertEquals("StrangePersonValue[id=5, name=Matt]", person.toString());
     }
 }

@@ -42,5 +42,6 @@ public final class PersonBeanTest {
 
         assertEquals(0, person.getId());
         assertEquals("", person.getName());
+        assertEquals("PersonBean[id=0, name=]", person.toString());
     }
 }
