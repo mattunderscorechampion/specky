@@ -25,23 +25,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
+import static com.squareup.javapoet.MethodSpec.methodBuilder;
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
+import static javax.lang.model.element.Modifier.PUBLIC;
+
 import com.mattunderscore.specky.model.PropertyDesc;
+import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 
-import static com.squareup.javapoet.MethodSpec.methodBuilder;
-import static java.lang.String.format;
-import static java.util.stream.Collectors.joining;
-import static javax.lang.model.element.Modifier.PUBLIC;
-
 /**
  * Generator for toString implementation.
  * @author Matt Champion on 27/06/16
  */
-public final class ToStringGenerator {
+public final class ToStringGenerator implements MethodGeneratorForType {
     public static final String COMMA_AND_SPACE_SEPARATOR = ", ";
     public static final String COMMA_SEPARATOR = ",";
     public static final PropertyListBookend SQUARE_BRACKETS = new SquareBrackets();
@@ -62,7 +63,8 @@ public final class ToStringGenerator {
         this.propertyFormatter = propertyFormatter;
     }
 
-    public MethodSpec generate(TypeDesc typeDesc) {
+    @Override
+    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
         return methodBuilder("toString")
             .returns(ClassName.get(String.class))
             .addModifiers(PUBLIC)

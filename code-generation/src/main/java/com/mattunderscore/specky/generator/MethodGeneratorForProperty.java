@@ -25,37 +25,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import static com.squareup.javapoet.MethodSpec.methodBuilder;
-import static java.util.stream.Collectors.joining;
-import static javax.lang.model.element.Modifier.PUBLIC;
-
-import java.util.Objects;
-
 import com.mattunderscore.specky.model.PropertyImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeName;
 
 /**
- * Hash code generator.
- * @author Matt Champion on 06/07/2016
+ * Generate a method for a type.
+ * @author Matt Champion on 09/07/2016
  */
-public final class HashCodeGenerator implements MethodGeneratorForType {
-    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
-        return methodBuilder("hashCode")
-            .addAnnotation(Override.class)
-            .addModifiers(PUBLIC)
-            .returns(TypeName.INT)
-            .addStatement(
-                "return $T.hash($L)",
-                ClassName.get(Objects.class),
-                typeDesc
-                    .getProperties()
-                    .stream()
-                    .map(PropertyImplementationDesc::getName)
-                    .collect(joining(", ")))
-            .build();
-    }
+public interface MethodGeneratorForProperty {
+    /**
+     * Generate a new method.
+     * @param specDesc the specification description
+     * @param typeDesc the type description
+     * @param propertyDesc the property description
+     * @return the method
+     */
+    MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc, PropertyImplementationDesc propertyDesc);
 }

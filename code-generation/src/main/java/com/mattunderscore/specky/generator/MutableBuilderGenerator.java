@@ -96,7 +96,7 @@ public final class MutableBuilderGenerator {
 
         builder.addMethod(constructorBuilder().addModifiers(PRIVATE).build());
 
-        builder.addMethod(buildMethodGenerator.generateBuildMethod(specDesc, valueDesc));
+        builder.addMethod(buildMethodGenerator.generate(specDesc, valueDesc));
 
         typeSpecBuilder
             .addMethod(methodBuilder("builder")

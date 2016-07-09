@@ -107,8 +107,8 @@ public final class ValueGenerator {
             });
 
         return builder
-            .addMethod(toStringGenerator.generate(valueDesc))
-            .addMethod(hashCodeGenerator.generate(valueDesc))
+            .addMethod(toStringGenerator.generate(specDesc, valueDesc))
+            .addMethod(hashCodeGenerator.generate(specDesc, valueDesc))
             .addMethod(equalsGenerator.generate(specDesc, valueDesc))
             .build();
     }

@@ -43,9 +43,10 @@ import com.squareup.javapoet.TypeName;
 /**
  * @author Matt Champion on 16/06/2016
  */
-public final class BuildMethodGenerator {
+public final class BuildMethodGenerator implements MethodGeneratorForType {
 
-    public MethodSpec generateBuildMethod(SpecDesc specDesc, TypeDesc valueDesc) {
+    @Override
+    public MethodSpec generate(SpecDesc specDesc, TypeDesc valueDesc) {
         final MethodSpec.Builder buildMethod = methodBuilder("build")
             .addModifiers(PUBLIC)
             .returns(ClassName.get(specDesc.getPackageName(), valueDesc.getName()))

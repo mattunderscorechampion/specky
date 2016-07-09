@@ -97,7 +97,7 @@ public final class ImmutableBuilderGenerator {
 
         builder.addMethod(constructor.build());
 
-        builder.addMethod(buildMethodGenerator.generateBuildMethod(specDesc, valueDesc));
+        builder.addMethod(buildMethodGenerator.generate(specDesc, valueDesc));
 
         typeSpecBuilder
             .addMethod(methodBuilder("builder")

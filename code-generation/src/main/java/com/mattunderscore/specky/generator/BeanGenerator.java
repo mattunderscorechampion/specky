@@ -123,8 +123,8 @@ public final class BeanGenerator {
         }
 
         return builder
-            .addMethod(toStringGenerator.generate(beanDesc))
-            .addMethod(hashCodeGenerator.generate(beanDesc))
+            .addMethod(toStringGenerator.generate(specDesc, beanDesc))
+            .addMethod(hashCodeGenerator.generate(specDesc, beanDesc))
             .addMethod(equalsGenerator.generate(specDesc, beanDesc))
             .build();
     }
