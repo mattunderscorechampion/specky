@@ -31,6 +31,8 @@ import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
+import java.util.List;
+
 import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.ValueDesc;
@@ -46,27 +48,21 @@ public final class ValueGenerator {
     private final MutableBuilderGenerator mutableBuilderGenerator;
     private final ImmutableBuilderGenerator immutableBuilderGenerator;
     private final ConstructorGenerator constructorGenerator;
-    private final AccessorGenerator accessorGenerator;
-    private final ToStringGenerator toStringGenerator;
-    private final HashCodeGenerator hashCodeGenerator;
-    private final EqualsGenerator equalsGenerator;
+    private final List<MethodGeneratorForType> forTypeGenerators;
+    private final List<MethodGeneratorForProperty> forPropertyGenerators;
 
     public ValueGenerator(
-        MutableBuilderGenerator mutableBuilderGenerator,
-        ImmutableBuilderGenerator immutableBuilderGenerator,
-        ConstructorGenerator constructorGenerator,
-        AccessorGenerator accessorGenerator,
-        ToStringGenerator toStringGenerator,
-        HashCodeGenerator hashCodeGenerator,
-        EqualsGenerator equalsGenerator) {
+            MutableBuilderGenerator mutableBuilderGenerator,
+            ImmutableBuilderGenerator immutableBuilderGenerator,
+            ConstructorGenerator constructorGenerator,
+            List<MethodGeneratorForProperty> methodGeneratorForProperties,
+            List<MethodGeneratorForType> methodGeneratorForTypes) {
 
         this.mutableBuilderGenerator = mutableBuilderGenerator;
         this.immutableBuilderGenerator = immutableBuilderGenerator;
         this.constructorGenerator = constructorGenerator;
-        this.accessorGenerator = accessorGenerator;
-        this.toStringGenerator = toStringGenerator;
-        this.hashCodeGenerator = hashCodeGenerator;
-        this.equalsGenerator = equalsGenerator;
+        this.forPropertyGenerators = methodGeneratorForProperties;
+        this.forTypeGenerators = methodGeneratorForTypes;
     }
 
     public TypeSpec generateValue(SpecDesc specDesc, ValueDesc valueDesc) {
@@ -99,17 +95,13 @@ public final class ValueGenerator {
             .stream()
             .forEach(propertyDesc -> {
                 final TypeName type = getType(propertyDesc.getType());
-                final FieldSpec fieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build();
-
-                builder
-                    .addField(fieldSpec)
-                    .addMethod(accessorGenerator.generate(specDesc, valueDesc, propertyDesc));
+                builder.addField(FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build());
+                forPropertyGenerators
+                    .forEach(generator -> builder.addMethod(generator.generate(specDesc, valueDesc, propertyDesc)));
             });
 
-        return builder
-            .addMethod(toStringGenerator.generate(specDesc, valueDesc))
-            .addMethod(hashCodeGenerator.generate(specDesc, valueDesc))
-            .addMethod(equalsGenerator.generate(specDesc, valueDesc))
-            .build();
+        forTypeGenerators.forEach(generator -> builder.addMethod(generator.generate(specDesc, valueDesc)));
+
+        return builder.build();
     }
 }

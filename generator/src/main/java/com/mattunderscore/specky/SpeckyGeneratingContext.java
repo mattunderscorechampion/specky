@@ -28,6 +28,8 @@ package com.mattunderscore.specky;
 import static com.mattunderscore.specky.generator.ToStringGenerator.COMMA_AND_SPACE_SEPARATOR;
 import static com.mattunderscore.specky.generator.ToStringGenerator.SIMPLE_PROPERTY_FORMATTER;
 import static com.mattunderscore.specky.generator.ToStringGenerator.SQUARE_BRACKETS;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +65,7 @@ public final class SpeckyGeneratingContext {
             SQUARE_BRACKETS,
             COMMA_AND_SPACE_SEPARATOR,
             SIMPLE_PROPERTY_FORMATTER);
-    private AccessorGenerator accessorGenerator = new AccessorGenerator();;
+    private AccessorGenerator accessorGenerator = new AccessorGenerator();
     private MutatorGenerator mutatorGenerator = new MutatorGenerator();
     private CodeStyle codeStyle = CodeStyle.builder().spaces(4).build();
 
@@ -119,18 +121,13 @@ public final class SpeckyGeneratingContext {
                     mutableBuilderGenerator,
                     immutableBuilderGenerator,
                     new ConstructorGenerator(),
-                    accessorGenerator,
-                    toStringGenerator,
-                    hashCodeGenerator,
-                    equalsGenerator),
+                    singletonList(accessorGenerator),
+                    asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
                 new BeanGenerator(
                     mutableBuilderGenerator,
                     immutableBuilderGenerator,
-                    accessorGenerator,
-                    mutatorGenerator,
-                    toStringGenerator,
-                    hashCodeGenerator,
-                    equalsGenerator),
+                    asList(accessorGenerator, mutatorGenerator),
+                    asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
                 new ViewGenerator(),
                 codeStyle);
 

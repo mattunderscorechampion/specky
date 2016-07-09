@@ -33,6 +33,8 @@ import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
+import java.util.List;
+
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.SpecDesc;
@@ -49,28 +51,19 @@ import com.squareup.javapoet.TypeSpec;
 public final class BeanGenerator {
     private final MutableBuilderGenerator mutableBuilderGenerator;
     private final ImmutableBuilderGenerator immutableBuilderGenerator;
-    private final AccessorGenerator accessorGenerator;
-    private final MutatorGenerator mutatorGenerator;
-    private final ToStringGenerator toStringGenerator;
-    private final HashCodeGenerator hashCodeGenerator;
-    private final EqualsGenerator equalsGenerator;
+    private final List<MethodGeneratorForType> forTypeGenerators;
+    private final List<MethodGeneratorForProperty> forPropertyGenerators;
 
     public BeanGenerator(
             MutableBuilderGenerator mutableBuilderGenerator,
             ImmutableBuilderGenerator immutableBuilderGenerator,
-            AccessorGenerator accessorGenerator,
-            MutatorGenerator mutatorGenerator,
-            ToStringGenerator toStringGenerator,
-            HashCodeGenerator hashCodeGenerator,
-            EqualsGenerator equalsGenerator) {
+            List<MethodGeneratorForProperty> methodGeneratorForProperties,
+            List<MethodGeneratorForType> methodGeneratorForTypes) {
 
         this.mutableBuilderGenerator = mutableBuilderGenerator;
         this.immutableBuilderGenerator = immutableBuilderGenerator;
-        this.accessorGenerator = accessorGenerator;
-        this.mutatorGenerator = mutatorGenerator;
-        this.toStringGenerator = toStringGenerator;
-        this.hashCodeGenerator = hashCodeGenerator;
-        this.equalsGenerator = equalsGenerator;
+        this.forTypeGenerators = methodGeneratorForTypes;
+        this.forPropertyGenerators = methodGeneratorForProperties;
     }
 
     public TypeSpec generateBean(SpecDesc specDesc, BeanDesc beanDesc) {
@@ -92,17 +85,15 @@ public final class BeanGenerator {
                 final TypeName type = getType(propertyDesc.getType());
                 final Builder fieldSpecBuilder = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE);
 
-                if (beanDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR && propertyDesc.getDefaultValue() != null) {
+                if (beanDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR
+                    && propertyDesc.getDefaultValue() != null) {
                     fieldSpecBuilder.initializer(propertyDesc.getDefaultValue());
                 }
 
-                final FieldSpec fieldSpec = fieldSpecBuilder.build();
-                final MethodSpec methodSpec = accessorGenerator.generate(specDesc, beanDesc, propertyDesc);
+                builder.addField(fieldSpecBuilder.build());
 
-                builder
-                    .addField(fieldSpec)
-                    .addMethod(methodSpec)
-                    .addMethod(mutatorGenerator.generate(specDesc, beanDesc, propertyDesc));
+                forPropertyGenerators
+                    .forEach(generator -> builder.addMethod(generator.generate(specDesc, beanDesc, propertyDesc)));
             });
 
         if (beanDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR) {
@@ -122,11 +113,10 @@ public final class BeanGenerator {
             throw new IllegalArgumentException("Unsupported construction type");
         }
 
-        return builder
-            .addMethod(toStringGenerator.generate(specDesc, beanDesc))
-            .addMethod(hashCodeGenerator.generate(specDesc, beanDesc))
-            .addMethod(equalsGenerator.generate(specDesc, beanDesc))
-            .build();
+        forTypeGenerators
+            .forEach(generator -> builder.addMethod(generator.generate(specDesc, beanDesc)));
+
+        return builder.build();
     }
 
 }
