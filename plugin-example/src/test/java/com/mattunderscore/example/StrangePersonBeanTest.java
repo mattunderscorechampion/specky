@@ -44,5 +44,8 @@ public final class StrangePersonBeanTest {
         assertEquals(5, (int)person.getId());
         assertEquals("Matt", person.getName());
         assertEquals("StrangePersonBean[id=5, name=Matt]", person.toString());
+        person.setName("someName");
+        assertEquals("someName", person.getName());
+        assertEquals("StrangePersonBean[id=5, name=someName]", person.toString());
     }
 }

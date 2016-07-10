@@ -4,6 +4,6 @@
 package com.example
 
 type PersonType {
-  int id
-  String name
+    int id
+    String name
 }

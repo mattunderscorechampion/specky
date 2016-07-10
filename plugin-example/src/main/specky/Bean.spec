@@ -4,17 +4,17 @@
 package com.example
 
 bean PersonBean : PersonType {
-  int id
-  String name
-  options {
-    constructor
-  }
+    int id
+    String name
+    options {
+        constructor
+    }
 }
 
 bean StrangePersonBean {
-  Integer id default 5
-  String name
-  options {
-    builder
-  }
+    Integer id default 5
+    String name
+    options {
+        builder
+    }
 }

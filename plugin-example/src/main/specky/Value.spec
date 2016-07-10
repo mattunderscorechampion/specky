@@ -4,17 +4,22 @@
 package com.example
 
 value PersonValue {
-  Integer id default 5
-  String name
-  options {
-    immutable builder
-  }
+    Integer id default 5
+    String name
+    options {
+        immutable builder
+    }
 }
 
 value StrangePersonValue {
-  int id default 5
-  optional String name
-  options {
-    builder
-  }
+    int id default 5
+    optional String name
+    options {
+        builder
+    }
+}
+
+value ConstructorValue : PersonType {
+    int id
+    String name
 }
