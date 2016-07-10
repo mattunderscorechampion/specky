@@ -25,11 +25,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.TYPE_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
-import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
-import static javax.lang.model.element.Modifier.PUBLIC;
 
 import java.util.List;
 
@@ -66,10 +63,7 @@ public final class BeanGenerator {
     }
 
     public TypeSpec generateBean(SpecDesc specDesc, BeanDesc beanDesc) {
-        final TypeSpec.Builder builder = TypeSpec
-            .classBuilder(beanDesc.getName())
-            .addModifiers(PUBLIC, FINAL)
-            .addJavadoc(TYPE_DOC, "Bean", beanDesc.getName());
+        final TypeSpec.Builder builder = typeInitialiser.create(specDesc, beanDesc);
 
         superTypeAppender.append(builder, specDesc, beanDesc);
 
