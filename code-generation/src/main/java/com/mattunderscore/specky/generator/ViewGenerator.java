@@ -46,6 +46,7 @@ import com.squareup.javapoet.TypeSpec;
 public final class ViewGenerator {
     public TypeSpec generateView(SpecDesc specDesc, ViewDesc typeDesc) {
         final TypeSpec.Builder builder = interfaceBuilder(typeDesc.getName())
+            .addModifiers(PUBLIC)
             .addJavadoc(TYPE_DOC, "View", typeDesc.getName());
 
         for (PropertyDesc view : typeDesc.getProperties()) {

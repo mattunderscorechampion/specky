@@ -26,10 +26,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.example;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 import com.example.PersonBean;
+import com.example.PersonType;
 
 /**
  * Unit tests for {@link PersonBean}.
@@ -43,5 +45,9 @@ public final class PersonBeanTest {
         assertEquals(0, person.getId());
         assertEquals("", person.getName());
         assertEquals("PersonBean[id=0, name=]", person.toString());
+        assertTrue(person instanceof PersonType);
+        person.setName("someName");
+        assertEquals("someName", person.getName());
+        assertEquals("PersonBean[id=0, name=someName]", person.toString());
     }
 }
