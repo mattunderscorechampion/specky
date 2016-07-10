@@ -25,10 +25,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.CONSTRUCTOR_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.TYPE_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
-import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
@@ -41,7 +39,6 @@ import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.FieldSpec.Builder;
-import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
@@ -49,22 +46,16 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 11/06/2016
  */
 public final class BeanGenerator {
-    private final MutableBuilderGenerator mutableBuilderGenerator;
-    private final ImmutableBuilderGenerator immutableBuilderGenerator;
+    private final TypeAppender constructionMethodAppender;
     private final List<MethodGeneratorForType> forTypeGenerators;
     private final List<MethodGeneratorForProperty> forPropertyGenerators;
-    private final MethodGeneratorForType constructorGenerator;
 
     public BeanGenerator(
-            MutableBuilderGenerator mutableBuilderGenerator,
-            ImmutableBuilderGenerator immutableBuilderGenerator,
-            MethodGeneratorForType constructorGenerator,
+            TypeAppender constructionMethodAppender,
             List<MethodGeneratorForProperty> methodGeneratorForProperties,
             List<MethodGeneratorForType> methodGeneratorForTypes) {
 
-        this.mutableBuilderGenerator = mutableBuilderGenerator;
-        this.immutableBuilderGenerator = immutableBuilderGenerator;
-        this.constructorGenerator = constructorGenerator;
+        this.constructionMethodAppender = constructionMethodAppender;
         this.forTypeGenerators = methodGeneratorForTypes;
         this.forPropertyGenerators = methodGeneratorForProperties;
     }
@@ -99,18 +90,7 @@ public final class BeanGenerator {
                     .forEach(generator -> builder.addMethod(generator.generate(specDesc, beanDesc, propertyDesc)));
             });
 
-        if (beanDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR) {
-            builder.addMethod(constructorGenerator.generate(specDesc, beanDesc));
-        }
-        else if (beanDesc.getConstructionMethod() == ConstructionMethod.MUTABLE_BUILDER) {
-            mutableBuilderGenerator.build(builder, specDesc, beanDesc);
-        }
-        else if (beanDesc.getConstructionMethod() == ConstructionMethod.IMMUTABLE_BUILDER) {
-            immutableBuilderGenerator.build(builder, specDesc, beanDesc);
-        }
-        else {
-            throw new IllegalArgumentException("Unsupported construction type");
-        }
+        constructionMethodAppender.append(builder, specDesc, beanDesc);
 
         forTypeGenerators
             .forEach(generator -> builder.addMethod(generator.generate(specDesc, beanDesc)));

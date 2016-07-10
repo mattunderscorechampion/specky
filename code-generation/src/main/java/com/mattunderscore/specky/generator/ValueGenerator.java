@@ -33,7 +33,6 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 
 import java.util.List;
 
-import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.ValueDesc;
 import com.squareup.javapoet.ClassName;
@@ -45,22 +44,16 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 11/06/2016
  */
 public final class ValueGenerator {
-    private final MutableBuilderGenerator mutableBuilderGenerator;
-    private final ImmutableBuilderGenerator immutableBuilderGenerator;
-    private final ValueConstructorGenerator constructorGenerator;
+    private final TypeAppender constructionMethodAppender;
     private final List<MethodGeneratorForType> forTypeGenerators;
     private final List<MethodGeneratorForProperty> forPropertyGenerators;
 
     public ValueGenerator(
-            MutableBuilderGenerator mutableBuilderGenerator,
-            ImmutableBuilderGenerator immutableBuilderGenerator,
-            ValueConstructorGenerator constructorGenerator,
+            TypeAppender constructionMethodAppender,
             List<MethodGeneratorForProperty> methodGeneratorForProperties,
             List<MethodGeneratorForType> methodGeneratorForTypes) {
 
-        this.mutableBuilderGenerator = mutableBuilderGenerator;
-        this.immutableBuilderGenerator = immutableBuilderGenerator;
-        this.constructorGenerator = constructorGenerator;
+        this.constructionMethodAppender = constructionMethodAppender;
         this.forPropertyGenerators = methodGeneratorForProperties;
         this.forTypeGenerators = methodGeneratorForTypes;
     }
@@ -77,18 +70,7 @@ public final class ValueGenerator {
             .map(ClassName::bestGuess)
             .forEach(builder::addSuperinterface);
 
-        if (valueDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR) {
-            builder.addMethod(constructorGenerator.generate(specDesc, valueDesc));
-        }
-        else if (valueDesc.getConstructionMethod() == ConstructionMethod.MUTABLE_BUILDER) {
-            mutableBuilderGenerator.build(builder, specDesc, valueDesc);
-        }
-        else if (valueDesc.getConstructionMethod() == ConstructionMethod.IMMUTABLE_BUILDER) {
-            immutableBuilderGenerator.build(builder, specDesc, valueDesc);
-        }
-        else {
-            throw new IllegalArgumentException("Unsupported construction type");
-        }
+        constructionMethodAppender.append(builder, specDesc, valueDesc);
 
         valueDesc
             .getProperties()
