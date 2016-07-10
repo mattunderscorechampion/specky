@@ -53,15 +53,18 @@ public final class BeanGenerator {
     private final ImmutableBuilderGenerator immutableBuilderGenerator;
     private final List<MethodGeneratorForType> forTypeGenerators;
     private final List<MethodGeneratorForProperty> forPropertyGenerators;
+    private final MethodGeneratorForType constructorGenerator;
 
     public BeanGenerator(
             MutableBuilderGenerator mutableBuilderGenerator,
             ImmutableBuilderGenerator immutableBuilderGenerator,
+            MethodGeneratorForType constructorGenerator,
             List<MethodGeneratorForProperty> methodGeneratorForProperties,
             List<MethodGeneratorForType> methodGeneratorForTypes) {
 
         this.mutableBuilderGenerator = mutableBuilderGenerator;
         this.immutableBuilderGenerator = immutableBuilderGenerator;
+        this.constructorGenerator = constructorGenerator;
         this.forTypeGenerators = methodGeneratorForTypes;
         this.forPropertyGenerators = methodGeneratorForProperties;
     }
@@ -97,11 +100,7 @@ public final class BeanGenerator {
             });
 
         if (beanDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR) {
-            final MethodSpec constructor = constructorBuilder()
-                .addModifiers(PUBLIC)
-                .addJavadoc(CONSTRUCTOR_DOC)
-                .build();
-            builder.addMethod(constructor);
+            builder.addMethod(constructorGenerator.generate(specDesc, beanDesc));
         }
         else if (beanDesc.getConstructionMethod() == ConstructionMethod.MUTABLE_BUILDER) {
             mutableBuilderGenerator.build(builder, specDesc, beanDesc);

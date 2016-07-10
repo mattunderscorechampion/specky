@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.mattunderscore.specky.generator.AccessorGenerator;
+import com.mattunderscore.specky.generator.BeanConstructorGenerator;
 import com.mattunderscore.specky.generator.BeanGenerator;
 import com.mattunderscore.specky.generator.BuildMethodGenerator;
 import com.mattunderscore.specky.generator.CodeStyle;
@@ -126,6 +127,7 @@ public final class SpeckyGeneratingContext {
                 new BeanGenerator(
                     mutableBuilderGenerator,
                     immutableBuilderGenerator,
+                    new BeanConstructorGenerator(),
                     asList(accessorGenerator, mutatorGenerator),
                     asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
                 new ViewGenerator(),
