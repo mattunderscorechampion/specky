@@ -36,7 +36,6 @@ import java.util.List;
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.FieldSpec.Builder;
 import com.squareup.javapoet.TypeName;
@@ -47,15 +46,18 @@ import com.squareup.javapoet.TypeSpec;
  */
 public final class BeanGenerator {
     private final TypeAppender constructionMethodAppender;
+    private final TypeAppender superTypeAppender;
     private final List<MethodGeneratorForType> forTypeGenerators;
     private final List<MethodGeneratorForProperty> forPropertyGenerators;
 
     public BeanGenerator(
             TypeAppender constructionMethodAppender,
+            TypeAppender superTypeAppender,
             List<MethodGeneratorForProperty> methodGeneratorForProperties,
             List<MethodGeneratorForType> methodGeneratorForTypes) {
 
         this.constructionMethodAppender = constructionMethodAppender;
+        this.superTypeAppender = superTypeAppender;
         this.forTypeGenerators = methodGeneratorForTypes;
         this.forPropertyGenerators = methodGeneratorForProperties;
     }
@@ -66,11 +68,7 @@ public final class BeanGenerator {
             .addModifiers(PUBLIC, FINAL)
             .addJavadoc(TYPE_DOC, "Bean", beanDesc.getName());
 
-        beanDesc
-            .getExtend()
-            .stream()
-            .map(ClassName::bestGuess)
-            .forEach(builder::addSuperinterface);
+        superTypeAppender.append(builder, specDesc, beanDesc);
 
         beanDesc
             .getProperties()

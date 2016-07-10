@@ -35,7 +35,6 @@ import java.util.List;
 
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.ValueDesc;
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
@@ -45,15 +44,18 @@ import com.squareup.javapoet.TypeSpec;
  */
 public final class ValueGenerator {
     private final TypeAppender constructionMethodAppender;
+    private final TypeAppender superTypeAppender;
     private final List<MethodGeneratorForType> forTypeGenerators;
     private final List<MethodGeneratorForProperty> forPropertyGenerators;
 
     public ValueGenerator(
             TypeAppender constructionMethodAppender,
+            TypeAppender superTypeAppender,
             List<MethodGeneratorForProperty> methodGeneratorForProperties,
             List<MethodGeneratorForType> methodGeneratorForTypes) {
 
         this.constructionMethodAppender = constructionMethodAppender;
+        this.superTypeAppender = superTypeAppender;
         this.forPropertyGenerators = methodGeneratorForProperties;
         this.forTypeGenerators = methodGeneratorForTypes;
     }
@@ -64,11 +66,7 @@ public final class ValueGenerator {
             .addModifiers(PUBLIC, FINAL)
             .addJavadoc(TYPE_DOC, "Value", valueDesc.getName());
 
-        valueDesc
-            .getExtend()
-            .stream()
-            .map(ClassName::bestGuess)
-            .forEach(builder::addSuperinterface);
+        superTypeAppender.append(builder, specDesc, valueDesc);
 
         constructionMethodAppender.append(builder, specDesc, valueDesc);
 

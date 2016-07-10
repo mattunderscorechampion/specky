@@ -47,7 +47,9 @@ import com.mattunderscore.specky.generator.HashCodeGenerator;
 import com.mattunderscore.specky.generator.ImmutableBuilderGenerator;
 import com.mattunderscore.specky.generator.MutableBuilderGenerator;
 import com.mattunderscore.specky.generator.MutatorGenerator;
+import com.mattunderscore.specky.generator.SuperTypeAppender;
 import com.mattunderscore.specky.generator.ToStringGenerator;
+import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.ValueConstructorGenerator;
 import com.mattunderscore.specky.generator.ValueGenerator;
 import com.mattunderscore.specky.generator.ViewGenerator;
@@ -118,12 +120,14 @@ public final class SpeckyGeneratingContext {
             final ImmutableBuilderGenerator immutableBuilderGenerator = new ImmutableBuilderGenerator(buildMethodGenerator);
             final HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
             final EqualsGenerator equalsGenerator = new EqualsGenerator();
+            final TypeAppender superTypeAppender = new SuperTypeAppender();
             final Generator generator = new Generator(
                 new ValueGenerator(
                     new ConstructionMethodAppender(
                         new ValueConstructorGenerator(),
                         mutableBuilderGenerator,
                         immutableBuilderGenerator),
+                    superTypeAppender,
                     singletonList(accessorGenerator),
                     asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
                 new BeanGenerator(
@@ -131,6 +135,7 @@ public final class SpeckyGeneratingContext {
                         new BeanConstructorGenerator(),
                         mutableBuilderGenerator,
                         immutableBuilderGenerator),
+                    superTypeAppender,
                     asList(accessorGenerator, mutatorGenerator),
                     asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
                 new ViewGenerator(),
