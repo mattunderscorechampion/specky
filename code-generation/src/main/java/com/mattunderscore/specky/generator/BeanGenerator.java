@@ -45,17 +45,20 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 11/06/2016
  */
 public final class BeanGenerator {
+    private final TypeInitialiser typeInitialiser;
     private final TypeAppender constructionMethodAppender;
     private final TypeAppender superTypeAppender;
     private final List<MethodGeneratorForType> forTypeGenerators;
     private final List<MethodGeneratorForProperty> forPropertyGenerators;
 
     public BeanGenerator(
+            TypeInitialiser typeInitialiser,
             TypeAppender constructionMethodAppender,
             TypeAppender superTypeAppender,
             List<MethodGeneratorForProperty> methodGeneratorForProperties,
             List<MethodGeneratorForType> methodGeneratorForTypes) {
 
+        this.typeInitialiser = typeInitialiser;
         this.constructionMethodAppender = constructionMethodAppender;
         this.superTypeAppender = superTypeAppender;
         this.forTypeGenerators = methodGeneratorForTypes;

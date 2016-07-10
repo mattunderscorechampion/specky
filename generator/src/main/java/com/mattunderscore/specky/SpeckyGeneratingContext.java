@@ -38,6 +38,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.mattunderscore.specky.generator.AccessorGenerator;
 import com.mattunderscore.specky.generator.BeanConstructorGenerator;
 import com.mattunderscore.specky.generator.BeanGenerator;
+import com.mattunderscore.specky.generator.BeanInitialiser;
 import com.mattunderscore.specky.generator.BuildMethodGenerator;
 import com.mattunderscore.specky.generator.CodeStyle;
 import com.mattunderscore.specky.generator.ConstructionMethodAppender;
@@ -52,6 +53,7 @@ import com.mattunderscore.specky.generator.ToStringGenerator;
 import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.ValueConstructorGenerator;
 import com.mattunderscore.specky.generator.ValueGenerator;
+import com.mattunderscore.specky.generator.ValueInitialiser;
 import com.mattunderscore.specky.generator.ViewGenerator;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.JavaFile;
@@ -123,6 +125,7 @@ public final class SpeckyGeneratingContext {
             final TypeAppender superTypeAppender = new SuperTypeAppender();
             final Generator generator = new Generator(
                 new ValueGenerator(
+                    new ValueInitialiser(),
                     new ConstructionMethodAppender(
                         new ValueConstructorGenerator(),
                         mutableBuilderGenerator,
@@ -131,6 +134,7 @@ public final class SpeckyGeneratingContext {
                     singletonList(accessorGenerator),
                     asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
                 new BeanGenerator(
+                    new BeanInitialiser(),
                     new ConstructionMethodAppender(
                         new BeanConstructorGenerator(),
                         mutableBuilderGenerator,

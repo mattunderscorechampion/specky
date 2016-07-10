@@ -43,17 +43,20 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 11/06/2016
  */
 public final class ValueGenerator {
+    private final TypeInitialiser typeInitialiser;
     private final TypeAppender constructionMethodAppender;
     private final TypeAppender superTypeAppender;
     private final List<MethodGeneratorForType> forTypeGenerators;
     private final List<MethodGeneratorForProperty> forPropertyGenerators;
 
     public ValueGenerator(
+            TypeInitialiser typeInitialiser,
             TypeAppender constructionMethodAppender,
             TypeAppender superTypeAppender,
             List<MethodGeneratorForProperty> methodGeneratorForProperties,
             List<MethodGeneratorForType> methodGeneratorForTypes) {
 
+        this.typeInitialiser = typeInitialiser;
         this.constructionMethodAppender = constructionMethodAppender;
         this.superTypeAppender = superTypeAppender;
         this.forPropertyGenerators = methodGeneratorForProperties;
@@ -61,10 +64,7 @@ public final class ValueGenerator {
     }
 
     public TypeSpec generateValue(SpecDesc specDesc, ValueDesc valueDesc) {
-        final TypeSpec.Builder builder = TypeSpec
-            .classBuilder(valueDesc.getName())
-            .addModifiers(PUBLIC, FINAL)
-            .addJavadoc(TYPE_DOC, "Value", valueDesc.getName());
+        final TypeSpec.Builder builder = typeInitialiser.create(specDesc, valueDesc);
 
         superTypeAppender.append(builder, specDesc, valueDesc);
 
