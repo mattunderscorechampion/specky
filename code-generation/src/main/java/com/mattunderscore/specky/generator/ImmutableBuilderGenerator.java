@@ -51,7 +51,7 @@ import com.squareup.javapoet.TypeSpec;
 /**
  * @author Matt Champion on 15/06/2016
  */
-public final class ImmutableBuilderGenerator {
+public final class ImmutableBuilderGenerator implements TypeAppender {
     private final MethodGeneratorForType constructorGenerator = new ConstructorForBuiltTypeGenerator();
     private final BuildMethodGenerator buildMethodGenerator;
 
@@ -59,7 +59,8 @@ public final class ImmutableBuilderGenerator {
         this.buildMethodGenerator = buildMethodGenerator;
     }
 
-    public void build(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
+    @Override
+    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
         final TypeSpec.Builder builder = classBuilder("Builder")
             .addModifiers(PUBLIC, FINAL, STATIC)
             .addJavadoc(BUILDER_TYPE_DOC, valueDesc.getName());
