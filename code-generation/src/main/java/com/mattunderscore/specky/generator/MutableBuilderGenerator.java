@@ -26,13 +26,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator;
 
 import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_FACTORY;
-import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_TYPE_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.MUTABLE_BUILDER_SETTER;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
-import static com.squareup.javapoet.TypeSpec.classBuilder;
-import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
@@ -50,18 +47,18 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 13/06/2016
  */
 public final class MutableBuilderGenerator implements TypeAppender {
+    private final TypeInitialiser typeInitialiser;
     private final MethodGeneratorForType constructorGenerator = new ConstructorForBuiltTypeGenerator();
     private final BuildMethodGenerator buildMethodGenerator;
 
-    public MutableBuilderGenerator(BuildMethodGenerator buildMethodGenerator) {
+    public MutableBuilderGenerator(TypeInitialiser typeInitialiser, BuildMethodGenerator buildMethodGenerator) {
+        this.typeInitialiser = typeInitialiser;
         this.buildMethodGenerator = buildMethodGenerator;
     }
 
     @Override
     public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
-        final TypeSpec.Builder builder = classBuilder("Builder")
-            .addModifiers(PUBLIC, FINAL, STATIC)
-            .addJavadoc(BUILDER_TYPE_DOC, valueDesc.getName());
+        final TypeSpec.Builder builder = typeInitialiser.create(specDesc, valueDesc);
 
         valueDesc
             .getProperties()

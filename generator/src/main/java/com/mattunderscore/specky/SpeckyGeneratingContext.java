@@ -40,6 +40,7 @@ import com.mattunderscore.specky.generator.BeanConstructorGenerator;
 import com.mattunderscore.specky.generator.BeanGenerator;
 import com.mattunderscore.specky.generator.BeanInitialiser;
 import com.mattunderscore.specky.generator.BuildMethodGenerator;
+import com.mattunderscore.specky.generator.BuilderInitialiser;
 import com.mattunderscore.specky.generator.CodeStyle;
 import com.mattunderscore.specky.generator.ConstructionMethodAppender;
 import com.mattunderscore.specky.generator.EqualsGenerator;
@@ -51,6 +52,7 @@ import com.mattunderscore.specky.generator.MutatorGenerator;
 import com.mattunderscore.specky.generator.SuperTypeAppender;
 import com.mattunderscore.specky.generator.ToStringGenerator;
 import com.mattunderscore.specky.generator.TypeAppender;
+import com.mattunderscore.specky.generator.TypeInitialiser;
 import com.mattunderscore.specky.generator.ValueConstructorGenerator;
 import com.mattunderscore.specky.generator.ValueGenerator;
 import com.mattunderscore.specky.generator.ValueInitialiser;
@@ -118,8 +120,13 @@ public final class SpeckyGeneratingContext {
     public SpeckyWritingContext generate() {
         if (consumed.compareAndSet(false, true)) {
             final BuildMethodGenerator buildMethodGenerator = new BuildMethodGenerator();
-            final MutableBuilderGenerator mutableBuilderGenerator = new MutableBuilderGenerator(buildMethodGenerator);
-            final ImmutableBuilderGenerator immutableBuilderGenerator = new ImmutableBuilderGenerator(buildMethodGenerator);
+            final TypeInitialiser builderInitialiser = new BuilderInitialiser();
+            final MutableBuilderGenerator mutableBuilderGenerator = new MutableBuilderGenerator(
+                builderInitialiser,
+                buildMethodGenerator);
+            final ImmutableBuilderGenerator immutableBuilderGenerator = new ImmutableBuilderGenerator(
+                builderInitialiser,
+                buildMethodGenerator);
             final HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
             final EqualsGenerator equalsGenerator = new EqualsGenerator();
             final TypeAppender superTypeAppender = new SuperTypeAppender();
