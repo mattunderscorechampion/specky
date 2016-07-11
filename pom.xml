@@ -17,6 +17,7 @@
         <module>dsl-ast-transformer</module>
         <module>javapoet-utils</module>
         <module>code-generation</module>
+        <module>processed-model</module>
     </modules>
 
     <dependencyManagement>
@@ -24,6 +25,11 @@
             <dependency>
                 <groupId>com.mattunderscore.code.generation.specky</groupId>
                 <artifactId>model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mattunderscore.code.generation.specky</groupId>
+                <artifactId>processed-model</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
