@@ -29,8 +29,8 @@ import static com.mattunderscore.specky.generator.GeneratorUtils.TYPE_DOC;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.dsl.model.SpecDesc;
+import com.mattunderscore.specky.dsl.model.TypeDesc;
 import com.squareup.javapoet.TypeSpec;
 
 /**

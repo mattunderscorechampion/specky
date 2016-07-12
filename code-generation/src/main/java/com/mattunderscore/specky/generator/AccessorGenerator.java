@@ -31,10 +31,9 @@ import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static java.lang.Character.toUpperCase;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.model.PropertyImplementationDesc;
-import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
-import com.squareup.javapoet.ClassName;
+import com.mattunderscore.specky.dsl.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.dsl.model.SpecDesc;
+import com.mattunderscore.specky.dsl.model.TypeDesc;
 import com.squareup.javapoet.MethodSpec;
 
 /**

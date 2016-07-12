@@ -23,15 +23,19 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.model;
+package com.mattunderscore.specky.dsl.model;
+
+import java.util.List;
 
 /**
- * Description of construction method for a type.
- *
- * @author Matt Champion
+ * @author Matt Champion on 11/06/2016
  */
-public enum ConstructionMethod {
-    CONSTRUCTOR,
-    MUTABLE_BUILDER,
-    IMMUTABLE_BUILDER;
+public interface TypeDesc {
+    String getName();
+
+    List<PropertyImplementationDesc> getProperties();
+
+    ConstructionMethod getConstructionMethod();
+
+    List<String> getExtend();
 }

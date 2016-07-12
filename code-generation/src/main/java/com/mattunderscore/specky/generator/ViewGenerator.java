@@ -34,9 +34,9 @@ import static java.lang.Character.toUpperCase;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.model.PropertyDesc;
-import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.ViewDesc;
+import com.mattunderscore.specky.dsl.model.PropertyDesc;
+import com.mattunderscore.specky.dsl.model.SpecDesc;
+import com.mattunderscore.specky.dsl.model.ViewDesc;
 import com.squareup.javapoet.TypeSpec;
 
 /**

@@ -23,22 +23,20 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.model;
+package com.mattunderscore.specky.dsl.model;
+
+import java.util.List;
 
 import lombok.Builder;
 import lombok.Value;
 
-import java.util.List;
-
 /**
- * Specification model.
- *
- * @author Matt Champion on 05/06/16
+ * View model.
+ * @author Matt Champion on 25/06/2016
  */
 @Value
 @Builder
-public class SpecDesc {
-    String packageName;
-    List<TypeDesc> values;
-    List<ViewDesc> views;
+public class ViewDesc {
+    String name;
+    List<? extends PropertyDesc> properties;
 }

@@ -28,8 +28,8 @@ package com.mattunderscore.specky.generator;
 import static com.mattunderscore.specky.generator.GeneratorUtils.TYPE_DOC;
 import static com.squareup.javapoet.TypeSpec.interfaceBuilder;
 
-import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.dsl.model.SpecDesc;
+import com.mattunderscore.specky.dsl.model.TypeDesc;
 import com.squareup.javapoet.TypeSpec;
 
 /**

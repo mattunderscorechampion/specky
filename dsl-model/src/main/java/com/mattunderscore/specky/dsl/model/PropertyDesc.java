@@ -23,21 +23,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.model;
-
-import lombok.Builder;
-import lombok.Value;
+package com.mattunderscore.specky.dsl.model;
 
 /**
- * Property implementation model.
- *
- * @author Matt Champion on 05/06/16
+ * Property model.
+ * @author Matt Champion on 25/06/2016
  */
-@Value
-@Builder
-public class PropertyImplementationDesc implements PropertyDesc {
-    String name;
-    String type;
-    boolean optional;
-    String defaultValue;
+public interface PropertyDesc {
+    String getType();
+    String getName();
 }

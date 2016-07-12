@@ -37,11 +37,11 @@ import org.antlr.v4.runtime.UnbufferedTokenStream;
 import org.junit.Test;
 
 import com.mattunderscore.specky.dsl.SpecBuilder;
-import com.mattunderscore.specky.model.PropertyDesc;
-import com.mattunderscore.specky.model.PropertyImplementationDesc;
-import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
-import com.mattunderscore.specky.model.ViewDesc;
+import com.mattunderscore.specky.dsl.model.PropertyDesc;
+import com.mattunderscore.specky.dsl.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.dsl.model.SpecDesc;
+import com.mattunderscore.specky.dsl.model.TypeDesc;
+import com.mattunderscore.specky.dsl.model.ViewDesc;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.SpeckyLexer;

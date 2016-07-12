@@ -32,14 +32,14 @@ import java.util.Optional;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import com.mattunderscore.specky.model.BeanDesc;
-import com.mattunderscore.specky.model.ConstructionMethod;
-import com.mattunderscore.specky.model.PropertyImplementationDesc;
-import com.mattunderscore.specky.model.PropertyViewDesc;
-import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
-import com.mattunderscore.specky.model.ValueDesc;
-import com.mattunderscore.specky.model.ViewDesc;
+import com.mattunderscore.specky.dsl.model.BeanDesc;
+import com.mattunderscore.specky.dsl.model.ConstructionMethod;
+import com.mattunderscore.specky.dsl.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.dsl.model.PropertyViewDesc;
+import com.mattunderscore.specky.dsl.model.SpecDesc;
+import com.mattunderscore.specky.dsl.model.TypeDesc;
+import com.mattunderscore.specky.dsl.model.ValueDesc;
+import com.mattunderscore.specky.dsl.model.ViewDesc;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.ImplSpecContext;
 import com.mattunderscore.specky.parser.Specky.PropertyContext;

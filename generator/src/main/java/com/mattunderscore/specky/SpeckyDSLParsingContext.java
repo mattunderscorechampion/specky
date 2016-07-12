@@ -37,7 +37,7 @@ import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.UnbufferedTokenStream;
 
 import com.mattunderscore.specky.dsl.SpecBuilder;
-import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.dsl.model.SpecDesc;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyLexer;
 import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
