@@ -31,9 +31,9 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 
 import java.util.stream.Collectors;
 
-import com.mattunderscore.specky.dsl.model.PropertyImplementationDesc;
-import com.mattunderscore.specky.dsl.model.SpecDesc;
-import com.mattunderscore.specky.dsl.model.TypeDesc;
+import com.mattunderscore.specky.dsl.model.DSLPropertyImplementationDesc;
+import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
+import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
@@ -48,7 +48,7 @@ public final class EqualsGenerator implements MethodGeneratorForType {
     private final ParameterSpec other = ParameterSpec.builder(OBJECT, "other").build();
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
+    public MethodSpec generate(DSLSpecDesc specDesc, DSLTypeDesc typeDesc) {
         return methodBuilder("equals")
             .addAnnotation(Override.class)
             .addModifiers(PUBLIC)
@@ -58,7 +58,7 @@ public final class EqualsGenerator implements MethodGeneratorForType {
             .build();
     }
 
-    private CodeBlock generateBlock(SpecDesc specDesc, TypeDesc typeDesc) {
+    private CodeBlock generateBlock(DSLSpecDesc specDesc, DSLTypeDesc typeDesc) {
         final CodeBlock.Builder codeBlock = CodeBlock
             .builder()
             .beginControlFlow("if ($N == this)", other)
@@ -79,7 +79,7 @@ public final class EqualsGenerator implements MethodGeneratorForType {
         return codeBlock.build();
     }
 
-    private String generatePropertyComparison(PropertyImplementationDesc propertyImplementationDesc) {
+    private String generatePropertyComparison(DSLPropertyImplementationDesc propertyImplementationDesc) {
         final String name = propertyImplementationDesc.getName();
         final String type = propertyImplementationDesc.getType();
 

@@ -30,9 +30,9 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 
 import java.util.List;
 
-import com.mattunderscore.specky.dsl.model.BeanDesc;
-import com.mattunderscore.specky.dsl.model.ConstructionMethod;
-import com.mattunderscore.specky.dsl.model.SpecDesc;
+import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
+import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
+import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.FieldSpec.Builder;
 import com.squareup.javapoet.TypeName;
@@ -62,7 +62,7 @@ public final class BeanGenerator {
         this.forPropertyGenerators = methodGeneratorForProperties;
     }
 
-    public TypeSpec generateBean(SpecDesc specDesc, BeanDesc beanDesc) {
+    public TypeSpec generateBean(DSLSpecDesc specDesc, DSLBeanDesc beanDesc) {
         final TypeSpec.Builder builder = typeInitialiser.create(specDesc, beanDesc);
 
         superTypeAppender.append(builder, specDesc, beanDesc);
@@ -74,7 +74,7 @@ public final class BeanGenerator {
                 final TypeName type = getType(propertyDesc.getType());
                 final Builder fieldSpecBuilder = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE);
 
-                if (beanDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR
+                if (beanDesc.getConstructionMethod() == DSLConstructionMethod.CONSTRUCTOR
                     && propertyDesc.getDefaultValue() != null) {
                     fieldSpecBuilder.initializer(propertyDesc.getDefaultValue());
                 }

@@ -29,11 +29,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.mattunderscore.specky.dsl.model.BeanDesc;
-import com.mattunderscore.specky.dsl.model.SpecDesc;
-import com.mattunderscore.specky.dsl.model.TypeDesc;
-import com.mattunderscore.specky.dsl.model.ValueDesc;
-import com.mattunderscore.specky.dsl.model.ViewDesc;
+import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
+import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
+import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
+import com.mattunderscore.specky.dsl.model.DSLValueDesc;
+import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 
@@ -59,7 +59,7 @@ public final class Generator {
         this.codeStyle = codeStyle;
     }
 
-    public List<JavaFile> generate(SpecDesc specDesc) {
+    public List<JavaFile> generate(DSLSpecDesc specDesc) {
         final List<JavaFile> result = new ArrayList<>();
         result.addAll(specDesc
             .getValues()
@@ -84,19 +84,19 @@ public final class Generator {
         return result;
     }
 
-    private TypeSpec generateType(SpecDesc specDesc, TypeDesc typeDesc) {
-        if (typeDesc instanceof ValueDesc) {
-            return valueGenerator.generateValue(specDesc, (ValueDesc) typeDesc);
+    private TypeSpec generateType(DSLSpecDesc specDesc, DSLTypeDesc typeDesc) {
+        if (typeDesc instanceof DSLValueDesc) {
+            return valueGenerator.generateValue(specDesc, (DSLValueDesc) typeDesc);
         }
-        else if (typeDesc instanceof BeanDesc) {
-            return beanGenerator.generateBean(specDesc, (BeanDesc) typeDesc);
+        else if (typeDesc instanceof DSLBeanDesc) {
+            return beanGenerator.generateBean(specDesc, (DSLBeanDesc) typeDesc);
         }
         else {
             throw new IllegalArgumentException("Unknown type to generate");
         }
     }
 
-    private TypeSpec generateView(SpecDesc specDesc, ViewDesc typeDesc) {
+    private TypeSpec generateView(DSLSpecDesc specDesc, DSLViewDesc typeDesc) {
         return viewGenerator.generateView(specDesc, typeDesc);
     }
 }

@@ -33,9 +33,9 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.mattunderscore.specky.dsl.model.PropertyImplementationDesc;
-import com.mattunderscore.specky.dsl.model.SpecDesc;
-import com.mattunderscore.specky.dsl.model.TypeDesc;
+import com.mattunderscore.specky.dsl.model.DSLPropertyImplementationDesc;
+import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
+import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
@@ -46,7 +46,7 @@ import com.squareup.javapoet.TypeName;
 public final class BuildMethodGenerator implements MethodGeneratorForType {
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, TypeDesc valueDesc) {
+    public MethodSpec generate(DSLSpecDesc specDesc, DSLTypeDesc valueDesc) {
         final MethodSpec.Builder buildMethod = methodBuilder("build")
             .addModifiers(PUBLIC)
             .returns(ClassName.get(specDesc.getPackageName(), valueDesc.getName()))
@@ -56,19 +56,19 @@ public final class BuildMethodGenerator implements MethodGeneratorForType {
         return buildMethod.build();
     }
 
-    private void addReturnStatement(MethodSpec.Builder buildMethod, SpecDesc specDesc, TypeDesc valueDesc) {
+    private void addReturnStatement(MethodSpec.Builder buildMethod, DSLSpecDesc specDesc, DSLTypeDesc valueDesc) {
         buildMethod.addStatement(
             "return new $T(" +
             valueDesc
                 .getProperties()
                 .stream()
-                .map(PropertyImplementationDesc::getName)
+                .map(DSLPropertyImplementationDesc::getName)
                 .collect(Collectors.joining(", ")) +
             ')',
             ClassName.get(specDesc.getPackageName(), valueDesc.getName()));
     }
 
-    private void addValidationStatements(MethodSpec.Builder methodSpecBuilder, TypeDesc valueDesc) {
+    private void addValidationStatements(MethodSpec.Builder methodSpecBuilder, DSLTypeDesc valueDesc) {
         valueDesc
             .getProperties()
             .stream()

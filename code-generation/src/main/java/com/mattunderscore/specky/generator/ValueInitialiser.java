@@ -29,8 +29,8 @@ import static com.mattunderscore.specky.generator.GeneratorUtils.TYPE_DOC;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.dsl.model.SpecDesc;
-import com.mattunderscore.specky.dsl.model.TypeDesc;
+import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
+import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.squareup.javapoet.TypeSpec;
 
 /**
@@ -39,7 +39,7 @@ import com.squareup.javapoet.TypeSpec;
  */
 public class ValueInitialiser implements TypeInitialiser {
     @Override
-    public TypeSpec.Builder create(SpecDesc specDesc, TypeDesc typeDesc) {
+    public TypeSpec.Builder create(DSLSpecDesc specDesc, DSLTypeDesc typeDesc) {
         return TypeSpec
             .classBuilder(typeDesc.getName())
             .addModifiers(PUBLIC, FINAL)

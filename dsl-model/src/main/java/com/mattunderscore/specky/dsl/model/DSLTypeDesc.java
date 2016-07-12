@@ -27,19 +27,15 @@ package com.mattunderscore.specky.dsl.model;
 
 import java.util.List;
 
-import lombok.Builder;
-import lombok.Value;
-
 /**
- * Value model.
- *
- * @author Matt Champion on 05/06/16
+ * @author Matt Champion on 11/06/2016
  */
-@Value
-@Builder
-public class ValueDesc implements TypeDesc {
-    String name;
-    List<PropertyImplementationDesc> properties;
-    ConstructionMethod constructionMethod;
-    List<String> extend;
+public interface DSLTypeDesc {
+    String getName();
+
+    List<DSLPropertyImplementationDesc> getProperties();
+
+    DSLConstructionMethod getConstructionMethod();
+
+    List<String> getExtend();
 }

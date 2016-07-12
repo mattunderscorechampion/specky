@@ -25,8 +25,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import com.mattunderscore.specky.dsl.model.SpecDesc;
-import com.mattunderscore.specky.dsl.model.TypeDesc;
+import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
+import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
@@ -44,7 +44,7 @@ import static com.squareup.javapoet.ParameterizedTypeName.get;
  */
 public final class ConditionalConfiguratorGenerator implements MethodGeneratorForType {
     @Override
-    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
+    public MethodSpec generate(DSLSpecDesc specDesc, DSLTypeDesc typeDesc) {
         final ClassName builderType = ClassName.get(specDesc.getPackageName(), typeDesc.getName(), "Builder");
         final ParameterSpec conditionParameter = ParameterSpec
                 .builder(get(Supplier.class, Boolean.class), "condition")

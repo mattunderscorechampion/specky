@@ -25,13 +25,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.dsl.model;
 
+import lombok.Builder;
+import lombok.Value;
+
+import java.util.List;
+
 /**
- * Description of construction method for a type.
+ * Bean model.
  *
- * @author Matt Champion
+ * @author Matt Champion on 05/06/16
  */
-public enum ConstructionMethod {
-    CONSTRUCTOR,
-    MUTABLE_BUILDER,
-    IMMUTABLE_BUILDER;
+@Value
+@Builder
+public class DSLBeanDesc implements DSLTypeDesc {
+    String name;
+    List<DSLPropertyImplementationDesc> properties;
+    DSLConstructionMethod constructionMethod;
+    List<String> extend;
 }

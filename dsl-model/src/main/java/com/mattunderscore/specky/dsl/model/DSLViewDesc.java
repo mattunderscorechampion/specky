@@ -36,7 +36,7 @@ import lombok.Value;
  */
 @Value
 @Builder
-public class ViewDesc {
+public class DSLViewDesc {
     String name;
-    List<? extends PropertyDesc> properties;
+    List<? extends DSLPropertyDesc> properties;
 }

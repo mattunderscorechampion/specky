@@ -28,16 +28,17 @@ package com.mattunderscore.specky.dsl.model;
 import lombok.Builder;
 import lombok.Value;
 
+import java.util.List;
+
 /**
- * Property implementation model.
+ * Specification model.
  *
  * @author Matt Champion on 05/06/16
  */
 @Value
 @Builder
-public class PropertyImplementationDesc implements PropertyDesc {
-    String name;
-    String type;
-    boolean optional;
-    String defaultValue;
+public class DSLSpecDesc {
+    String packageName;
+    List<DSLTypeDesc> values;
+    List<DSLViewDesc> views;
 }

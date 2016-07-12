@@ -34,9 +34,9 @@ import static java.lang.Character.toUpperCase;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.dsl.model.PropertyDesc;
-import com.mattunderscore.specky.dsl.model.SpecDesc;
-import com.mattunderscore.specky.dsl.model.ViewDesc;
+import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
+import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
+import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.squareup.javapoet.TypeSpec;
 
 /**
@@ -44,12 +44,12 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 25/06/2016
  */
 public final class ViewGenerator {
-    public TypeSpec generateView(SpecDesc specDesc, ViewDesc typeDesc) {
+    public TypeSpec generateView(DSLSpecDesc specDesc, DSLViewDesc typeDesc) {
         final TypeSpec.Builder builder = interfaceBuilder(typeDesc.getName())
             .addModifiers(PUBLIC)
             .addJavadoc(TYPE_DOC, "View", typeDesc.getName());
 
-        for (PropertyDesc view : typeDesc.getProperties()) {
+        for (DSLPropertyDesc view : typeDesc.getProperties()) {
             builder
                 .addMethod(methodBuilder(getAccessorName(view.getName()))
                     .addJavadoc(GETTER_DOC, view.getName())

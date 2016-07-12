@@ -34,8 +34,8 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
-import com.mattunderscore.specky.dsl.model.SpecDesc;
-import com.mattunderscore.specky.dsl.model.TypeDesc;
+import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
+import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
@@ -58,7 +58,7 @@ public final class MutableBuilderGenerator implements TypeAppender {
     }
 
     @Override
-    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
+    public void append(TypeSpec.Builder typeSpecBuilder, DSLSpecDesc specDesc, DSLTypeDesc valueDesc) {
         final TypeSpec.Builder builder = typeInitialiser.create(specDesc, valueDesc);
 
         valueDesc

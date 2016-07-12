@@ -25,16 +25,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.dsl.model;
 
-import lombok.Builder;
-import lombok.Value;
-
 /**
- * Property view model.
- * @author Matt Champion on 25/06/2016
+ * Description of construction method for a type.
+ *
+ * @author Matt Champion
  */
-@Value
-@Builder
-public class PropertyViewDesc implements PropertyDesc {
-    final String type;
-    final String name;
+public enum DSLConstructionMethod {
+    CONSTRUCTOR,
+    MUTABLE_BUILDER,
+    IMMUTABLE_BUILDER;
 }

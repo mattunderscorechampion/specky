@@ -31,9 +31,9 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 
 import java.util.Objects;
 
-import com.mattunderscore.specky.dsl.model.PropertyImplementationDesc;
-import com.mattunderscore.specky.dsl.model.SpecDesc;
-import com.mattunderscore.specky.dsl.model.TypeDesc;
+import com.mattunderscore.specky.dsl.model.DSLPropertyImplementationDesc;
+import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
+import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
@@ -43,7 +43,7 @@ import com.squareup.javapoet.TypeName;
  * @author Matt Champion on 06/07/2016
  */
 public final class HashCodeGenerator implements MethodGeneratorForType {
-    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
+    public MethodSpec generate(DSLSpecDesc specDesc, DSLTypeDesc typeDesc) {
         return methodBuilder("hashCode")
             .addAnnotation(Override.class)
             .addModifiers(PUBLIC)
@@ -54,7 +54,7 @@ public final class HashCodeGenerator implements MethodGeneratorForType {
                 typeDesc
                     .getProperties()
                     .stream()
-                    .map(PropertyImplementationDesc::getName)
+                    .map(DSLPropertyImplementationDesc::getName)
                     .collect(joining(", ")))
             .build();
     }

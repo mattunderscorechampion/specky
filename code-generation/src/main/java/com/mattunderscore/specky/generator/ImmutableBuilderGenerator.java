@@ -35,9 +35,9 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 import java.util.stream.Collectors;
 
-import com.mattunderscore.specky.dsl.model.PropertyImplementationDesc;
-import com.mattunderscore.specky.dsl.model.SpecDesc;
-import com.mattunderscore.specky.dsl.model.TypeDesc;
+import com.mattunderscore.specky.dsl.model.DSLPropertyImplementationDesc;
+import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
+import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
@@ -59,7 +59,7 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
     }
 
     @Override
-    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
+    public void append(TypeSpec.Builder typeSpecBuilder, DSLSpecDesc specDesc, DSLTypeDesc valueDesc) {
         final TypeSpec.Builder builder = typeInitialiser.create(specDesc, valueDesc);
 
         valueDesc
@@ -98,17 +98,17 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
             .addType(builder.build());
     }
 
-    private String newBuilder(TypeDesc valueDesc) {
+    private String newBuilder(DSLTypeDesc valueDesc) {
         return "return new Builder(" +
             valueDesc
                 .getProperties()
                 .stream()
-                .map(PropertyImplementationDesc::getName)
+                .map(DSLPropertyImplementationDesc::getName)
                 .collect(Collectors.joining(", ")) +
             ')';
     }
 
-    private String defaultBuilder(TypeDesc valueDesc) {
+    private String defaultBuilder(DSLTypeDesc valueDesc) {
         return "return new Builder(" +
             valueDesc
                 .getProperties()

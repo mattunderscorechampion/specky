@@ -37,11 +37,11 @@ import org.antlr.v4.runtime.UnbufferedTokenStream;
 import org.junit.Test;
 
 import com.mattunderscore.specky.dsl.SpecBuilder;
-import com.mattunderscore.specky.dsl.model.PropertyDesc;
-import com.mattunderscore.specky.dsl.model.PropertyImplementationDesc;
-import com.mattunderscore.specky.dsl.model.SpecDesc;
-import com.mattunderscore.specky.dsl.model.TypeDesc;
-import com.mattunderscore.specky.dsl.model.ViewDesc;
+import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
+import com.mattunderscore.specky.dsl.model.DSLPropertyImplementationDesc;
+import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
+import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
+import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.SpeckyLexer;
@@ -71,72 +71,72 @@ public final class SpecBuilderTest {
             .with(new JavaStandardDefaultValueResolver())
             .with(new NullValueResolver()));
 
-        final SpecDesc specDesc = specBuilder.build(spec);
+        final DSLSpecDesc specDesc = specBuilder.build(spec);
 
         assertEquals("com.example", specDesc.getPackageName());
-        final List<ViewDesc> views = specDesc.getViews();
-        final List<TypeDesc> values = specDesc.getValues();
+        final List<DSLViewDesc> views = specDesc.getViews();
+        final List<DSLTypeDesc> values = specDesc.getValues();
         assertEquals(1, views.size());
         assertEquals(4, values.size());
 
-        final ViewDesc typeDesc0 = views.get(0);
+        final DSLViewDesc typeDesc0 = views.get(0);
         assertEquals("TestType", typeDesc0.getName());
-        final List<? extends PropertyDesc> properties0 = typeDesc0.getProperties();
+        final List<? extends DSLPropertyDesc> properties0 = typeDesc0.getProperties();
         assertEquals(1, properties0.size());
 
-        final PropertyDesc propertyDesc0 = properties0.get(0);
+        final DSLPropertyDesc propertyDesc0 = properties0.get(0);
         assertEquals("num", propertyDesc0.getName());
         assertEquals("java.lang.Integer", propertyDesc0.getType());
 
-        final TypeDesc valueDesc0 = values.get(0);
+        final DSLTypeDesc valueDesc0 = values.get(0);
         assertEquals("FirstValue", valueDesc0.getName());
-        final List<PropertyImplementationDesc> properties1 = valueDesc0.getProperties();
+        final List<DSLPropertyImplementationDesc> properties1 = valueDesc0.getProperties();
         assertEquals(2, properties1.size());
         final List<String> extend = valueDesc0.getExtend();
         assertEquals(1, extend.size());
         assertEquals("com.example.TestType", extend.get(0));
 
-        final PropertyImplementationDesc propertyDesc1 = properties1.get(0);
+        final DSLPropertyImplementationDesc propertyDesc1 = properties1.get(0);
         assertEquals("num", propertyDesc1.getName());
         assertEquals("java.lang.Integer", propertyDesc1.getType());
-        final PropertyImplementationDesc propertyDesc2 = properties1.get(1);
+        final DSLPropertyImplementationDesc propertyDesc2 = properties1.get(1);
         assertEquals("str", propertyDesc2.getName());
         assertEquals("java.lang.String", propertyDesc2.getType());
 
-        final TypeDesc valueDesc1 = values.get(1);
+        final DSLTypeDesc valueDesc1 = values.get(1);
         assertEquals("SecondValue", valueDesc1.getName());
-        final List<PropertyImplementationDesc> properties2 = valueDesc1.getProperties();
+        final List<DSLPropertyImplementationDesc> properties2 = valueDesc1.getProperties();
         assertEquals(2, properties2.size());
 
-        final PropertyImplementationDesc propertyDesc3 = properties2.get(0);
+        final DSLPropertyImplementationDesc propertyDesc3 = properties2.get(0);
         assertEquals("num", propertyDesc3.getName());
         assertEquals("java.lang.Integer", propertyDesc3.getType());
-        final PropertyImplementationDesc propertyDesc4 = properties2.get(1);
+        final DSLPropertyImplementationDesc propertyDesc4 = properties2.get(1);
         assertEquals("dbl", propertyDesc4.getName());
         assertEquals("java.lang.Double", propertyDesc4.getType());
 
-        final TypeDesc valueDesc2 = values.get(2);
+        final DSLTypeDesc valueDesc2 = values.get(2);
         assertEquals("ValueWithBooleans", valueDesc2.getName());
-        final List<PropertyImplementationDesc> properties3 = valueDesc2.getProperties();
+        final List<DSLPropertyImplementationDesc> properties3 = valueDesc2.getProperties();
         assertEquals(2, properties3.size());
 
-        final PropertyImplementationDesc propertyDesc5 = properties3.get(0);
+        final DSLPropertyImplementationDesc propertyDesc5 = properties3.get(0);
         assertEquals("num", propertyDesc5.getName());
         assertEquals("java.lang.Integer", propertyDesc5.getType());
-        final PropertyImplementationDesc propertyDesc6 = properties3.get(1);
+        final DSLPropertyImplementationDesc propertyDesc6 = properties3.get(1);
         assertEquals("boolVal", propertyDesc6.getName());
         assertEquals("java.lang.Boolean", propertyDesc6.getType());
 
-        final TypeDesc beanSpec0 = values.get(3);
+        final DSLTypeDesc beanSpec0 = values.get(3);
         assertEquals("FirstBean", beanSpec0.getName());
-        final List<PropertyImplementationDesc> properties4 = beanSpec0.getProperties();
+        final List<DSLPropertyImplementationDesc> properties4 = beanSpec0.getProperties();
         assertEquals(2, properties4.size());
 
-        final PropertyImplementationDesc propertyDesc7 = properties4.get(0);
+        final DSLPropertyImplementationDesc propertyDesc7 = properties4.get(0);
         assertEquals("num", propertyDesc7.getName());
         assertEquals("java.lang.Integer", propertyDesc7.getType());
         assertEquals("5", propertyDesc7.getDefaultValue());
-        final PropertyImplementationDesc propertyDesc8 = properties4.get(1);
+        final DSLPropertyImplementationDesc propertyDesc8 = properties4.get(1);
         assertEquals("str", propertyDesc8.getName());
         assertEquals("java.lang.String", propertyDesc8.getType());
     }

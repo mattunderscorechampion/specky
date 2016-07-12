@@ -25,21 +25,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.dsl.model;
 
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Value;
 
-import java.util.List;
-
 /**
- * Bean model.
+ * Value model.
  *
  * @author Matt Champion on 05/06/16
  */
 @Value
 @Builder
-public class BeanDesc implements TypeDesc {
+public class DSLValueDesc implements DSLTypeDesc {
     String name;
-    List<PropertyImplementationDesc> properties;
-    ConstructionMethod constructionMethod;
+    List<DSLPropertyImplementationDesc> properties;
+    DSLConstructionMethod constructionMethod;
     List<String> extend;
 }

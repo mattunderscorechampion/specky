@@ -29,7 +29,7 @@ package com.mattunderscore.specky.dsl.model;
  * Property model.
  * @author Matt Champion on 25/06/2016
  */
-public interface PropertyDesc {
+public interface DSLPropertyDesc {
     String getType();
     String getName();
 }

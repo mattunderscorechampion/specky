@@ -32,14 +32,16 @@ import java.util.Optional;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import com.mattunderscore.specky.dsl.model.BeanDesc;
-import com.mattunderscore.specky.dsl.model.ConstructionMethod;
-import com.mattunderscore.specky.dsl.model.PropertyImplementationDesc;
-import com.mattunderscore.specky.dsl.model.PropertyViewDesc;
-import com.mattunderscore.specky.dsl.model.SpecDesc;
-import com.mattunderscore.specky.dsl.model.TypeDesc;
-import com.mattunderscore.specky.dsl.model.ValueDesc;
-import com.mattunderscore.specky.dsl.model.ViewDesc;
+import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
+import com.mattunderscore.specky.dsl.model.DSLBeanDesc.DSLBeanDescBuilder;
+import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
+import com.mattunderscore.specky.dsl.model.DSLPropertyImplementationDesc;
+import com.mattunderscore.specky.dsl.model.DSLPropertyViewDesc;
+import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
+import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
+import com.mattunderscore.specky.dsl.model.DSLValueDesc;
+import com.mattunderscore.specky.dsl.model.DSLValueDesc.DSLValueDescBuilder;
+import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.ImplSpecContext;
 import com.mattunderscore.specky.parser.Specky.PropertyContext;
@@ -61,8 +63,8 @@ public final class SpecBuilder {
         this.valueResolver = valueResolver;
     }
 
-    public SpecDesc build(SpecContext context) {
-        return SpecDesc
+    public DSLSpecDesc build(SpecContext context) {
+        return DSLSpecDesc
             .builder()
             .packageName(context.r_package().qualifiedName().getText())
             .views(context
@@ -78,9 +80,9 @@ public final class SpecBuilder {
             .build();
     }
 
-    private TypeDesc createValue(ImplSpecContext context) {
+    private DSLTypeDesc createValue(ImplSpecContext context) {
         if (context.BEAN() == null) {
-            final ValueDesc.ValueDescBuilder valueDescBuilder = ValueDesc
+            final DSLValueDescBuilder valueDescBuilder = DSLValueDesc
                 .builder()
                 .name(context.Identifier().get(0).getText())
                 .properties(context
@@ -108,7 +110,7 @@ public final class SpecBuilder {
             return valueDescBuilder.build();
         }
         else {
-            final BeanDesc.BeanDescBuilder beanDescBuilder = BeanDesc
+            final DSLBeanDescBuilder beanDescBuilder = DSLBeanDesc
                 .builder()
                 .name(context.Identifier().get(0).getText())
                 .properties(context
@@ -138,8 +140,8 @@ public final class SpecBuilder {
         }
     }
 
-    private ViewDesc createValue(TypeSpecContext context) {
-            return ViewDesc
+    private DSLViewDesc createValue(TypeSpecContext context) {
+            return DSLViewDesc
                 .builder()
                 .name(context.Identifier().getText())
                 .properties(context
@@ -150,15 +152,15 @@ public final class SpecBuilder {
                 .build();
         }
 
-    private PropertyViewDesc createPropertyView(PropertyViewContext propertyViewContext) {
-        return PropertyViewDesc
+    private DSLPropertyViewDesc createPropertyView(PropertyViewContext propertyViewContext) {
+        return DSLPropertyViewDesc
             .builder()
             .name(propertyViewContext.Identifier().get(1).getText())
             .type(resolver.resolve(propertyViewContext.Identifier().get(0).getText()).get())
             .build();
     }
 
-    private PropertyImplementationDesc createProperty(PropertyContext context) {
+    private DSLPropertyImplementationDesc createProperty(PropertyContext context) {
         final String type = resolver
             .resolve(context
                 .Identifier()
@@ -168,7 +170,7 @@ public final class SpecBuilder {
         final String defaultValue = context.r_default() == null ?
             valueResolver.resolve(type).get() :
             context.r_default().ANYTHING().getText();
-        return PropertyImplementationDesc
+        return DSLPropertyImplementationDesc
             .builder()
             .name(context
                 .Identifier()
@@ -180,22 +182,22 @@ public final class SpecBuilder {
             .build();
     }
 
-    private ConstructionMethod toConstructionDesc(ImplSpecContext typeSpec) {
+    private DSLConstructionMethod toConstructionDesc(ImplSpecContext typeSpec) {
         final Specky.OptsContext options = typeSpec.opts();
 
         if (options == null || options.construction() == null) {
-            return ConstructionMethod.CONSTRUCTOR;
+            return DSLConstructionMethod.CONSTRUCTOR;
         }
 
         final String token = options.construction().getText();
         if ("constructor".equals(token)) {
-            return ConstructionMethod.CONSTRUCTOR;
+            return DSLConstructionMethod.CONSTRUCTOR;
         }
         else if ("builder".equals(token)) {
-            return ConstructionMethod.MUTABLE_BUILDER;
+            return DSLConstructionMethod.MUTABLE_BUILDER;
         }
         else if ("immutable builder".equals(token)) {
-            return ConstructionMethod.IMMUTABLE_BUILDER;
+            return DSLConstructionMethod.IMMUTABLE_BUILDER;
         }
         else {
             throw new IllegalArgumentException("Unsupported type");

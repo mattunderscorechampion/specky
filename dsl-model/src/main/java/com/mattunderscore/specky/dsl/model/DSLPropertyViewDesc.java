@@ -25,17 +25,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.dsl.model;
 
-import java.util.List;
+import lombok.Builder;
+import lombok.Value;
 
 /**
- * @author Matt Champion on 11/06/2016
+ * Property view model.
+ * @author Matt Champion on 25/06/2016
  */
-public interface TypeDesc {
-    String getName();
-
-    List<PropertyImplementationDesc> getProperties();
-
-    ConstructionMethod getConstructionMethod();
-
-    List<String> getExtend();
+@Value
+@Builder
+public class DSLPropertyViewDesc implements DSLPropertyDesc {
+    final String type;
+    final String name;
 }
