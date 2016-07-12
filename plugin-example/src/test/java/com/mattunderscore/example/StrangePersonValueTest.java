@@ -42,7 +42,35 @@ public final class StrangePersonValueTest {
     public void test() {
         final StrangePersonValue person = StrangePersonValue.builder().id(5).name("Matt").build();
 
-        assertEquals(5, (int) person.getId());
+        assertEquals(5, person.getId());
+        assertEquals("Matt", person.getName());
+        assertEquals("StrangePersonValue[id=5, name=Matt]", person.toString());
+    }
+
+    @Test
+    public void trueConditionalTest() {
+        final StrangePersonValue person = StrangePersonValue
+                .builder()
+                .id(5)
+                .name("Matt")
+                .ifThen(() -> true, builder -> builder.id(10))
+                .build();
+
+        assertEquals(10, person.getId());
+        assertEquals("Matt", person.getName());
+        assertEquals("StrangePersonValue[id=10, name=Matt]", person.toString());
+    }
+
+    @Test
+    public void falseConditionalTest() {
+        final StrangePersonValue person = StrangePersonValue
+                .builder()
+                .id(5)
+                .name("Matt")
+                .ifThen(() -> false, builder -> builder.id(10))
+                .build();
+
+        assertEquals(5, person.getId());
         assertEquals("Matt", person.getName());
         assertEquals("StrangePersonValue[id=5, name=Matt]", person.toString());
     }

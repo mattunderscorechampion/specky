@@ -70,6 +70,12 @@ import com.squareup.javapoet.TypeSpec;
         .setMethodDescription("Method to configure property $L on the builder.")
         .setReturnsDescription("a new builder")
         .toJavaDoc();
+    public final static String CONDITIONAL_BUILDER_SETTER = docMethod()
+        .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
+        .addParameter("condition", "the condition to evaluate")
+        .addParameter("function", "the function to apply")
+        .setReturnsDescription("this builder")
+        .toJavaDoc();
 
     private GeneratorUtils() {
     }

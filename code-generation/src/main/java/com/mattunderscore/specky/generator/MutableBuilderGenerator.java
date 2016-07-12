@@ -49,6 +49,7 @@ import com.squareup.javapoet.TypeSpec;
 public final class MutableBuilderGenerator implements TypeAppender {
     private final TypeInitialiser typeInitialiser;
     private final MethodGeneratorForType constructorGenerator = new ConstructorForBuiltTypeGenerator();
+    private final MethodGeneratorForType conditionalGenerator = new ConditionalConfiguratorGenerator();
     private final BuildMethodGenerator buildMethodGenerator;
 
     public MutableBuilderGenerator(TypeInitialiser typeInitialiser, BuildMethodGenerator buildMethodGenerator) {
@@ -86,6 +87,7 @@ public final class MutableBuilderGenerator implements TypeAppender {
 
         builder
             .addMethod(constructorBuilder().addModifiers(PRIVATE).build())
+            .addMethod(conditionalGenerator.generate(specDesc, valueDesc))
             .addMethod(buildMethodGenerator.generate(specDesc, valueDesc));
 
         typeSpecBuilder
