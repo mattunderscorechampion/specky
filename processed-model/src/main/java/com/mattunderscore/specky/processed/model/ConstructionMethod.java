@@ -25,18 +25,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.processed.model;
 
-import java.util.List;
-
-import lombok.Builder;
-import lombok.Value;
-
 /**
- * Specification model.
+ * Description of construction method for a type.
  *
- * @author Matt Champion on 05/06/16
+ * @author Matt Champion
  */
-@Value
-@Builder
-public class SpecDesc {
-    List<TypeDesc> values;
+public enum ConstructionMethod {
+    CONSTRUCTOR,
+    MUTABLE_BUILDER,
+    IMMUTABLE_BUILDER;
 }

@@ -27,7 +27,6 @@ package com.mattunderscore.specky.processed.model;
 
 import java.util.List;
 
-import com.mattunderscore.specky.model.ConstructionMethod;
 import lombok.Builder;
 import lombok.Value;
 

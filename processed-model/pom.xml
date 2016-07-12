@@ -16,11 +16,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.mattunderscore.code.generation.specky</groupId>
-            <artifactId>dsl-model</artifactId>
-        </dependency>
     </dependencies>
 
 </project>

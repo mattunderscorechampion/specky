@@ -25,8 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.processed.model;
 
-import com.mattunderscore.specky.model.ConstructionMethod;
-
 import java.util.List;
 
 /**
