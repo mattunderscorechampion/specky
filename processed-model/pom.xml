@@ -19,7 +19,7 @@
 
         <dependency>
             <groupId>com.mattunderscore.code.generation.specky</groupId>
-            <artifactId>model</artifactId>
+            <artifactId>dsl-model</artifactId>
         </dependency>
     </dependencies>
 
