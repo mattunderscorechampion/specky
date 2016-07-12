@@ -18,6 +18,7 @@
         <module>javapoet-utils</module>
         <module>code-generation</module>
         <module>processed-model</module>
+        <module>model-generator</module>
     </modules>
 
     <dependencyManagement>
