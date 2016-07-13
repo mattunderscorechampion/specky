@@ -25,8 +25,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
+import com.mattunderscore.specky.processed.model.SpecDesc;
+import com.mattunderscore.specky.processed.model.TypeDesc;
 import com.squareup.javapoet.TypeSpec;
 
 /**
@@ -37,5 +37,5 @@ public interface TypeAppender {
     /**
      * Append to type.
      */
-    void append(TypeSpec.Builder typeSpecBuilder, DSLSpecDesc specDesc, DSLTypeDesc valueDesc);
+    void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc);
 }

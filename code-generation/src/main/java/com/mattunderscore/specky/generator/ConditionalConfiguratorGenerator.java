@@ -25,27 +25,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
+import static com.mattunderscore.specky.generator.GeneratorUtils.CONDITIONAL_BUILDER_SETTER;
+import static com.squareup.javapoet.ParameterizedTypeName.get;
+
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import javax.lang.model.element.Modifier;
+
+import com.mattunderscore.specky.processed.model.SpecDesc;
+import com.mattunderscore.specky.processed.model.TypeDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
-
-import javax.lang.model.element.Modifier;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-import static com.mattunderscore.specky.generator.GeneratorUtils.CONDITIONAL_BUILDER_SETTER;
-import static com.squareup.javapoet.ParameterizedTypeName.get;
 
 /**
  * @author Matt Champion on 12/07/16
  */
 public final class ConditionalConfiguratorGenerator implements MethodGeneratorForType {
     @Override
-    public MethodSpec generate(DSLSpecDesc specDesc, DSLTypeDesc typeDesc) {
-        final ClassName builderType = ClassName.get(specDesc.getPackageName(), typeDesc.getName(), "Builder");
+    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
+        final ClassName builderType = ClassName.get(typeDesc.getPackageName(), typeDesc.getName(), "Builder");
         final ParameterSpec conditionParameter = ParameterSpec
                 .builder(get(Supplier.class, Boolean.class), "condition")
                 .build();

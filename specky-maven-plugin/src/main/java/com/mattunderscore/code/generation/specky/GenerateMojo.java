@@ -99,6 +99,7 @@ public class GenerateMojo extends AbstractMojo {
                 .open()
                 .parse()
                 .generate()
+                .generate()
                 .targetPath(targetPath)
                 .write();
         }

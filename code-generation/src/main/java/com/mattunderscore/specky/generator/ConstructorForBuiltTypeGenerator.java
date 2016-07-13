@@ -31,9 +31,9 @@ import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 
-import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
-import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
+import com.mattunderscore.specky.processed.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.processed.model.SpecDesc;
+import com.mattunderscore.specky.processed.model.TypeDesc;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
@@ -44,7 +44,7 @@ import com.squareup.javapoet.TypeName;
  */
 public class ConstructorForBuiltTypeGenerator implements MethodGeneratorForType {
     @Override
-    public MethodSpec generate(DSLSpecDesc specDesc, DSLTypeDesc typeDesc) {
+    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
         final MethodSpec.Builder constructor = constructorBuilder()
             .addModifiers(PRIVATE)
             .addJavadoc(CONSTRUCTOR_DOC);
@@ -54,7 +54,7 @@ public class ConstructorForBuiltTypeGenerator implements MethodGeneratorForType 
         return constructor.build();
     }
 
-    private void addProperty(MethodSpec.Builder constructor, DSLPropertyDesc property) {
+    private void addProperty(MethodSpec.Builder constructor, PropertyImplementationDesc property) {
         final TypeName type = getType(property.getType());
         final ParameterSpec constructorParameter = ParameterSpec.builder(type, property.getName()).build();
         constructor

@@ -25,9 +25,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
-import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
+import com.mattunderscore.specky.processed.model.ConstructionMethod;
+import com.mattunderscore.specky.processed.model.SpecDesc;
+import com.mattunderscore.specky.processed.model.TypeDesc;
 import com.squareup.javapoet.TypeSpec;
 
 /**
@@ -49,14 +49,14 @@ public final class ConstructionMethodAppender implements TypeAppender {
     }
 
     @Override
-    public void append(TypeSpec.Builder typeSpecBuilder, DSLSpecDesc specDesc, DSLTypeDesc valueDesc) {
-        if (valueDesc.getConstructionMethod() == DSLConstructionMethod.CONSTRUCTOR) {
+    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
+        if (valueDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR) {
             typeSpecBuilder.addMethod(constructorGenerator.generate(specDesc, valueDesc));
         }
-        else if (valueDesc.getConstructionMethod() == DSLConstructionMethod.MUTABLE_BUILDER) {
+        else if (valueDesc.getConstructionMethod() == ConstructionMethod.MUTABLE_BUILDER) {
             mutableBuilderAppender.append(typeSpecBuilder, specDesc, valueDesc);
         }
-        else if (valueDesc.getConstructionMethod() == DSLConstructionMethod.IMMUTABLE_BUILDER) {
+        else if (valueDesc.getConstructionMethod() == ConstructionMethod.IMMUTABLE_BUILDER) {
             immutableBuilderAppender.append(typeSpecBuilder, specDesc, valueDesc);
         }
         else {

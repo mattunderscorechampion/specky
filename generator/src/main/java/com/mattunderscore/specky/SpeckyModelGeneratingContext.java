@@ -23,22 +23,39 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.processed.model;
+package com.mattunderscore.specky;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import lombok.Builder;
-import lombok.Value;
+import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
+import com.mattunderscore.specky.model.generator.ModelGenerator;
+import com.mattunderscore.specky.processed.model.SpecDesc;
 
 /**
- * Specification model.
+ * Generates a model from the DSL model.
  *
- * @author Matt Champion on 05/06/16
+ * @author Matt Champion on 13/07/2016
  */
-@Value
-@Builder
-public class SpecDesc {
-    List<TypeDesc> values;
+public final class SpeckyModelGeneratingContext {
+    private final AtomicBoolean consumed = new AtomicBoolean(false);
+    private final ModelGenerator modelGenerator;
 
-    List<ViewDesc> views;
+    /*package*/ SpeckyModelGeneratingContext(List<DSLSpecDesc> specs) {
+        modelGenerator = new ModelGenerator(specs);
+    }
+
+    /**
+     * Generate the Java code.
+     * @throws IllegalStateException if has been called before
+     */
+    public SpeckyGeneratingContext generate() {
+        if (consumed.compareAndSet(false, true)) {
+            final SpecDesc specDesc = modelGenerator.get();
+            return new SpeckyGeneratingContext(specDesc);
+        }
+        else {
+            throw new IllegalStateException("Context has already been generated");
+        }
+    }
 }

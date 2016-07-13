@@ -31,8 +31,8 @@ import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
-import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
+import com.mattunderscore.specky.processed.model.SpecDesc;
+import com.mattunderscore.specky.processed.model.TypeDesc;
 import com.squareup.javapoet.TypeSpec;
 
 /**
@@ -41,7 +41,7 @@ import com.squareup.javapoet.TypeSpec;
  */
 public class BuilderInitialiser implements TypeInitialiser {
     @Override
-    public TypeSpec.Builder create(DSLSpecDesc specDesc, DSLTypeDesc typeDesc) {
+    public TypeSpec.Builder create(SpecDesc specDesc, TypeDesc typeDesc) {
         return classBuilder("Builder")
             .addModifiers(PUBLIC, FINAL, STATIC)
             .addJavadoc(BUILDER_TYPE_DOC, typeDesc.getName());

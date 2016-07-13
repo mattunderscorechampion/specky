@@ -30,9 +30,9 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
-import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
+import com.mattunderscore.specky.processed.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.processed.model.SpecDesc;
+import com.mattunderscore.specky.processed.model.TypeDesc;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -64,7 +64,7 @@ public final class ToStringGenerator implements MethodGeneratorForType {
     }
 
     @Override
-    public MethodSpec generate(DSLSpecDesc specDesc, DSLTypeDesc typeDesc) {
+    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
         return methodBuilder("toString")
             .returns(ClassName.get(String.class))
             .addModifiers(PUBLIC)
@@ -73,7 +73,7 @@ public final class ToStringGenerator implements MethodGeneratorForType {
             .build();
     }
 
-    private CodeBlock generateImplementation(DSLTypeDesc typeDesc) {
+    private CodeBlock generateImplementation(TypeDesc typeDesc) {
         final String properties = typeDesc
             .getProperties()
             .stream()
@@ -94,7 +94,7 @@ public final class ToStringGenerator implements MethodGeneratorForType {
         /**
          * Generate the code for the property. Starts within a string literal.
          */
-        String formatProperty(DSLPropertyDesc propertyDesc);
+        String formatProperty(PropertyImplementationDesc propertyDesc);
     }
 
     public interface PropertyListBookend {
@@ -111,7 +111,7 @@ public final class ToStringGenerator implements MethodGeneratorForType {
 
     private static final class SimplePropertyFormatter implements PropertyFormatter {
         @Override
-        public String formatProperty(DSLPropertyDesc propertyDesc) {
+        public String formatProperty(PropertyImplementationDesc propertyDesc) {
             return format("%1$s=\" + %1$s + \"", propertyDesc.getName());
         }
     }

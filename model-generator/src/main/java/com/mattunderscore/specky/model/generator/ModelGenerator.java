@@ -40,12 +40,15 @@ import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyImplementationDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
+import com.mattunderscore.specky.dsl.model.DSLValueDesc;
 import com.mattunderscore.specky.dsl.model.DSLViewDesc;
+import com.mattunderscore.specky.processed.model.BeanDesc;
 import com.mattunderscore.specky.processed.model.ConstructionMethod;
 import com.mattunderscore.specky.processed.model.PropertyImplementationDesc;
 import com.mattunderscore.specky.processed.model.SpecDesc;
 import com.mattunderscore.specky.processed.model.TypeDesc;
 import com.mattunderscore.specky.processed.model.ValueDesc;
+import com.mattunderscore.specky.processed.model.ViewDesc;
 
 /**
  * Generator for the model from the DSL model.
@@ -60,58 +63,157 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
 
     @Override
     public SpecDesc get() {
-        final Map<String, DSLViewDesc> views = dslSpecs
+
+        final List<ViewDesc> views = dslSpecs
             .stream()
-            .map(DSLSpecDesc::getViews)
+            .map(this::get)
             .flatMap(Collection::stream)
-            .collect(toMap(DSLViewDesc::getName, view -> view));
+            .collect(toList());
+
+        final Map<String, ViewDesc> mappedViews = getMappedViews(dslSpecs);
 
         return SpecDesc
             .builder()
             .values(
                 dslSpecs
                     .stream()
-                    .map(dslSpecDesc -> get(views, dslSpecDesc))
+                    .map(dslSpecDesc -> get(mappedViews, dslSpecDesc))
                     .flatMap(Collection::stream)
                     .collect(toList()))
+            .views(views)
             .build();
     }
 
-    private List<TypeDesc> get(Map<String, DSLViewDesc> views, DSLSpecDesc dslSpecDesc) {
+    private Map<String, ViewDesc> getMappedViews(List<DSLSpecDesc> dslSpecs) {
+        return dslSpecs
+            .stream()
+            .map(this::getMappedViews)
+            .map(Map::entrySet)
+            .flatMap(Collection::stream)
+            .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    private Map<String, ViewDesc> getMappedViews(DSLSpecDesc dslSpec) {
+        return dslSpec
+            .getViews()
+            .stream()
+            .collect(toMap(
+                view -> dslSpec.getPackageName() + "." + view.getName(),
+                view -> ViewDesc
+                    .builder()
+                    .packageName(dslSpec.getPackageName())
+                    .name(view.getName())
+                    .properties(view
+                        .getProperties()
+                        .stream()
+                        .map(prop -> PropertyImplementationDesc
+                            .builder()
+                            .name(prop.getName())
+                            .type(prop.getType())
+                            .build())
+                        .collect(toList()))
+                    .build()));
+    }
+
+    private List<TypeDesc> get(Map<String, ViewDesc> views, DSLSpecDesc dslSpecDesc) {
         final String packageName = dslSpecDesc.getPackageName();
         return dslSpecDesc
             .getValues()
             .stream()
-            .map(dslTypeDesc -> get(views, packageName, dslTypeDesc))
+            .map(dslViewDesc -> get(views, packageName, dslViewDesc))
             .collect(Collectors.toList());
     }
 
-    private TypeDesc get(Map<String, DSLViewDesc> views, String packageName, DSLTypeDesc dslTypeDesc) {
+    private List<ViewDesc> get(DSLSpecDesc dslSpecDesc) {
+        final String packageName = dslSpecDesc.getPackageName();
+        return dslSpecDesc
+            .getViews()
+            .stream()
+            .map(dslTypeDesc -> get(packageName, dslTypeDesc))
+            .collect(Collectors.toList());
+    }
+
+    private TypeDesc get(Map<String, ViewDesc> views, String packageName, DSLTypeDesc dslTypeDesc) {
+        for (String type : dslTypeDesc.getExtend()) {
+            final ViewDesc dslViewDesc = views.get(type);
+            if (dslViewDesc == null) {
+                throw new IllegalArgumentException("View not found for " + type + " in " + views);
+            }
+        }
+
         final List<PropertyImplementationDesc> inheritedProperties = dslTypeDesc
             .getExtend()
             .stream()
             .map(views::get)
-            .map(DSLViewDesc::getProperties)
+            .map(ViewDesc::getProperties)
             .flatMap(Collection::stream)
-            .map(this::get)
             .collect(toList());
+
+        final Map<String, PropertyImplementationDesc> inheritedProps = inheritedProperties
+            .stream()
+            .collect(toMap(PropertyImplementationDesc::getName, prop -> prop));
 
         final List<PropertyImplementationDesc> declaredProperties = dslTypeDesc
             .getProperties()
             .stream()
             .map(this::get)
-            .collect(Collectors.toList());
+            .collect(toList());
+
+        final Map<String, PropertyImplementationDesc> declaredProps = declaredProperties
+            .stream()
+            .collect(toMap(PropertyImplementationDesc::getName, prop -> prop));
 
         final List<PropertyImplementationDesc> allProperties = new ArrayList<>();
-        allProperties.addAll(inheritedProperties);
-        allProperties.addAll(declaredProperties);
+        for (PropertyImplementationDesc prop : inheritedProperties) {
+            if (!declaredProps.containsKey(prop.getName())) {
+                allProperties.add(prop);
+            }
+        }
+        for (PropertyImplementationDesc prop : declaredProperties) {
+            allProperties.add(PropertyImplementationDesc
+                .builder()
+                .name(prop.getName())
+                .type(prop.getType())
+                .defaultValue(prop.getDefaultValue())
+                .optional(prop.isOptional())
+                .override(inheritedProps.containsKey(prop.getName()))
+                .build());
+        }
 
-        return ValueDesc
+        if (dslTypeDesc instanceof DSLValueDesc) {
+            return ValueDesc
+                .builder()
+                .packageName(packageName)
+                .name(dslTypeDesc.getName())
+                .constructionMethod(get(dslTypeDesc.getConstructionMethod()))
+                .properties(allProperties)
+                .extend(dslTypeDesc.getExtend())
+                .build();
+        }
+        else {
+            return BeanDesc
+                .builder()
+                .packageName(packageName)
+                .name(dslTypeDesc.getName())
+                .constructionMethod(get(dslTypeDesc.getConstructionMethod()))
+                .properties(allProperties)
+                .extend(dslTypeDesc.getExtend())
+                .build();
+        }
+    }
+
+    private ViewDesc get(String packageName, DSLViewDesc dslViewDesc) {
+        final List<PropertyImplementationDesc> properties = dslViewDesc
+            .getProperties()
+            .stream()
+            .map(this::get)
+            .collect(Collectors.toList());
+
+        return ViewDesc
             .builder()
             .packageName(packageName)
-            .name(dslTypeDesc.getName())
-            .constructionMethod(get(dslTypeDesc.getConstructionMethod()))
-            .properties(allProperties)
+            .name(dslViewDesc.getName())
+            .properties(properties)
             .build();
     }
 
@@ -128,12 +230,14 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
         }
     }
 
-    private PropertyImplementationDesc get(DSLPropertyImplementationDesc dslTypeDesc) {
+    private PropertyImplementationDesc get(DSLPropertyImplementationDesc dslPropertyImplementationDesc) {
         return PropertyImplementationDesc
             .builder()
-            .name(dslTypeDesc.getName())
-            .type(dslTypeDesc.getType())
-            .override(false)
+            .name(dslPropertyImplementationDesc.getName())
+            .type(dslPropertyImplementationDesc.getType())
+            .defaultValue(dslPropertyImplementationDesc.getDefaultValue())
+            .optional(dslPropertyImplementationDesc.isOptional())
+            .override(true)
             .build();
     }
 

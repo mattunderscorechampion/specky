@@ -31,8 +31,8 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 
 import java.util.List;
 
-import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLValueDesc;
+import com.mattunderscore.specky.processed.model.SpecDesc;
+import com.mattunderscore.specky.processed.model.ValueDesc;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
@@ -61,7 +61,7 @@ public final class ValueGenerator {
         this.forTypeGenerators = methodGeneratorForTypes;
     }
 
-    public TypeSpec generateValue(DSLSpecDesc specDesc, DSLValueDesc valueDesc) {
+    public TypeSpec generateValue(SpecDesc specDesc, ValueDesc valueDesc) {
         final TypeSpec.Builder builder = typeInitialiser.create(specDesc, valueDesc);
 
         superTypeAppender.append(builder, specDesc, valueDesc);

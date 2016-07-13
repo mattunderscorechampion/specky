@@ -35,9 +35,9 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 import java.util.stream.Collectors;
 
-import com.mattunderscore.specky.dsl.model.DSLPropertyImplementationDesc;
-import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
+import com.mattunderscore.specky.processed.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.processed.model.SpecDesc;
+import com.mattunderscore.specky.processed.model.TypeDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
@@ -59,7 +59,7 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
     }
 
     @Override
-    public void append(TypeSpec.Builder typeSpecBuilder, DSLSpecDesc specDesc, DSLTypeDesc valueDesc) {
+    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
         final TypeSpec.Builder builder = typeInitialiser.create(specDesc, valueDesc);
 
         valueDesc
@@ -74,7 +74,7 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
                 final MethodSpec configuator = methodBuilder(propertyDesc.getName())
                     .addModifiers(PUBLIC)
                     .addJavadoc(IMMUTABLE_BUILDER_SETTER, propertyDesc.getName())
-                    .returns(ClassName.get(specDesc.getPackageName(), valueDesc.getName(), "Builder"))
+                    .returns(ClassName.get(valueDesc.getPackageName(), valueDesc.getName(), "Builder"))
                     .addParameter(constructorParameter)
                     .addStatement("this.$N = $N", builderFieldSpec, constructorParameter)
                     .addStatement(newBuilder(valueDesc))
@@ -89,7 +89,7 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
 
         typeSpecBuilder
             .addMethod(methodBuilder("builder")
-                .returns(ClassName.get(specDesc.getPackageName(), valueDesc.getName(), "Builder"))
+                .returns(ClassName.get(valueDesc.getPackageName(), valueDesc.getName(), "Builder"))
                 .addModifiers(PUBLIC, STATIC)
                 .addJavadoc(BUILDER_FACTORY, valueDesc.getName())
                 .addStatement(defaultBuilder(valueDesc))
@@ -98,17 +98,17 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
             .addType(builder.build());
     }
 
-    private String newBuilder(DSLTypeDesc valueDesc) {
+    private String newBuilder(TypeDesc valueDesc) {
         return "return new Builder(" +
             valueDesc
                 .getProperties()
                 .stream()
-                .map(DSLPropertyImplementationDesc::getName)
+                .map(PropertyImplementationDesc::getName)
                 .collect(Collectors.joining(", ")) +
             ')';
     }
 
-    private String defaultBuilder(DSLTypeDesc valueDesc) {
+    private String defaultBuilder(TypeDesc valueDesc) {
         return "return new Builder(" +
             valueDesc
                 .getProperties()

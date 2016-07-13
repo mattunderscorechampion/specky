@@ -28,8 +28,8 @@ package com.mattunderscore.specky.generator;
 import static com.mattunderscore.specky.generator.GeneratorUtils.TYPE_DOC;
 import static com.squareup.javapoet.TypeSpec.interfaceBuilder;
 
-import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
+import com.mattunderscore.specky.processed.model.SpecDesc;
+import com.mattunderscore.specky.processed.model.TypeDesc;
 import com.squareup.javapoet.TypeSpec;
 
 /**
@@ -38,7 +38,7 @@ import com.squareup.javapoet.TypeSpec;
  */
 public class ViewInitialiser implements TypeInitialiser {
     @Override
-    public TypeSpec.Builder create(DSLSpecDesc specDesc, DSLTypeDesc typeDesc) {
+    public TypeSpec.Builder create(SpecDesc specDesc, TypeDesc typeDesc) {
         return interfaceBuilder(typeDesc.getName())
             .addJavadoc(TYPE_DOC, "View", typeDesc.getName());
     }

@@ -32,8 +32,8 @@ import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
+import com.mattunderscore.specky.processed.model.SpecDesc;
+import com.mattunderscore.specky.processed.model.TypeDesc;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
@@ -46,12 +46,12 @@ import com.squareup.javapoet.TypeName;
 public final class ValueConstructorGenerator implements MethodGeneratorForType {
 
     @Override
-    public MethodSpec generate(DSLSpecDesc specDesc, DSLTypeDesc valueDesc) {
+    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
         final MethodSpec.Builder constructor = constructorBuilder()
             .addModifiers(PUBLIC)
             .addJavadoc(CONSTRUCTOR_DOC);
 
-        valueDesc
+        typeDesc
             .getProperties()
             .stream()
             .forEach(propertyDesc -> {

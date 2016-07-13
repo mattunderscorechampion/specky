@@ -31,14 +31,13 @@ import lombok.Builder;
 import lombok.Value;
 
 /**
- * Specification model.
- *
- * @author Matt Champion on 05/06/16
+ * View model.
+ * @author Matt Champion on 25/06/2016
  */
 @Value
 @Builder
-public class SpecDesc {
-    List<TypeDesc> values;
-
-    List<ViewDesc> views;
+public class ViewDesc {
+    String packageName;
+    String name;
+    List<PropertyImplementationDesc> properties;
 }

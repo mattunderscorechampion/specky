@@ -29,11 +29,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
-import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
-import com.mattunderscore.specky.dsl.model.DSLValueDesc;
-import com.mattunderscore.specky.dsl.model.DSLViewDesc;
+import com.mattunderscore.specky.processed.model.BeanDesc;
+import com.mattunderscore.specky.processed.model.SpecDesc;
+import com.mattunderscore.specky.processed.model.TypeDesc;
+import com.mattunderscore.specky.processed.model.ValueDesc;
+import com.mattunderscore.specky.processed.model.ViewDesc;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 
@@ -59,44 +59,52 @@ public final class Generator {
         this.codeStyle = codeStyle;
     }
 
-    public List<JavaFile> generate(DSLSpecDesc specDesc) {
+    public List<JavaFile> generate(SpecDesc specDesc) {
         final List<JavaFile> result = new ArrayList<>();
         result.addAll(specDesc
             .getValues()
             .stream()
-            .map(valueSpec -> generateType(specDesc, valueSpec))
-            .map(typeSpec -> JavaFile
-                .builder(specDesc.getPackageName(), typeSpec)
-                .indent(codeStyle.getIndent())
-                .build())
+            .map(valueSpec -> generateTypeFile(specDesc, valueSpec))
             .collect(Collectors.toList()));
 
         result.addAll(specDesc
             .getViews()
             .stream()
-            .map(valueSpec -> generateView(specDesc, valueSpec))
-            .map(typeSpec -> JavaFile
-                .builder(specDesc.getPackageName(), typeSpec)
-                .indent(codeStyle.getIndent())
-                .build())
+            .map(valueSpec -> generateViewFile(specDesc, valueSpec))
             .collect(Collectors.toList()));
 
         return result;
     }
 
-    private TypeSpec generateType(DSLSpecDesc specDesc, DSLTypeDesc typeDesc) {
-        if (typeDesc instanceof DSLValueDesc) {
-            return valueGenerator.generateValue(specDesc, (DSLValueDesc) typeDesc);
+    private JavaFile generateTypeFile(SpecDesc specDesc, TypeDesc typeDesc) {
+        final TypeSpec typeSpec = generateType(specDesc, typeDesc);
+        return JavaFile
+            .builder(typeDesc.getPackageName(), typeSpec)
+            .indent(codeStyle.getIndent())
+            .build();
+    }
+
+    private JavaFile generateViewFile(SpecDesc specDesc, ViewDesc viewDesc) {
+        final TypeSpec typeSpec = generateView(specDesc, viewDesc);
+        return JavaFile
+            .builder(viewDesc.getPackageName(), typeSpec)
+            .indent(codeStyle.getIndent())
+            .build();
+    }
+
+    private TypeSpec generateType(SpecDesc specDesc, TypeDesc typeDesc) {
+        if (typeDesc instanceof ValueDesc) {
+            return valueGenerator.generateValue(specDesc, (ValueDesc) typeDesc);
         }
-        else if (typeDesc instanceof DSLBeanDesc) {
-            return beanGenerator.generateBean(specDesc, (DSLBeanDesc) typeDesc);
+        else if (typeDesc instanceof BeanDesc) {
+            return beanGenerator.generateBean(specDesc, (BeanDesc) typeDesc);
         }
         else {
             throw new IllegalArgumentException("Unknown type to generate");
         }
     }
 
-    private TypeSpec generateView(DSLSpecDesc specDesc, DSLViewDesc typeDesc) {
+    private TypeSpec generateView(SpecDesc specDesc, ViewDesc typeDesc) {
         return viewGenerator.generateView(specDesc, typeDesc);
     }
 }

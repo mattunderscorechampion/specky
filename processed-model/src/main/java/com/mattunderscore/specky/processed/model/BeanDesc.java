@@ -42,4 +42,5 @@ public class BeanDesc implements TypeDesc {
     String name;
     List<PropertyImplementationDesc> properties;
     ConstructionMethod constructionMethod;
+    List<String> extend;
 }

@@ -29,8 +29,8 @@ import static com.mattunderscore.specky.generator.GeneratorUtils.CONSTRUCTOR_DOC
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
+import com.mattunderscore.specky.processed.model.SpecDesc;
+import com.mattunderscore.specky.processed.model.TypeDesc;
 import com.squareup.javapoet.MethodSpec;
 
 /**
@@ -40,7 +40,7 @@ import com.squareup.javapoet.MethodSpec;
  */
 public final class BeanConstructorGenerator implements MethodGeneratorForType {
     @Override
-    public MethodSpec generate(DSLSpecDesc specDesc, DSLTypeDesc typeDesc) {
+    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
         return constructorBuilder()
             .addModifiers(PUBLIC)
             .addJavadoc(CONSTRUCTOR_DOC)

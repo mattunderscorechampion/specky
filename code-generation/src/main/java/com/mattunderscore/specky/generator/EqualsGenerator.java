@@ -31,9 +31,9 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 
 import java.util.stream.Collectors;
 
-import com.mattunderscore.specky.dsl.model.DSLPropertyImplementationDesc;
-import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
+import com.mattunderscore.specky.processed.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.processed.model.SpecDesc;
+import com.mattunderscore.specky.processed.model.TypeDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
@@ -48,7 +48,7 @@ public final class EqualsGenerator implements MethodGeneratorForType {
     private final ParameterSpec other = ParameterSpec.builder(OBJECT, "other").build();
 
     @Override
-    public MethodSpec generate(DSLSpecDesc specDesc, DSLTypeDesc typeDesc) {
+    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
         return methodBuilder("equals")
             .addAnnotation(Override.class)
             .addModifiers(PUBLIC)
@@ -58,7 +58,7 @@ public final class EqualsGenerator implements MethodGeneratorForType {
             .build();
     }
 
-    private CodeBlock generateBlock(DSLSpecDesc specDesc, DSLTypeDesc typeDesc) {
+    private CodeBlock generateBlock(SpecDesc specDesc, TypeDesc typeDesc) {
         final CodeBlock.Builder codeBlock = CodeBlock
             .builder()
             .beginControlFlow("if ($N == this)", other)
@@ -69,7 +69,7 @@ public final class EqualsGenerator implements MethodGeneratorForType {
             .endControlFlow()
             .addStatement(
                 "final $1T that = ($1T) $2N",
-                ClassName.get(specDesc.getPackageName(), typeDesc.getName()), other)
+                ClassName.get(typeDesc.getPackageName(), typeDesc.getName()), other)
             .addStatement("return " + typeDesc
                 .getProperties()
                 .stream()
@@ -79,7 +79,7 @@ public final class EqualsGenerator implements MethodGeneratorForType {
         return codeBlock.build();
     }
 
-    private String generatePropertyComparison(DSLPropertyImplementationDesc propertyImplementationDesc) {
+    private String generatePropertyComparison(PropertyImplementationDesc propertyImplementationDesc) {
         final String name = propertyImplementationDesc.getName();
         final String type = propertyImplementationDesc.getType();
 

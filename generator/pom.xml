@@ -17,6 +17,10 @@
             <artifactId>code-generation</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.mattunderscore.code.generation.specky</groupId>
+            <artifactId>model-generator</artifactId>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>

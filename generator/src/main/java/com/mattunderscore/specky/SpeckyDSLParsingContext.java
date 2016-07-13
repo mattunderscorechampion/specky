@@ -57,7 +57,7 @@ public final class SpeckyDSLParsingContext {
         this.streamsToParse = streamsToParse;
     }
 
-    public SpeckyGeneratingContext parse() throws IOException {
+    public SpeckyModelGeneratingContext parse() throws IOException {
         if (consumed.compareAndSet(false, true)) {
             final DefaultValueResolver valueResolver = new CompositeValueResolver()
                 .with(new JavaStandardDefaultValueResolver())
@@ -86,7 +86,7 @@ public final class SpeckyDSLParsingContext {
                 specs.add(specDesc);
             }
 
-            return new SpeckyGeneratingContext(specs);
+            return new SpeckyModelGeneratingContext(specs);
         }
         else {
             throw new IllegalStateException("Context has already been parsed");

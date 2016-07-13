@@ -27,11 +27,9 @@ package com.mattunderscore.specky.generator;
 
 import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
 import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
-import static java.lang.Character.toUpperCase;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeSpec;
 
 /**
  * @author Matt Champion on 11/06/2016

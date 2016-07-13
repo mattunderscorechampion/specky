@@ -57,7 +57,7 @@ import com.mattunderscore.specky.generator.ValueConstructorGenerator;
 import com.mattunderscore.specky.generator.ValueGenerator;
 import com.mattunderscore.specky.generator.ValueInitialiser;
 import com.mattunderscore.specky.generator.ViewGenerator;
-import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
+import com.mattunderscore.specky.processed.model.SpecDesc;
 import com.squareup.javapoet.JavaFile;
 
 /**
@@ -66,7 +66,7 @@ import com.squareup.javapoet.JavaFile;
  * @author Matt Champion on 02/07/2016
  */
 public final class SpeckyGeneratingContext {
-    private final List<DSLSpecDesc> specs;
+    private final SpecDesc spec;
     private final AtomicBoolean consumed = new AtomicBoolean(false);
     private volatile ToStringGenerator toStringGenerator =
         new ToStringGenerator(
@@ -77,8 +77,8 @@ public final class SpeckyGeneratingContext {
     private MutatorGenerator mutatorGenerator = new MutatorGenerator();
     private CodeStyle codeStyle = CodeStyle.builder().spaces(4).build();
 
-    /*package*/ SpeckyGeneratingContext(List<DSLSpecDesc> specs) {
-        this.specs = specs;
+    /*package*/ SpeckyGeneratingContext(SpecDesc spec) {
+        this.spec = spec;
     }
 
     /**
@@ -153,9 +153,7 @@ public final class SpeckyGeneratingContext {
                 codeStyle);
 
             final List<JavaFile> javaFiles = new ArrayList<>();
-            for (DSLSpecDesc spec : specs) {
-                javaFiles.addAll(generator.generate(spec));
-            }
+            javaFiles.addAll(generator.generate(spec));
 
             return new SpeckyWritingContext(javaFiles);
         }

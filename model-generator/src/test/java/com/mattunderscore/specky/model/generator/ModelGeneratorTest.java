@@ -79,7 +79,7 @@ public final class ModelGeneratorTest {
             .values(singletonList(DSLValueDesc
                 .builder()
                 .name("Example")
-                .extend(singletonList("SuperType"))
+                .extend(singletonList("com.example.SuperType"))
                 .constructionMethod(DSLConstructionMethod.CONSTRUCTOR)
                 .properties(singletonList(DSLPropertyImplementationDesc
                     .builder()

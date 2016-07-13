@@ -33,9 +33,9 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.mattunderscore.specky.dsl.model.DSLPropertyImplementationDesc;
-import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
+import com.mattunderscore.specky.processed.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.processed.model.SpecDesc;
+import com.mattunderscore.specky.processed.model.TypeDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
@@ -46,29 +46,29 @@ import com.squareup.javapoet.TypeName;
 public final class BuildMethodGenerator implements MethodGeneratorForType {
 
     @Override
-    public MethodSpec generate(DSLSpecDesc specDesc, DSLTypeDesc valueDesc) {
+    public MethodSpec generate(SpecDesc specDesc, TypeDesc valueDesc) {
         final MethodSpec.Builder buildMethod = methodBuilder("build")
             .addModifiers(PUBLIC)
-            .returns(ClassName.get(specDesc.getPackageName(), valueDesc.getName()))
+            .returns(ClassName.get(valueDesc.getPackageName(), valueDesc.getName()))
             .addJavadoc(BUILD_DOC, valueDesc.getName());
         addValidationStatements(buildMethod, valueDesc);
         addReturnStatement(buildMethod, specDesc, valueDesc);
         return buildMethod.build();
     }
 
-    private void addReturnStatement(MethodSpec.Builder buildMethod, DSLSpecDesc specDesc, DSLTypeDesc valueDesc) {
+    private void addReturnStatement(MethodSpec.Builder buildMethod, SpecDesc specDesc, TypeDesc valueDesc) {
         buildMethod.addStatement(
             "return new $T(" +
             valueDesc
                 .getProperties()
                 .stream()
-                .map(DSLPropertyImplementationDesc::getName)
+                .map(PropertyImplementationDesc::getName)
                 .collect(Collectors.joining(", ")) +
             ')',
-            ClassName.get(specDesc.getPackageName(), valueDesc.getName()));
+            ClassName.get(valueDesc.getPackageName(), valueDesc.getName()));
     }
 
-    private void addValidationStatements(MethodSpec.Builder methodSpecBuilder, DSLTypeDesc valueDesc) {
+    private void addValidationStatements(MethodSpec.Builder methodSpecBuilder, TypeDesc valueDesc) {
         valueDesc
             .getProperties()
             .stream()
