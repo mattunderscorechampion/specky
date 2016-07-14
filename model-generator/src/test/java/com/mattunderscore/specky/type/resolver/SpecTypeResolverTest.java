@@ -25,48 +25,35 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.type.resolver;
 
-import static java.util.Optional.ofNullable;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import com.mattunderscore.specky.Combinable;
+import org.junit.Test;
 
 /**
- * {@link TypeResolver} for specified types.
- *
+ * Unit tests for {@link SpecTypeResolver}.
  * @author Matt Champion on 08/06/16
  */
-/*package*/ final class SpecTypeResolver implements TypeResolver, Combinable<SpecTypeResolver> {
-    private final String packageName;
-    private final Map<String, String> specs = new HashMap<>();
+public class SpecTypeResolverTest {
 
-    public SpecTypeResolver(String packageName) {
-        this.packageName = packageName;
+    @Test
+    public void resolve() {
+        final TypeResolver resolver = new SpecTypeResolver().registerTypeName("com.example", "Test");
+
+        assertEquals("com.example.Test", resolver.resolve("Test").get());
     }
 
-    public SpecTypeResolver registerTypeName(String typeName) {
-        final String fullyQualifiedTypeName = packageName + "." + typeName;
-        specs.put(typeName, fullyQualifiedTypeName);
-        specs.put(fullyQualifiedTypeName, fullyQualifiedTypeName);
-        return this;
+    @Test
+    public void get() {
+        final TypeResolver resolver = new SpecTypeResolver().registerTypeName("com.example", "Test");
+
+        assertEquals("com.example.Test", resolver.resolve("com.example.Test").get());
     }
 
-    @Override
-    public SpecTypeResolver combine(SpecTypeResolver otherResolver) {
-        if (!this.packageName.equals(otherResolver.packageName)) {
-            throw new IllegalArgumentException("Packages do not match");
-        }
+    @Test
+    public void unknown() {
+        final TypeResolver resolver = new SpecTypeResolver().registerTypeName("com.example", "Test");
 
-        final SpecTypeResolver newResolver = new SpecTypeResolver(packageName);
-        newResolver.specs.putAll(specs);
-        newResolver.specs.putAll(otherResolver.specs);
-        return newResolver;
-    }
-
-    @Override
-    public Optional<String> resolve(String name) {
-        return ofNullable(specs.get(name));
+        assertFalse(resolver.resolve("XTest").isPresent());
     }
 }

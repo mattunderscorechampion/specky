@@ -48,7 +48,7 @@ import java.util.stream.Stream;
         return resolvers
             .stream()
             .map(resolver -> resolver.resolve(name))
-            .filter(value -> value.isPresent())
+            .filter(Optional::isPresent)
             .flatMap(o -> o.isPresent() ? Stream.of(o.get()) : Stream.empty())
             .findFirst();
     }

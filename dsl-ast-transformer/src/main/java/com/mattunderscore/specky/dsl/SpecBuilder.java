@@ -28,7 +28,6 @@ package com.mattunderscore.specky.dsl;
 import static java.util.stream.Collectors.toList;
 
 import java.util.Collections;
-import java.util.Optional;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -48,19 +47,13 @@ import com.mattunderscore.specky.parser.Specky.PropertyContext;
 import com.mattunderscore.specky.parser.Specky.PropertyViewContext;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.Specky.TypeSpecContext;
-import com.mattunderscore.specky.type.resolver.TypeResolver;
-import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 
 /**
  * @author Matt Champion on 05/06/16
  */
 public final class SpecBuilder {
-    private final TypeResolver resolver;
-    private final DefaultValueResolver valueResolver;
 
-    public SpecBuilder(TypeResolver resolver, DefaultValueResolver valueResolver) {
-        this.resolver = resolver;
-        this.valueResolver = valueResolver;
+    public SpecBuilder() {
     }
 
     public DSLSpecDesc build(SpecContext context) {
@@ -99,8 +92,6 @@ public final class SpecBuilder {
                         .subList(1, context.Identifier().size())
                         .stream()
                         .map(TerminalNode::getText)
-                        .map(resolver::resolve)
-                        .map(Optional::get)
                         .collect(toList()));
             }
             else {
@@ -127,8 +118,6 @@ public final class SpecBuilder {
                         .subList(1, context.Identifier().size())
                         .stream()
                         .map(TerminalNode::getText)
-                        .map(resolver::resolve)
-                        .map(Optional::get)
                         .collect(toList()));
             }
             else {
@@ -156,19 +145,13 @@ public final class SpecBuilder {
         return DSLPropertyViewDesc
             .builder()
             .name(propertyViewContext.Identifier().get(1).getText())
-            .type(resolver.resolve(propertyViewContext.Identifier().get(0).getText()).get())
+            .type(propertyViewContext.Identifier().get(0).getText())
             .build();
     }
 
     private DSLPropertyImplementationDesc createProperty(PropertyContext context) {
-        final String type = resolver
-            .resolve(context
-                .Identifier()
-                .get(0)
-                .getText())
-            .get();
         final String defaultValue = context.r_default() == null ?
-            valueResolver.resolve(type).get() :
+            null :
             context.r_default().ANYTHING().getText();
         return DSLPropertyImplementationDesc
             .builder()
@@ -176,7 +159,10 @@ public final class SpecBuilder {
                 .Identifier()
                 .get(1)
                 .getText())
-            .type(type)
+            .type(context
+                .Identifier()
+                .get(0)
+                .getText())
             .optional(context.OPTIONAL() != null)
             .defaultValue(defaultValue)
             .build();

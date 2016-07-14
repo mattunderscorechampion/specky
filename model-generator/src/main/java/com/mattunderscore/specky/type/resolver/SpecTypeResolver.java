@@ -25,36 +25,32 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.type.resolver;
 
-import com.mattunderscore.specky.parser.Specky.SpecContext;
+import static java.util.Optional.ofNullable;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
- * Build a {@link TypeResolver} for specification.
+ * {@link TypeResolver} for specified types.
+ *
  * @author Matt Champion on 08/06/16
  */
-public final class TypeResolverBuilder {
-    private final CompositeTypeResolver compositeTypeResolver =
-        new CompositeTypeResolver().registerResolver(new JavaStandardTypeResolver());
+/*package*/ final class SpecTypeResolver implements TypeResolver {
+    private final Map<String, String> specs = new HashMap<>();
 
-    public TypeResolverBuilder addSpecContext(SpecContext spec) {
-        compositeTypeResolver.registerResolver(getSpecTypeResolver(spec));
+    public SpecTypeResolver() {
+    }
+
+    public SpecTypeResolver registerTypeName(String packageName, String typeName) {
+        final String fullyQualifiedTypeName = packageName + "." + typeName;
+        specs.put(typeName, fullyQualifiedTypeName);
+        specs.put(fullyQualifiedTypeName, fullyQualifiedTypeName);
         return this;
     }
 
-    /**
-     * @return The type resolver
-     */
-    public TypeResolver build() {
-        return compositeTypeResolver;
-    }
-
-    private static SpecTypeResolver getSpecTypeResolver(SpecContext spec) {
-        final String packageName = spec.r_package().qualifiedName().getText();
-        return spec
-            .typeSpec()
-            .stream()
-            .reduce(
-                new SpecTypeResolver(packageName),
-                (resolver, value) -> resolver.registerTypeName(value.Identifier().getText()),
-                SpecTypeResolver::combine);
+    @Override
+    public Optional<String> resolve(String name) {
+        return ofNullable(specs.get(name));
     }
 }

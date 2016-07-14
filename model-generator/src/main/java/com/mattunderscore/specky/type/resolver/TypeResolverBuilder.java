@@ -25,41 +25,32 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.type.resolver;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
-import org.junit.Test;
+import com.mattunderscore.specky.processed.model.SpecDesc;
 
 /**
- * Unit tests for {@link CompositeTypeResolver}.
+ * Build a {@link TypeResolver} for specification.
  * @author Matt Champion on 08/06/16
  */
-public class CompositeTypeResolverTest {
+public final class TypeResolverBuilder {
+    private final CompositeTypeResolver compositeTypeResolver =
+        new CompositeTypeResolver()
+            .registerResolver(new JavaStandardTypeResolver());
 
-    @Test
-    public void resolveJava() throws Exception {
-        final TypeResolver resolver = new CompositeTypeResolver()
-                .registerResolver(new JavaStandardTypeResolver())
-                .registerResolver(new SpecTypeResolver("com.example").registerTypeName("Test"));
-
-        assertEquals("java.lang.String", resolver.resolve("String").get());
+    public TypeResolverBuilder addSpecContext(SpecDesc spec) {
+        final SpecTypeResolver specTypeResolver = new SpecTypeResolver();
+        spec
+            .getValues()
+            .forEach(value -> specTypeResolver.registerTypeName(value.getPackageName(), value.getName()));
+        spec
+            .getViews()
+            .forEach(view -> specTypeResolver.registerTypeName(view.getPackageName(), view.getName()));
+        return this;
     }
 
-    @Test
-    public void resolveSpec() throws Exception {
-        final TypeResolver resolver = new CompositeTypeResolver()
-                .registerResolver(new JavaStandardTypeResolver())
-                .registerResolver(new SpecTypeResolver("com.example").registerTypeName("Test"));
-
-        assertEquals("com.example.Test", resolver.resolve("Test").get());
-    }
-
-    @Test
-    public void unknown() {
-        final TypeResolver resolver = new CompositeTypeResolver()
-                .registerResolver(new JavaStandardTypeResolver())
-                .registerResolver(new SpecTypeResolver("com.example").registerTypeName("Test"));
-
-        assertFalse(resolver.resolve("XTest").isPresent());
+    /**
+     * @return The type resolver
+     */
+    public TypeResolver build() {
+        return compositeTypeResolver;
     }
 }
