@@ -46,12 +46,22 @@ public final class AccessorGenerator implements MethodGeneratorForProperty {
 
     @Override
     public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc, PropertyImplementationDesc propertyDesc) {
-        return methodBuilder(getAccessorName(propertyDesc.getName()))
-            .addModifiers(PUBLIC)
-            .addJavadoc(GETTER_DOC, propertyDesc.getName())
-            .returns(getType(propertyDesc.getType()))
-            .addStatement("return $N", propertyDesc.getName())
-            .build();
+        if (propertyDesc.isOverride()) {
+            return methodBuilder(getAccessorName(propertyDesc.getName()))
+                .addModifiers(PUBLIC)
+                .addAnnotation(Override.class)
+                .returns(getType(propertyDesc.getType()))
+                .addStatement("return $N", propertyDesc.getName())
+                .build();
+        }
+        else {
+            return methodBuilder(getAccessorName(propertyDesc.getName()))
+                .addModifiers(PUBLIC)
+                .addJavadoc(GETTER_DOC, propertyDesc.getName())
+                .returns(getType(propertyDesc.getType()))
+                .addStatement("return $N", propertyDesc.getName())
+                .build();
+        }
     }
 
     private static String getAccessorName(String propertyName) {
