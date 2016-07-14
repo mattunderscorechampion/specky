@@ -18,6 +18,11 @@ import com.mattunderscore.specky.processed.model.ConstructionMethod;
 import com.mattunderscore.specky.processed.model.PropertyImplementationDesc;
 import com.mattunderscore.specky.processed.model.SpecDesc;
 import com.mattunderscore.specky.processed.model.TypeDesc;
+import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
+import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
+import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
+import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver;
+import com.mattunderscore.specky.value.resolver.NullValueResolver;
 
 /**
  * Unit tests for {@link ModelGenerator}.
@@ -46,7 +51,15 @@ public final class ModelGeneratorTest {
                 .build()))
             .build();
 
-        final ModelGenerator generator = new ModelGenerator(singletonList(spec));
+        final SpecTypeResolver typeResolver = new SpecTypeResolver();
+        spec.getViews().forEach(view -> typeResolver.registerTypeName(spec.getPackageName(), view.getName()));
+        spec.getValues().forEach(value -> typeResolver.registerTypeName(spec.getPackageName(), value.getName()));
+        final ModelGenerator generator = new ModelGenerator(
+            singletonList(spec),
+            new TypeResolverBuilder().registerResolver(typeResolver).build(),
+            new CompositeValueResolver()
+                .with(new JavaStandardDefaultValueResolver())
+                .with(new NullValueResolver()));
 
         final SpecDesc specDesc = generator.get();
 
@@ -92,7 +105,15 @@ public final class ModelGeneratorTest {
                 .build()))
             .build();
 
-        final ModelGenerator generator = new ModelGenerator(singletonList(spec));
+        final SpecTypeResolver typeResolver = new SpecTypeResolver();
+        spec.getViews().forEach(view -> typeResolver.registerTypeName(spec.getPackageName(), view.getName()));
+        spec.getValues().forEach(value -> typeResolver.registerTypeName(spec.getPackageName(), value.getName()));
+        final ModelGenerator generator = new ModelGenerator(
+            singletonList(spec),
+            new TypeResolverBuilder().registerResolver(typeResolver).build(),
+            new CompositeValueResolver()
+                .with(new JavaStandardDefaultValueResolver())
+                .with(new NullValueResolver()));
 
         final SpecDesc specDesc = generator.get();
 
@@ -106,10 +127,12 @@ public final class ModelGeneratorTest {
         final PropertyImplementationDesc property0 = typeDesc.getProperties().get(1);
         assertEquals("intProp", property0.getName());
         assertEquals("int", property0.getType());
+        assertEquals("0", property0.getDefaultValue());
         assertFalse(property0.isOverride());
         final PropertyImplementationDesc property1 = typeDesc.getProperties().get(0);
         assertEquals("objectProp", property1.getName());
-        assertEquals("Object", property1.getType());
+        assertEquals("java.lang.Object", property1.getType());
         assertTrue(property1.isOverride());
+        assertEquals("null", property1.getDefaultValue());
     }
 }

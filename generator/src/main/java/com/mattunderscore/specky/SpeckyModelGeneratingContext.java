@@ -31,6 +31,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.model.generator.ModelGenerator;
 import com.mattunderscore.specky.processed.model.SpecDesc;
+import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
+import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
+import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
+import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver;
+import com.mattunderscore.specky.value.resolver.NullValueResolver;
 
 /**
  * Generates a model from the DSL model.
@@ -42,7 +47,18 @@ public final class SpeckyModelGeneratingContext {
     private final ModelGenerator modelGenerator;
 
     /*package*/ SpeckyModelGeneratingContext(List<DSLSpecDesc> specs) {
-        modelGenerator = new ModelGenerator(specs);
+        final SpecTypeResolver typeResolver = new SpecTypeResolver();
+        specs.forEach(spec -> {
+            spec.getViews().forEach(view -> typeResolver.registerTypeName(spec.getPackageName(), view.getName()));
+            spec.getValues().forEach(value -> typeResolver.registerTypeName(spec.getPackageName(), value.getName()));
+        });
+
+        modelGenerator = new ModelGenerator(
+            specs,
+            new TypeResolverBuilder().registerResolver(typeResolver).build(),
+            new CompositeValueResolver()
+                .with(new JavaStandardDefaultValueResolver())
+                .with(new NullValueResolver()));
     }
 
     /**

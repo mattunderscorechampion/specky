@@ -55,6 +55,8 @@ import com.mattunderscore.specky.type.resolver.TypeResolver;
         nameToType.put("int", "int");
         nameToType.put("double", "double");
         nameToType.put("boolean", "boolean");
+        nameToType.put("java.lang.Object", "java.lang.Object");
+        nameToType.put("Object", "java.lang.Object");
     }
 
     @Override

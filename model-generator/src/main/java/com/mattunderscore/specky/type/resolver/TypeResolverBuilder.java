@@ -25,8 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.type.resolver;
 
-import com.mattunderscore.specky.processed.model.SpecDesc;
-
 /**
  * Build a {@link TypeResolver} for specification.
  * @author Matt Champion on 08/06/16
@@ -36,14 +34,8 @@ public final class TypeResolverBuilder {
         new CompositeTypeResolver()
             .registerResolver(new JavaStandardTypeResolver());
 
-    public TypeResolverBuilder addSpecContext(SpecDesc spec) {
-        final SpecTypeResolver specTypeResolver = new SpecTypeResolver();
-        spec
-            .getValues()
-            .forEach(value -> specTypeResolver.registerTypeName(value.getPackageName(), value.getName()));
-        spec
-            .getViews()
-            .forEach(view -> specTypeResolver.registerTypeName(view.getPackageName(), view.getName()));
+    public TypeResolverBuilder registerResolver(TypeResolver typeResolver) {
+        compositeTypeResolver.registerResolver(typeResolver);
         return this;
     }
 

@@ -36,7 +36,7 @@ import java.util.Optional;
  *
  * @author Matt Champion on 08/06/16
  */
-/*package*/ final class SpecTypeResolver implements TypeResolver {
+public final class SpecTypeResolver implements TypeResolver {
     private final Map<String, String> specs = new HashMap<>();
 
     public SpecTypeResolver() {

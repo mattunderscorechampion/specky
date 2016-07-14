@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -50,6 +51,8 @@ import com.mattunderscore.specky.processed.model.SpecDesc;
 import com.mattunderscore.specky.processed.model.TypeDesc;
 import com.mattunderscore.specky.processed.model.ValueDesc;
 import com.mattunderscore.specky.processed.model.ViewDesc;
+import com.mattunderscore.specky.type.resolver.TypeResolver;
+import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 
 /**
  * Generator for the model from the DSL model.
@@ -57,9 +60,13 @@ import com.mattunderscore.specky.processed.model.ViewDesc;
  */
 public final class ModelGenerator implements Supplier<SpecDesc> {
     private final List<DSLSpecDesc> dslSpecs;
+    private final TypeResolver typeResolver;
+    private final DefaultValueResolver valueResolver;
 
-    public ModelGenerator(List<DSLSpecDesc> dslSpecs) {
+    public ModelGenerator(List<DSLSpecDesc> dslSpecs, TypeResolver typeResolver, DefaultValueResolver valueResolver) {
         this.dslSpecs = dslSpecs;
+        this.typeResolver = typeResolver;
+        this.valueResolver = valueResolver;
     }
 
     @Override
@@ -107,12 +114,16 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                     .properties(view
                         .getProperties()
                         .stream()
-                        .map(prop -> PropertyImplementationDesc
-                            .builder()
-                            .name(prop.getName())
-                            .type(prop.getType())
-                            .override(true)
-                            .build())
+                        .map(prop -> {
+                            final String resolvedType = typeResolver.resolve(prop.getType()).get();
+                            return PropertyImplementationDesc
+                                .builder()
+                                .name(prop.getName())
+                                .type(resolvedType)
+                                .override(true)
+                                .defaultValue(valueResolver.resolve(resolvedType).get())
+                                .build();
+                        })
                         .collect(toList()))
                     .build()));
     }
@@ -137,15 +148,18 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
 
     private TypeDesc get(Map<String, ViewDesc> views, String packageName, DSLTypeDesc dslTypeDesc) {
         for (String type : dslTypeDesc.getExtend()) {
-            final ViewDesc dslViewDesc = views.get(type);
+            String resolvedType = typeResolver.resolve(type).get();
+            final ViewDesc dslViewDesc = views.get(resolvedType);
             if (dslViewDesc == null) {
-                throw new IllegalArgumentException("View not found for " + type + " in " + views);
+                throw new IllegalArgumentException("View not found for " + resolvedType + " in " + views);
             }
         }
 
         final List<PropertyImplementationDesc> inheritedProperties = dslTypeDesc
             .getExtend()
             .stream()
+            .map(typeResolver::resolve)
+            .map(Optional::get)
             .map(views::get)
             .map(ViewDesc::getProperties)
             .flatMap(Collection::stream)
@@ -233,21 +247,26 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
     }
 
     private PropertyImplementationDesc get(DSLPropertyImplementationDesc dslPropertyImplementationDesc) {
+        final String defaultValue = dslPropertyImplementationDesc.getDefaultValue();
+        final String resolvedType = typeResolver.resolve(dslPropertyImplementationDesc.getType()).get();
         return PropertyImplementationDesc
             .builder()
             .name(dslPropertyImplementationDesc.getName())
-            .type(dslPropertyImplementationDesc.getType())
-            .defaultValue(dslPropertyImplementationDesc.getDefaultValue())
+            .type(resolvedType)
+            .defaultValue(defaultValue == null ? valueResolver.resolve(resolvedType).get() : defaultValue)
             .optional(dslPropertyImplementationDesc.isOptional())
             .override(false)
             .build();
     }
 
     private PropertyImplementationDesc get(DSLPropertyDesc dslTypeDesc) {
+        final String type = typeResolver.resolve(dslTypeDesc.getType()).get();
+        final String defaultValue = valueResolver.resolve(type).get();
         return PropertyImplementationDesc
             .builder()
             .name(dslTypeDesc.getName())
-            .type(dslTypeDesc.getType())
+            .type(type)
+            .defaultValue(defaultValue)
             .override(true)
             .build();
     }

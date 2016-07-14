@@ -59,11 +59,6 @@ public final class SpeckyDSLParsingContext {
 
     public SpeckyModelGeneratingContext parse() throws IOException {
         if (consumed.compareAndSet(false, true)) {
-            final DefaultValueResolver valueResolver = new CompositeValueResolver()
-                .with(new JavaStandardDefaultValueResolver())
-                .with(new NullValueResolver());
-
-            final TypeResolverBuilder resolver = new TypeResolverBuilder();
             final List<Specky.SpecContext> specContexts = new ArrayList<>();
             for (InputStream inputStream : streamsToParse) {
                 try {
@@ -72,7 +67,6 @@ public final class SpeckyDSLParsingContext {
                     final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
                     final Specky.SpecContext specContext = parser.spec();
                     specContexts.add(specContext);
-                    resolver.addSpecContext(specContext);
                 }
                 finally {
                     inputStream.close();
@@ -81,7 +75,7 @@ public final class SpeckyDSLParsingContext {
 
             final List<DSLSpecDesc> specs = new ArrayList<>();
             for (Specky.SpecContext specContext : specContexts) {
-                final SpecBuilder specBuilder = new SpecBuilder(resolver.build(), valueResolver);
+                final SpecBuilder specBuilder = new SpecBuilder();
                 final DSLSpecDesc specDesc = specBuilder.build(specContext);
                 specs.add(specDesc);
             }
