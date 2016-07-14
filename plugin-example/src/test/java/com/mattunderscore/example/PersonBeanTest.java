@@ -26,6 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.example;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -49,5 +50,39 @@ public final class PersonBeanTest {
         person.setName("someName");
         assertEquals("someName", person.getName());
         assertEquals("PersonBean[id=0, name=someName]", person.toString());
+    }
+
+    @Test
+    public void equality() {
+        final PersonBean person0 = new PersonBean();
+        final PersonBean person1 = new PersonBean();
+
+        assertTrue(person0.equals(person1));
+        assertTrue(person1.equals(person0));
+        assertEquals(person0.hashCode(), person1.hashCode());
+    }
+
+    @Test
+    public void notEquals() {
+        final PersonBean person0 = new PersonBean();
+        final PersonBean person1 = new PersonBean();
+        person1.setId(4);
+
+        assertFalse(person0.equals(person1));
+        assertFalse(person1.equals(person0));
+    }
+
+    @Test
+    public void notEqualsNull() {
+        final PersonBean person0 = new PersonBean();
+
+        assertFalse(person0.equals(null));
+    }
+
+    @Test
+    public void notEqualsObject() {
+        final PersonBean person0 = new PersonBean();
+
+        assertFalse(person0.equals(new Object()));
     }
 }

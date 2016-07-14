@@ -26,10 +26,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.example;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.example.PersonBean;
 import com.example.StrangePersonBean;
 
 /**
@@ -47,5 +48,38 @@ public final class StrangePersonBeanTest {
         person.setName("someName");
         assertEquals("someName", person.getName());
         assertEquals("StrangePersonBean[id=5, name=someName]", person.toString());
+    }
+
+    @Test
+    public void equality() {
+        final StrangePersonBean person0 = StrangePersonBean.builder().name("Matt").build();
+        final StrangePersonBean person1 = StrangePersonBean.builder().name("Matt").build();
+
+        assertTrue(person0.equals(person1));
+        assertTrue(person1.equals(person0));
+        assertEquals(person0.hashCode(), person1.hashCode());
+    }
+
+    @Test
+    public void notEquals() {
+        final StrangePersonBean person0 = StrangePersonBean.builder().name("Matt").build();
+        final StrangePersonBean person1 = StrangePersonBean.builder().name("Mattie").build();
+
+        assertFalse(person0.equals(person1));
+        assertFalse(person1.equals(person0));
+    }
+
+    @Test
+    public void notEqualsNull() {
+        final StrangePersonBean person0 = StrangePersonBean.builder().name("Matt").build();
+
+        assertFalse(person0.equals(null));
+    }
+
+    @Test
+    public void notEqualsObject() {
+        final StrangePersonBean person0 = StrangePersonBean.builder().name("Matt").build();
+
+        assertFalse(person0.equals(new Object()));
     }
 }
