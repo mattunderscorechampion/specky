@@ -30,6 +30,7 @@ import static java.util.stream.Collectors.toMap;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -110,6 +111,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                             .builder()
                             .name(prop.getName())
                             .type(prop.getType())
+                            .override(true)
                             .build())
                         .collect(toList()))
                     .build()));
@@ -149,35 +151,35 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .flatMap(Collection::stream)
             .collect(toList());
 
-        final Map<String, PropertyImplementationDesc> inheritedProps = inheritedProperties
-            .stream()
-            .collect(toMap(PropertyImplementationDesc::getName, prop -> prop));
-
         final List<PropertyImplementationDesc> declaredProperties = dslTypeDesc
             .getProperties()
             .stream()
             .map(this::get)
             .collect(toList());
 
-        final Map<String, PropertyImplementationDesc> declaredProps = declaredProperties
-            .stream()
-            .collect(toMap(PropertyImplementationDesc::getName, prop -> prop));
-
+        final Map<String, PropertyImplementationDesc> knownProperties = new HashMap<>();
         final List<PropertyImplementationDesc> allProperties = new ArrayList<>();
-        for (PropertyImplementationDesc prop : inheritedProperties) {
-            if (!declaredProps.containsKey(prop.getName())) {
-                allProperties.add(prop);
+        for (PropertyImplementationDesc property : inheritedProperties) {
+            final String propertyName = property.getName();
+            final PropertyImplementationDesc currentProperty = knownProperties.get(propertyName);
+            if (currentProperty == null) {
+                allProperties.add(property);
+                knownProperties.put(propertyName, property);
+            }
+            else if (!property.getType().equals(currentProperty.getType())) {
+                throw new IllegalArgumentException("Conflicting property declarations");
             }
         }
-        for (PropertyImplementationDesc prop : declaredProperties) {
-            allProperties.add(PropertyImplementationDesc
-                .builder()
-                .name(prop.getName())
-                .type(prop.getType())
-                .defaultValue(prop.getDefaultValue())
-                .optional(prop.isOptional())
-                .override(inheritedProps.containsKey(prop.getName()))
-                .build());
+        for (PropertyImplementationDesc property : declaredProperties) {
+            final String propertyName = property.getName();
+            final PropertyImplementationDesc currentProperty = knownProperties.get(propertyName);
+            if (currentProperty == null) {
+                allProperties.add(property);
+                knownProperties.put(propertyName, property);
+            }
+            else if (!property.getType().equals(currentProperty.getType())) {
+                throw new IllegalArgumentException("Conflicting property declarations");
+            }
         }
 
         if (dslTypeDesc instanceof DSLValueDesc) {
@@ -237,7 +239,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .type(dslPropertyImplementationDesc.getType())
             .defaultValue(dslPropertyImplementationDesc.getDefaultValue())
             .optional(dslPropertyImplementationDesc.isOptional())
-            .override(true)
+            .override(false)
             .build();
     }
 

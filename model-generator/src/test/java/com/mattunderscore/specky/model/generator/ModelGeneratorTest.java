@@ -3,7 +3,9 @@ package com.mattunderscore.specky.model.generator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -104,8 +106,10 @@ public final class ModelGeneratorTest {
         final PropertyImplementationDesc property0 = typeDesc.getProperties().get(1);
         assertEquals("intProp", property0.getName());
         assertEquals("int", property0.getType());
+        assertFalse(property0.isOverride());
         final PropertyImplementationDesc property1 = typeDesc.getProperties().get(0);
         assertEquals("objectProp", property1.getName());
         assertEquals("Object", property1.getType());
+        assertTrue(property1.isOverride());
     }
 }
