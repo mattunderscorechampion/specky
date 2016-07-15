@@ -33,19 +33,19 @@ construction
     | IMMUTABLE_BUILDER
     ;
 
-r_default
+default_value
     : DEFAULT ANYTHING
     ;
 
 property
-    : OPTIONAL? Identifier Identifier r_default?
+    : OPTIONAL? Identifier Identifier default_value?
     ;
 
 qualifiedName
     : Identifier (PACKAGE_SEPARATOR Identifier)*
     ;
 
-r_package
+package_name
     : PACKAGE qualifiedName
     ;
 
@@ -53,7 +53,7 @@ opts
     : OPTIONS OPEN_BLOCK construction? CLOSE_BLOCK
     ;
 
-implSpec
+implmentationSpec
     : (VALUE | BEAN ) Identifier (EXTENDS Identifier)? OPEN_BLOCK (property)+ opts? CLOSE_BLOCK
     ;
 
@@ -62,5 +62,5 @@ typeSpec
     ;
 
 spec
-    : r_package (typeSpec | implSpec)+
+    : package_name (typeSpec | implmentationSpec)+
     ;

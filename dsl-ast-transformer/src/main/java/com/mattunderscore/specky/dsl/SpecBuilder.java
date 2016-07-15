@@ -41,7 +41,7 @@ import com.mattunderscore.specky.dsl.model.DSLValueDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc.DSLValueDescBuilder;
 import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.mattunderscore.specky.parser.Specky;
-import com.mattunderscore.specky.parser.Specky.ImplSpecContext;
+import com.mattunderscore.specky.parser.Specky.ImplmentationSpecContext;
 import com.mattunderscore.specky.parser.Specky.PropertyContext;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.Specky.TypeSpecContext;
@@ -57,21 +57,21 @@ public final class SpecBuilder {
     public DSLSpecDesc build(SpecContext context) {
         return DSLSpecDesc
             .builder()
-            .packageName(context.r_package().qualifiedName().getText())
+            .packageName(context.package_name().qualifiedName().getText())
             .views(context
                 .typeSpec()
                 .stream()
                 .map(this::createView)
                 .collect(toList()))
             .values(context
-                .implSpec()
+                .implmentationSpec()
                 .stream()
                 .map(this::createType)
                 .collect(toList()))
             .build();
     }
 
-    private DSLTypeDesc createType(ImplSpecContext context) {
+    private DSLTypeDesc createType(ImplmentationSpecContext context) {
         if (context.BEAN() == null) {
             final DSLValueDescBuilder valueDescBuilder = DSLValueDesc
                 .builder()
@@ -140,9 +140,9 @@ public final class SpecBuilder {
         }
 
     private DSLPropertyDesc createProperty(PropertyContext context) {
-        final String defaultValue = context.r_default() == null ?
+        final String defaultValue = context.default_value() == null ?
             null :
-            context.r_default().ANYTHING().getText();
+            context.default_value().ANYTHING().getText();
         return DSLPropertyDesc
             .builder()
             .name(context
@@ -158,7 +158,7 @@ public final class SpecBuilder {
             .build();
     }
 
-    private DSLConstructionMethod toConstructionDesc(ImplSpecContext typeSpec) {
+    private DSLConstructionMethod toConstructionDesc(ImplmentationSpecContext typeSpec) {
         final Specky.OptsContext options = typeSpec.opts();
 
         if (options == null || options.construction() == null) {
