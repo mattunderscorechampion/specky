@@ -42,5 +42,5 @@ public class ValueDesc implements TypeDesc {
     String name;
     List<PropertyImplementationDesc> properties;
     ConstructionMethod constructionMethod;
-    List<String> extend;
+    List<String> supertypes;
 }

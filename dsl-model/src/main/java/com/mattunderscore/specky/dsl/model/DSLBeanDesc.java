@@ -41,5 +41,5 @@ public class DSLBeanDesc implements DSLTypeDesc {
     String name;
     List<DSLPropertyDesc> properties;
     DSLConstructionMethod constructionMethod;
-    List<String> extend;
+    List<String> supertypes;
 }

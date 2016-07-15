@@ -37,5 +37,5 @@ public interface DSLTypeDesc {
 
     DSLConstructionMethod getConstructionMethod();
 
-    List<String> getExtend();
+    List<String> getSupertypes();
 }

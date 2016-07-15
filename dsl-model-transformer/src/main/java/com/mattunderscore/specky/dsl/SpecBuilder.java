@@ -85,7 +85,7 @@ public final class SpecBuilder {
 
             if (context.Identifier().size() > 1) {
                 valueDescBuilder
-                    .extend(context
+                    .supertypes(context
                         .Identifier()
                         .subList(1, context.Identifier().size())
                         .stream()
@@ -93,7 +93,7 @@ public final class SpecBuilder {
                         .collect(toList()));
             }
             else {
-                valueDescBuilder.extend(Collections.emptyList());
+                valueDescBuilder.supertypes(Collections.emptyList());
             }
 
             return valueDescBuilder.build();
@@ -111,7 +111,7 @@ public final class SpecBuilder {
 
             if (context.Identifier().size() > 1) {
                 beanDescBuilder
-                    .extend(context
+                    .supertypes(context
                         .Identifier()
                         .subList(1, context.Identifier().size())
                         .stream()
@@ -119,7 +119,7 @@ public final class SpecBuilder {
                         .collect(toList()));
             }
             else {
-                beanDescBuilder.extend(Collections.emptyList());
+                beanDescBuilder.supertypes(Collections.emptyList());
             }
 
             return beanDescBuilder

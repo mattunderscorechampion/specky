@@ -39,5 +39,5 @@ public interface TypeDesc {
 
     ConstructionMethod getConstructionMethod();
 
-    List<String> getExtend();
+    List<String> getSupertypes();
 }

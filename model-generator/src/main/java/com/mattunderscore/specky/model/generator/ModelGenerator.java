@@ -146,7 +146,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
     }
 
     private TypeDesc get(Map<String, ViewDesc> views, String packageName, DSLTypeDesc dslTypeDesc) {
-        for (String type : dslTypeDesc.getExtend()) {
+        for (String type : dslTypeDesc.getSupertypes()) {
             String resolvedType = typeResolver.resolve(type).get();
             final ViewDesc dslViewDesc = views.get(resolvedType);
             if (dslViewDesc == null) {
@@ -155,7 +155,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
         }
 
         final List<PropertyImplementationDesc> inheritedProperties = dslTypeDesc
-            .getExtend()
+            .getSupertypes()
             .stream()
             .map(typeResolver::resolve)
             .map(Optional::get)
@@ -202,7 +202,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                 .name(dslTypeDesc.getName())
                 .constructionMethod(get(dslTypeDesc.getConstructionMethod()))
                 .properties(allProperties)
-                .extend(dslTypeDesc.getExtend())
+                .supertypes(dslTypeDesc.getSupertypes())
                 .build();
         }
         else {
@@ -212,7 +212,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                 .name(dslTypeDesc.getName())
                 .constructionMethod(get(dslTypeDesc.getConstructionMethod()))
                 .properties(allProperties)
-                .extend(dslTypeDesc.getExtend())
+                .supertypes(dslTypeDesc.getSupertypes())
                 .build();
         }
     }

@@ -38,7 +38,7 @@ public final class SuperTypeAppender implements TypeAppender {
     @Override
     public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc typeDesc) {
         typeDesc
-            .getExtend()
+            .getSupertypes()
             .stream()
             .map(GeneratorUtils::getType)
             .forEach(typeSpecBuilder::addSuperinterface);

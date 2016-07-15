@@ -83,7 +83,7 @@ public final class SpecBuilderTest {
         assertEquals("FirstValue", valueDesc0.getName());
         final List<DSLPropertyDesc> properties1 = valueDesc0.getProperties();
         assertEquals(2, properties1.size());
-        final List<String> extend = valueDesc0.getExtend();
+        final List<String> extend = valueDesc0.getSupertypes();
         assertEquals(1, extend.size());
         assertEquals("TestType", extend.get(0));
 
