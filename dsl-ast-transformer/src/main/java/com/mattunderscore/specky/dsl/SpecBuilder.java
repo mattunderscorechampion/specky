@@ -43,7 +43,6 @@ import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.ImplSpecContext;
 import com.mattunderscore.specky.parser.Specky.PropertyContext;
-import com.mattunderscore.specky.parser.Specky.PropertyViewContext;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.Specky.TypeSpecContext;
 
@@ -62,17 +61,17 @@ public final class SpecBuilder {
             .views(context
                 .typeSpec()
                 .stream()
-                .map(this::createValue)
+                .map(this::createView)
                 .collect(toList()))
             .values(context
                 .implSpec()
                 .stream()
-                .map(this::createValue)
+                .map(this::createType)
                 .collect(toList()))
             .build();
     }
 
-    private DSLTypeDesc createValue(ImplSpecContext context) {
+    private DSLTypeDesc createType(ImplSpecContext context) {
         if (context.BEAN() == null) {
             final DSLValueDescBuilder valueDescBuilder = DSLValueDesc
                 .builder()
@@ -128,25 +127,17 @@ public final class SpecBuilder {
         }
     }
 
-    private DSLViewDesc createValue(TypeSpecContext context) {
+    private DSLViewDesc createView(TypeSpecContext context) {
             return DSLViewDesc
                 .builder()
                 .name(context.Identifier().getText())
                 .properties(context
-                    .propertyView()
+                    .property()
                     .stream()
-                    .map(this::createPropertyView)
+                    .map(this::createProperty)
                     .collect(toList()))
                 .build();
         }
-
-    private DSLPropertyDesc createPropertyView(PropertyViewContext propertyViewContext) {
-        return DSLPropertyDesc
-            .builder()
-            .name(propertyViewContext.Identifier().get(1).getText())
-            .type(propertyViewContext.Identifier().get(0).getText())
-            .build();
-    }
 
     private DSLPropertyDesc createProperty(PropertyContext context) {
         final String defaultValue = context.r_default() == null ?

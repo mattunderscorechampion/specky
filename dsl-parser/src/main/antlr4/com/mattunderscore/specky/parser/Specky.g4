@@ -41,10 +41,6 @@ property
     : OPTIONAL? Identifier Identifier r_default?
     ;
 
-propertyView
-    : OPTIONAL? Identifier Identifier
-    ;
-
 qualifiedName
     : Identifier (PACKAGE_SEPARATOR Identifier)*
     ;
@@ -62,7 +58,7 @@ implSpec
     ;
 
 typeSpec
-    : TYPE Identifier OPEN_BLOCK (propertyView)+ CLOSE_BLOCK
+    : TYPE Identifier OPEN_BLOCK (property)+ CLOSE_BLOCK
     ;
 
 spec
