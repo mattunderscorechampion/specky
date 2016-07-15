@@ -39,7 +39,6 @@ import java.util.stream.Collectors;
 
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
-import com.mattunderscore.specky.dsl.model.DSLPropertyImplementationDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
@@ -246,28 +245,16 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
         }
     }
 
-    private PropertyImplementationDesc get(DSLPropertyImplementationDesc dslPropertyImplementationDesc) {
-        final String defaultValue = dslPropertyImplementationDesc.getDefaultValue();
-        final String resolvedType = typeResolver.resolve(dslPropertyImplementationDesc.getType()).get();
+    private PropertyImplementationDesc get(DSLPropertyDesc dslPropertyDesc) {
+        final String defaultValue = dslPropertyDesc.getDefaultValue();
+        final String resolvedType = typeResolver.resolve(dslPropertyDesc.getType()).get();
         return PropertyImplementationDesc
             .builder()
-            .name(dslPropertyImplementationDesc.getName())
+            .name(dslPropertyDesc.getName())
             .type(resolvedType)
             .defaultValue(defaultValue == null ? valueResolver.resolve(resolvedType).get() : defaultValue)
-            .optional(dslPropertyImplementationDesc.isOptional())
+            .optional(dslPropertyDesc.isOptional())
             .override(false)
-            .build();
-    }
-
-    private PropertyImplementationDesc get(DSLPropertyDesc dslTypeDesc) {
-        final String type = typeResolver.resolve(dslTypeDesc.getType()).get();
-        final String defaultValue = valueResolver.resolve(type).get();
-        return PropertyImplementationDesc
-            .builder()
-            .name(dslTypeDesc.getName())
-            .type(type)
-            .defaultValue(defaultValue)
-            .override(true)
             .build();
     }
 }

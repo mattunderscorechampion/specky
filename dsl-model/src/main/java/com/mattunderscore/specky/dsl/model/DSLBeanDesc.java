@@ -39,7 +39,7 @@ import java.util.List;
 @Builder
 public class DSLBeanDesc implements DSLTypeDesc {
     String name;
-    List<DSLPropertyImplementationDesc> properties;
+    List<DSLPropertyDesc> properties;
     DSLConstructionMethod constructionMethod;
     List<String> extend;
 }

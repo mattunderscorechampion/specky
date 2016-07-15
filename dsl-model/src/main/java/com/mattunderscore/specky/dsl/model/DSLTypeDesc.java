@@ -33,7 +33,7 @@ import java.util.List;
 public interface DSLTypeDesc {
     String getName();
 
-    List<DSLPropertyImplementationDesc> getProperties();
+    List<DSLPropertyDesc> getProperties();
 
     DSLConstructionMethod getConstructionMethod();
 

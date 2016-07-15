@@ -39,7 +39,7 @@ import lombok.Value;
 @Builder
 public class DSLValueDesc implements DSLTypeDesc {
     String name;
-    List<DSLPropertyImplementationDesc> properties;
+    List<DSLPropertyDesc> properties;
     DSLConstructionMethod constructionMethod;
     List<String> extend;
 }

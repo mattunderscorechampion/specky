@@ -25,11 +25,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.dsl.model;
 
+import lombok.Builder;
+import lombok.Value;
+
 /**
  * Property model.
- * @author Matt Champion on 25/06/2016
+ *
+ * @author Matt Champion on 05/06/16
  */
-public interface DSLPropertyDesc {
-    String getType();
-    String getName();
+@Value
+@Builder
+public class DSLPropertyDesc {
+    String name;
+    String type;
+    boolean optional;
+    String defaultValue;
 }

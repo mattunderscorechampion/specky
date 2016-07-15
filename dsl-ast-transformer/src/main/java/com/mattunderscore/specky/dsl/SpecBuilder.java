@@ -34,8 +34,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc.DSLBeanDescBuilder;
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
-import com.mattunderscore.specky.dsl.model.DSLPropertyImplementationDesc;
-import com.mattunderscore.specky.dsl.model.DSLPropertyViewDesc;
+import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
@@ -141,19 +140,19 @@ public final class SpecBuilder {
                 .build();
         }
 
-    private DSLPropertyViewDesc createPropertyView(PropertyViewContext propertyViewContext) {
-        return DSLPropertyViewDesc
+    private DSLPropertyDesc createPropertyView(PropertyViewContext propertyViewContext) {
+        return DSLPropertyDesc
             .builder()
             .name(propertyViewContext.Identifier().get(1).getText())
             .type(propertyViewContext.Identifier().get(0).getText())
             .build();
     }
 
-    private DSLPropertyImplementationDesc createProperty(PropertyContext context) {
+    private DSLPropertyDesc createProperty(PropertyContext context) {
         final String defaultValue = context.r_default() == null ?
             null :
             context.r_default().ANYTHING().getText();
-        return DSLPropertyImplementationDesc
+        return DSLPropertyDesc
             .builder()
             .name(context
                 .Identifier()

@@ -38,5 +38,5 @@ import lombok.Value;
 @Builder
 public class DSLViewDesc {
     String name;
-    List<? extends DSLPropertyDesc> properties;
+    List<DSLPropertyDesc> properties;
 }

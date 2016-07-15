@@ -10,7 +10,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
-import com.mattunderscore.specky.dsl.model.DSLPropertyImplementationDesc;
+import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
 import com.mattunderscore.specky.dsl.model.DSLViewDesc;
@@ -42,7 +42,7 @@ public final class ModelGeneratorTest {
                 .name("Example")
                 .extend(emptyList())
                 .constructionMethod(DSLConstructionMethod.CONSTRUCTOR)
-                .properties(singletonList(DSLPropertyImplementationDesc
+                .properties(singletonList(DSLPropertyDesc
                     .builder()
                     .name("intProp")
                     .optional(false)
@@ -83,7 +83,7 @@ public final class ModelGeneratorTest {
             .views(singletonList(DSLViewDesc
                 .builder()
                 .name("SuperType")
-                .properties(singletonList(DSLPropertyImplementationDesc
+                .properties(singletonList(DSLPropertyDesc
                     .builder()
                     .name("objectProp")
                     .type("Object")
@@ -96,7 +96,7 @@ public final class ModelGeneratorTest {
                 .name("Example")
                 .extend(singletonList("com.example.SuperType"))
                 .constructionMethod(DSLConstructionMethod.CONSTRUCTOR)
-                .properties(singletonList(DSLPropertyImplementationDesc
+                .properties(singletonList(DSLPropertyDesc
                     .builder()
                     .name("intProp")
                     .optional(false)
