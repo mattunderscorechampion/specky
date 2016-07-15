@@ -14,7 +14,7 @@
         <module>generator</module>
         <module>specky-maven-plugin</module>
         <module>plugin-example</module>
-        <module>dsl-ast-transformer</module>
+        <module>dsl-model-transformer</module>
         <module>javapoet-utils</module>
         <module>code-generation</module>
         <module>processed-model</module>
@@ -35,7 +35,7 @@
             </dependency>
             <dependency>
                 <groupId>com.mattunderscore.code.generation.specky</groupId>
-                <artifactId>dsl-ast-transformer</artifactId>
+                <artifactId>dsl-model-transformer</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>dsl-ast-transformer</artifactId>
+    <artifactId>dsl-model-transformer</artifactId>
 
     <dependencies>
         <dependency>

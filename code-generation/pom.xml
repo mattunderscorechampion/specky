@@ -22,7 +22,7 @@
         </dependency>
         <dependency>
             <groupId>com.mattunderscore.code.generation.specky</groupId>
-            <artifactId>dsl-ast-transformer</artifactId>
+            <artifactId>dsl-model-transformer</artifactId>
         </dependency>
         <dependency>
             <groupId>com.mattunderscore.code.generation.specky</groupId>
