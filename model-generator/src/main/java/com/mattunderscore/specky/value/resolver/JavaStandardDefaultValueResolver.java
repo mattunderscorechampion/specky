@@ -37,15 +37,25 @@ public final class JavaStandardDefaultValueResolver implements DefaultValueResol
     private final Map<String, String> typeToDefault = new HashMap<>();
 
     public JavaStandardDefaultValueResolver() {
-        typeToDefault.put("java.lang.Integer", "0");
-        typeToDefault.put("java.math.BigInteger", "BigInteger.ZERO");
-        typeToDefault.put("java.lang.Double", "0.0");
-        typeToDefault.put("java.math.BigDecimal", "BigDecimal.ZERO");
-        typeToDefault.put("java.lang.String", "\"\"");
-        typeToDefault.put("java.lang.Boolean", "false");
+        // Primitives
         typeToDefault.put("int", "0");
         typeToDefault.put("double", "0.0");
         typeToDefault.put("boolean", "false");
+        typeToDefault.put("long", "0L");
+
+        // Boxed primitives
+        typeToDefault.put("java.lang.Integer", "0");
+        typeToDefault.put("java.lang.Double", "0.0");
+        typeToDefault.put("java.lang.Boolean", "false");
+        typeToDefault.put("java.lang.Long", "0L");
+
+        // Big numbers
+        typeToDefault.put("java.math.BigInteger", "BigInteger.ZERO");
+        typeToDefault.put("java.math.BigDecimal", "BigDecimal.ZERO");
+
+        // Simple classes
+        typeToDefault.put("java.lang.Object", "new Object()");
+        typeToDefault.put("java.lang.String", "\"\"");
     }
 
     @Override

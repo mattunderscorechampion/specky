@@ -29,8 +29,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.mattunderscore.specky.type.resolver.TypeResolver;
-
 /**
  * {@link TypeResolver} for types in the standard Java library.
  *
@@ -40,23 +38,33 @@ import com.mattunderscore.specky.type.resolver.TypeResolver;
     private final Map<String, String> nameToType = new HashMap<>();
 
     public JavaStandardTypeResolver() {
-        nameToType.put("Integer", "java.lang.Integer");
-        nameToType.put("BigInteger", "java.math.BigInteger");
-        nameToType.put("Double", "java.lang.Double");
-        nameToType.put("BigDecimal", "java.math.BigDecimal");
-        nameToType.put("String", "java.lang.String");
-        nameToType.put("Boolean", "java.lang.Boolean");
-        nameToType.put("java.lang.Integer", "java.lang.Integer");
-        nameToType.put("java.math.BigInteger", "java.math.BigInteger");
-        nameToType.put("java.lang.Double", "java.lang.Double");
-        nameToType.put("java.math.BigDecimal", "java.math.BigDecimal");
-        nameToType.put("java.lang.String", "java.lang.String");
-        nameToType.put("java.lang.Boolean", "java.lang.Boolean");
+        // Primitives
         nameToType.put("int", "int");
         nameToType.put("double", "double");
         nameToType.put("boolean", "boolean");
-        nameToType.put("java.lang.Object", "java.lang.Object");
+        nameToType.put("long", "long");
+
+        // Boxed primitives
+        nameToType.put("Integer", "java.lang.Integer");
+        nameToType.put("java.lang.Integer", "java.lang.Integer");
+        nameToType.put("Double", "java.lang.Double");
+        nameToType.put("java.lang.Double", "java.lang.Double");
+        nameToType.put("Boolean", "java.lang.Boolean");
+        nameToType.put("java.lang.Boolean", "java.lang.Boolean");
+        nameToType.put("Long", "java.lang.Long");
+        nameToType.put("java.lang.Long", "java.lang.Long");
+
+        // Big numbers
+        nameToType.put("BigInteger", "java.math.BigInteger");
+        nameToType.put("java.math.BigInteger", "java.math.BigInteger");
+        nameToType.put("BigDecimal", "java.math.BigDecimal");
+        nameToType.put("java.math.BigDecimal", "java.math.BigDecimal");
+
+        // Simple classes
         nameToType.put("Object", "java.lang.Object");
+        nameToType.put("java.lang.Object", "java.lang.Object");
+        nameToType.put("String", "java.lang.String");
+        nameToType.put("java.lang.String", "java.lang.String");
     }
 
     @Override

@@ -49,10 +49,10 @@ public final class PersonBeanTest {
         assertTrue(person instanceof PersonType);
         person.setId(2);
         person.setName("someName");
-        person.setBirthTimestamp(50);
+        person.setBirthTimestamp(50L);
         assertEquals(2, person.getId());
         assertEquals("someName", person.getName());
-        assertEquals(50, person.getBirthTimestamp());
+        assertEquals(50L, person.getBirthTimestamp());
         assertEquals("PersonBean[id=2, name=someName, birthTimestamp=50]", person.toString());
     }
 
@@ -60,10 +60,10 @@ public final class PersonBeanTest {
     public void testStructure() throws NoSuchMethodException {
         assertHasMethod(PersonBean.class, "getId", Integer.TYPE);
         assertHasMethod(PersonBean.class, "getName", String.class);
-        assertHasMethod(PersonBean.class, "getBirthTimestamp", Integer.TYPE);
+        assertHasMethod(PersonBean.class, "getBirthTimestamp", Long.TYPE);
         assertHasMethod(PersonBean.class, "setId", Void.TYPE, Integer.TYPE);
         assertHasMethod(PersonBean.class, "setName", Void.TYPE, String.class);
-        assertHasMethod(PersonBean.class, "setBirthTimestamp", Void.TYPE, Integer.TYPE);
+        assertHasMethod(PersonBean.class, "setBirthTimestamp", Void.TYPE, Long.TYPE);
     }
 
     @Test

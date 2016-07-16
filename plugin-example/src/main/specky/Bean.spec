@@ -27,7 +27,7 @@
 package com.example
 
 bean PersonBean : PersonType {
-    int birthTimestamp
+    long birthTimestamp
     options {
         constructor
     }

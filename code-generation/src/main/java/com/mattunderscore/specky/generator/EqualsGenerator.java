@@ -83,7 +83,7 @@ public final class EqualsGenerator implements MethodGeneratorForType {
         final String name = propertyImplementationDesc.getName();
         final String type = propertyImplementationDesc.getType();
 
-        if ("int".equals(type) || "boolean".equals(type) || "double".equals(type)) {
+        if ("int".equals(type) || "boolean".equals(type) || "double".equals(type) || "long".equals(type)) {
             return "this." + name + " == " + "that." + name;
         }
 

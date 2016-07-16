@@ -22,7 +22,7 @@ public final class ConstructorValueTest {
 
         assertEquals(1, person.getId());
         assertEquals("Matt", person.getName());
-        assertEquals(1000, person.getBirthTimestamp());
+        assertEquals(1000L, person.getBirthTimestamp());
         assertEquals("ConstructorValue[id=1, name=Matt, birthTimestamp=1000]", person.toString());
         assertTrue(person instanceof PersonType);
     }

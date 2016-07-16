@@ -43,5 +43,5 @@ value StrangePersonValue {
 }
 
 value ConstructorValue : PersonType {
-    int birthTimestamp
+    long birthTimestamp
 }

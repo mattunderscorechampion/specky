@@ -89,6 +89,9 @@ import com.squareup.javapoet.TypeName;
         else if ("double".equals(type)) {
             return TypeName.DOUBLE;
         }
+        else if ("long".equals(type)) {
+            return TypeName.LONG;
+        }
 
         return ClassName.bestGuess(type);
     }
