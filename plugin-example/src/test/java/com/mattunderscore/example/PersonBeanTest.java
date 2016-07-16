@@ -25,14 +25,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.example;
 
+import com.example.PersonBean;
+import com.example.PersonType;
+import org.junit.Test;
+
+import static com.mattunderscore.example.ReflectionAssertions.assertHasMethod;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-
-import com.example.PersonBean;
-import com.example.PersonType;
 
 /**
  * Unit tests for {@link PersonBean}.
@@ -45,11 +45,25 @@ public final class PersonBeanTest {
 
         assertEquals(0, person.getId());
         assertEquals("", person.getName());
-        assertEquals("PersonBean[id=0, name=]", person.toString());
+        assertEquals("PersonBean[id=0, name=, birthTimestamp=0]", person.toString());
         assertTrue(person instanceof PersonType);
+        person.setId(2);
         person.setName("someName");
+        person.setBirthTimestamp(50);
+        assertEquals(2, person.getId());
         assertEquals("someName", person.getName());
-        assertEquals("PersonBean[id=0, name=someName]", person.toString());
+        assertEquals(50, person.getBirthTimestamp());
+        assertEquals("PersonBean[id=2, name=someName, birthTimestamp=50]", person.toString());
+    }
+
+    @Test
+    public void testStructure() throws NoSuchMethodException {
+        assertHasMethod(PersonBean.class, "getId", Integer.TYPE);
+        assertHasMethod(PersonBean.class, "getName", String.class);
+        assertHasMethod(PersonBean.class, "getBirthTimestamp", Integer.TYPE);
+        assertHasMethod(PersonBean.class, "setId", Void.TYPE, Integer.TYPE);
+        assertHasMethod(PersonBean.class, "setName", Void.TYPE, String.class);
+        assertHasMethod(PersonBean.class, "setBirthTimestamp", Void.TYPE, Integer.TYPE);
     }
 
     @Test
