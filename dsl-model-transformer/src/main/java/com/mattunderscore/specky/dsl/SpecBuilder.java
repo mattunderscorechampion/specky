@@ -25,16 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.dsl;
 
-import static java.util.stream.Collectors.toList;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.mattunderscore.specky.parser.Specky.TypeParametersContext;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc.DSLBeanDescBuilder;
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
@@ -48,7 +38,15 @@ import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.ImplmentationSpecContext;
 import com.mattunderscore.specky.parser.Specky.PropertyContext;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
+import com.mattunderscore.specky.parser.Specky.TypeParametersContext;
 import com.mattunderscore.specky.parser.Specky.TypeSpecContext;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
+import java.util.Collections;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author Matt Champion on 05/06/16
@@ -166,7 +164,7 @@ public final class SpecBuilder {
                 .Identifier()
                 .get(0)
                 .getText())
-                .typeParameters(typeParameters)
+            .typeParameters(typeParameters)
             .optional(context.OPTIONAL() != null)
             .defaultValue(defaultValue)
             .build();
