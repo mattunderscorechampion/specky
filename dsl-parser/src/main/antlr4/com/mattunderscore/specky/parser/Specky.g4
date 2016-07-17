@@ -37,8 +37,12 @@ default_value
     : DEFAULT ANYTHING
     ;
 
+typeParameters
+    : OPEN_TYPE_PARAMETERS Identifier+ CLOSE_TYPE_PARAMETERS
+    ;
+
 property
-    : OPTIONAL? Identifier Identifier default_value?
+    : OPTIONAL? Identifier typeParameters? Identifier default_value?
     ;
 
 qualifiedName

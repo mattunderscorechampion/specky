@@ -28,6 +28,8 @@ package com.mattunderscore.specky.processed.model;
 import lombok.Builder;
 import lombok.Value;
 
+import java.util.List;
+
 /**
  * Property implementation model.
  *
@@ -38,6 +40,7 @@ import lombok.Value;
 public class PropertyImplementationDesc {
     String name;
     String type;
+    List<String> typeParameters;
     boolean optional;
     String defaultValue;
     boolean override;

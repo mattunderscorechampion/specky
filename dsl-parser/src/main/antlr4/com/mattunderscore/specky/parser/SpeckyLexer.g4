@@ -61,6 +61,14 @@ CLOSE_BLOCK
     : '}'
     ;
 
+OPEN_TYPE_PARAMETERS
+    : '<'
+    ;
+
+CLOSE_TYPE_PARAMETERS
+    : '>'
+    ;
+
 PACKAGE
     : 'package'
     ;

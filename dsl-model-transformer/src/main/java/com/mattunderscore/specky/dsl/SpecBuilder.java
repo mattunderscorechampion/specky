@@ -28,7 +28,11 @@ package com.mattunderscore.specky.dsl;
 import static java.util.stream.Collectors.toList;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import com.mattunderscore.specky.parser.Specky.TypeParametersContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
@@ -143,6 +147,15 @@ public final class SpecBuilder {
         final String defaultValue = context.default_value() == null ?
             null :
             context.default_value().ANYTHING().getText();
+        final TypeParametersContext parametersContext = context
+                .typeParameters();
+        final List<String> typeParameters = parametersContext == null ?
+            Collections.emptyList() :
+            parametersContext
+                .Identifier()
+                .stream()
+                .map(ParseTree::getText)
+                .collect(toList());
         return DSLPropertyDesc
             .builder()
             .name(context
@@ -153,6 +166,7 @@ public final class SpecBuilder {
                 .Identifier()
                 .get(0)
                 .getText())
+                .typeParameters(typeParameters)
             .optional(context.OPTIONAL() != null)
             .defaultValue(defaultValue)
             .build();

@@ -28,6 +28,8 @@ package com.mattunderscore.specky.dsl.model;
 import lombok.Builder;
 import lombok.Value;
 
+import java.util.List;
+
 /**
  * Property model.
  *
@@ -38,6 +40,7 @@ import lombok.Value;
 public class DSLPropertyDesc {
     String name;
     String type;
+    List<String> typeParameters;
     boolean optional;
     String defaultValue;
 }
