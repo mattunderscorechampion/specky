@@ -23,15 +23,24 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.processed.model;
+package com.mattunderscore.specky.model;
+
+import java.util.List;
+
+import lombok.Builder;
+import lombok.Value;
 
 /**
- * Description of construction method for a type.
+ * Bean model.
  *
- * @author Matt Champion
+ * @author Matt Champion on 05/06/16
  */
-public enum ConstructionMethod {
-    CONSTRUCTOR,
-    MUTABLE_BUILDER,
-    IMMUTABLE_BUILDER;
+@Value
+@Builder
+public class BeanDesc implements TypeDesc {
+    String packageName;
+    String name;
+    List<PropertyImplementationDesc> properties;
+    ConstructionMethod constructionMethod;
+    List<String> supertypes;
 }

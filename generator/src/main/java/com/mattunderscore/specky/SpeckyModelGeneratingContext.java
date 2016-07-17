@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.model.generator.ModelGenerator;
-import com.mattunderscore.specky.processed.model.SpecDesc;
+import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
 import com.mattunderscore.specky.value.resolver.CompositeValueResolver;

@@ -57,7 +57,7 @@ import com.mattunderscore.specky.generator.ValueConstructorGenerator;
 import com.mattunderscore.specky.generator.ValueGenerator;
 import com.mattunderscore.specky.generator.ValueInitialiser;
 import com.mattunderscore.specky.generator.ViewGenerator;
-import com.mattunderscore.specky.processed.model.SpecDesc;
+import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.JavaFile;
 
 /**

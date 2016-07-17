@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
@@ -43,13 +42,13 @@ import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
 import com.mattunderscore.specky.dsl.model.DSLViewDesc;
-import com.mattunderscore.specky.processed.model.BeanDesc;
-import com.mattunderscore.specky.processed.model.ConstructionMethod;
-import com.mattunderscore.specky.processed.model.PropertyImplementationDesc;
-import com.mattunderscore.specky.processed.model.SpecDesc;
-import com.mattunderscore.specky.processed.model.TypeDesc;
-import com.mattunderscore.specky.processed.model.ValueDesc;
-import com.mattunderscore.specky.processed.model.ViewDesc;
+import com.mattunderscore.specky.model.BeanDesc;
+import com.mattunderscore.specky.model.ConstructionMethod;
+import com.mattunderscore.specky.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.model.ValueDesc;
+import com.mattunderscore.specky.model.ViewDesc;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 

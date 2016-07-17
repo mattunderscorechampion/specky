@@ -29,11 +29,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.mattunderscore.specky.processed.model.BeanDesc;
-import com.mattunderscore.specky.processed.model.SpecDesc;
-import com.mattunderscore.specky.processed.model.TypeDesc;
-import com.mattunderscore.specky.processed.model.ValueDesc;
-import com.mattunderscore.specky.processed.model.ViewDesc;
+import com.mattunderscore.specky.model.BeanDesc;
+import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.model.ValueDesc;
+import com.mattunderscore.specky.model.ViewDesc;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 

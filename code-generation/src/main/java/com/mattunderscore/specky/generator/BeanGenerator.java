@@ -30,9 +30,9 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 
 import java.util.List;
 
-import com.mattunderscore.specky.processed.model.BeanDesc;
-import com.mattunderscore.specky.processed.model.ConstructionMethod;
-import com.mattunderscore.specky.processed.model.SpecDesc;
+import com.mattunderscore.specky.model.BeanDesc;
+import com.mattunderscore.specky.model.ConstructionMethod;
+import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.FieldSpec.Builder;
 import com.squareup.javapoet.TypeName;

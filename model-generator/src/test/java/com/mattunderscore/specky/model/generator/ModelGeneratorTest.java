@@ -14,17 +14,15 @@ import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
 import com.mattunderscore.specky.dsl.model.DSLViewDesc;
-import com.mattunderscore.specky.processed.model.ConstructionMethod;
-import com.mattunderscore.specky.processed.model.PropertyImplementationDesc;
-import com.mattunderscore.specky.processed.model.SpecDesc;
-import com.mattunderscore.specky.processed.model.TypeDesc;
+import com.mattunderscore.specky.model.ConstructionMethod;
+import com.mattunderscore.specky.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
 import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
 import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver;
 import com.mattunderscore.specky.value.resolver.NullValueResolver;
-
-import java.util.Collections;
 
 /**
  * Unit tests for {@link ModelGenerator}.

@@ -29,8 +29,8 @@ import static com.mattunderscore.specky.generator.GeneratorUtils.CONSTRUCTOR_DOC
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.processed.model.SpecDesc;
-import com.mattunderscore.specky.processed.model.TypeDesc;
+import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.MethodSpec;
 
 /**
