@@ -1,6 +1,5 @@
 package com.mattunderscore.example;
 
-import com.example.PersonValue;
 import com.example.ValueWithList;
 import org.junit.Test;
 
