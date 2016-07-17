@@ -28,6 +28,14 @@
         <module>model-generator</module>
     </modules>
 
+    <!-- Source control for common parent -->
+    <scm>
+        <connection>scm:git:https://github.com/mattunderscorechampion/mattunderscore-common-parent.git</connection>
+        <developerConnection>scm:git:git@github.com:mattunderscorechampion/mattunderscore-common-parent.git</developerConnection>
+        <url>https://github.com/mattunderscorechampion/mattunderscore-common-parent</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
