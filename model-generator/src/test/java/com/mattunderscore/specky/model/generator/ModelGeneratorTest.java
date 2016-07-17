@@ -24,6 +24,8 @@ import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
 import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver;
 import com.mattunderscore.specky.value.resolver.NullValueResolver;
 
+import java.util.Collections;
+
 /**
  * Unit tests for {@link ModelGenerator}.
  *
@@ -45,6 +47,7 @@ public final class ModelGeneratorTest {
                 .properties(singletonList(DSLPropertyDesc
                     .builder()
                     .name("intProp")
+                    .typeParameters(emptyList())
                     .optional(false)
                     .type("int")
                     .build()))
@@ -87,6 +90,7 @@ public final class ModelGeneratorTest {
                     .builder()
                     .name("objectProp")
                     .type("Object")
+                    .typeParameters(emptyList())
                     .defaultValue("null")
                     .optional(false)
                     .build()))
@@ -101,6 +105,7 @@ public final class ModelGeneratorTest {
                     .name("intProp")
                     .optional(false)
                     .type("int")
+                    .typeParameters(emptyList())
                     .build()))
                 .build()))
             .build();

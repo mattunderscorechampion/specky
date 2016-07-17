@@ -119,6 +119,12 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                                 .builder()
                                 .name(prop.getName())
                                 .type(resolvedType)
+                                .typeParameters(prop
+                                    .getTypeParameters()
+                                    .stream()
+                                    .map(valueResolver::resolve)
+                                    .map(Optional::get)
+                                    .collect(toList()))
                                 .override(true)
                                 .defaultValue(valueResolver.resolve(resolvedType).get())
                                 .build();
@@ -133,7 +139,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .getValues()
             .stream()
             .map(dslViewDesc -> get(views, packageName, dslViewDesc))
-            .collect(Collectors.toList());
+            .collect(toList());
     }
 
     private List<ViewDesc> get(DSLSpecDesc dslSpecDesc) {
@@ -142,7 +148,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .getViews()
             .stream()
             .map(dslTypeDesc -> get(packageName, dslTypeDesc))
-            .collect(Collectors.toList());
+            .collect(toList());
     }
 
     private TypeDesc get(Map<String, ViewDesc> views, String packageName, DSLTypeDesc dslTypeDesc) {
@@ -222,7 +228,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .getProperties()
             .stream()
             .map(this::get)
-            .collect(Collectors.toList());
+            .collect(toList());
 
         return ViewDesc
             .builder()
@@ -252,6 +258,12 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .builder()
             .name(dslPropertyDesc.getName())
             .type(resolvedType)
+            .typeParameters(dslPropertyDesc
+                .getTypeParameters()
+                .stream()
+                .map(typeResolver::resolve)
+                .map(Optional::get)
+                .collect(toList()))
             .defaultValue(defaultValue == null ? valueResolver.resolve(resolvedType).get() : defaultValue)
             .optional(dslPropertyDesc.isOptional())
             .override(false)
