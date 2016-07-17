@@ -65,6 +65,10 @@ import java.util.Optional;
         nameToType.put("java.lang.Object", "java.lang.Object");
         nameToType.put("String", "java.lang.String");
         nameToType.put("java.lang.String", "java.lang.String");
+
+        // Generic classes
+        nameToType.put("List", "java.util.List");
+        nameToType.put("java.util.List", "java.util.List");
     }
 
     @Override
