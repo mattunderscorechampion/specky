@@ -45,3 +45,7 @@ value StrangePersonValue {
 value ConstructorValue : PersonType {
     long birthTimestamp
 }
+
+value ValueWithList {
+    List<String> names
+}
