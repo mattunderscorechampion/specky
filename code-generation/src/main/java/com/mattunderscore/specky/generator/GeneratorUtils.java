@@ -25,11 +25,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
+import com.mattunderscore.specky.processed.model.PropertyImplementationDesc;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
 import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
-
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.TypeName;
 
 /**
  * @author Matt Champion on 11/06/2016
@@ -78,6 +83,16 @@ import com.squareup.javapoet.TypeName;
     private GeneratorUtils() {
     }
 
+    public static TypeName getType(PropertyImplementationDesc property) {
+        final List<String> typeParameters = property.getTypeParameters();
+        if (typeParameters.size() > 0) {
+            return getType(property.getType(), typeParameters);
+        }
+        else {
+            return getType(property.getType());
+        }
+    }
+
     public static TypeName getType(String type) {
 
         if ("int".equals(type)) {
@@ -94,5 +109,14 @@ import com.squareup.javapoet.TypeName;
         }
 
         return ClassName.bestGuess(type);
+    }
+
+    public static ParameterizedTypeName getType(String type, List<String> typeParameters) {
+        final List<TypeName> parameterList = typeParameters.stream().map(GeneratorUtils::getType).collect(Collectors.toList());
+        final TypeName[] parameters = new TypeName[parameterList.size()];
+        parameterList.toArray(parameters);
+
+        final ClassName mainType = ClassName.bestGuess(type);
+        return ParameterizedTypeName.get(mainType, parameters);
     }
 }

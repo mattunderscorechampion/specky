@@ -58,7 +58,7 @@ public final class JavaStandardDefaultValueResolver implements DefaultValueResol
         typeToDefault.put("java.lang.String", "\"\"");
 
         // Generic classes
-        typeToDefault.put("java.util.List", "new ArrayList()");
+        typeToDefault.put("java.util.List", "new java.util.ArrayList()");
     }
 
     @Override

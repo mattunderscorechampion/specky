@@ -55,7 +55,7 @@ public final class ValueConstructorGenerator implements MethodGeneratorForType {
             .getProperties()
             .stream()
             .forEach(propertyDesc -> {
-                final TypeName type = getType(propertyDesc.getType());
+                final TypeName type = getType(propertyDesc);
                 final FieldSpec fieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build();
 
                 final ParameterSpec constructorParameter = ParameterSpec.builder(type, propertyDesc.getName()).build();

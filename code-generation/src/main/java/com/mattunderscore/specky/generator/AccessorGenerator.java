@@ -50,7 +50,7 @@ public final class AccessorGenerator implements MethodGeneratorForProperty {
             return methodBuilder(getAccessorName(propertyDesc.getName()))
                 .addModifiers(PUBLIC)
                 .addAnnotation(Override.class)
-                .returns(getType(propertyDesc.getType()))
+                .returns(getType(propertyDesc))
                 .addStatement("return $N", propertyDesc.getName())
                 .build();
         }
@@ -58,7 +58,7 @@ public final class AccessorGenerator implements MethodGeneratorForProperty {
             return methodBuilder(getAccessorName(propertyDesc.getName()))
                 .addModifiers(PUBLIC)
                 .addJavadoc(GETTER_DOC, propertyDesc.getName())
-                .returns(getType(propertyDesc.getType()))
+                .returns(getType(propertyDesc))
                 .addStatement("return $N", propertyDesc.getName())
                 .build();
         }

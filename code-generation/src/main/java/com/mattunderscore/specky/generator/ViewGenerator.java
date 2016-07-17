@@ -54,7 +54,7 @@ public final class ViewGenerator {
                 .addMethod(methodBuilder(getAccessorName(view.getName()))
                     .addJavadoc(GETTER_DOC, view.getName())
                     .addModifiers(ABSTRACT, PUBLIC)
-                    .returns(getType(view.getType()))
+                    .returns(getType(view))
                     .build());
         }
 

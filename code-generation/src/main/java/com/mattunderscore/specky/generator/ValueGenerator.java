@@ -72,7 +72,7 @@ public final class ValueGenerator {
             .getProperties()
             .stream()
             .forEach(propertyDesc -> {
-                final TypeName type = getType(propertyDesc.getType());
+                final TypeName type = getType(propertyDesc);
                 builder.addField(FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build());
                 forPropertyGenerators
                     .forEach(generator -> builder.addMethod(generator.generate(specDesc, valueDesc, propertyDesc)));

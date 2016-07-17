@@ -48,7 +48,7 @@ import com.squareup.javapoet.TypeName;
 public final class MutatorGenerator implements MethodGeneratorForProperty {
     @Override
     public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc, PropertyImplementationDesc propertyDesc) {
-        final TypeName type = getType(propertyDesc.getType());
+        final TypeName type = getType(propertyDesc);
         final ParameterSpec parameterSpec = ParameterSpec.builder(type, propertyDesc.getName()).build();
         final MethodSpec.Builder setterSpec = methodBuilder(getMutatorName(propertyDesc.getName()))
             .addModifiers(PUBLIC)

@@ -40,3 +40,7 @@ bean StrangePersonBean {
         builder
     }
 }
+
+bean BeanWithList {
+    List<String> names
+}

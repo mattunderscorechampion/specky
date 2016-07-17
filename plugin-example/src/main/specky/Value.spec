@@ -48,4 +48,7 @@ value ConstructorValue : PersonType {
 
 value ValueWithList {
     List<String> names
+    options {
+        builder
+    }
 }

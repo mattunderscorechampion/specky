@@ -55,7 +55,7 @@ public class ConstructorForBuiltTypeGenerator implements MethodGeneratorForType 
     }
 
     private void addProperty(MethodSpec.Builder constructor, PropertyImplementationDesc property) {
-        final TypeName type = getType(property.getType());
+        final TypeName type = getType(property);
         final ParameterSpec constructorParameter = ParameterSpec.builder(type, property.getName()).build();
         constructor
             .addParameter(constructorParameter)
