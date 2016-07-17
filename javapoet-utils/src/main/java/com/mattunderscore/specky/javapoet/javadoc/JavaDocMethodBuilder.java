@@ -94,7 +94,7 @@ public final class JavaDocMethodBuilder {
 
         if (returns != null) {
             stringBuilder
-                .append("@returns ")
+                .append("@return ")
                 .append(returns)
                 .append('\n');
         }
