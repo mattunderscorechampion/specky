@@ -252,7 +252,9 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
 
     private PropertyDesc get(DSLPropertyDesc dslPropertyDesc) {
         final String defaultValue = dslPropertyDesc.getDefaultValue();
-        final String resolvedType = typeResolver.resolve(dslPropertyDesc.getTypeName()).get();
+        final String resolvedType = typeResolver
+            .resolve(dslPropertyDesc.getTypeName())
+            .orElseThrow(() -> new IllegalStateException("No type for " + dslPropertyDesc.getTypeName()));
         return PropertyDesc
             .builder()
             .name(dslPropertyDesc.getName())

@@ -26,6 +26,10 @@
 
 package com.example
 
+imports {
+    com.mattunderscore.example.ExtraType
+}
+
 value PersonValue {
     Integer id default 5
     String name
@@ -51,4 +55,8 @@ value ValueWithList {
     options {
         builder
     }
+}
+
+value ValueWithExtraType {
+    ExtraType extra
 }

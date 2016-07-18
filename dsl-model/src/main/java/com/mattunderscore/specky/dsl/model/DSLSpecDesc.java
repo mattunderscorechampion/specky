@@ -39,6 +39,7 @@ import java.util.List;
 @Builder
 public class DSLSpecDesc {
     String packageName;
+    List<String> imports;
     List<DSLTypeDesc> values;
     List<DSLViewDesc> views;
 }

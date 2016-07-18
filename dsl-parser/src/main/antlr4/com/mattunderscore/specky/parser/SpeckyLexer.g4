@@ -89,6 +89,10 @@ EXTENDS
     : ':'
     ;
 
+IMPORT
+    : 'imports'
+    ;
+
 fragment
 UpperCaseLetter
     :   [A-Z]

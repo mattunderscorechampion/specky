@@ -23,24 +23,14 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.model;
-
-import lombok.Builder;
-import lombok.Value;
-
-import java.util.List;
+package com.mattunderscore.example;
 
 /**
- * Specification model.
- *
- * @author Matt Champion on 05/06/16
+ * @author Matt Champion on 18/07/16
  */
-@Value
-@Builder
-public class SpecDesc {
-    List<String> imports;
-
-    List<TypeDesc> values;
-
-    List<ViewDesc> views;
+public class ExtraType {
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
 }

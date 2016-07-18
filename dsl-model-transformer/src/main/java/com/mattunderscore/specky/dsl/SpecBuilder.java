@@ -36,16 +36,18 @@ import com.mattunderscore.specky.dsl.model.DSLValueDesc.DSLValueDescBuilder;
 import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.ImplmentationSpecContext;
+import com.mattunderscore.specky.parser.Specky.ImportsContext;
 import com.mattunderscore.specky.parser.Specky.PropertyContext;
+import com.mattunderscore.specky.parser.Specky.QualifiedNameContext;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.Specky.TypeParametersContext;
 import com.mattunderscore.specky.parser.Specky.TypeSpecContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -57,9 +59,19 @@ public final class SpecBuilder {
     }
 
     public DSLSpecDesc build(SpecContext context) {
+        final ImportsContext importsContext = context
+                .imports();
+        final List<String> imports = importsContext == null ?
+            emptyList() :
+            importsContext
+                .qualifiedName()
+                .stream()
+                .map(QualifiedNameContext::getText)
+                .collect(toList());
         return DSLSpecDesc
             .builder()
             .packageName(context.package_name().qualifiedName().getText())
+            .imports(imports)
             .views(context
                 .typeSpec()
                 .stream()
@@ -95,7 +107,7 @@ public final class SpecBuilder {
                         .collect(toList()));
             }
             else {
-                valueDescBuilder.supertypes(Collections.emptyList());
+                valueDescBuilder.supertypes(emptyList());
             }
 
             return valueDescBuilder.build();
@@ -121,7 +133,7 @@ public final class SpecBuilder {
                         .collect(toList()));
             }
             else {
-                beanDescBuilder.supertypes(Collections.emptyList());
+                beanDescBuilder.supertypes(emptyList());
             }
 
             return beanDescBuilder
@@ -148,7 +160,7 @@ public final class SpecBuilder {
         final TypeParametersContext parametersContext = context
                 .typeParameters();
         final List<String> typeParameters = parametersContext == null ?
-            Collections.emptyList() :
+            emptyList() :
             parametersContext
                 .Identifier()
                 .stream()

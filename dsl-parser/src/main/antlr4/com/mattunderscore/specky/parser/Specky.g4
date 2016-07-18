@@ -53,6 +53,10 @@ package_name
     : PACKAGE qualifiedName
     ;
 
+imports
+    : IMPORT OPEN_BLOCK qualifiedName + CLOSE_BLOCK
+    ;
+
 opts
     : OPTIONS OPEN_BLOCK construction? CLOSE_BLOCK
     ;
@@ -66,5 +70,5 @@ typeSpec
     ;
 
 spec
-    : package_name (typeSpec | implmentationSpec)+
+    : package_name imports? (typeSpec | implmentationSpec)+
     ;
