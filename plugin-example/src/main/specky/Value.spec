@@ -60,3 +60,7 @@ value ValueWithList {
 value ValueWithExtraType {
     ExtraType extra
 }
+
+value IsValue {
+    boolean val
+}
