@@ -25,6 +25,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.dsl;
 
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
+
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc.DSLBeanDescBuilder;
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
@@ -35,20 +43,13 @@ import com.mattunderscore.specky.dsl.model.DSLValueDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc.DSLValueDescBuilder;
 import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.mattunderscore.specky.parser.Specky;
-import com.mattunderscore.specky.parser.Specky.ImplmentationSpecContext;
+import com.mattunderscore.specky.parser.Specky.ImplementationSpecContext;
 import com.mattunderscore.specky.parser.Specky.ImportsContext;
 import com.mattunderscore.specky.parser.Specky.PropertyContext;
 import com.mattunderscore.specky.parser.Specky.QualifiedNameContext;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.Specky.TypeParametersContext;
 import com.mattunderscore.specky.parser.Specky.TypeSpecContext;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
-import java.util.List;
-
-import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
 
 /**
  * @author Matt Champion on 05/06/16
@@ -78,14 +79,14 @@ public final class SpecBuilder {
                 .map(this::createView)
                 .collect(toList()))
             .values(context
-                .implmentationSpec()
+                .implementationSpec()
                 .stream()
                 .map(this::createType)
                 .collect(toList()))
             .build();
     }
 
-    private DSLTypeDesc createType(ImplmentationSpecContext context) {
+    private DSLTypeDesc createType(ImplementationSpecContext context) {
         if (context.BEAN() == null) {
             final DSLValueDescBuilder valueDescBuilder = DSLValueDesc
                 .builder()
@@ -182,7 +183,7 @@ public final class SpecBuilder {
             .build();
     }
 
-    private DSLConstructionMethod toConstructionDesc(ImplmentationSpecContext typeSpec) {
+    private DSLConstructionMethod toConstructionDesc(ImplementationSpecContext typeSpec) {
         final Specky.OptsContext options = typeSpec.opts();
 
         if (options == null || options.construction() == null) {

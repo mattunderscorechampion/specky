@@ -61,7 +61,7 @@ opts
     : OPTIONS OPEN_BLOCK construction? CLOSE_BLOCK
     ;
 
-implmentationSpec
+implementationSpec
     : (VALUE | BEAN ) Identifier (EXTENDS Identifier)? OPEN_BLOCK (property)+ opts? CLOSE_BLOCK
     ;
 
@@ -70,5 +70,5 @@ typeSpec
     ;
 
 spec
-    : package_name imports? (typeSpec | implmentationSpec)+
+    : package_name imports? (typeSpec | implementationSpec)+
     ;
