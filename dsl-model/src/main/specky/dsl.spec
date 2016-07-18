@@ -36,3 +36,11 @@ value DSLPropertyDesc {
         builder
     }
 }
+
+value DSLViewDesc {
+    String name
+    List<DSLPropertyDesc> properties
+    options {
+        builder
+    }
+}
