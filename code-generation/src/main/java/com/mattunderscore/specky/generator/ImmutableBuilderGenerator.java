@@ -35,7 +35,7 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 import java.util.stream.Collectors;
 
-import com.mattunderscore.specky.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.ClassName;
@@ -103,7 +103,7 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
             valueDesc
                 .getProperties()
                 .stream()
-                .map(PropertyImplementationDesc::getName)
+                .map(PropertyDesc::getName)
                 .collect(Collectors.joining(", ")) +
             ')';
     }

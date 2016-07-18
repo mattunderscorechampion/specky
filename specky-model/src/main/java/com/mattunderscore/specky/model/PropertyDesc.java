@@ -37,7 +37,7 @@ import java.util.List;
  */
 @Value
 @Builder
-public class PropertyImplementationDesc {
+public class PropertyDesc {
     String name;
     String type;
     List<String> typeParameters;

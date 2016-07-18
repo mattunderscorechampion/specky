@@ -33,7 +33,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 
 import java.util.Objects;
 
-import com.mattunderscore.specky.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.ClassName;
@@ -47,7 +47,7 @@ import com.squareup.javapoet.TypeName;
  */
 public final class MutatorGenerator implements MethodGeneratorForProperty {
     @Override
-    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc, PropertyImplementationDesc propertyDesc) {
+    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc, PropertyDesc propertyDesc) {
         final TypeName type = getType(propertyDesc);
         final ParameterSpec parameterSpec = ParameterSpec.builder(type, propertyDesc.getName()).build();
         final MethodSpec.Builder setterSpec = methodBuilder(getMutatorName(propertyDesc.getName()))

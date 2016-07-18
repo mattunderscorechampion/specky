@@ -39,5 +39,5 @@ import lombok.Value;
 public class ViewDesc {
     String packageName;
     String name;
-    List<PropertyImplementationDesc> properties;
+    List<PropertyDesc> properties;
 }

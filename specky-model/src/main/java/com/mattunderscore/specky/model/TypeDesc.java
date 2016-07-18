@@ -35,7 +35,7 @@ public interface TypeDesc {
 
     String getName();
 
-    List<PropertyImplementationDesc> getProperties();
+    List<PropertyDesc> getProperties();
 
     ConstructionMethod getConstructionMethod();
 

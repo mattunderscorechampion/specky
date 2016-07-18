@@ -44,7 +44,7 @@ import com.mattunderscore.specky.dsl.model.DSLValueDesc;
 import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;
-import com.mattunderscore.specky.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ValueDesc;
@@ -114,7 +114,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                         .stream()
                         .map(prop -> {
                             final String resolvedType = typeResolver.resolve(prop.getTypeName()).get();
-                            return PropertyImplementationDesc
+                            return PropertyDesc
                                 .builder()
                                 .name(prop.getName())
                                 .type(resolvedType)
@@ -159,7 +159,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             }
         }
 
-        final List<PropertyImplementationDesc> inheritedProperties = dslTypeDesc
+        final List<PropertyDesc> inheritedProperties = dslTypeDesc
             .getSupertypes()
             .stream()
             .map(typeResolver::resolve)
@@ -169,17 +169,17 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .flatMap(Collection::stream)
             .collect(toList());
 
-        final List<PropertyImplementationDesc> declaredProperties = dslTypeDesc
+        final List<PropertyDesc> declaredProperties = dslTypeDesc
             .getProperties()
             .stream()
             .map(this::get)
             .collect(toList());
 
-        final Map<String, PropertyImplementationDesc> knownProperties = new HashMap<>();
-        final List<PropertyImplementationDesc> allProperties = new ArrayList<>();
-        for (PropertyImplementationDesc property : inheritedProperties) {
+        final Map<String, PropertyDesc> knownProperties = new HashMap<>();
+        final List<PropertyDesc> allProperties = new ArrayList<>();
+        for (PropertyDesc property : inheritedProperties) {
             final String propertyName = property.getName();
-            final PropertyImplementationDesc currentProperty = knownProperties.get(propertyName);
+            final PropertyDesc currentProperty = knownProperties.get(propertyName);
             if (currentProperty == null) {
                 allProperties.add(property);
                 knownProperties.put(propertyName, property);
@@ -188,9 +188,9 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                 throw new IllegalArgumentException("Conflicting property declarations");
             }
         }
-        for (PropertyImplementationDesc property : declaredProperties) {
+        for (PropertyDesc property : declaredProperties) {
             final String propertyName = property.getName();
-            final PropertyImplementationDesc currentProperty = knownProperties.get(propertyName);
+            final PropertyDesc currentProperty = knownProperties.get(propertyName);
             if (currentProperty == null) {
                 allProperties.add(property);
                 knownProperties.put(propertyName, property);
@@ -223,7 +223,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
     }
 
     private ViewDesc get(String packageName, DSLViewDesc dslViewDesc) {
-        final List<PropertyImplementationDesc> properties = dslViewDesc
+        final List<PropertyDesc> properties = dslViewDesc
             .getProperties()
             .stream()
             .map(this::get)
@@ -250,10 +250,10 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
         }
     }
 
-    private PropertyImplementationDesc get(DSLPropertyDesc dslPropertyDesc) {
+    private PropertyDesc get(DSLPropertyDesc dslPropertyDesc) {
         final String defaultValue = dslPropertyDesc.getDefaultValue();
         final String resolvedType = typeResolver.resolve(dslPropertyDesc.getTypeName()).get();
-        return PropertyImplementationDesc
+        return PropertyDesc
             .builder()
             .name(dslPropertyDesc.getName())
             .type(resolvedType)

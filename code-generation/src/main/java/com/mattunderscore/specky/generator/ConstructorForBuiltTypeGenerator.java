@@ -31,7 +31,7 @@ import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 
-import com.mattunderscore.specky.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.FieldSpec;
@@ -54,7 +54,7 @@ public class ConstructorForBuiltTypeGenerator implements MethodGeneratorForType 
         return constructor.build();
     }
 
-    private void addProperty(MethodSpec.Builder constructor, PropertyImplementationDesc property) {
+    private void addProperty(MethodSpec.Builder constructor, PropertyDesc property) {
         final TypeName type = getType(property);
         final ParameterSpec constructorParameter = ParameterSpec.builder(type, property.getName()).build();
         constructor

@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import com.mattunderscore.specky.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.MethodSpec;
@@ -42,5 +42,5 @@ public interface MethodGeneratorForProperty {
      * @param propertyDesc the property description
      * @return the method
      */
-    MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc, PropertyImplementationDesc propertyDesc);
+    MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc, PropertyDesc propertyDesc);
 }

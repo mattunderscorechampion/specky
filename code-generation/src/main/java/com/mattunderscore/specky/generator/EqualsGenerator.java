@@ -31,7 +31,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 
 import java.util.stream.Collectors;
 
-import com.mattunderscore.specky.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.ClassName;
@@ -79,15 +79,15 @@ public final class EqualsGenerator implements MethodGeneratorForType {
         return codeBlock.build();
     }
 
-    private String generatePropertyComparison(PropertyImplementationDesc propertyImplementationDesc) {
-        final String name = propertyImplementationDesc.getName();
-        final String type = propertyImplementationDesc.getType();
+    private String generatePropertyComparison(PropertyDesc propertyDesc) {
+        final String name = propertyDesc.getName();
+        final String type = propertyDesc.getType();
 
         if ("int".equals(type) || "boolean".equals(type) || "double".equals(type) || "long".equals(type)) {
             return "this." + name + " == " + "that." + name;
         }
 
-        if (propertyImplementationDesc.isOptional()) {
+        if (propertyDesc.isOptional()) {
             return "(this." +
                 name +
                 " == null && that." +

@@ -40,7 +40,7 @@ import lombok.Value;
 public class BeanDesc implements TypeDesc {
     String packageName;
     String name;
-    List<PropertyImplementationDesc> properties;
+    List<PropertyDesc> properties;
     ConstructionMethod constructionMethod;
     List<String> supertypes;
 }

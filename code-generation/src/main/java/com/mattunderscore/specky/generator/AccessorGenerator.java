@@ -31,7 +31,7 @@ import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static java.lang.Character.toUpperCase;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.MethodSpec;
@@ -45,7 +45,7 @@ public final class AccessorGenerator implements MethodGeneratorForProperty {
     }
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc, PropertyImplementationDesc propertyDesc) {
+    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc, PropertyDesc propertyDesc) {
         if (propertyDesc.isOverride()) {
             return methodBuilder(getAccessorName(propertyDesc.getName()))
                 .addModifiers(PUBLIC)

@@ -30,7 +30,7 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.AnnotationSpec;
@@ -94,7 +94,7 @@ public final class ToStringGenerator implements MethodGeneratorForType {
         /**
          * Generate the code for the property. Starts within a string literal.
          */
-        String formatProperty(PropertyImplementationDesc propertyDesc);
+        String formatProperty(PropertyDesc propertyDesc);
     }
 
     public interface PropertyListBookend {
@@ -111,7 +111,7 @@ public final class ToStringGenerator implements MethodGeneratorForType {
 
     private static final class SimplePropertyFormatter implements PropertyFormatter {
         @Override
-        public String formatProperty(PropertyImplementationDesc propertyDesc) {
+        public String formatProperty(PropertyDesc propertyDesc) {
             return format("%1$s=\" + %1$s + \"", propertyDesc.getName());
         }
     }

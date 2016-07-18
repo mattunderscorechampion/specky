@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import com.mattunderscore.specky.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.model.PropertyDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
@@ -83,7 +83,7 @@ import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
     private GeneratorUtils() {
     }
 
-    public static TypeName getType(PropertyImplementationDesc property) {
+    public static TypeName getType(PropertyDesc property) {
         final List<String> typeParameters = property.getTypeParameters();
         if (typeParameters.size() > 0) {
             return getType(property.getType(), typeParameters);

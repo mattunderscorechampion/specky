@@ -34,7 +34,7 @@ import static java.lang.Character.toUpperCase;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.model.PropertyImplementationDesc;
+import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.ViewDesc;
 import com.squareup.javapoet.TypeSpec;
@@ -49,7 +49,7 @@ public final class ViewGenerator {
             .addModifiers(PUBLIC)
             .addJavadoc(TYPE_DOC, "View", typeDesc.getName());
 
-        for (PropertyImplementationDesc view : typeDesc.getProperties()) {
+        for (PropertyDesc view : typeDesc.getProperties()) {
             builder
                 .addMethod(methodBuilder(getAccessorName(view.getName()))
                     .addJavadoc(GETTER_DOC, view.getName())
