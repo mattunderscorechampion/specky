@@ -26,6 +26,10 @@
 
 package com.mattunderscore.specky.dsl.model
 
+imports {
+    com.mattunderscore.specky.dsl.model.DSLConstructionMethod
+}
+
 value DSLPropertyDesc {
     String name
     String typeName
@@ -43,4 +47,11 @@ value DSLViewDesc {
     options {
         builder
     }
+}
+
+type DSLTypeDesc {
+    String name
+    List<DSLPropertyDesc> properties
+    DSLConstructionMethod constructionMethod
+    List<String> supertypes
 }
