@@ -25,17 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.util.List;
-
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CommonToken;
-import org.antlr.v4.runtime.UnbufferedTokenStream;
-import org.junit.Test;
-
 import com.mattunderscore.specky.dsl.SpecBuilder;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
@@ -44,6 +33,16 @@ import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.SpeckyLexer;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CommonToken;
+import org.antlr.v4.runtime.UnbufferedTokenStream;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests for {@link SpecBuilder}.
@@ -77,7 +76,7 @@ public final class SpecBuilderTest {
 
         final DSLPropertyDesc propertyDesc0 = properties0.get(0);
         assertEquals("num", propertyDesc0.getName());
-        assertEquals("Integer", propertyDesc0.getType());
+        assertEquals("Integer", propertyDesc0.getTypeName());
 
         final DSLTypeDesc valueDesc0 = values.get(0);
         assertEquals("FirstValue", valueDesc0.getName());
@@ -89,10 +88,10 @@ public final class SpecBuilderTest {
 
         final DSLPropertyDesc propertyDesc1 = properties1.get(0);
         assertEquals("num", propertyDesc1.getName());
-        assertEquals("Integer", propertyDesc1.getType());
+        assertEquals("Integer", propertyDesc1.getTypeName());
         final DSLPropertyDesc propertyDesc2 = properties1.get(1);
         assertEquals("str", propertyDesc2.getName());
-        assertEquals("String", propertyDesc2.getType());
+        assertEquals("String", propertyDesc2.getTypeName());
 
         final DSLTypeDesc valueDesc1 = values.get(1);
         assertEquals("SecondValue", valueDesc1.getName());
@@ -101,10 +100,10 @@ public final class SpecBuilderTest {
 
         final DSLPropertyDesc propertyDesc3 = properties2.get(0);
         assertEquals("num", propertyDesc3.getName());
-        assertEquals("Integer", propertyDesc3.getType());
+        assertEquals("Integer", propertyDesc3.getTypeName());
         final DSLPropertyDesc propertyDesc4 = properties2.get(1);
         assertEquals("dbl", propertyDesc4.getName());
-        assertEquals("Double", propertyDesc4.getType());
+        assertEquals("Double", propertyDesc4.getTypeName());
 
         final DSLTypeDesc valueDesc2 = values.get(2);
         assertEquals("ValueWithBooleans", valueDesc2.getName());
@@ -113,10 +112,10 @@ public final class SpecBuilderTest {
 
         final DSLPropertyDesc propertyDesc5 = properties3.get(0);
         assertEquals("num", propertyDesc5.getName());
-        assertEquals("Integer", propertyDesc5.getType());
+        assertEquals("Integer", propertyDesc5.getTypeName());
         final DSLPropertyDesc propertyDesc6 = properties3.get(1);
         assertEquals("boolVal", propertyDesc6.getName());
-        assertEquals("Boolean", propertyDesc6.getType());
+        assertEquals("Boolean", propertyDesc6.getTypeName());
 
         final DSLTypeDesc beanSpec0 = values.get(3);
         assertEquals("FirstBean", beanSpec0.getName());
@@ -125,10 +124,10 @@ public final class SpecBuilderTest {
 
         final DSLPropertyDesc propertyDesc7 = properties4.get(0);
         assertEquals("num", propertyDesc7.getName());
-        assertEquals("Integer", propertyDesc7.getType());
+        assertEquals("Integer", propertyDesc7.getTypeName());
         assertEquals("5", propertyDesc7.getDefaultValue());
         final DSLPropertyDesc propertyDesc8 = properties4.get(1);
         assertEquals("str", propertyDesc8.getName());
-        assertEquals("String", propertyDesc8.getType());
+        assertEquals("String", propertyDesc8.getTypeName());
     }
 }

@@ -1,14 +1,5 @@
 package com.mattunderscore.specky.model.generator;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
@@ -23,6 +14,14 @@ import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
 import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
 import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver;
 import com.mattunderscore.specky.value.resolver.NullValueResolver;
+import org.junit.Test;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests for {@link ModelGenerator}.
@@ -46,8 +45,8 @@ public final class ModelGeneratorTest {
                     .builder()
                     .name("intProp")
                     .typeParameters(emptyList())
-                    .optional(false)
-                    .type("int")
+                    .optionalProperty(false)
+                    .typeName("int")
                     .build()))
                 .build()))
             .build();
@@ -87,10 +86,10 @@ public final class ModelGeneratorTest {
                 .properties(singletonList(DSLPropertyDesc
                     .builder()
                     .name("objectProp")
-                    .type("Object")
+                    .typeName("Object")
                     .typeParameters(emptyList())
                     .defaultValue("null")
-                    .optional(false)
+                    .optionalProperty(false)
                     .build()))
                 .build()))
             .values(singletonList(DSLValueDesc
@@ -101,8 +100,8 @@ public final class ModelGeneratorTest {
                 .properties(singletonList(DSLPropertyDesc
                     .builder()
                     .name("intProp")
-                    .optional(false)
-                    .type("int")
+                    .optionalProperty(false)
+                    .typeName("int")
                     .typeParameters(emptyList())
                     .build()))
                 .build()))

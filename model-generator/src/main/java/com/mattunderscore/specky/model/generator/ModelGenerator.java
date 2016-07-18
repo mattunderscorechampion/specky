@@ -113,7 +113,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                         .getProperties()
                         .stream()
                         .map(prop -> {
-                            final String resolvedType = typeResolver.resolve(prop.getType()).get();
+                            final String resolvedType = typeResolver.resolve(prop.getTypeName()).get();
                             return PropertyImplementationDesc
                                 .builder()
                                 .name(prop.getName())
@@ -252,7 +252,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
 
     private PropertyImplementationDesc get(DSLPropertyDesc dslPropertyDesc) {
         final String defaultValue = dslPropertyDesc.getDefaultValue();
-        final String resolvedType = typeResolver.resolve(dslPropertyDesc.getType()).get();
+        final String resolvedType = typeResolver.resolve(dslPropertyDesc.getTypeName()).get();
         return PropertyImplementationDesc
             .builder()
             .name(dslPropertyDesc.getName())
@@ -264,7 +264,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                 .map(Optional::get)
                 .collect(toList()))
             .defaultValue(defaultValue == null ? valueResolver.resolve(resolvedType).get() : defaultValue)
-            .optional(dslPropertyDesc.isOptional())
+            .optional(dslPropertyDesc.getOptionalProperty())
             .override(false)
             .build();
     }

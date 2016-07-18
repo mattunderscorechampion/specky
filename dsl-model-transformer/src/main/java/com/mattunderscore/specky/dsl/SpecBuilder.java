@@ -160,12 +160,12 @@ public final class SpecBuilder {
                 .Identifier()
                 .get(1)
                 .getText())
-            .type(context
+            .typeName(context
                 .Identifier()
                 .get(0)
                 .getText())
             .typeParameters(typeParameters)
-            .optional(context.OPTIONAL() != null)
+            .optionalProperty(context.OPTIONAL() != null)
             .defaultValue(defaultValue)
             .build();
     }
