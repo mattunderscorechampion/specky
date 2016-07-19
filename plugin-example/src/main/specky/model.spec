@@ -35,6 +35,7 @@ value PropertyDesc {
     String typeName
     List<String> typeParameters
     boolean optionalProperty
+    boolean override
     optional String defaultValue default null
     options {
         builder
@@ -42,6 +43,7 @@ value PropertyDesc {
 }
 
 value ViewDesc {
+    String packageName
     String name
     List<PropertyDesc> properties
     options {
@@ -53,7 +55,7 @@ type TypeDesc {
     String packageName
     String name
     List<PropertyDesc> properties
-    DSLConstructionMethod constructionMethod
+    ConstructionMethod constructionMethod
     List<String> supertypes
 }
 
