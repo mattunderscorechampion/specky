@@ -121,7 +121,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                                 .typeParameters(prop
                                     .getTypeParameters()
                                     .stream()
-                                    .map(valueResolver::resolve)
+                                    .map(typeResolver::resolve)
                                     .map(Optional::get)
                                     .collect(toList()))
                                 .override(true)
