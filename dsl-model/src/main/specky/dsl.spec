@@ -55,3 +55,26 @@ type DSLTypeDesc {
     DSLConstructionMethod constructionMethod
     List<String> supertypes
 }
+
+
+value DSLValueDesc : DSLTypeDesc {
+    options {
+        builder
+    }
+}
+
+value DSLBeanDesc : DSLTypeDesc {
+    options {
+        builder
+    }
+}
+
+value DSLSpecDesc {
+    String packageName
+    List<String> importTypes
+    List<DSLTypeDesc> values
+    List<DSLViewDesc> views
+    options {
+        builder
+    }
+}

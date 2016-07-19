@@ -49,7 +49,7 @@ public final class SpeckyModelGeneratingContext {
     /*package*/ SpeckyModelGeneratingContext(List<DSLSpecDesc> specs) {
         final SpecTypeResolver typeResolver = new SpecTypeResolver();
         specs.forEach(spec -> {
-            spec.getImports().forEach(importClass -> {
+            spec.getImportTypes().forEach(importClass -> {
                 final int lastPart = importClass.lastIndexOf('.');
                 final String packageName = importClass.substring(0, lastPart);
                 final String typeName = importClass.substring(lastPart + 1);

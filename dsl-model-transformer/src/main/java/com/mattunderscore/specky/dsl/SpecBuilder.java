@@ -25,22 +25,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.dsl;
 
-import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
-
-import java.util.List;
-
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
-import com.mattunderscore.specky.dsl.model.DSLBeanDesc.DSLBeanDescBuilder;
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
-import com.mattunderscore.specky.dsl.model.DSLValueDesc.DSLValueDescBuilder;
 import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.ImplementationSpecContext;
@@ -50,6 +40,13 @@ import com.mattunderscore.specky.parser.Specky.QualifiedNameContext;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.Specky.TypeParametersContext;
 import com.mattunderscore.specky.parser.Specky.TypeSpecContext;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
+import java.util.List;
+
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author Matt Champion on 05/06/16
@@ -72,7 +69,7 @@ public final class SpecBuilder {
         return DSLSpecDesc
             .builder()
             .packageName(context.package_name().qualifiedName().getText())
-            .imports(imports)
+            .importTypes(imports)
             .views(context
                 .typeSpec()
                 .stream()
@@ -88,7 +85,7 @@ public final class SpecBuilder {
 
     private DSLTypeDesc createType(ImplementationSpecContext context) {
         if (context.BEAN() == null) {
-            final DSLValueDescBuilder valueDescBuilder = DSLValueDesc
+            final DSLValueDesc.Builder valueDescBuilder = DSLValueDesc
                 .builder()
                 .name(context.Identifier().get(0).getText())
                 .properties(context
@@ -114,7 +111,7 @@ public final class SpecBuilder {
             return valueDescBuilder.build();
         }
         else {
-            final DSLBeanDescBuilder beanDescBuilder = DSLBeanDesc
+            final DSLBeanDesc.Builder beanDescBuilder = DSLBeanDesc
                 .builder()
                 .name(context.Identifier().get(0).getText())
                 .properties(context

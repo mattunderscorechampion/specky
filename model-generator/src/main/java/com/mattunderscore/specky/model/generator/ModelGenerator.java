@@ -266,7 +266,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                 .map(Optional::get)
                 .collect(toList()))
             .defaultValue(defaultValue == null ? valueResolver.resolve(resolvedType).get() : defaultValue)
-            .optional(dslPropertyDesc.getOptionalProperty())
+            .optional(dslPropertyDesc.isOptionalProperty())
             .override(false)
             .build();
     }
