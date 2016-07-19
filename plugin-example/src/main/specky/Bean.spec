@@ -44,3 +44,6 @@ bean StrangePersonBean {
 bean BeanWithList {
     List<String> names
 }
+
+bean BeanPersonType : PersonType {
+}

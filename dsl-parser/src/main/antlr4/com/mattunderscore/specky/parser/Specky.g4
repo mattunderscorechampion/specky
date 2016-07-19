@@ -66,7 +66,7 @@ implementationSpec
     ;
 
 typeSpec
-    : TYPE Identifier OPEN_BLOCK (property)+ CLOSE_BLOCK
+    : TYPE Identifier OPEN_BLOCK (property)* CLOSE_BLOCK
     ;
 
 spec
