@@ -70,7 +70,7 @@ value DSLBeanDesc : DSLTypeDesc {
 
 value DSLSpecDesc {
     String packageName
-    List<String> imports
+    List<String> importTypes
     List<DSLTypeDesc> values
     List<DSLViewDesc> views
     options {

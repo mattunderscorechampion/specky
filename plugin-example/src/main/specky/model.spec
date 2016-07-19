@@ -70,7 +70,7 @@ value BeanDesc : TypeDesc {
 }
 
 value SpecDesc {
-    List<String> imports
+    List<String> importTypes
     List<TypeDesc> values
     List<ViewDesc> views
     options {
