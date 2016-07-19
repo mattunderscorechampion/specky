@@ -71,7 +71,7 @@ public final class BeanGenerator {
             .getProperties()
             .stream()
             .forEach(propertyDesc -> {
-                final TypeName type = getType(propertyDesc.getType());
+                final TypeName type = getType(propertyDesc);
                 final Builder fieldSpecBuilder = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE);
 
                 if (beanDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR
