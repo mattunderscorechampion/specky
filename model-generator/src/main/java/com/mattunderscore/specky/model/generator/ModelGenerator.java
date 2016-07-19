@@ -117,7 +117,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                             return PropertyDesc
                                 .builder()
                                 .name(prop.getName())
-                                .type(resolvedType)
+                                .typeName(resolvedType)
                                 .typeParameters(prop
                                     .getTypeParameters()
                                     .stream()
@@ -184,7 +184,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                 allProperties.add(property);
                 knownProperties.put(propertyName, property);
             }
-            else if (!property.getType().equals(currentProperty.getType())) {
+            else if (!property.getTypeName().equals(currentProperty.getTypeName())) {
                 throw new IllegalArgumentException("Conflicting property declarations");
             }
         }
@@ -195,7 +195,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                 allProperties.add(property);
                 knownProperties.put(propertyName, property);
             }
-            else if (!property.getType().equals(currentProperty.getType())) {
+            else if (!property.getTypeName().equals(currentProperty.getTypeName())) {
                 throw new IllegalArgumentException("Conflicting property declarations");
             }
         }
@@ -258,7 +258,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
         return PropertyDesc
             .builder()
             .name(dslPropertyDesc.getName())
-            .type(resolvedType)
+            .typeName(resolvedType)
             .typeParameters(dslPropertyDesc
                 .getTypeParameters()
                 .stream()
@@ -266,7 +266,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                 .map(Optional::get)
                 .collect(toList()))
             .defaultValue(defaultValue == null ? valueResolver.resolve(resolvedType).get() : defaultValue)
-            .optional(dslPropertyDesc.isOptionalProperty())
+            .optionalProperty(dslPropertyDesc.isOptionalProperty())
             .override(false)
             .build();
     }

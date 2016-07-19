@@ -74,7 +74,7 @@ public final class BuildMethodGenerator implements MethodGeneratorForType {
             .stream()
             .forEach(propertySpec -> {
                 final TypeName typeName = getType(propertySpec);
-                if (!propertySpec.isOptional() && !typeName.isPrimitive()) {
+                if (!propertySpec.isOptionalProperty() && !typeName.isPrimitive()) {
                     methodSpecBuilder.addStatement("$T.requireNonNull($N)", ClassName.get(Objects.class), propertySpec.getName());
                 }
             });

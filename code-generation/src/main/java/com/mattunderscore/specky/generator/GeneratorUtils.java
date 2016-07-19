@@ -86,10 +86,10 @@ import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
     public static TypeName getType(PropertyDesc property) {
         final List<String> typeParameters = property.getTypeParameters();
         if (typeParameters.size() > 0) {
-            return getType(property.getType(), typeParameters);
+            return getType(property.getTypeName(), typeParameters);
         }
         else {
-            return getType(property.getType());
+            return getType(property.getTypeName());
         }
     }
 

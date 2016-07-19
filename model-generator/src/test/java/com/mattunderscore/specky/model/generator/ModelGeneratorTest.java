@@ -72,7 +72,7 @@ public final class ModelGeneratorTest {
         assertEquals(1, typeDesc.getProperties().size());
         final PropertyDesc property = typeDesc.getProperties().get(0);
         assertEquals("intProp", property.getName());
-        assertEquals("int", property.getType());
+        assertEquals("int", property.getTypeName());
     }
 
     @Test
@@ -128,12 +128,12 @@ public final class ModelGeneratorTest {
         assertEquals(2, typeDesc.getProperties().size());
         final PropertyDesc property0 = typeDesc.getProperties().get(1);
         assertEquals("intProp", property0.getName());
-        assertEquals("int", property0.getType());
+        assertEquals("int", property0.getTypeName());
         assertEquals("0", property0.getDefaultValue());
         assertFalse(property0.isOverride());
         final PropertyDesc property1 = typeDesc.getProperties().get(0);
         assertEquals("objectProp", property1.getName());
-        assertEquals("java.lang.Object", property1.getType());
+        assertEquals("java.lang.Object", property1.getTypeName());
         assertTrue(property1.isOverride());
         assertEquals("new Object()", property1.getDefaultValue());
     }
