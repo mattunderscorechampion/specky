@@ -25,14 +25,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.code.generation.specky;
 
-import static java.util.Collections.singletonList;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.stream.Stream;
-
+import com.mattunderscore.specky.SpeckyDSLFileStreamingContext;
+import com.mattunderscore.specky.SpeckyModelGeneratingContext;
+import com.mattunderscore.specky.SpeckyWritingContext;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -40,7 +35,13 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.model.fileset.FileSet;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
 
-import com.mattunderscore.specky.SpeckyDSLFileStreamingContext;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
+
+import static java.util.Collections.singletonList;
 
 /**
  * @goal generate
@@ -71,7 +72,7 @@ public class GenerateMojo extends AbstractMojo {
         final String[] files = fileSetManager.getIncludedFiles(currentFileset);
 
         if (files.length == 0) {
-            throw new MojoFailureException("No files found");
+            throw new MojoFailureException("No specification files found in " + currentFileset.getDirectory());
         }
 
         final Path targetPath = target
@@ -88,23 +89,31 @@ public class GenerateMojo extends AbstractMojo {
         }
 
         final Path basePath = Paths.get(currentFileset.getDirectory());
+        final SpeckyDSLFileStreamingContext streamingContext = new SpeckyDSLFileStreamingContext();
+        Stream.of(files)
+            .map(basePath::resolve)
+            .forEach(streamingContext::addFileToParse);
+
+        final SpeckyModelGeneratingContext generatingContext;
         try {
-            Stream
-                .of(files)
-                .map(basePath::resolve)
-                .reduce(
-                    new SpeckyDSLFileStreamingContext(),
-                    SpeckyDSLFileStreamingContext::addFileToParse,
-                    SpeckyDSLFileStreamingContext::combine)
+            generatingContext = streamingContext
                 .open()
-                .parse()
-                .generate()
-                .generate()
-                .targetPath(targetPath)
-                .write();
+                .parse();
         }
         catch (IOException e) {
-            throw new MojoFailureException("Failure", e);
+            throw new MojoFailureException("Failed to process specification files", e);
+        }
+
+        final SpeckyWritingContext speckyWritingContext = generatingContext
+            .generate()
+            .generate()
+            .targetPath(targetPath);
+
+        try {
+            speckyWritingContext.write();
+        }
+        catch (IOException e) {
+            throw new MojoFailureException("Failed to write generated source code", e);
         }
 
         project.addCompileSourceRoot(targetPath.toString());
