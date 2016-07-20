@@ -38,4 +38,14 @@ public interface TypeResolver {
      * @return optional fully qualified name
      */
     Optional<String> resolve(String name);
+
+    /**
+     *
+     * @param name the type name
+     * @return fully qualified name
+     * @throws IllegalArgumentException if the type name cannot be resolved
+     */
+    default String resolveOrThrow(String name) {
+        return resolve(name).orElseThrow(() -> new IllegalArgumentException("No resolvable type for " + name));
+    }
 }

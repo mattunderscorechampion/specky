@@ -25,17 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Supplier;
-
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
@@ -51,6 +40,16 @@ import com.mattunderscore.specky.model.ValueDesc;
 import com.mattunderscore.specky.model.ViewDesc;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Generator for the model from the DSL model.
@@ -113,7 +112,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                         .getProperties()
                         .stream()
                         .map(prop -> {
-                            final String resolvedType = typeResolver.resolve(prop.getTypeName()).get();
+                            final String resolvedType = typeResolver.resolveOrThrow(prop.getTypeName());
                             return PropertyDesc
                                 .builder()
                                 .name(prop.getName())
@@ -121,8 +120,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                                 .typeParameters(prop
                                     .getTypeParameters()
                                     .stream()
-                                    .map(typeResolver::resolve)
-                                    .map(Optional::get)
+                                    .map(typeResolver::resolveOrThrow)
                                     .collect(toList()))
                                 .override(true)
                                 .defaultValue(valueResolver.resolve(resolvedType).get())
@@ -152,7 +150,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
 
     private TypeDesc get(Map<String, ViewDesc> views, String packageName, DSLTypeDesc dslTypeDesc) {
         for (String type : dslTypeDesc.getSupertypes()) {
-            String resolvedType = typeResolver.resolve(type).get();
+            String resolvedType = typeResolver.resolveOrThrow(type);
             final ViewDesc dslViewDesc = views.get(resolvedType);
             if (dslViewDesc == null) {
                 throw new IllegalArgumentException("View not found for " + resolvedType + " in " + views);
@@ -162,8 +160,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
         final List<PropertyDesc> inheritedProperties = dslTypeDesc
             .getSupertypes()
             .stream()
-            .map(typeResolver::resolve)
-            .map(Optional::get)
+            .map(typeResolver::resolveOrThrow)
             .map(views::get)
             .map(ViewDesc::getProperties)
             .flatMap(Collection::stream)
@@ -252,9 +249,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
 
     private PropertyDesc get(DSLPropertyDesc dslPropertyDesc) {
         final String defaultValue = dslPropertyDesc.getDefaultValue();
-        final String resolvedType = typeResolver
-            .resolve(dslPropertyDesc.getTypeName())
-            .orElseThrow(() -> new IllegalStateException("No type for " + dslPropertyDesc.getTypeName()));
+        final String resolvedType = typeResolver.resolveOrThrow(dslPropertyDesc.getTypeName());
         return PropertyDesc
             .builder()
             .name(dslPropertyDesc.getName())
@@ -262,8 +257,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .typeParameters(dslPropertyDesc
                 .getTypeParameters()
                 .stream()
-                .map(typeResolver::resolve)
-                .map(Optional::get)
+                .map(typeResolver::resolveOrThrow)
                 .collect(toList()))
             .defaultValue(defaultValue == null ? valueResolver.resolve(resolvedType).get() : defaultValue)
             .optionalProperty(dslPropertyDesc.isOptionalProperty())
