@@ -38,7 +38,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * @author Matt Champion on 02/07/2016
  */
-public final class SpeckyDSLFileStreamingContext implements Combinable<SpeckyDSLFileStreamingContext> {
+public final class SpeckyDSLFileStreamingContext {
     private final List<Path> filesToParse = new ArrayList<>();
     private final AtomicBoolean consumed = new AtomicBoolean(false);
 
@@ -70,15 +70,5 @@ public final class SpeckyDSLFileStreamingContext implements Combinable<SpeckyDSL
         else {
             throw new IllegalStateException("Context has already been parsed");
         }
-    }
-
-    @Override
-    public SpeckyDSLFileStreamingContext combine(SpeckyDSLFileStreamingContext other) {
-        final SpeckyDSLFileStreamingContext newContext = new SpeckyDSLFileStreamingContext();
-
-        filesToParse.forEach(newContext::addFileToParse);
-        other.filesToParse.forEach(newContext::addFileToParse);
-
-        return newContext;
     }
 }
