@@ -30,3 +30,7 @@ type PersonType {
     int id
     String name
 }
+
+type TypeWithDefault {
+    int number default 6
+}

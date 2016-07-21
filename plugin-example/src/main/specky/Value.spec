@@ -64,3 +64,10 @@ value ValueWithExtraType {
 value IsValue {
     boolean val
 }
+
+value ValueOverridingDefault : TypeWithDefault {
+    int number default 10
+    options {
+        builder
+    }
+}

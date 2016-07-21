@@ -76,13 +76,14 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .collect(toList());
 
         final Map<String, ViewDesc> mappedViews = getMappedViews(dslSpecs);
+        final TypeDeriver typeDeriver = new TypeDeriver(typeResolver, valueResolver, mappedViews);
 
         return SpecDesc
             .builder()
             .values(
                 dslSpecs
                     .stream()
-                    .map(dslSpecDesc -> get(mappedViews, dslSpecDesc))
+                    .map(dslSpecDesc -> get(typeDeriver, dslSpecDesc))
                     .flatMap(Collection::stream)
                     .collect(toList()))
             .views(views)
@@ -130,12 +131,12 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                     .build()));
     }
 
-    private List<TypeDesc> get(Map<String, ViewDesc> views, DSLSpecDesc dslSpecDesc) {
+    private List<TypeDesc> get(TypeDeriver typeDeriver, DSLSpecDesc dslSpecDesc) {
         final String packageName = dslSpecDesc.getPackageName();
         return dslSpecDesc
             .getValues()
             .stream()
-            .map(dslViewDesc -> get(views, packageName, dslViewDesc))
+            .map(dslTypeDesc -> typeDeriver.deriveType(packageName, dslTypeDesc))
             .collect(toList());
     }
 
@@ -146,77 +147,6 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .stream()
             .map(dslTypeDesc -> get(packageName, dslTypeDesc))
             .collect(toList());
-    }
-
-    private TypeDesc get(Map<String, ViewDesc> views, String packageName, DSLTypeDesc dslTypeDesc) {
-        for (String type : dslTypeDesc.getSupertypes()) {
-            String resolvedType = typeResolver.resolveOrThrow(type);
-            final ViewDesc dslViewDesc = views.get(resolvedType);
-            if (dslViewDesc == null) {
-                throw new IllegalArgumentException("View not found for " + resolvedType + " in " + views);
-            }
-        }
-
-        final List<PropertyDesc> inheritedProperties = dslTypeDesc
-            .getSupertypes()
-            .stream()
-            .map(typeResolver::resolveOrThrow)
-            .map(views::get)
-            .map(ViewDesc::getProperties)
-            .flatMap(Collection::stream)
-            .collect(toList());
-
-        final List<PropertyDesc> declaredProperties = dslTypeDesc
-            .getProperties()
-            .stream()
-            .map(this::get)
-            .collect(toList());
-
-        final Map<String, PropertyDesc> knownProperties = new HashMap<>();
-        final List<PropertyDesc> allProperties = new ArrayList<>();
-        for (PropertyDesc property : inheritedProperties) {
-            final String propertyName = property.getName();
-            final PropertyDesc currentProperty = knownProperties.get(propertyName);
-            if (currentProperty == null) {
-                allProperties.add(property);
-                knownProperties.put(propertyName, property);
-            }
-            else if (!property.getTypeName().equals(currentProperty.getTypeName())) {
-                throw new IllegalArgumentException("Conflicting property declarations");
-            }
-        }
-        for (PropertyDesc property : declaredProperties) {
-            final String propertyName = property.getName();
-            final PropertyDesc currentProperty = knownProperties.get(propertyName);
-            if (currentProperty == null) {
-                allProperties.add(property);
-                knownProperties.put(propertyName, property);
-            }
-            else if (!property.getTypeName().equals(currentProperty.getTypeName())) {
-                throw new IllegalArgumentException("Conflicting property declarations");
-            }
-        }
-
-        if (dslTypeDesc instanceof DSLValueDesc) {
-            return ValueDesc
-                .builder()
-                .packageName(packageName)
-                .name(dslTypeDesc.getName())
-                .constructionMethod(get(dslTypeDesc.getConstructionMethod()))
-                .properties(allProperties)
-                .supertypes(dslTypeDesc.getSupertypes())
-                .build();
-        }
-        else {
-            return BeanDesc
-                .builder()
-                .packageName(packageName)
-                .name(dslTypeDesc.getName())
-                .constructionMethod(get(dslTypeDesc.getConstructionMethod()))
-                .properties(allProperties)
-                .supertypes(dslTypeDesc.getSupertypes())
-                .build();
-        }
     }
 
     private ViewDesc get(String packageName, DSLViewDesc dslViewDesc) {
@@ -232,19 +162,6 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .name(dslViewDesc.getName())
             .properties(properties)
             .build();
-    }
-
-    private ConstructionMethod get(DSLConstructionMethod method) {
-        switch (method) {
-            case CONSTRUCTOR:
-                return ConstructionMethod.CONSTRUCTOR;
-            case MUTABLE_BUILDER:
-                return ConstructionMethod.MUTABLE_BUILDER;
-            case IMMUTABLE_BUILDER:
-                return ConstructionMethod.IMMUTABLE_BUILDER;
-            default:
-                throw new IllegalArgumentException("Unsupported construction method");
-        }
     }
 
     private PropertyDesc get(DSLPropertyDesc dslPropertyDesc) {
