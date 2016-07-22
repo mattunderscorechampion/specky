@@ -63,11 +63,13 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
 
         final List<ViewDesc> views = dslSpecs
             .stream()
-            .map(this::get)
+            .map(this::getViews)
             .flatMap(Collection::stream)
             .collect(toList());
 
-        final Map<String, ViewDesc> mappedViews = getMappedViews(dslSpecs);
+        final Map<String, ViewDesc> mappedViews = views
+            .stream()
+            .collect(toMap(viewDesc -> viewDesc.getPackageName() + "." + viewDesc.getName(), viewDesc -> viewDesc));
         final TypeDeriver typeDeriver = new TypeDeriver(typeResolver, valueResolver, mappedViews);
 
         return SpecDesc
@@ -75,55 +77,14 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .values(
                 dslSpecs
                     .stream()
-                    .map(dslSpecDesc -> get(typeDeriver, dslSpecDesc))
+                    .map(dslSpecDesc -> getTypes(typeDeriver, dslSpecDesc))
                     .flatMap(Collection::stream)
                     .collect(toList()))
             .views(views)
             .build();
     }
 
-    private Map<String, ViewDesc> getMappedViews(List<DSLSpecDesc> dslSpecs) {
-        return dslSpecs
-            .stream()
-            .map(this::getMappedViews)
-            .map(Map::entrySet)
-            .flatMap(Collection::stream)
-            .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
-
-    private Map<String, ViewDesc> getMappedViews(DSLSpecDesc dslSpec) {
-        return dslSpec
-            .getViews()
-            .stream()
-            .collect(toMap(
-                view -> dslSpec.getPackageName() + "." + view.getName(),
-                view -> ViewDesc
-                    .builder()
-                    .packageName(dslSpec.getPackageName())
-                    .name(view.getName())
-                    .properties(view
-                        .getProperties()
-                        .stream()
-                        .map(prop -> {
-                            final String resolvedType = typeResolver.resolveOrThrow(prop.getTypeName());
-                            return PropertyDesc
-                                .builder()
-                                .name(prop.getName())
-                                .typeName(resolvedType)
-                                .typeParameters(prop
-                                    .getTypeParameters()
-                                    .stream()
-                                    .map(typeResolver::resolveOrThrow)
-                                    .collect(toList()))
-                                .override(true)
-                                .defaultValue(valueResolver.resolve(resolvedType).get())
-                                .build();
-                        })
-                        .collect(toList()))
-                    .build()));
-    }
-
-    private List<TypeDesc> get(TypeDeriver typeDeriver, DSLSpecDesc dslSpecDesc) {
+    private List<TypeDesc> getTypes(TypeDeriver typeDeriver, DSLSpecDesc dslSpecDesc) {
         final String packageName = dslSpecDesc.getPackageName();
         return dslSpecDesc
             .getValues()
@@ -132,20 +93,20 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .collect(toList());
     }
 
-    private List<ViewDesc> get(DSLSpecDesc dslSpecDesc) {
+    private List<ViewDesc> getViews(DSLSpecDesc dslSpecDesc) {
         final String packageName = dslSpecDesc.getPackageName();
         return dslSpecDesc
             .getViews()
             .stream()
-            .map(dslTypeDesc -> get(packageName, dslTypeDesc))
+            .map(dslTypeDesc -> getView(packageName, dslTypeDesc))
             .collect(toList());
     }
 
-    private ViewDesc get(String packageName, DSLViewDesc dslViewDesc) {
+    private ViewDesc getView(String packageName, DSLViewDesc dslViewDesc) {
         final List<PropertyDesc> properties = dslViewDesc
             .getProperties()
             .stream()
-            .map(this::get)
+            .map(this::getViewProperty)
             .collect(toList());
 
         return ViewDesc
@@ -156,7 +117,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .build();
     }
 
-    private PropertyDesc get(DSLPropertyDesc dslPropertyDesc) {
+    private PropertyDesc getViewProperty(DSLPropertyDesc dslPropertyDesc) {
         final String defaultValue = dslPropertyDesc.getDefaultValue();
         final String resolvedType = typeResolver.resolveOrThrow(dslPropertyDesc.getTypeName());
         return PropertyDesc
@@ -170,7 +131,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                 .collect(toList()))
             .defaultValue(defaultValue == null ? valueResolver.resolve(resolvedType).get() : defaultValue)
             .optionalProperty(dslPropertyDesc.isOptionalProperty())
-            .override(false)
+            .override(true)
             .build();
     }
 }

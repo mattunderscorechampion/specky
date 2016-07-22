@@ -135,6 +135,6 @@ public final class ModelGeneratorTest {
         assertEquals("objectProp", property1.getName());
         assertEquals("java.lang.Object", property1.getTypeName());
         assertTrue(property1.isOverride());
-        assertEquals("new Object()", property1.getDefaultValue());
+        assertEquals("null", property1.getDefaultValue());
     }
 }
