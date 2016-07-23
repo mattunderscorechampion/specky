@@ -53,11 +53,11 @@ public final class BuildMethodGenerator implements MethodGeneratorForType {
             .returns(ClassName.get(valueDesc.getPackageName(), valueDesc.getName()))
             .addJavadoc(BUILD_DOC, valueDesc.getName());
         addValidationStatements(buildMethod, valueDesc);
-        addReturnStatement(buildMethod, specDesc, valueDesc);
+        addReturnStatement(buildMethod, valueDesc);
         return buildMethod.build();
     }
 
-    private void addReturnStatement(MethodSpec.Builder buildMethod, SpecDesc specDesc, TypeDesc valueDesc) {
+    private void addReturnStatement(MethodSpec.Builder buildMethod, TypeDesc valueDesc) {
         buildMethod.addStatement(
             "return new $T(" +
             valueDesc

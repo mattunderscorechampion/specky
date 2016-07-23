@@ -76,7 +76,7 @@ public final class Generator {
         result.addAll(specDesc
             .getViews()
             .stream()
-            .map(valueSpec -> generateViewFile(specDesc, valueSpec))
+            .map(this::generateViewFile)
             .collect(Collectors.toList()));
 
         return result;
@@ -90,8 +90,8 @@ public final class Generator {
             .build();
     }
 
-    private JavaFile generateViewFile(SpecDesc specDesc, ViewDesc viewDesc) {
-        final TypeSpec typeSpec = generateView(specDesc, viewDesc);
+    private JavaFile generateViewFile(ViewDesc viewDesc) {
+        final TypeSpec typeSpec = generateView(viewDesc);
         return JavaFile
             .builder(viewDesc.getPackageName(), typeSpec)
             .indent(codeStyle.getIndent())
@@ -110,7 +110,7 @@ public final class Generator {
         }
     }
 
-    private TypeSpec generateView(SpecDesc specDesc, ViewDesc typeDesc) {
-        return viewGenerator.generateView(specDesc, typeDesc);
+    private TypeSpec generateView(ViewDesc typeDesc) {
+        return viewGenerator.generateView(typeDesc);
     }
 }

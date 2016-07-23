@@ -54,11 +54,11 @@ public final class EqualsGenerator implements MethodGeneratorForType {
             .addModifiers(PUBLIC)
             .addParameter(other)
             .returns(TypeName.BOOLEAN)
-            .addCode(generateBlock(specDesc, typeDesc))
+            .addCode(generateBlock(typeDesc))
             .build();
     }
 
-    private CodeBlock generateBlock(SpecDesc specDesc, TypeDesc typeDesc) {
+    private CodeBlock generateBlock(TypeDesc typeDesc) {
         final CodeBlock.Builder codeBlock = CodeBlock
             .builder()
             .beginControlFlow("if ($N == this)", other)

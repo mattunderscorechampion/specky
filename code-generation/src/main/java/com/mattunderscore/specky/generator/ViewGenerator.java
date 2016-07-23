@@ -48,7 +48,7 @@ public final class ViewGenerator {
     /**
      * @return the view type
      */
-    public TypeSpec generateView(SpecDesc specDesc, ViewDesc typeDesc) {
+    public TypeSpec generateView(ViewDesc typeDesc) {
         final TypeSpec.Builder builder = interfaceBuilder(typeDesc.getName())
             .addModifiers(PUBLIC)
             .addJavadoc(TYPE_DOC, "View", typeDesc.getName());
