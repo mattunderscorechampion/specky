@@ -52,7 +52,7 @@ public final class ViewGenerator {
             .addModifiers(PUBLIC)
             .addJavadoc(TYPE_DOC, "View", typeDesc.getName());
 
-        for (PropertyDesc view : typeDesc.getProperties()) {
+        for (final PropertyDesc view : typeDesc.getProperties()) {
             builder
                 .addMethod(methodBuilder(getAccessorName(view.getName()))
                     .addJavadoc(GETTER_DOC, view.getName())
