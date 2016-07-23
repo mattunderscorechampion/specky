@@ -52,6 +52,10 @@ public final class SpeckyDSLParsingContext {
         this.streamsToParse = streamsToParse;
     }
 
+    /**
+     * Parse the input streams and return a model generating context.
+     * @throws IOException if there is a problem with the streams
+     */
     public SpeckyModelGeneratingContext parse() throws IOException {
         if (consumed.compareAndSet(false, true)) {
             final List<Specky.SpecContext> specContexts = new ArrayList<>();

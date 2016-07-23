@@ -42,6 +42,9 @@ public final class SpeckyDSLFileStreamingContext {
     private final List<Path> filesToParse = new ArrayList<>();
     private final AtomicBoolean consumed = new AtomicBoolean(false);
 
+    /**
+     * Constructor.
+     */
     public SpeckyDSLFileStreamingContext() {
     }
 
