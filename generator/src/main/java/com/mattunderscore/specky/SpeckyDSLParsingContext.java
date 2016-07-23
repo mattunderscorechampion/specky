@@ -40,11 +40,6 @@ import com.mattunderscore.specky.dsl.SpecBuilder;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyLexer;
-import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
-import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
-import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
-import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver;
-import com.mattunderscore.specky.value.resolver.NullValueResolver;
 
 /**
  * @author Matt Champion on 03/07/2016
