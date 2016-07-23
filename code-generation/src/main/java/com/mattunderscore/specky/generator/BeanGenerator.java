@@ -81,8 +81,8 @@ public final class BeanGenerator {
                 final TypeName type = getType(propertyDesc);
                 final Builder fieldSpecBuilder = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE);
 
-                if (beanDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR
-                    && propertyDesc.getDefaultValue() != null) {
+                if (beanDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR &&
+                    propertyDesc.getDefaultValue() != null) {
                     fieldSpecBuilder.initializer(propertyDesc.getDefaultValue());
                 }
 
