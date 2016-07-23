@@ -25,6 +25,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.dsl;
 
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
+
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
@@ -40,22 +48,23 @@ import com.mattunderscore.specky.parser.Specky.QualifiedNameContext;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.Specky.TypeParametersContext;
 import com.mattunderscore.specky.parser.Specky.TypeSpecContext;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
-import java.util.List;
-
-import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
 
 /**
+ * Processor for the ANTLR4 generated AST. Returns a better representation of the DSL.
+ *
  * @author Matt Champion on 05/06/16
  */
 public final class SpecBuilder {
 
+    /**
+     * Constructor.
+     */
     public SpecBuilder() {
     }
 
+    /**
+     * @return a {@link DSLSpecDesc} from a {@link SpecContext}.
+     */
     public DSLSpecDesc build(SpecContext context) {
         final ImportsContext importsContext = context
                 .imports();
