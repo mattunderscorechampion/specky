@@ -62,6 +62,9 @@ public final class Generator {
         this.codeStyle = codeStyle;
     }
 
+    /**
+     * @return the Java files implied by the spec.
+     */
     public List<JavaFile> generate(SpecDesc specDesc) {
         final List<JavaFile> result = new ArrayList<>();
         result.addAll(specDesc

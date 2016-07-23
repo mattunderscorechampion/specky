@@ -108,6 +108,9 @@ public final class ToStringGenerator implements MethodGeneratorForType {
             .build();
     }
 
+    /**
+     * Property formatter.
+     */
     public interface PropertyFormatter {
         /**
          * Generate the code for the property. Starts within a string literal.
@@ -115,6 +118,9 @@ public final class ToStringGenerator implements MethodGeneratorForType {
         String formatProperty(PropertyDesc propertyDesc);
     }
 
+    /**
+     * Describe the start and end of a property list
+     */
     public interface PropertyListBookend {
         /**
          * @return the prefix, starts within a string literal
