@@ -41,6 +41,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 
 /**
+ *
  * @author Matt Champion on 12/07/16
  */
 public final class ConditionalConfiguratorGenerator implements MethodGeneratorForType {

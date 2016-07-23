@@ -38,6 +38,7 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 /**
+ * Generator for value types.
  * @author Matt Champion on 11/06/2016
  */
 public final class ValueGenerator {
@@ -47,6 +48,9 @@ public final class ValueGenerator {
     private final List<MethodGeneratorForType> forTypeGenerators;
     private final List<MethodGeneratorForProperty> forPropertyGenerators;
 
+    /**
+     * Constructor.
+     */
     public ValueGenerator(
             TypeInitialiser typeInitialiser,
             TypeAppender constructionMethodAppender,
@@ -61,6 +65,9 @@ public final class ValueGenerator {
         this.forTypeGenerators = methodGeneratorForTypes;
     }
 
+    /**
+     * @return the value type
+     */
     public TypeSpec generateValue(SpecDesc specDesc, ValueDesc valueDesc) {
         final TypeSpec.Builder builder = typeInitialiser.create(specDesc, valueDesc);
 

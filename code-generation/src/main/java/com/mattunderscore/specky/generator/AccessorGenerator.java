@@ -41,6 +41,9 @@ import com.squareup.javapoet.MethodSpec;
  * @author Matt Champion on 21/06/2016
  */
 public final class AccessorGenerator implements MethodGeneratorForProperty {
+    /**
+     * Constructor.
+     */
     public AccessorGenerator() {
     }
 

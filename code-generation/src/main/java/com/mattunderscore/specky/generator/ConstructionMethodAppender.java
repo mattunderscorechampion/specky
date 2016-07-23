@@ -39,6 +39,9 @@ public final class ConstructionMethodAppender implements TypeAppender {
     private final TypeAppender mutableBuilderAppender;
     private final TypeAppender immutableBuilderAppender;
 
+    /**
+     * Constructor.
+     */
     public ConstructionMethodAppender(
             MethodGeneratorForType constructorGenerator,
             TypeAppender mutableBuilderAppender,

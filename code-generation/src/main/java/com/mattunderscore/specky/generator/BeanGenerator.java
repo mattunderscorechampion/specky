@@ -39,6 +39,7 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 /**
+ * Generator for beans.
  * @author Matt Champion on 11/06/2016
  */
 public final class BeanGenerator {
@@ -48,6 +49,9 @@ public final class BeanGenerator {
     private final List<MethodGeneratorForType> forTypeGenerators;
     private final List<MethodGeneratorForProperty> forPropertyGenerators;
 
+    /**
+     * Constructor.
+     */
     public BeanGenerator(
             TypeInitialiser typeInitialiser,
             TypeAppender constructionMethodAppender,

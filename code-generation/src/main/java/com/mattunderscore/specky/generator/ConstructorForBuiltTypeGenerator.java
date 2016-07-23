@@ -40,6 +40,7 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 
 /**
+ * Generator for constructor used by builders.
  * @author Matt Champion on 09/07/2016
  */
 public class ConstructorForBuiltTypeGenerator implements MethodGeneratorForType {

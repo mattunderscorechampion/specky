@@ -46,6 +46,7 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 /**
+ * Generator for immutable builders.
  * @author Matt Champion on 15/06/2016
  */
 public final class ImmutableBuilderGenerator implements TypeAppender {
@@ -53,6 +54,9 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
     private final MethodGeneratorForType constructorGenerator = new ConstructorForBuiltTypeGenerator();
     private final BuildMethodGenerator buildMethodGenerator;
 
+    /**
+     * Constructor.
+     */
     public ImmutableBuilderGenerator(TypeInitialiser typeInitialiser, BuildMethodGenerator buildMethodGenerator) {
         this.typeInitialiser = typeInitialiser;
         this.buildMethodGenerator = buildMethodGenerator;

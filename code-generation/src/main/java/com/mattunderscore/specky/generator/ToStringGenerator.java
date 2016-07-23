@@ -43,16 +43,34 @@ import com.squareup.javapoet.MethodSpec;
  * @author Matt Champion on 27/06/16
  */
 public final class ToStringGenerator implements MethodGeneratorForType {
+    /**
+     * Comma and space separator.
+     */
     public static final String COMMA_AND_SPACE_SEPARATOR = ", ";
+    /**
+     * Comma separator.
+     */
     public static final String COMMA_SEPARATOR = ",";
+    /**
+     * Square brackets.
+     */
     public static final PropertyListBookend SQUARE_BRACKETS = new SquareBrackets();
+    /**
+     * Round brackets.
+     */
     public static final PropertyListBookend ROUND_BRACKETS = new RoundBrackets();
+    /**
+     * Property formatter.
+     */
     public static final SimplePropertyFormatter SIMPLE_PROPERTY_FORMATTER = new SimplePropertyFormatter();
 
     private final PropertyListBookend propertyListBookend;
     private final String propertySeparator;
     private final PropertyFormatter propertyFormatter;
 
+    /**
+     * Constructor.
+     */
     public ToStringGenerator(
             PropertyListBookend propertyListBookend,
             String propertySeparator,

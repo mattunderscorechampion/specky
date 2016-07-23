@@ -47,6 +47,9 @@ public final class Generator {
     private final ViewGenerator viewGenerator;
     private final CodeStyle codeStyle;
 
+    /**
+     * Constructor.
+     */
     public Generator(
             ValueGenerator valueGenerator,
             BeanGenerator beanGenerator,

@@ -44,6 +44,7 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 /**
+ * Generator for mutable builders.
  * @author Matt Champion on 13/06/2016
  */
 public final class MutableBuilderGenerator implements TypeAppender {
@@ -52,6 +53,9 @@ public final class MutableBuilderGenerator implements TypeAppender {
     private final MethodGeneratorForType conditionalGenerator = new ConditionalConfiguratorGenerator();
     private final BuildMethodGenerator buildMethodGenerator;
 
+    /**
+     * Constructor.
+     */
     public MutableBuilderGenerator(TypeInitialiser typeInitialiser, BuildMethodGenerator buildMethodGenerator) {
         this.typeInitialiser = typeInitialiser;
         this.buildMethodGenerator = buildMethodGenerator;

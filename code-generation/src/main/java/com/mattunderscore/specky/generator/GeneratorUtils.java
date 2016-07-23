@@ -25,18 +25,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
+import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
+import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
-import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
-
 /**
+ * Generator utilities.
  * @author Matt Champion on 11/06/2016
  */
 /*package*/ final class GeneratorUtils {
@@ -83,6 +84,9 @@ import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
     private GeneratorUtils() {
     }
 
+    /**
+     * @return the type name of a property
+     */
     public static TypeName getType(PropertyDesc property) {
         final List<String> typeParameters = property.getTypeParameters();
         if (typeParameters.size() > 0) {
@@ -93,6 +97,9 @@ import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
         }
     }
 
+    /**
+     * @return the type name
+     */
     public static TypeName getType(String type) {
 
         if ("int".equals(type)) {
@@ -111,6 +118,9 @@ import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
         return ClassName.bestGuess(type);
     }
 
+    /**
+     * @return the type name with parameters
+     */
     public static ParameterizedTypeName getType(String type, List<String> typeParameters) {
         final List<TypeName> parameterList = typeParameters.stream().map(GeneratorUtils::getType).collect(Collectors.toList());
         final TypeName[] parameters = new TypeName[parameterList.size()];

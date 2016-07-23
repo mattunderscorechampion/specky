@@ -41,6 +41,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 
 /**
+ * Generator for build methods.
  * @author Matt Champion on 16/06/2016
  */
 public final class BuildMethodGenerator implements MethodGeneratorForType {

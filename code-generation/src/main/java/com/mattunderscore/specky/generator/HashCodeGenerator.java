@@ -43,6 +43,8 @@ import com.squareup.javapoet.TypeName;
  * @author Matt Champion on 06/07/2016
  */
 public final class HashCodeGenerator implements MethodGeneratorForType {
+
+    @Override
     public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
         return methodBuilder("hashCode")
             .addAnnotation(Override.class)
