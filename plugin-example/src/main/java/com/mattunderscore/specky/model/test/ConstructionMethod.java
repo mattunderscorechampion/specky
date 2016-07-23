@@ -26,12 +26,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.model.test;
 
 /**
- * Description of construction method for a type.
+ * Stand-in for description of construction method for a type.
  *
  * @author Matt Champion
  */
-public enum ConstructionMethod {
-    CONSTRUCTOR,
-    MUTABLE_BUILDER,
-    IMMUTABLE_BUILDER;
+public final class ConstructionMethod {
 }
