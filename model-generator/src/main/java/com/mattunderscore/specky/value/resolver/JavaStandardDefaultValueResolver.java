@@ -62,6 +62,7 @@ public final class JavaStandardDefaultValueResolver implements DefaultValueResol
 
         // Generic classes
         typeToDefault.put("java.util.List", "new java.util.ArrayList<>()");
+        typeToDefault.put("java.util.Set", "new java.util.HashSet<>()");
     }
 
     @Override

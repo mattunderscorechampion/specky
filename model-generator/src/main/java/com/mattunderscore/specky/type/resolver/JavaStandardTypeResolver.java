@@ -72,6 +72,8 @@ import java.util.Optional;
         // Generic classes
         nameToType.put("List", "java.util.List");
         nameToType.put("java.util.List", "java.util.List");
+        nameToType.put("Set", "java.util.Set");
+        nameToType.put("java.util.Set", "java.util.Set");
     }
 
     @Override
