@@ -38,7 +38,7 @@ value PropertyDesc {
     boolean override
     optional String defaultValue default null
     options {
-        builder
+        immutable builder
     }
 }
 
@@ -47,7 +47,7 @@ value ViewDesc {
     String name
     List<PropertyDesc> properties
     options {
-        builder
+        immutable builder
     }
 }
 
@@ -61,13 +61,13 @@ type TypeDesc {
 
 value ValueDesc : TypeDesc {
     options {
-        builder
+        immutable builder
     }
 }
 
 value BeanDesc : TypeDesc {
     options {
-        builder
+        immutable builder
     }
 }
 
@@ -76,6 +76,6 @@ value SpecDesc {
     List<TypeDesc> values
     List<ViewDesc> views
     options {
-        builder
+        immutable builder
     }
 }

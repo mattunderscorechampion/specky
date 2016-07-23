@@ -37,7 +37,7 @@ value DSLPropertyDesc {
     boolean optionalProperty
     optional String defaultValue default null
     options {
-        builder
+        immutable builder
     }
 }
 
@@ -45,7 +45,7 @@ value DSLViewDesc {
     String name
     List<DSLPropertyDesc> properties
     options {
-        builder
+        immutable builder
     }
 }
 
@@ -59,13 +59,13 @@ type DSLTypeDesc {
 
 value DSLValueDesc : DSLTypeDesc {
     options {
-        builder
+        immutable builder
     }
 }
 
 value DSLBeanDesc : DSLTypeDesc {
     options {
-        builder
+        immutable builder
     }
 }
 
@@ -75,6 +75,6 @@ value DSLSpecDesc {
     List<DSLTypeDesc> values
     List<DSLViewDesc> views
     options {
-        builder
+        immutable builder
     }
 }
