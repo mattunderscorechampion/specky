@@ -58,6 +58,9 @@ public final class CompositeValueResolver implements DefaultValueResolver {
             .findFirst();
     }
 
+    /**
+     * @return a new composite resolver with the provided one
+     */
     public CompositeValueResolver with(DefaultValueResolver resolver) {
         final DefaultValueResolver[] newResolvers = copyOf(resolvers, resolvers.length + 1);
         newResolvers[resolvers.length] = resolver;
