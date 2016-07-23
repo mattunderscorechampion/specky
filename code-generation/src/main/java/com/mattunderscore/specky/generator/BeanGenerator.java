@@ -66,6 +66,9 @@ public final class BeanGenerator {
         this.forPropertyGenerators = methodGeneratorForProperties;
     }
 
+    /**
+     * @return the bean type
+     */
     public TypeSpec generateBean(SpecDesc specDesc, BeanDesc beanDesc) {
         final TypeSpec.Builder builder = typeInitialiser.create(specDesc, beanDesc);
 
