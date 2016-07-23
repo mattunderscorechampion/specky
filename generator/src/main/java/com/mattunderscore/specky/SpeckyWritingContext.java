@@ -60,7 +60,7 @@ public final class SpeckyWritingContext {
      */
     public void write() throws IOException {
         if (consumed.compareAndSet(false, true)) {
-            for (JavaFile file : javaFiles) {
+            for (final JavaFile file : javaFiles) {
                 file.writeTo(targetPath);
             }
         }

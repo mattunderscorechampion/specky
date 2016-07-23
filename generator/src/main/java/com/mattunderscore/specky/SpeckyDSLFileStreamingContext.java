@@ -64,7 +64,7 @@ public final class SpeckyDSLFileStreamingContext {
         if (consumed.compareAndSet(false, true)) {
 
             final List<InputStream> streamsToParse = new ArrayList<>();
-            for (Path path : filesToParse) {
+            for (final Path path : filesToParse) {
                 streamsToParse.add(Files.newInputStream(path));
             }
 

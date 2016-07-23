@@ -59,7 +59,7 @@ public final class SpeckyDSLParsingContext {
     public SpeckyModelGeneratingContext parse() throws IOException {
         if (consumed.compareAndSet(false, true)) {
             final List<Specky.SpecContext> specContexts = new ArrayList<>();
-            for (InputStream inputStream : streamsToParse) {
+            for (final InputStream inputStream : streamsToParse) {
                 try {
                     final CharStream stream = new ANTLRInputStream(inputStream);
                     final SpeckyLexer lexer = new SpeckyLexer(stream);
@@ -73,7 +73,7 @@ public final class SpeckyDSLParsingContext {
             }
 
             final List<DSLSpecDesc> specs = new ArrayList<>();
-            for (Specky.SpecContext specContext : specContexts) {
+            for (final Specky.SpecContext specContext : specContexts) {
                 final SpecBuilder specBuilder = new SpecBuilder();
                 final DSLSpecDesc specDesc = specBuilder.build(specContext);
                 specs.add(specDesc);
