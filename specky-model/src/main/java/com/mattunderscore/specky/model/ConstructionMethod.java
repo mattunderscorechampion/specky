@@ -31,7 +31,16 @@ package com.mattunderscore.specky.model;
  * @author Matt Champion
  */
 public enum ConstructionMethod {
+    /**
+     * Construct with constructor.
+     */
     CONSTRUCTOR,
+    /**
+     * Construct with mutable builder.
+     */
     MUTABLE_BUILDER,
+    /**
+     * Construct with immutable builder.
+     */
     IMMUTABLE_BUILDER;
 }
