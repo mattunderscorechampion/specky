@@ -40,7 +40,7 @@ import java.util.Optional;
     /**
      * Constructor.
      */
-    public JavaStandardTypeResolver() {
+    JavaStandardTypeResolver() {
         // Primitives
         nameToType.put("int", "int");
         nameToType.put("double", "double");
