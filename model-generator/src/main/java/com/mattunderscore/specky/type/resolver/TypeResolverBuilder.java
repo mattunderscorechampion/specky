@@ -34,6 +34,9 @@ public final class TypeResolverBuilder {
         new CompositeTypeResolver()
             .registerResolver(new JavaStandardTypeResolver());
 
+    /**
+     * Register a resolver.
+     */
     public TypeResolverBuilder registerResolver(TypeResolver typeResolver) {
         compositeTypeResolver.registerResolver(typeResolver);
         return this;

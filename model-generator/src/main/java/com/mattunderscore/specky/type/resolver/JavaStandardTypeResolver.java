@@ -37,6 +37,9 @@ import java.util.Optional;
 /*package*/ final class JavaStandardTypeResolver implements TypeResolver {
     private final Map<String, String> nameToType = new HashMap<>();
 
+    /**
+     * Constructor.
+     */
     public JavaStandardTypeResolver() {
         // Primitives
         nameToType.put("int", "int");

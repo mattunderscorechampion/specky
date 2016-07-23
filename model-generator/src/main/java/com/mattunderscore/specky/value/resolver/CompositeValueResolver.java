@@ -37,6 +37,9 @@ import java.util.stream.Stream;
 public final class CompositeValueResolver implements DefaultValueResolver {
     private final DefaultValueResolver[] resolvers;
 
+    /**
+     * Constructor.
+     */
     public CompositeValueResolver() {
         this(new DefaultValueResolver[0]);
     }

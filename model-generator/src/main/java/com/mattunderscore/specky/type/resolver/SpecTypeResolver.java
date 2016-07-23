@@ -39,9 +39,15 @@ import java.util.Optional;
 public final class SpecTypeResolver implements TypeResolver {
     private final Map<String, String> specs = new HashMap<>();
 
+    /**
+     * Constructor.
+     */
     public SpecTypeResolver() {
     }
 
+    /**
+     * Register a type with the resolver.
+     */
     public SpecTypeResolver registerTypeName(String packageName, String typeName) {
         final String fullyQualifiedTypeName = packageName + "." + typeName;
         specs.put(typeName, fullyQualifiedTypeName);

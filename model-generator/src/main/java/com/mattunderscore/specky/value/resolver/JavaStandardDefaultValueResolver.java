@@ -36,6 +36,9 @@ import java.util.Optional;
 public final class JavaStandardDefaultValueResolver implements DefaultValueResolver {
     private final Map<String, String> typeToDefault = new HashMap<>();
 
+    /**
+     * Constructor.
+     */
     public JavaStandardDefaultValueResolver() {
         // Primitives
         typeToDefault.put("int", "0");

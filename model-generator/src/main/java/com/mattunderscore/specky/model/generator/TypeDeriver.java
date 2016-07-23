@@ -47,6 +47,8 @@ import java.util.Map;
 import static java.util.stream.Collectors.toList;
 
 /**
+ * Fully derive a type from its superinterfaces.
+ *
  * @author Matt Champion on 21/07/16
  */
 public final class TypeDeriver {
@@ -54,40 +56,44 @@ public final class TypeDeriver {
     private final DefaultValueResolver valueResolver;
     private final Map<String, ViewDesc> views;
 
+    /**
+     * Constructor.
+     */
     public TypeDeriver(TypeResolver typeResolver, DefaultValueResolver valueResolver, Map<String, ViewDesc> views) {
         this.typeResolver = typeResolver;
         this.valueResolver = valueResolver;
         this.views = views;
     }
 
+    /**
+     * @return the fully derived type
+     */
     public TypeDesc deriveType(String packageName, DSLTypeDesc dslTypeDesc) {
-
-
         if (dslTypeDesc instanceof DSLValueDesc) {
             return ValueDesc
-                    .builder()
-                    .packageName(packageName)
-                    .name(dslTypeDesc.getName())
-                    .constructionMethod(get(dslTypeDesc.getConstructionMethod()))
-                    .properties(deriveProperties(dslTypeDesc))
-                    .supertypes(dslTypeDesc.getSupertypes())
-                    .build();
+                .builder()
+                .packageName(packageName)
+                .name(dslTypeDesc.getName())
+                .constructionMethod(get(dslTypeDesc.getConstructionMethod()))
+                .properties(deriveProperties(dslTypeDesc))
+                .supertypes(dslTypeDesc.getSupertypes())
+                .build();
         }
         else {
             return BeanDesc
-                    .builder()
-                    .packageName(packageName)
-                    .name(dslTypeDesc.getName())
-                    .constructionMethod(get(dslTypeDesc.getConstructionMethod()))
-                    .properties(deriveProperties(dslTypeDesc))
-                    .supertypes(dslTypeDesc.getSupertypes())
-                    .build();
+                .builder()
+                .packageName(packageName)
+                .name(dslTypeDesc.getName())
+                .constructionMethod(get(dslTypeDesc.getConstructionMethod()))
+                .properties(deriveProperties(dslTypeDesc))
+                .supertypes(dslTypeDesc.getSupertypes())
+                .build();
         }
     }
 
     private List<PropertyDesc> deriveProperties(DSLTypeDesc dslTypeDesc) {
-        for (String type : dslTypeDesc.getSupertypes()) {
-            String resolvedType = typeResolver.resolveOrThrow(type);
+        for (final String type : dslTypeDesc.getSupertypes()) {
+            final String resolvedType = typeResolver.resolveOrThrow(type);
             final ViewDesc dslViewDesc = views.get(resolvedType);
             if (dslViewDesc == null) {
                 throw new IllegalArgumentException("View not found for " + resolvedType + " in " + views);
@@ -95,23 +101,23 @@ public final class TypeDeriver {
         }
 
         final List<PropertyDesc> inheritedProperties = dslTypeDesc
-                .getSupertypes()
-                .stream()
-                .map(typeResolver::resolveOrThrow)
-                .map(views::get)
-                .map(ViewDesc::getProperties)
-                .flatMap(Collection::stream)
-                .collect(toList());
+            .getSupertypes()
+            .stream()
+            .map(typeResolver::resolveOrThrow)
+            .map(views::get)
+            .map(ViewDesc::getProperties)
+            .flatMap(Collection::stream)
+            .collect(toList());
 
         final List<PropertyDesc> declaredProperties = dslTypeDesc
-                .getProperties()
-                .stream()
-                .map(this::get)
-                .collect(toList());
+            .getProperties()
+            .stream()
+            .map(this::get)
+            .collect(toList());
 
         final Map<String, PropertyDesc> knownProperties = new HashMap<>();
         final List<PropertyDesc> allProperties = new ArrayList<>();
-        for (PropertyDesc property : inheritedProperties) {
+        for (final PropertyDesc property : inheritedProperties) {
             final String propertyName = property.getName();
             final PropertyDesc currentProperty = knownProperties.get(propertyName);
             if (currentProperty == null) {
@@ -122,7 +128,7 @@ public final class TypeDeriver {
                 checkMegableProperties(currentProperty, property);
             }
         }
-        for (PropertyDesc property : declaredProperties) {
+        for (final PropertyDesc property : declaredProperties) {
             final String propertyName = property.getName();
             final PropertyDesc currentProperty = knownProperties.get(propertyName);
             if (currentProperty == null) {

@@ -52,6 +52,9 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
     private final TypeResolver typeResolver;
     private final DefaultValueResolver valueResolver;
 
+    /**
+     * Constructor.
+     */
     public ModelGenerator(List<DSLSpecDesc> dslSpecs, TypeResolver typeResolver, DefaultValueResolver valueResolver) {
         this.dslSpecs = dslSpecs;
         this.typeResolver = typeResolver;
