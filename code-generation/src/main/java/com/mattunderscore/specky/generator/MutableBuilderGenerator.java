@@ -39,8 +39,6 @@ import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
@@ -51,6 +49,8 @@ import com.squareup.javapoet.TypeSpec;
 public final class MutableBuilderGenerator implements TypeAppender {
     private final TypeInitialiser typeInitialiser;
     private final MethodGeneratorForType constructorGenerator = new ConstructorForBuiltTypeGenerator();
+    private final MethodGeneratorForProperty settingConfiguratorGenerator =
+        new SettingConfiguratorGenerator(MUTABLE_BUILDER_SETTER, new This());
     private final MethodGeneratorForType conditionalGenerator = new ConditionalConfiguratorGenerator(
         CONDITIONAL_MUTABLE_BUILDER_SETTER);
     private final BuildMethodGenerator buildMethodGenerator;
@@ -77,18 +77,9 @@ public final class MutableBuilderGenerator implements TypeAppender {
                     .initializer(propertyDesc.getDefaultValue() == null ? "null" : propertyDesc.getDefaultValue())
                     .build();
 
-                final ParameterSpec constructorParameter = ParameterSpec.builder(type, propertyDesc.getName()).build();
-
-                final MethodSpec configuator = methodBuilder(propertyDesc.getName())
-                    .addModifiers(PUBLIC)
-                    .addJavadoc(MUTABLE_BUILDER_SETTER, propertyDesc.getName())
-                    .returns(ClassName.get(valueDesc.getPackageName(), valueDesc.getName(), "Builder"))
-                    .addParameter(constructorParameter)
-                    .addStatement("this.$N = $N", fieldSpec, constructorParameter)
-                    .addStatement("return this")
-                    .build();
-
-                builder.addField(fieldSpec).addMethod(configuator);
+                builder
+                    .addField(fieldSpec)
+                    .addMethod(settingConfiguratorGenerator.generate(specDesc, valueDesc, propertyDesc));
             });
 
         builder
