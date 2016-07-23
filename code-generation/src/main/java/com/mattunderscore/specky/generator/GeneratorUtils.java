@@ -41,39 +41,69 @@ import com.squareup.javapoet.TypeName;
  * @author Matt Champion on 11/06/2016
  */
 /*package*/ final class GeneratorUtils {
+    /**
+     * Javadoc for constructor.
+     */
     public static final String CONSTRUCTOR_DOC = docMethod()
         .setMethodDescription("Constructor.")
         .toJavaDoc();
+    /**
+     * Javadoc for getter.
+     */
     public static final String GETTER_DOC = docMethod()
         .setMethodDescription("Getter for the property $1L.")
         .setReturnsDescription("the value of $1L")
         .toJavaDoc();
+    /**
+     * Javadoc for accessor.
+     */
     public static final String SETTER_DOC = docMethod()
         .setMethodDescription("Setter for the property $1L.")
         .addParameter("$2L", "the new value of $1L")
         .toJavaDoc();
+    /**
+     * Javadoc for type.
+     */
     public static final String TYPE_DOC = docType()
         .setDescription("$L type $L.\n\nAuto-generated from specification.")
         .toJavaDoc();
+    /**
+     * Javadoc for builder.
+     */
     public static final String BUILDER_TYPE_DOC = docType()
         .setDescription("The builder for $L.")
         .toJavaDoc();
+    /**
+     * Javadoc for build method.
+     */
     public static final String BUILD_DOC = docMethod()
         .setMethodDescription("Build an instance of $1L.")
         .setReturnsDescription("a new instance of $1L")
         .toJavaDoc();
+    /**
+     * Javadoc for builder factory.
+     */
     public static final String BUILDER_FACTORY = docMethod()
         .setMethodDescription("Factory method for builder.")
         .setReturnsDescription("a new builder for $L")
         .toJavaDoc();
+    /**
+     * Javadoc for mutable builder configurator.
+     */
     public static final String MUTABLE_BUILDER_SETTER = docMethod()
         .setMethodDescription("Method to configure property $L on the builder.")
         .setReturnsDescription("this builder")
         .toJavaDoc();
+    /**
+     * Javadoc for immutable builder configurator.
+     */
     public static final String IMMUTABLE_BUILDER_SETTER = docMethod()
         .setMethodDescription("Method to configure property $L on the builder.")
         .setReturnsDescription("a new builder")
         .toJavaDoc();
+    /**
+     * Javadoc for conditional configurator.
+     */
     public static final String CONDITIONAL_BUILDER_SETTER = docMethod()
         .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
         .addParameter("condition", "the condition to evaluate")
