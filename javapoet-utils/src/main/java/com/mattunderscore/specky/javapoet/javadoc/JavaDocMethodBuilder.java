@@ -83,7 +83,7 @@ public final class JavaDocMethodBuilder {
                 .append('\n');
         }
 
-        for (Parameter parameter : parameters) {
+        for (final Parameter parameter : parameters) {
             stringBuilder
                 .append("@param ")
                 .append(parameter.name)
