@@ -31,7 +31,16 @@ package com.mattunderscore.specky.dsl.model;
  * @author Matt Champion
  */
 public enum DSLConstructionMethod {
+    /**
+     * Construct with constructor.
+     */
     CONSTRUCTOR,
+    /**
+     * Construct with mutable builder.
+     */
     MUTABLE_BUILDER,
+    /**
+     * Construct with immutable builder.
+     */
     IMMUTABLE_BUILDER;
 }
