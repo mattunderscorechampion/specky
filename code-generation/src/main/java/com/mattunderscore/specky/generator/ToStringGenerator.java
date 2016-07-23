@@ -119,7 +119,7 @@ public final class ToStringGenerator implements MethodGeneratorForType {
     }
 
     /**
-     * Describe the start and end of a property list
+     * Describe the start and end of a property list.
      */
     public interface PropertyListBookend {
         /**
