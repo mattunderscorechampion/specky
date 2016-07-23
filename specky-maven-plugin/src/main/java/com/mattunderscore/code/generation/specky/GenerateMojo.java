@@ -119,7 +119,7 @@ public class GenerateMojo extends AbstractMojo {
         project.addCompileSourceRoot(targetPath.toString());
     }
 
-    public FileSet getFileSet() {
+    private FileSet getFileSet() {
         if (fileset != null) {
             return fileset;
         }
