@@ -102,6 +102,6 @@ public final class EqualsGenerator implements MethodGeneratorForType {
                 ")))";
         }
 
-        return "this." + name + ".equals(that." + name +")";
+        return "this." + name + ".equals(that." + name + ")";
     }
 }
