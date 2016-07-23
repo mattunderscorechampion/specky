@@ -40,40 +40,40 @@ import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
  * @author Matt Champion on 11/06/2016
  */
 /*package*/ final class GeneratorUtils {
-    public final static String CONSTRUCTOR_DOC = docMethod()
+    public static final String CONSTRUCTOR_DOC = docMethod()
         .setMethodDescription("Constructor.")
         .toJavaDoc();
-    public final static String GETTER_DOC = docMethod()
+    public static final String GETTER_DOC = docMethod()
         .setMethodDescription("Getter for the property $1L.")
         .setReturnsDescription("the value of $1L")
         .toJavaDoc();
-    public final static String SETTER_DOC = docMethod()
+    public static final String SETTER_DOC = docMethod()
         .setMethodDescription("Setter for the property $1L.")
         .addParameter("$2L", "the new value of $1L")
         .toJavaDoc();
-    public final static String TYPE_DOC = docType()
+    public static final String TYPE_DOC = docType()
         .setDescription("$L type $L.\n\nAuto-generated from specification.")
         .toJavaDoc();
-    public final static String BUILDER_TYPE_DOC = docType()
+    public static final String BUILDER_TYPE_DOC = docType()
         .setDescription("The builder for $L.")
         .toJavaDoc();
-    public final static String BUILD_DOC = docMethod()
+    public static final String BUILD_DOC = docMethod()
         .setMethodDescription("Build an instance of $1L.")
         .setReturnsDescription("a new instance of $1L")
         .toJavaDoc();
-    public final static String BUILDER_FACTORY = docMethod()
+    public static final String BUILDER_FACTORY = docMethod()
         .setMethodDescription("Factory method for builder.")
         .setReturnsDescription("a new builder for $L")
         .toJavaDoc();
-    public final static String MUTABLE_BUILDER_SETTER = docMethod()
+    public static final String MUTABLE_BUILDER_SETTER = docMethod()
         .setMethodDescription("Method to configure property $L on the builder.")
         .setReturnsDescription("this builder")
         .toJavaDoc();
-    public final static String IMMUTABLE_BUILDER_SETTER = docMethod()
+    public static final String IMMUTABLE_BUILDER_SETTER = docMethod()
         .setMethodDescription("Method to configure property $L on the builder.")
         .setReturnsDescription("a new builder")
         .toJavaDoc();
-    public final static String CONDITIONAL_BUILDER_SETTER = docMethod()
+    public static final String CONDITIONAL_BUILDER_SETTER = docMethod()
         .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
         .addParameter("condition", "the condition to evaluate")
         .addParameter("function", "the function to apply")
