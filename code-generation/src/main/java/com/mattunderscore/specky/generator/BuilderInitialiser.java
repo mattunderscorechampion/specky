@@ -39,7 +39,7 @@ import com.squareup.javapoet.TypeSpec;
  * {@link TypeInitialiser} for Builders.
  * @author Matt Champion on 10/07/2016
  */
-public class BuilderInitialiser implements TypeInitialiser {
+public final class BuilderInitialiser implements TypeInitialiser {
     @Override
     public TypeSpec.Builder create(SpecDesc specDesc, TypeDesc typeDesc) {
         return classBuilder("Builder")

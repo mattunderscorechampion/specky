@@ -37,7 +37,7 @@ import com.squareup.javapoet.TypeSpec;
  * {@link TypeInitialiser} for values.
  * @author Matt Champion on 10/07/2016
  */
-public class ValueInitialiser implements TypeInitialiser {
+public final class ValueInitialiser implements TypeInitialiser {
     @Override
     public TypeSpec.Builder create(SpecDesc specDesc, TypeDesc typeDesc) {
         return TypeSpec

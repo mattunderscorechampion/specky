@@ -37,7 +37,7 @@ import com.squareup.javapoet.TypeSpec;
  * {@link TypeInitialiser} for beans.
  * @author Matt Champion on 10/07/2016
  */
-public class BeanInitialiser implements TypeInitialiser {
+public final class BeanInitialiser implements TypeInitialiser {
     @Override
     public TypeSpec.Builder create(SpecDesc specDesc, TypeDesc typeDesc) {
         return TypeSpec

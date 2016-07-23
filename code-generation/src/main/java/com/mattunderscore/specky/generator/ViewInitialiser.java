@@ -36,7 +36,7 @@ import com.squareup.javapoet.TypeSpec;
  * {@link TypeInitialiser} for views.
  * @author Matt Champion on 10/07/2016
  */
-public class ViewInitialiser implements TypeInitialiser {
+public final class ViewInitialiser implements TypeInitialiser {
     @Override
     public TypeSpec.Builder create(SpecDesc specDesc, TypeDesc typeDesc) {
         return interfaceBuilder(typeDesc.getName())

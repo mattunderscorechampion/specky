@@ -43,7 +43,7 @@ import com.squareup.javapoet.TypeName;
  * Generator for constructor used by builders.
  * @author Matt Champion on 09/07/2016
  */
-public class ConstructorForBuiltTypeGenerator implements MethodGeneratorForType {
+public final class ConstructorForBuiltTypeGenerator implements MethodGeneratorForType {
     @Override
     public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
         final MethodSpec.Builder constructor = constructorBuilder()
