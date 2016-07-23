@@ -26,6 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator;
 
 import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_FACTORY;
+import static com.mattunderscore.specky.generator.GeneratorUtils.CONDITIONAL_MUTABLE_BUILDER_SETTER;
 import static com.mattunderscore.specky.generator.GeneratorUtils.MUTABLE_BUILDER_SETTER;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
@@ -50,7 +51,8 @@ import com.squareup.javapoet.TypeSpec;
 public final class MutableBuilderGenerator implements TypeAppender {
     private final TypeInitialiser typeInitialiser;
     private final MethodGeneratorForType constructorGenerator = new ConstructorForBuiltTypeGenerator();
-    private final MethodGeneratorForType conditionalGenerator = new ConditionalConfiguratorGenerator();
+    private final MethodGeneratorForType conditionalGenerator = new ConditionalConfiguratorGenerator(
+        CONDITIONAL_MUTABLE_BUILDER_SETTER);
     private final BuildMethodGenerator buildMethodGenerator;
 
     /**

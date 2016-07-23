@@ -25,7 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.CONDITIONAL_BUILDER_SETTER;
 import static com.squareup.javapoet.ParameterizedTypeName.get;
 
 import java.util.function.Function;
@@ -41,10 +40,20 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 
 /**
+ * Generator for conditional configurators.
  *
  * @author Matt Champion on 12/07/16
  */
 public final class ConditionalConfiguratorGenerator implements MethodGeneratorForType {
+    private final String javaDoc;
+
+    /**
+     * Constructor.
+     */
+    public ConditionalConfiguratorGenerator(String javaDoc) {
+        this.javaDoc = javaDoc;
+    }
+
     @Override
     public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
         final ClassName builderType = ClassName.get(typeDesc.getPackageName(), typeDesc.getName(), "Builder");
@@ -57,7 +66,7 @@ public final class ConditionalConfiguratorGenerator implements MethodGeneratorFo
         return MethodSpec
                 .methodBuilder("ifThen")
                 .addModifiers(Modifier.PUBLIC)
-                .addJavadoc(CONDITIONAL_BUILDER_SETTER)
+                .addJavadoc(javaDoc)
                 .returns(builderType)
                 .addParameter(conditionParameter)
                 .addParameter(modifierParameter)
