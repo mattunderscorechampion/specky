@@ -51,7 +51,7 @@ public final class MutableBuilderGenerator implements TypeAppender {
     private final MethodGeneratorForType constructorGenerator = new ConstructorForBuiltTypeGenerator();
     private final MethodGeneratorForProperty settingConfiguratorGenerator =
         new SettingConfiguratorGenerator(MUTABLE_BUILDER_SETTER, new This());
-    private final MethodGeneratorForType conditionalGenerator = new ConditionalConfiguratorGenerator(
+    private final MethodGeneratorForType conditionalGenerator = new SupplierConditionalConfiguratorGenerator(
         CONDITIONAL_MUTABLE_BUILDER_SETTER);
     private final BuildMethodGenerator buildMethodGenerator;
 

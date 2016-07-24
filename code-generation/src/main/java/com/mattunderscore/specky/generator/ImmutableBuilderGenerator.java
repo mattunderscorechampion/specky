@@ -51,7 +51,7 @@ import com.squareup.javapoet.TypeSpec;
 public final class ImmutableBuilderGenerator implements TypeAppender {
     private final TypeInitialiser typeInitialiser;
     private final MethodGeneratorForType constructorGenerator = new ConstructorForBuiltTypeGenerator();
-    private final MethodGeneratorForType conditionalGenerator = new ConditionalConfiguratorGenerator(
+    private final MethodGeneratorForType conditionalGenerator = new SupplierConditionalConfiguratorGenerator(
         CONDITIONAL_IMMUTABLE_BUILDER_SETTER);
     private final MethodGeneratorForProperty settingConfiguratorGenerator =
         new SettingConfiguratorGenerator(IMMUTABLE_BUILDER_SETTER, new InstantiateNewBuilder());

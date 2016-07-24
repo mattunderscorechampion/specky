@@ -40,17 +40,17 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 
 /**
- * Generator for conditional configurators.
+ * Generator for conditional configurators that take a supplier.
  *
  * @author Matt Champion on 12/07/16
  */
-public final class ConditionalConfiguratorGenerator implements MethodGeneratorForType {
+public final class SupplierConditionalConfiguratorGenerator implements MethodGeneratorForType {
     private final String javaDoc;
 
     /**
      * Constructor.
      */
-    public ConditionalConfiguratorGenerator(String javaDoc) {
+    public SupplierConditionalConfiguratorGenerator(String javaDoc) {
         this.javaDoc = javaDoc;
     }
 
