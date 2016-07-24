@@ -104,7 +104,7 @@ import com.squareup.javapoet.TypeName;
     /**
      * Javadoc for conditional mutable builder configurator.
      */
-    public static final String CONDITIONAL_MUTABLE_BUILDER_SETTER = docMethod()
+    public static final String SUPPLIER_CONDITIONAL_MUTABLE_BUILDER_SETTER = docMethod()
         .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
         .addParameter("condition", "the condition to evaluate")
         .addParameter("function", "the function to apply")
@@ -113,7 +113,7 @@ import com.squareup.javapoet.TypeName;
     /**
      * Javadoc for conditional immutable builder configurator.
      */
-    public static final String CONDITIONAL_IMMUTABLE_BUILDER_SETTER = docMethod()
+    public static final String SUPPLIER_CONDITIONAL_IMMUTABLE_BUILDER_SETTER = docMethod()
         .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
         .addParameter("condition", "the condition to evaluate")
         .addParameter("function", "the function to apply")

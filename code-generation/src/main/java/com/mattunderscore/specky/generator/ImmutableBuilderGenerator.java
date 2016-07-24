@@ -27,7 +27,7 @@ package com.mattunderscore.specky.generator;
 
 import static com.mattunderscore.specky.generator.GeneratorUtils.BOOLEAN_CONDITIONAL_IMMUTABLE_BUILDER_SETTER;
 import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_FACTORY;
-import static com.mattunderscore.specky.generator.GeneratorUtils.CONDITIONAL_IMMUTABLE_BUILDER_SETTER;
+import static com.mattunderscore.specky.generator.GeneratorUtils.SUPPLIER_CONDITIONAL_IMMUTABLE_BUILDER_SETTER;
 import static com.mattunderscore.specky.generator.GeneratorUtils.IMMUTABLE_BUILDER_SETTER;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
@@ -53,7 +53,7 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
     private final TypeInitialiser typeInitialiser;
     private final MethodGeneratorForType constructorGenerator = new ConstructorForBuiltTypeGenerator();
     private final MethodGeneratorForType conditionalGenerator = new SupplierConditionalConfiguratorGenerator(
-        CONDITIONAL_IMMUTABLE_BUILDER_SETTER);
+        SUPPLIER_CONDITIONAL_IMMUTABLE_BUILDER_SETTER);
     private final MethodGeneratorForProperty settingConfiguratorGenerator =
         new SettingConfiguratorGenerator(IMMUTABLE_BUILDER_SETTER, new InstantiateNewBuilder());
     private final MethodGeneratorForType booleanConditional = new BooleanConditionalConfiguratorGenerator(
