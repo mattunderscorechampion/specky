@@ -25,6 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
+import static com.mattunderscore.specky.generator.GeneratorUtils.BOOLEAN_CONDITIONAL_MUTABLE_BUILDER_SETTER;
 import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_FACTORY;
 import static com.mattunderscore.specky.generator.GeneratorUtils.CONDITIONAL_MUTABLE_BUILDER_SETTER;
 import static com.mattunderscore.specky.generator.GeneratorUtils.MUTABLE_BUILDER_SETTER;
@@ -51,8 +52,10 @@ public final class MutableBuilderGenerator implements TypeAppender {
     private final MethodGeneratorForType constructorGenerator = new ConstructorForBuiltTypeGenerator();
     private final MethodGeneratorForProperty settingConfiguratorGenerator =
         new SettingConfiguratorGenerator(MUTABLE_BUILDER_SETTER, new This());
-    private final MethodGeneratorForType conditionalGenerator = new SupplierConditionalConfiguratorGenerator(
+    private final MethodGeneratorForType supplierConditional = new SupplierConditionalConfiguratorGenerator(
         CONDITIONAL_MUTABLE_BUILDER_SETTER);
+    private final MethodGeneratorForType booleanConditional = new BooleanConditionalConfiguratorGenerator(
+        BOOLEAN_CONDITIONAL_MUTABLE_BUILDER_SETTER);
     private final BuildMethodGenerator buildMethodGenerator;
 
     /**
@@ -84,7 +87,8 @@ public final class MutableBuilderGenerator implements TypeAppender {
 
         builder
             .addMethod(constructorBuilder().addModifiers(PRIVATE).build())
-            .addMethod(conditionalGenerator.generate(specDesc, valueDesc))
+            .addMethod(booleanConditional.generate(specDesc, valueDesc))
+            .addMethod(supplierConditional.generate(specDesc, valueDesc))
             .addMethod(buildMethodGenerator.generate(specDesc, valueDesc));
 
         typeSpecBuilder

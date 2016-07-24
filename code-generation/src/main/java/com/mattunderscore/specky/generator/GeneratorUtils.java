@@ -119,6 +119,24 @@ import com.squareup.javapoet.TypeName;
         .addParameter("function", "the function to apply")
         .setReturnsDescription("a new builder if the condition is {@code true}, otherwise this builder")
         .toJavaDoc();
+    /**
+     * Javadoc for conditional mutable builder configurator.
+     */
+    public static final String BOOLEAN_CONDITIONAL_MUTABLE_BUILDER_SETTER = docMethod()
+        .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
+        .addParameter("condition", "the condition")
+        .addParameter("function", "the function to apply")
+        .setReturnsDescription("this builder")
+        .toJavaDoc();
+    /**
+     * Javadoc for conditional immutable builder configurator.
+     */
+    public static final String BOOLEAN_CONDITIONAL_IMMUTABLE_BUILDER_SETTER = docMethod()
+        .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
+        .addParameter("condition", "the condition")
+        .addParameter("function", "the function to apply")
+        .setReturnsDescription("a new builder if the condition is {@code true}, otherwise this builder")
+        .toJavaDoc();
 
     private GeneratorUtils() {
     }

@@ -25,6 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
+import static com.mattunderscore.specky.generator.GeneratorUtils.BOOLEAN_CONDITIONAL_IMMUTABLE_BUILDER_SETTER;
 import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_FACTORY;
 import static com.mattunderscore.specky.generator.GeneratorUtils.CONDITIONAL_IMMUTABLE_BUILDER_SETTER;
 import static com.mattunderscore.specky.generator.GeneratorUtils.IMMUTABLE_BUILDER_SETTER;
@@ -55,6 +56,8 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
         CONDITIONAL_IMMUTABLE_BUILDER_SETTER);
     private final MethodGeneratorForProperty settingConfiguratorGenerator =
         new SettingConfiguratorGenerator(IMMUTABLE_BUILDER_SETTER, new InstantiateNewBuilder());
+    private final MethodGeneratorForType booleanConditional = new BooleanConditionalConfiguratorGenerator(
+        BOOLEAN_CONDITIONAL_IMMUTABLE_BUILDER_SETTER);
     private final BuildMethodGenerator buildMethodGenerator;
 
     /**
@@ -83,6 +86,7 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
 
         builder
             .addMethod(constructorGenerator.generate(specDesc, valueDesc))
+            .addMethod(booleanConditional.generate(specDesc, valueDesc))
             .addMethod(conditionalGenerator.generate(specDesc, valueDesc))
             .addMethod(buildMethodGenerator.generate(specDesc, valueDesc));
 
