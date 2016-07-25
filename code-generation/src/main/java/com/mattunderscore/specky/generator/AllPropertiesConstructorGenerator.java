@@ -40,10 +40,13 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 
 /**
- * Constructor generator.
+ * All property constructor generator.
+ * <P>
+ * All properties must be passed in by parameters.
+ *
  * @author Matt Champion on 13/06/2016
  */
-public final class ValueConstructorGenerator implements MethodGeneratorForType {
+public final class AllPropertiesConstructorGenerator implements MethodGeneratorForType {
 
     @Override
     public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {

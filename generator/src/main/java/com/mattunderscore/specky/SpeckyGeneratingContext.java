@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.mattunderscore.specky.generator.AccessorGenerator;
-import com.mattunderscore.specky.generator.BeanConstructorGenerator;
+import com.mattunderscore.specky.generator.EmptyConstructorGenerator;
 import com.mattunderscore.specky.generator.BeanGenerator;
 import com.mattunderscore.specky.generator.BeanInitialiser;
 import com.mattunderscore.specky.generator.BuildMethodGenerator;
@@ -54,7 +54,7 @@ import com.mattunderscore.specky.generator.SuperTypeAppender;
 import com.mattunderscore.specky.generator.ToStringGenerator;
 import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.TypeInitialiser;
-import com.mattunderscore.specky.generator.ValueConstructorGenerator;
+import com.mattunderscore.specky.generator.AllPropertiesConstructorGenerator;
 import com.mattunderscore.specky.generator.ValueGenerator;
 import com.mattunderscore.specky.generator.ValueInitialiser;
 import com.mattunderscore.specky.generator.ViewGenerator;
@@ -135,7 +135,7 @@ public final class SpeckyGeneratingContext {
                 new ValueGenerator(
                     new ValueInitialiser(),
                     new ConstructionMethodAppender(
-                        asList(new ValueConstructorGenerator(), new DefaultConstructorGenerator()),
+                        asList(new AllPropertiesConstructorGenerator(), new DefaultConstructorGenerator()),
                         mutableBuilderGenerator,
                         immutableBuilderGenerator),
                     superTypeAppender,
@@ -144,7 +144,7 @@ public final class SpeckyGeneratingContext {
                 new BeanGenerator(
                     new BeanInitialiser(),
                     new ConstructionMethodAppender(
-                        singletonList(new BeanConstructorGenerator()),
+                        singletonList(new EmptyConstructorGenerator()),
                         mutableBuilderGenerator,
                         immutableBuilderGenerator),
                     superTypeAppender,

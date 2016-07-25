@@ -34,11 +34,13 @@ import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.MethodSpec;
 
 /**
- * Constructor generator for beans.
+ * Empty constructor generator.
+ * <P>
+ * Does not set any fields.
  *
  * @author Matt Champion on 10/07/2016
  */
-public final class BeanConstructorGenerator implements MethodGeneratorForType {
+public final class EmptyConstructorGenerator implements MethodGeneratorForType {
     @Override
     public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
         return constructorBuilder()
