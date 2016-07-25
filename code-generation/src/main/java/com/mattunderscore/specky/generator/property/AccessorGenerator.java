@@ -23,49 +23,63 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.generator;
+package com.mattunderscore.specky.generator.property;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.SETTER_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
+import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static java.lang.Character.toUpperCase;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import java.util.Objects;
-
+import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterSpec;
-import com.squareup.javapoet.TypeName;
 
 /**
- * Generator for mutator method.
+ * Generator for accessor method.
  * @author Matt Champion on 21/06/2016
  */
-public final class MutatorGenerator implements MethodGeneratorForProperty {
-    @Override
-    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc, PropertyDesc propertyDesc) {
-        final TypeName type = getType(propertyDesc);
-        final ParameterSpec parameterSpec = ParameterSpec.builder(type, propertyDesc.getName()).build();
-        final MethodSpec.Builder setterSpec = methodBuilder(getMutatorName(propertyDesc.getName()))
-            .addModifiers(PUBLIC)
-            .addParameter(parameterSpec)
-            .addJavadoc(SETTER_DOC, propertyDesc.getName(), propertyDesc.getName())
-            .returns(TypeName.VOID);
-
-        if (!propertyDesc.isOptionalProperty() && !type.isPrimitive()) {
-            setterSpec.addStatement("$T.requireNonNull($N)", ClassName.get(Objects.class), propertyDesc.getName());
-        }
-
-        setterSpec.addStatement("this.$N = $N", propertyDesc.getName(), parameterSpec);
-
-        return setterSpec.build();
+public final class AccessorGenerator implements MethodGeneratorForProperty {
+    /**
+     * Constructor.
+     */
+    public AccessorGenerator() {
     }
 
-    private static String getMutatorName(String propertyName) {
-        return "set" + toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
+    @Override
+    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc, PropertyDesc propertyDesc) {
+        if (propertyDesc.isOverride()) {
+            return methodBuilder(getAccessorName(propertyDesc))
+                .addModifiers(PUBLIC)
+                .addAnnotation(Override.class)
+                .returns(getType(propertyDesc))
+                .addStatement("return $N", propertyDesc.getName())
+                .build();
+        }
+        else {
+            return methodBuilder(getAccessorName(propertyDesc))
+                .addModifiers(PUBLIC)
+                .addJavadoc(
+                    docMethod()
+                        .setMethodDescription("Getter for the property $1L.")
+                        .setReturnsDescription("the value of $1L")
+                        .toJavaDoc(),
+                    propertyDesc.getName())
+                .returns(getType(propertyDesc))
+                .addStatement("return $N", propertyDesc.getName())
+                .build();
+        }
+    }
+
+    private static String getAccessorName(PropertyDesc property) {
+        final String propertyName = property.getName();
+        if (property.getTypeName().equals("boolean")) {
+            return "is" + toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
+        }
+        else {
+            return "get" + toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
+        }
     }
 }
