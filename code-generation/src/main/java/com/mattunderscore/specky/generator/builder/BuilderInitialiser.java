@@ -23,7 +23,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.generator;
+package com.mattunderscore.specky.generator.builder;
 
 import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_TYPE_DOC;
 import static com.squareup.javapoet.TypeSpec.classBuilder;
@@ -31,6 +31,7 @@ import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
+import com.mattunderscore.specky.generator.TypeInitialiser;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.TypeSpec;

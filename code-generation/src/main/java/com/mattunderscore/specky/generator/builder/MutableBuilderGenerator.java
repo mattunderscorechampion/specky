@@ -23,22 +23,25 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.generator;
+package com.mattunderscore.specky.generator.builder;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.BOOLEAN_CONDITIONAL_IMMUTABLE_BUILDER_SETTER;
+import static com.mattunderscore.specky.generator.GeneratorUtils.BOOLEAN_CONDITIONAL_MUTABLE_BUILDER_SETTER;
 import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_FACTORY;
-import static com.mattunderscore.specky.generator.GeneratorUtils.SUPPLIER_CONDITIONAL_IMMUTABLE_BUILDER_SETTER;
-import static com.mattunderscore.specky.generator.GeneratorUtils.IMMUTABLE_BUILDER_SETTER;
+import static com.mattunderscore.specky.generator.GeneratorUtils.SUPPLIER_CONDITIONAL_MUTABLE_BUILDER_SETTER;
+import static com.mattunderscore.specky.generator.GeneratorUtils.MUTABLE_BUILDER_SETTER;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
+import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
-import java.util.stream.Collectors;
-
+import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
+import com.mattunderscore.specky.generator.MethodGeneratorForType;
+import com.mattunderscore.specky.generator.This;
+import com.mattunderscore.specky.generator.TypeAppender;
+import com.mattunderscore.specky.generator.TypeInitialiser;
 import com.mattunderscore.specky.generator.constructor.ConstructorForBuiltTypeGenerator;
-import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.ClassName;
@@ -47,24 +50,24 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 /**
- * Generator for immutable builders.
- * @author Matt Champion on 15/06/2016
+ * Generator for mutable builders.
+ * @author Matt Champion on 13/06/2016
  */
-public final class ImmutableBuilderGenerator implements TypeAppender {
+public final class MutableBuilderGenerator implements TypeAppender {
     private final TypeInitialiser typeInitialiser;
     private final MethodGeneratorForType constructorGenerator = new ConstructorForBuiltTypeGenerator();
-    private final MethodGeneratorForType conditionalGenerator = new SupplierConditionalConfiguratorGenerator(
-        SUPPLIER_CONDITIONAL_IMMUTABLE_BUILDER_SETTER);
     private final MethodGeneratorForProperty settingConfiguratorGenerator =
-        new SettingConfiguratorGenerator(IMMUTABLE_BUILDER_SETTER, new InstantiateNewBuilder());
+        new SettingConfiguratorGenerator(MUTABLE_BUILDER_SETTER, new This());
+    private final MethodGeneratorForType supplierConditional = new SupplierConditionalConfiguratorGenerator(
+        SUPPLIER_CONDITIONAL_MUTABLE_BUILDER_SETTER);
     private final MethodGeneratorForType booleanConditional = new BooleanConditionalConfiguratorGenerator(
-        BOOLEAN_CONDITIONAL_IMMUTABLE_BUILDER_SETTER);
+        BOOLEAN_CONDITIONAL_MUTABLE_BUILDER_SETTER);
     private final BuildMethodGenerator buildMethodGenerator;
 
     /**
      * Constructor.
      */
-    public ImmutableBuilderGenerator(TypeInitialiser typeInitialiser, BuildMethodGenerator buildMethodGenerator) {
+    public MutableBuilderGenerator(TypeInitialiser typeInitialiser, BuildMethodGenerator buildMethodGenerator) {
         this.typeInitialiser = typeInitialiser;
         this.buildMethodGenerator = buildMethodGenerator;
     }
@@ -78,17 +81,20 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
             .stream()
             .forEach(propertyDesc -> {
                 final TypeName type = getType(propertyDesc);
-                final FieldSpec builderFieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE).build();
+                final FieldSpec fieldSpec = FieldSpec
+                    .builder(type, propertyDesc.getName(), PRIVATE)
+                    .initializer(propertyDesc.getDefaultValue() == null ? "null" : propertyDesc.getDefaultValue())
+                    .build();
 
                 builder
-                    .addField(builderFieldSpec)
+                    .addField(fieldSpec)
                     .addMethod(settingConfiguratorGenerator.generate(specDesc, valueDesc, propertyDesc));
             });
 
         builder
-            .addMethod(constructorGenerator.generate(specDesc, valueDesc))
+            .addMethod(constructorBuilder().addModifiers(PRIVATE).build())
             .addMethod(booleanConditional.generate(specDesc, valueDesc))
-            .addMethod(conditionalGenerator.generate(specDesc, valueDesc))
+            .addMethod(supplierConditional.generate(specDesc, valueDesc))
             .addMethod(buildMethodGenerator.generate(specDesc, valueDesc));
 
         typeSpecBuilder
@@ -96,29 +102,9 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
                 .returns(ClassName.get(valueDesc.getPackageName(), valueDesc.getName(), "Builder"))
                 .addModifiers(PUBLIC, STATIC)
                 .addJavadoc(BUILDER_FACTORY, valueDesc.getName())
-                .addStatement(defaultBuilder(valueDesc))
+                .addStatement("return new Builder()")
                 .build())
             .addMethod(constructorGenerator.generate(specDesc, valueDesc))
             .addType(builder.build());
-    }
-
-    private String newBuilder(TypeDesc valueDesc) {
-        return "return new Builder(" +
-            valueDesc
-                .getProperties()
-                .stream()
-                .map(PropertyDesc::getName)
-                .collect(Collectors.joining(", ")) +
-            ')';
-    }
-
-    private String defaultBuilder(TypeDesc valueDesc) {
-        return "return new Builder(" +
-            valueDesc
-                .getProperties()
-                .stream()
-                .map(propertySpec -> propertySpec.getDefaultValue() == null ? "null" : propertySpec.getDefaultValue())
-                .collect(Collectors.joining(", ")) +
-            ')';
     }
 }
