@@ -25,11 +25,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.builder;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.BOOLEAN_CONDITIONAL_MUTABLE_BUILDER_SETTER;
 import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_FACTORY;
-import static com.mattunderscore.specky.generator.GeneratorUtils.SUPPLIER_CONDITIONAL_MUTABLE_BUILDER_SETTER;
-import static com.mattunderscore.specky.generator.GeneratorUtils.MUTABLE_BUILDER_SETTER;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
+import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static javax.lang.model.element.Modifier.PRIVATE;
@@ -57,11 +55,26 @@ public final class MutableBuilderGenerator implements TypeAppender {
     private final TypeInitialiser typeInitialiser;
     private final MethodGeneratorForType constructorGenerator = new ConstructorForBuiltTypeGenerator();
     private final MethodGeneratorForProperty settingConfiguratorGenerator =
-        new SettingConfiguratorGenerator(MUTABLE_BUILDER_SETTER, new This());
+        new SettingConfiguratorGenerator(
+            docMethod()
+                .setMethodDescription("Method to configure property $L on the builder.")
+                .setReturnsDescription("this builder")
+                .toJavaDoc(),
+            new This());
     private final MethodGeneratorForType supplierConditional = new SupplierConditionalConfiguratorGenerator(
-        SUPPLIER_CONDITIONAL_MUTABLE_BUILDER_SETTER);
+        docMethod()
+            .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
+            .addParameter("condition", "the condition to evaluate")
+            .addParameter("function", "the function to apply")
+            .setReturnsDescription("this builder")
+            .toJavaDoc());
     private final MethodGeneratorForType booleanConditional = new BooleanConditionalConfiguratorGenerator(
-        BOOLEAN_CONDITIONAL_MUTABLE_BUILDER_SETTER);
+        docMethod()
+            .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
+            .addParameter("condition", "the condition")
+            .addParameter("function", "the function to apply")
+            .setReturnsDescription("this builder")
+            .toJavaDoc());
     private final BuildMethodGenerator buildMethodGenerator;
 
     /**

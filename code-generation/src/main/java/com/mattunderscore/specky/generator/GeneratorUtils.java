@@ -67,56 +67,6 @@ public final class GeneratorUtils {
         .setMethodDescription("Factory method for builder.")
         .setReturnsDescription("a new builder for $L")
         .toJavaDoc();
-    /**
-     * Javadoc for mutable builder configurator.
-     */
-    public static final String MUTABLE_BUILDER_SETTER = docMethod()
-        .setMethodDescription("Method to configure property $L on the builder.")
-        .setReturnsDescription("this builder")
-        .toJavaDoc();
-    /**
-     * Javadoc for immutable builder configurator.
-     */
-    public static final String IMMUTABLE_BUILDER_SETTER = docMethod()
-        .setMethodDescription("Method to configure property $L on the builder.")
-        .setReturnsDescription("a new builder")
-        .toJavaDoc();
-    /**
-     * Javadoc for conditional mutable builder configurator.
-     */
-    public static final String SUPPLIER_CONDITIONAL_MUTABLE_BUILDER_SETTER = docMethod()
-        .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
-        .addParameter("condition", "the condition to evaluate")
-        .addParameter("function", "the function to apply")
-        .setReturnsDescription("this builder")
-        .toJavaDoc();
-    /**
-     * Javadoc for conditional immutable builder configurator.
-     */
-    public static final String SUPPLIER_CONDITIONAL_IMMUTABLE_BUILDER_SETTER = docMethod()
-        .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
-        .addParameter("condition", "the condition to evaluate")
-        .addParameter("function", "the function to apply")
-        .setReturnsDescription("a new builder if the condition is {@code true}, otherwise this builder")
-        .toJavaDoc();
-    /**
-     * Javadoc for conditional mutable builder configurator.
-     */
-    public static final String BOOLEAN_CONDITIONAL_MUTABLE_BUILDER_SETTER = docMethod()
-        .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
-        .addParameter("condition", "the condition")
-        .addParameter("function", "the function to apply")
-        .setReturnsDescription("this builder")
-        .toJavaDoc();
-    /**
-     * Javadoc for conditional immutable builder configurator.
-     */
-    public static final String BOOLEAN_CONDITIONAL_IMMUTABLE_BUILDER_SETTER = docMethod()
-        .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
-        .addParameter("condition", "the condition")
-        .addParameter("function", "the function to apply")
-        .setReturnsDescription("a new builder if the condition is {@code true}, otherwise this builder")
-        .toJavaDoc();
 
     private GeneratorUtils() {
     }
