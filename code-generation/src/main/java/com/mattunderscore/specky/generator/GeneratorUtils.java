@@ -40,13 +40,7 @@ import com.squareup.javapoet.TypeName;
  * Generator utilities.
  * @author Matt Champion on 11/06/2016
  */
-/*package*/ final class GeneratorUtils {
-    /**
-     * Javadoc for constructor.
-     */
-    public static final String CONSTRUCTOR_DOC = docMethod()
-        .setMethodDescription("Constructor.")
-        .toJavaDoc();
+public final class GeneratorUtils {
     /**
      * Javadoc for getter.
      */

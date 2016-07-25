@@ -23,46 +23,32 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.generator;
+package com.mattunderscore.specky.generator.constructor;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.CONSTRUCTOR_DOC;
-import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
+import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
-import static javax.lang.model.element.Modifier.FINAL;
-import static javax.lang.model.element.Modifier.PRIVATE;
+import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.model.PropertyDesc;
+import com.mattunderscore.specky.generator.MethodGeneratorForType;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
-import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterSpec;
-import com.squareup.javapoet.TypeName;
 
 /**
- * Generator for constructor used by builders.
- * @author Matt Champion on 09/07/2016
+ * Empty constructor generator.
+ * <P>
+ * Does not set any fields.
+ *
+ * @author Matt Champion on 10/07/2016
  */
-public final class ConstructorForBuiltTypeGenerator implements MethodGeneratorForType {
+public final class EmptyConstructorGenerator implements MethodGeneratorForType {
     @Override
     public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
-        final MethodSpec.Builder constructor = constructorBuilder()
-            .addModifiers(PRIVATE)
-            .addJavadoc(CONSTRUCTOR_DOC);
-
-        typeDesc.getProperties().forEach(property -> addProperty(constructor, property));
-
-        return constructor.build();
-    }
-
-    private void addProperty(MethodSpec.Builder constructor, PropertyDesc property) {
-        final TypeName type = getType(property);
-        final ParameterSpec constructorParameter = ParameterSpec.builder(type, property.getName()).build();
-        constructor
-            .addParameter(constructorParameter)
-            .addStatement(
-                "this.$N = $N",
-                FieldSpec.builder(type, property.getName(), PRIVATE, FINAL).build(),
-                constructorParameter);
+        return constructorBuilder()
+            .addModifiers(PUBLIC)
+            .addJavadoc(docMethod()
+                .setMethodDescription("Constructor.")
+                .toJavaDoc())
+            .build();
     }
 }

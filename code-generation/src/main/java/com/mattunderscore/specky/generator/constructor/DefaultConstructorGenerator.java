@@ -23,15 +23,16 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.generator;
+package com.mattunderscore.specky.generator.constructor;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.CONSTRUCTOR_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
+import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
+import com.mattunderscore.specky.generator.MethodGeneratorForType;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.FieldSpec;
@@ -40,19 +41,18 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 
 /**
- * All property constructor generator.
- * <P>
- * All properties must be passed in by parameters.
- *
+ * Default constructor generator.
  * @author Matt Champion on 13/06/2016
  */
-public final class AllPropertiesConstructorGenerator implements MethodGeneratorForType {
+public final class DefaultConstructorGenerator implements MethodGeneratorForType {
 
     @Override
     public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
         final MethodSpec.Builder constructor = constructorBuilder()
             .addModifiers(PUBLIC)
-            .addJavadoc(CONSTRUCTOR_DOC);
+            .addJavadoc(docMethod()
+                .setMethodDescription("Default constructor.")
+                .toJavaDoc());
 
         typeDesc
             .getProperties()
@@ -61,11 +61,20 @@ public final class AllPropertiesConstructorGenerator implements MethodGeneratorF
                 final TypeName type = getType(propertyDesc);
                 final FieldSpec fieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build();
 
-                final ParameterSpec constructorParameter = ParameterSpec.builder(type, propertyDesc.getName()).build();
+                final String defaultValue = propertyDesc.getDefaultValue();
 
-                constructor
-                    .addParameter(constructorParameter)
-                    .addStatement("this.$N = $N", fieldSpec, constructorParameter);
+                if (defaultValue == null) {
+                    // If the property does not have a default value add a parameter
+                    final ParameterSpec constructorParameter = ParameterSpec.builder(type, propertyDesc.getName()).build();
+                    constructor
+                        .addParameter(constructorParameter)
+                        .addStatement("this.$N = $N", fieldSpec, constructorParameter);
+                }
+                else {
+                    // If the property has a default value use it
+                    constructor
+                        .addStatement("this.$N = $L", fieldSpec, defaultValue);
+                }
             });
 
         return constructor.build();
