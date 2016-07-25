@@ -25,6 +25,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
+import java.util.List;
+
 import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
@@ -35,7 +37,7 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 10/07/2016
  */
 public final class ConstructionMethodAppender implements TypeAppender {
-    private final MethodGeneratorForType constructorGenerator;
+    private final List<MethodGeneratorForType> constructorGenerators;
     private final TypeAppender mutableBuilderAppender;
     private final TypeAppender immutableBuilderAppender;
 
@@ -43,10 +45,10 @@ public final class ConstructionMethodAppender implements TypeAppender {
      * Constructor.
      */
     public ConstructionMethodAppender(
-            MethodGeneratorForType constructorGenerator,
+            List<MethodGeneratorForType> constructorGenerators,
             TypeAppender mutableBuilderAppender,
             TypeAppender immutableBuilderAppender) {
-        this.constructorGenerator = constructorGenerator;
+        this.constructorGenerators = constructorGenerators;
         this.mutableBuilderAppender = mutableBuilderAppender;
         this.immutableBuilderAppender = immutableBuilderAppender;
     }
@@ -54,7 +56,8 @@ public final class ConstructionMethodAppender implements TypeAppender {
     @Override
     public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
         if (valueDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR) {
-            typeSpecBuilder.addMethod(constructorGenerator.generate(specDesc, valueDesc));
+            constructorGenerators.forEach(generator -> typeSpecBuilder
+                .addMethod(generator.generate(specDesc, valueDesc)));
         }
         else if (valueDesc.getConstructionMethod() == ConstructionMethod.MUTABLE_BUILDER) {
             mutableBuilderAppender.append(typeSpecBuilder, specDesc, valueDesc);

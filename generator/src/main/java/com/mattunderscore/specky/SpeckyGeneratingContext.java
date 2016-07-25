@@ -43,6 +43,7 @@ import com.mattunderscore.specky.generator.BuildMethodGenerator;
 import com.mattunderscore.specky.generator.BuilderInitialiser;
 import com.mattunderscore.specky.generator.CodeStyle;
 import com.mattunderscore.specky.generator.ConstructionMethodAppender;
+import com.mattunderscore.specky.generator.DefaultConstructorGenerator;
 import com.mattunderscore.specky.generator.EqualsGenerator;
 import com.mattunderscore.specky.generator.Generator;
 import com.mattunderscore.specky.generator.HashCodeGenerator;
@@ -134,7 +135,7 @@ public final class SpeckyGeneratingContext {
                 new ValueGenerator(
                     new ValueInitialiser(),
                     new ConstructionMethodAppender(
-                        new ValueConstructorGenerator(),
+                        asList(new ValueConstructorGenerator(), new DefaultConstructorGenerator()),
                         mutableBuilderGenerator,
                         immutableBuilderGenerator),
                     superTypeAppender,
@@ -143,7 +144,7 @@ public final class SpeckyGeneratingContext {
                 new BeanGenerator(
                     new BeanInitialiser(),
                     new ConstructionMethodAppender(
-                        new BeanConstructorGenerator(),
+                        singletonList(new BeanConstructorGenerator()),
                         mutableBuilderGenerator,
                         immutableBuilderGenerator),
                     superTypeAppender,

@@ -38,6 +38,13 @@ value PersonValue {
     }
 }
 
+value PersonValueWithDefaultConstructor : PersonType {
+    int id default 5
+    options {
+        constructor
+    }
+}
+
 value StrangePersonValue {
     int id default 5
     optional String name

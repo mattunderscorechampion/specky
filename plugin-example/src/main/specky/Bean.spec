@@ -33,6 +33,13 @@ bean PersonBean : PersonType {
     }
 }
 
+bean PersonBeanWithDefaultConstructor : PersonType {
+    int id default 5
+    options {
+        constructor
+    }
+}
+
 bean StrangePersonBean {
     Integer id default 5
     String name
