@@ -25,9 +25,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
-import static com.mattunderscore.specky.generator.ToStringGenerator.COMMA_AND_SPACE_SEPARATOR;
-import static com.mattunderscore.specky.generator.ToStringGenerator.SIMPLE_PROPERTY_FORMATTER;
-import static com.mattunderscore.specky.generator.ToStringGenerator.SQUARE_BRACKETS;
+import static com.mattunderscore.specky.generator.object.method.ToStringGenerator.COMMA_AND_SPACE_SEPARATOR;
+import static com.mattunderscore.specky.generator.object.method.ToStringGenerator.SIMPLE_PROPERTY_FORMATTER;
+import static com.mattunderscore.specky.generator.object.method.ToStringGenerator.SQUARE_BRACKETS;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
@@ -44,14 +44,14 @@ import com.mattunderscore.specky.generator.BuilderInitialiser;
 import com.mattunderscore.specky.generator.CodeStyle;
 import com.mattunderscore.specky.generator.ConstructionMethodAppender;
 import com.mattunderscore.specky.generator.constructor.DefaultConstructorGenerator;
-import com.mattunderscore.specky.generator.EqualsGenerator;
+import com.mattunderscore.specky.generator.object.method.EqualsGenerator;
 import com.mattunderscore.specky.generator.Generator;
-import com.mattunderscore.specky.generator.HashCodeGenerator;
+import com.mattunderscore.specky.generator.object.method.HashCodeGenerator;
 import com.mattunderscore.specky.generator.ImmutableBuilderGenerator;
 import com.mattunderscore.specky.generator.MutableBuilderGenerator;
 import com.mattunderscore.specky.generator.MutatorGenerator;
 import com.mattunderscore.specky.generator.SuperTypeAppender;
-import com.mattunderscore.specky.generator.ToStringGenerator;
+import com.mattunderscore.specky.generator.object.method.ToStringGenerator;
 import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.TypeInitialiser;
 import com.mattunderscore.specky.generator.constructor.AllPropertiesConstructorGenerator;
