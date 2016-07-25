@@ -42,20 +42,6 @@ import com.squareup.javapoet.TypeName;
  */
 public final class GeneratorUtils {
     /**
-     * Javadoc for getter.
-     */
-    public static final String GETTER_DOC = docMethod()
-        .setMethodDescription("Getter for the property $1L.")
-        .setReturnsDescription("the value of $1L")
-        .toJavaDoc();
-    /**
-     * Javadoc for accessor.
-     */
-    public static final String SETTER_DOC = docMethod()
-        .setMethodDescription("Setter for the property $1L.")
-        .addParameter("$2L", "the new value of $1L")
-        .toJavaDoc();
-    /**
      * Javadoc for type.
      */
     public static final String TYPE_DOC = docType()

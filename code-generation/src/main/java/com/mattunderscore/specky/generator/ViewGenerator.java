@@ -25,9 +25,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.GETTER_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.TYPE_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
+import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static com.squareup.javapoet.TypeSpec.interfaceBuilder;
 import static java.lang.Character.toUpperCase;
@@ -55,7 +55,12 @@ public final class ViewGenerator {
         for (final PropertyDesc view : typeDesc.getProperties()) {
             builder
                 .addMethod(methodBuilder(getAccessorName(view.getName()))
-                    .addJavadoc(GETTER_DOC, view.getName())
+                    .addJavadoc(
+                        docMethod()
+                            .setMethodDescription("Getter for the property $1L.")
+                            .setReturnsDescription("the value of $1L")
+                            .toJavaDoc(),
+                        view.getName())
                     .addModifiers(ABSTRACT, PUBLIC)
                     .returns(getType(view))
                     .build());
