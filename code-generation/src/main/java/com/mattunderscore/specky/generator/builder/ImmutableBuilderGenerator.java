@@ -25,7 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.builder;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_FACTORY;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
@@ -112,7 +111,12 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
             .addMethod(methodBuilder("builder")
                 .returns(ClassName.get(valueDesc.getPackageName(), valueDesc.getName(), "Builder"))
                 .addModifiers(PUBLIC, STATIC)
-                .addJavadoc(BUILDER_FACTORY, valueDesc.getName())
+                .addJavadoc(
+                    docMethod()
+                        .setMethodDescription("Factory method for builder.")
+                        .setReturnsDescription("a new builder for $L")
+                        .toJavaDoc(),
+                    valueDesc.getName())
                 .addStatement(defaultBuilder(valueDesc))
                 .build())
             .addMethod(constructorGenerator.generate(specDesc, valueDesc))

@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.builder;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.BUILDER_TYPE_DOC;
+import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
 import static com.squareup.javapoet.TypeSpec.classBuilder;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
@@ -45,6 +45,10 @@ public final class BuilderInitialiser implements TypeInitialiser {
     public TypeSpec.Builder create(SpecDesc specDesc, TypeDesc typeDesc) {
         return classBuilder("Builder")
             .addModifiers(PUBLIC, FINAL, STATIC)
-            .addJavadoc(BUILDER_TYPE_DOC, typeDesc.getName());
+            .addJavadoc(
+                docType()
+                    .setDescription("The builder for $L.")
+                    .toJavaDoc(),
+                typeDesc.getName());
     }
 }

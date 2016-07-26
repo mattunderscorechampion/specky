@@ -25,8 +25,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.builder;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.BUILD_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
+import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
@@ -52,7 +52,12 @@ public final class BuildMethodGenerator implements MethodGeneratorForType {
         final MethodSpec.Builder buildMethod = methodBuilder("build")
             .addModifiers(PUBLIC)
             .returns(ClassName.get(valueDesc.getPackageName(), valueDesc.getName()))
-            .addJavadoc(BUILD_DOC, valueDesc.getName());
+            .addJavadoc(
+                docMethod()
+                    .setMethodDescription("Build an instance of $1L.")
+                    .setReturnsDescription("a new instance of $1L")
+                    .toJavaDoc(),
+                valueDesc.getName());
         addValidationStatements(buildMethod, valueDesc);
         addReturnStatement(buildMethod, valueDesc);
         return buildMethod.build();

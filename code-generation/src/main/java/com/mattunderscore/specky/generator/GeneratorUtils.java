@@ -25,9 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
-import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,26 +38,6 @@ import com.squareup.javapoet.TypeName;
  * @author Matt Champion on 11/06/2016
  */
 public final class GeneratorUtils {
-    /**
-     * Javadoc for builder.
-     */
-    public static final String BUILDER_TYPE_DOC = docType()
-        .setDescription("The builder for $L.")
-        .toJavaDoc();
-    /**
-     * Javadoc for build method.
-     */
-    public static final String BUILD_DOC = docMethod()
-        .setMethodDescription("Build an instance of $1L.")
-        .setReturnsDescription("a new instance of $1L")
-        .toJavaDoc();
-    /**
-     * Javadoc for builder factory.
-     */
-    public static final String BUILDER_FACTORY = docMethod()
-        .setMethodDescription("Factory method for builder.")
-        .setReturnsDescription("a new builder for $L")
-        .toJavaDoc();
 
     private GeneratorUtils() {
     }
