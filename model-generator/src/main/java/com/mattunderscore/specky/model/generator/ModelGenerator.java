@@ -25,6 +25,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator;
 
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLViewDesc;
@@ -34,14 +42,6 @@ import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ViewDesc;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
-
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 
 /**
  * Generator for the model from the DSL model.
@@ -132,7 +132,9 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                 .stream()
                 .map(typeResolver::resolveOrThrow)
                 .collect(toList()))
-            .defaultValue(defaultValue == null ? valueResolver.resolve(resolvedType).get() : defaultValue)
+            .defaultValue(defaultValue == null && !dslPropertyDesc.isOptionalProperty() ?
+                valueResolver.resolve(resolvedType).get() :
+                defaultValue)
             .optionalProperty(dslPropertyDesc.isOptionalProperty())
             .override(true)
             .build();

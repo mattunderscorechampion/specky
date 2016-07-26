@@ -25,6 +25,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator;
 
+import static java.util.stream.Collectors.toList;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
@@ -37,14 +45,6 @@ import com.mattunderscore.specky.model.ValueDesc;
 import com.mattunderscore.specky.model.ViewDesc;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * Fully derive a type from its superinterfaces.
@@ -192,7 +192,10 @@ public final class TypeDeriver {
                 .stream()
                 .map(typeResolver::resolveOrThrow)
                 .collect(toList()))
-            .defaultValue(defaultValue == null ? valueResolver.resolve(resolvedType).get() : defaultValue)
+            .defaultValue(
+                defaultValue == null && !dslPropertyDesc.isOptionalProperty() ?
+                    valueResolver.resolve(resolvedType).get() :
+                    defaultValue)
             .optionalProperty(dslPropertyDesc.isOptionalProperty())
             .override(false)
             .build();

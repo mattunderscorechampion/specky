@@ -88,7 +88,7 @@ public final class ModelGeneratorTest {
                     .name("objectProp")
                     .typeName("Object")
                     .typeParameters(emptyList())
-                    .defaultValue("null")
+                    .defaultValue("Integer.ZERO")
                     .optionalProperty(false)
                     .build()))
                 .build()))
@@ -135,6 +135,6 @@ public final class ModelGeneratorTest {
         assertEquals("objectProp", property1.getName());
         assertEquals("java.lang.Object", property1.getTypeName());
         assertTrue(property1.isOverride());
-        assertEquals("null", property1.getDefaultValue());
+        assertEquals("Integer.ZERO", property1.getDefaultValue());
     }
 }
