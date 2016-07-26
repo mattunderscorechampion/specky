@@ -25,9 +25,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.TYPE_DOC;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
+import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static com.squareup.javapoet.TypeSpec.interfaceBuilder;
 import static java.lang.Character.toUpperCase;
@@ -50,7 +50,11 @@ public final class ViewGenerator {
     public TypeSpec generateView(ViewDesc typeDesc) {
         final TypeSpec.Builder builder = interfaceBuilder(typeDesc.getName())
             .addModifiers(PUBLIC)
-            .addJavadoc(TYPE_DOC, "View", typeDesc.getName());
+            .addJavadoc(
+                docType()
+                    .setDescription("View type $L.\n\nAuto-generated from specification.")
+                    .toJavaDoc(),
+                typeDesc.getName());
 
         for (final PropertyDesc view : typeDesc.getProperties()) {
             builder

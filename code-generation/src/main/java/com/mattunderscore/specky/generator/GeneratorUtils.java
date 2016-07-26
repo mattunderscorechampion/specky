@@ -42,12 +42,6 @@ import com.squareup.javapoet.TypeName;
  */
 public final class GeneratorUtils {
     /**
-     * Javadoc for type.
-     */
-    public static final String TYPE_DOC = docType()
-        .setDescription("$L type $L.\n\nAuto-generated from specification.")
-        .toJavaDoc();
-    /**
      * Javadoc for builder.
      */
     public static final String BUILDER_TYPE_DOC = docType()

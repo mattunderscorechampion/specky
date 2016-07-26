@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.TYPE_DOC;
+import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
@@ -43,6 +43,10 @@ public final class ValueInitialiser implements TypeInitialiser {
         return TypeSpec
             .classBuilder(typeDesc.getName())
             .addModifiers(PUBLIC, FINAL)
-            .addJavadoc(TYPE_DOC, "Value", typeDesc.getName());
+            .addJavadoc(
+                docType()
+                    .setDescription("Value type $L.\n\nAuto-generated from specification.")
+                    .toJavaDoc(),
+                typeDesc.getName());
     }
 }
