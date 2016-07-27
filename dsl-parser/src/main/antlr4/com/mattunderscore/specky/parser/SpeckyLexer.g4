@@ -117,10 +117,11 @@ LetterOrDigit
     ;
 
 INLINE_WS
-    : [ \t]+ -> skip
+    : [ \t]+ -> channel(HIDDEN)
     ;
 
-WS  :  [ \t\r\n\u000C]+ -> skip
+LINE_BREAK
+    : [\r\n]+ -> channel(HIDDEN)
     ;
 
 LINE_COMMENT

@@ -38,11 +38,11 @@ default_value
     ;
 
 typeParameters
-    : OPEN_TYPE_PARAMETERS Identifier+ CLOSE_TYPE_PARAMETERS
+    : OPEN_TYPE_PARAMETERS Identifier (INLINE_WS+ Identifier)* CLOSE_TYPE_PARAMETERS
     ;
 
 property
-    : OPTIONAL? Identifier typeParameters? Identifier default_value?
+    : (OPTIONAL INLINE_WS+)? Identifier typeParameters? INLINE_WS+ Identifier (INLINE_WS+ default_value)?
     ;
 
 qualifiedName
@@ -50,25 +50,34 @@ qualifiedName
     ;
 
 package_name
-    : PACKAGE qualifiedName
+    : PACKAGE INLINE_WS+ qualifiedName
     ;
 
 imports
-    : IMPORT OPEN_BLOCK qualifiedName + CLOSE_BLOCK
+    : IMPORT INLINE_WS+ OPEN_BLOCK LINE_BREAK (INLINE_WS* qualifiedName)+ LINE_BREAK CLOSE_BLOCK
     ;
 
 opts
-    : OPTIONS OPEN_BLOCK construction? CLOSE_BLOCK
+    : OPTIONS INLINE_WS+ OPEN_BLOCK LINE_BREAK
+        INLINE_WS* construction? LINE_BREAK
+        INLINE_WS* CLOSE_BLOCK LINE_BREAK
     ;
 
 implementationSpec
-    : (VALUE | BEAN ) Identifier (EXTENDS Identifier)? OPEN_BLOCK (property)* opts? CLOSE_BLOCK
+    : (VALUE | BEAN ) INLINE_WS+ Identifier INLINE_WS+ (EXTENDS INLINE_WS+ Identifier INLINE_WS+)? OPEN_BLOCK LINE_BREAK
+        (INLINE_WS* property LINE_BREAK)*
+        (INLINE_WS* opts)? INLINE_WS* CLOSE_BLOCK
     ;
 
 typeSpec
-    : TYPE Identifier OPEN_BLOCK (property)* CLOSE_BLOCK
+    : TYPE INLINE_WS+ Identifier INLINE_WS+ OPEN_BLOCK LINE_BREAK
+        (INLINE_WS+ property LINE_BREAK)*
+        INLINE_WS* CLOSE_BLOCK
     ;
 
 spec
-    : package_name imports? (typeSpec | implementationSpec)+
+    : (LINE_BREAK | INLINE_WS)*
+        package_name (LINE_BREAK | INLINE_WS)+
+        (imports (LINE_BREAK | INLINE_WS)+)?
+        ((typeSpec | implementationSpec) LINE_BREAK+)+
     ;
