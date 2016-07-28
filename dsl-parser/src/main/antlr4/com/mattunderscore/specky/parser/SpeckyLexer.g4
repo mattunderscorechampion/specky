@@ -117,7 +117,7 @@ LetterOrDigit
     ;
 
 INLINE_WS
-    : [ \t]+ -> channel(HIDDEN)
+    : [ ]+ -> channel(HIDDEN)
     ;
 
 LINE_BREAK
@@ -135,7 +135,7 @@ Identifier
 mode LITERAL;
 
 INLINE_WS_2
-    : [ \t]+ -> skip
+    : [ ]+ -> skip
     ;
 
 ANYTHING
