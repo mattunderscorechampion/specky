@@ -54,19 +54,22 @@ package_name
     ;
 
 imports
-    : IMPORT INLINE_WS+ OPEN_BLOCK LINE_BREAK (INLINE_WS* qualifiedName)+ LINE_BREAK CLOSE_BLOCK
+    : IMPORT INLINE_WS+ OPEN_BLOCK LINE_BREAK
+        (INLINE_WS* qualifiedName)+ LINE_BREAK
+        CLOSE_BLOCK
     ;
 
 opts
     : OPTIONS INLINE_WS+ OPEN_BLOCK LINE_BREAK
         INLINE_WS* construction? LINE_BREAK
-        INLINE_WS* CLOSE_BLOCK LINE_BREAK
+        INLINE_WS* CLOSE_BLOCK
     ;
 
 implementationSpec
     : (VALUE | BEAN ) INLINE_WS+ Identifier INLINE_WS+ (EXTENDS INLINE_WS+ Identifier INLINE_WS+)? OPEN_BLOCK LINE_BREAK
         (INLINE_WS* property LINE_BREAK)*
-        (INLINE_WS* opts)? INLINE_WS* CLOSE_BLOCK
+        (INLINE_WS* opts LINE_BREAK)?
+        INLINE_WS* CLOSE_BLOCK
     ;
 
 typeSpec
