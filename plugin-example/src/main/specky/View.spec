@@ -26,11 +26,13 @@
 
 package com.example
 
-type PersonType {
-    int id
-    String name
-}
+type PersonType
+    properties
+        int id
+        String name
 
-type TypeWithDefault {
-    int number default 6
-}
+
+type TypeWithDefault
+    properties
+        int number default 6
+

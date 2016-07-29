@@ -28,59 +28,60 @@ parser grammar Specky;
 options { tokenVocab=SpeckyLexer; }
 
 construction
-    : CONSTRUCTOR
-    | MUTABLE_BUILDER
-    | IMMUTABLE_BUILDER
+    :   CONSTRUCTOR
+    |   MUTABLE_BUILDER
+    |   IMMUTABLE_BUILDER
     ;
 
 default_value
-    : DEFAULT ANYTHING
+    :    DEFAULT ANYTHING
     ;
 
 typeParameters
-    : OPEN_TYPE_PARAMETERS Identifier (INLINE_WS+ Identifier)* CLOSE_TYPE_PARAMETERS
+    :   OPEN_TYPE_PARAMETERS Identifier (INLINE_WS Identifier)* CLOSE_TYPE_PARAMETERS
     ;
 
 property
-    : (OPTIONAL INLINE_WS+)? Identifier typeParameters? INLINE_WS+ Identifier (INLINE_WS+ default_value)?
+    :   (OPTIONAL INLINE_WS)? Identifier typeParameters? INLINE_WS Identifier (INLINE_WS default_value)?
     ;
 
 qualifiedName
-    : Identifier (PACKAGE_SEPARATOR Identifier)*
+    :   Identifier (PACKAGE_SEPARATOR Identifier)*
     ;
 
 package_name
-    : PACKAGE INLINE_WS+ qualifiedName
+    :   PACKAGE INLINE_WS qualifiedName
     ;
 
 imports
-    : IMPORT INLINE_WS+ OPEN_BLOCK LINE_BREAK
-        (INLINE_WS* qualifiedName)+ LINE_BREAK
-        CLOSE_BLOCK
+    :   IMPORT LINE_BREAK
+        (INLINE_WS? qualifiedName LINE_BREAK)+
+    ;
+
+props
+    :   PROPERTIES LINE_BREAK
+        (INLINE_WS? property LINE_BREAK)+
     ;
 
 opts
-    : OPTIONS INLINE_WS+ OPEN_BLOCK LINE_BREAK
-        INLINE_WS* construction? LINE_BREAK
-        INLINE_WS* CLOSE_BLOCK
+    :   OPTIONS LINE_BREAK
+        INLINE_WS? construction? LINE_BREAK
     ;
 
 implementationSpec
-    : (VALUE | BEAN ) INLINE_WS+ Identifier INLINE_WS+ (EXTENDS INLINE_WS+ Identifier INLINE_WS+)? OPEN_BLOCK LINE_BREAK
-        (INLINE_WS* property LINE_BREAK)*
-        (INLINE_WS* opts LINE_BREAK)?
-        INLINE_WS* CLOSE_BLOCK
+    :   (VALUE | BEAN ) INLINE_WS Identifier (INLINE_WS EXTENDS INLINE_WS Identifier)? LINE_BREAK
+        (INLINE_WS? props)?
+        (INLINE_WS? opts)?
     ;
 
 typeSpec
-    : TYPE INLINE_WS+ Identifier INLINE_WS+ OPEN_BLOCK LINE_BREAK
-        (INLINE_WS+ property LINE_BREAK)*
-        INLINE_WS* CLOSE_BLOCK
+    :   TYPE INLINE_WS Identifier LINE_BREAK
+        (INLINE_WS? props)?
     ;
 
 spec
-    : (LINE_BREAK | INLINE_WS)*
-        package_name (LINE_BREAK | INLINE_WS)+
-        (imports (LINE_BREAK | INLINE_WS)+)?
-        ((typeSpec | implementationSpec) LINE_BREAK+)+
+    :   LINE_BREAK*
+        package_name LINE_BREAK*
+        (imports LINE_BREAK*)?
+        ((typeSpec | implementationSpec) LINE_BREAK*)+
     ;

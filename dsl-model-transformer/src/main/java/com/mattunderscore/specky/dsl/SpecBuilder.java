@@ -25,14 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.dsl;
 
-import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
-
-import java.util.List;
-
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
@@ -48,6 +40,13 @@ import com.mattunderscore.specky.parser.Specky.QualifiedNameContext;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.Specky.TypeParametersContext;
 import com.mattunderscore.specky.parser.Specky.TypeSpecContext;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
+import java.util.List;
+
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Processor for the ANTLR4 generated AST. Returns a better representation of the DSL.
@@ -93,70 +92,60 @@ public final class SpecBuilder {
     }
 
     private DSLTypeDesc createType(ImplementationSpecContext context) {
-        if (context.BEAN() == null) {
-            final DSLValueDesc.Builder valueDescBuilder = DSLValueDesc
-                .builder()
-                .name(context.Identifier().get(0).getText())
-                .properties(context
-                    .property()
-                    .stream()
-                    .map(this::createProperty)
-                    .collect(toList()))
-                .constructionMethod(toConstructionDesc(context));
-
-            if (context.Identifier().size() > 1) {
-                valueDescBuilder
-                    .supertypes(context
-                        .Identifier()
-                        .subList(1, context.Identifier().size())
-                        .stream()
-                        .map(TerminalNode::getText)
-                        .collect(toList()));
-            }
-            else {
-                valueDescBuilder.supertypes(emptyList());
-            }
-
-            return valueDescBuilder.build();
+        final String typeName = context.Identifier().get(0).getText();
+        final List<DSLPropertyDesc> properties = context.props() == null ?
+            emptyList() :
+            context
+                .props()
+                .property()
+                .stream()
+                .map(this::createProperty)
+                .collect(toList());
+        final DSLConstructionMethod constructionMethod = toConstructionDesc(context);
+        final List<String> supertypes;
+        if (context.Identifier().size() > 1) {
+            supertypes = context
+                .Identifier()
+                .subList(1, context.Identifier().size())
+                .stream()
+                .map(TerminalNode::getText)
+                .collect(toList());
         }
         else {
-            final DSLBeanDesc.Builder beanDescBuilder = DSLBeanDesc
+            supertypes = emptyList();
+        }
+        if (context.BEAN() == null) {
+            return DSLValueDesc
                 .builder()
-                .name(context.Identifier().get(0).getText())
-                .properties(context
-                    .property()
-                    .stream()
-                    .map(this::createProperty)
-                    .collect(toList()))
-                .constructionMethod(toConstructionDesc(context));
-
-            if (context.Identifier().size() > 1) {
-                beanDescBuilder
-                    .supertypes(context
-                        .Identifier()
-                        .subList(1, context.Identifier().size())
-                        .stream()
-                        .map(TerminalNode::getText)
-                        .collect(toList()));
-            }
-            else {
-                beanDescBuilder.supertypes(emptyList());
-            }
-
-            return beanDescBuilder
-                .build();
+                .name(typeName)
+                .properties(properties)
+                .constructionMethod(constructionMethod)
+                .supertypes(supertypes).build();
+        }
+        else {
+            return DSLBeanDesc
+                .builder()
+                .name(typeName)
+                .properties(properties)
+                .constructionMethod(constructionMethod)
+                .supertypes(supertypes).build();
         }
     }
 
     private DSLViewDesc createView(TypeSpecContext context) {
-            return DSLViewDesc
+        final String typeName = context.Identifier().getText();
+        final List<DSLPropertyDesc> properties = context.props() == null ?
+            emptyList() :
+            context
+                .props()
+                .property()
+                .stream()
+                .map(this::createProperty)
+                .collect(toList());
+        return DSLViewDesc
                 .builder()
-                .name(context.Identifier().getText())
-                .properties(context
-                    .property()
-                    .stream()
-                    .map(this::createProperty)
-                    .collect(toList()))
+                .name(typeName)
+                .properties(properties)
                 .build();
         }
 

@@ -26,31 +26,28 @@
 
 package com.example
 
-bean PersonBean : PersonType {
-    long birthTimestamp
-    options {
-        constructor
-    }
-}
 
-bean PersonBeanWithDefaultConstructor : PersonType {
-    int id default 5
-    options {
+bean PersonBean : PersonType
+    properties
+        long birthTimestamp
+    options
         constructor
-    }
-}
 
-bean StrangePersonBean {
-    Integer id default 5
-    String name
-    options {
+bean PersonBeanWithDefaultConstructor : PersonType
+    properties
+        int id default 5
+    options
+        constructor
+
+bean StrangePersonBean
+    properties
+        Integer id default 5
+        String name
+    options
         builder
-    }
-}
 
-bean BeanWithList {
-    List<String> names
-}
+bean BeanWithList
+    properties
+        List<String> names
 
-bean BeanPersonType : PersonType {
-}
+bean BeanPersonType : PersonType

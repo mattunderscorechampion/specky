@@ -26,55 +26,53 @@
 
 package com.example
 
-imports {
+imports
     com.mattunderscore.example.ExtraType
-}
 
-value PersonValue {
-    Integer id default 5
-    String name
-    options {
+
+value PersonValue
+    properties
+        Integer id default 5
+        String name
+    options
         immutable builder
-    }
-}
 
-value PersonValueWithDefaultConstructor : PersonType {
-    int id default 5
-    options {
+value PersonValueWithDefaultConstructor : PersonType
+    properties
+        int id default 5
+    options
         constructor
-    }
-}
 
-value StrangePersonValue {
-    int id default 5
-    optional String name
-    options {
+value StrangePersonValue
+    properties
+        int id default 5
+        optional String name
+    options
         builder
-    }
-}
 
-value ConstructorValue : PersonType {
-    long birthTimestamp
-}
+value ConstructorValue : PersonType
+    properties
+        long birthTimestamp
 
-value ValueWithList {
-    List<String> names
-    options {
+
+value ValueWithList
+    properties
+        List<String> names
+    options
         builder
-    }
-}
 
-value ValueWithExtraType {
-    ExtraType extra
-}
+value ValueWithExtraType
+    properties
+        ExtraType extra
 
-value IsValue {
-    boolean val
-}
 
-value ValueOverridingDefault : TypeWithDefault {
-    int number default 10
-    options {
+value IsValue
+    properties
+        boolean val
+
+
+value ValueOverridingDefault : TypeWithDefault
+    properties
+        int number default 10
+    options
         builder
-    }
-}

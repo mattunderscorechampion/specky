@@ -93,6 +93,10 @@ IMPORT
     : 'imports'
     ;
 
+PROPERTIES
+    : 'properties'
+    ;
+
 fragment
 UpperCaseLetter
     :   [A-Z]
@@ -121,7 +125,7 @@ INLINE_WS
     ;
 
 LINE_BREAK
-    : [\r\n]+ -> channel(HIDDEN)
+    : ('\n' | '\r\n') -> channel(HIDDEN)
     ;
 
 LINE_COMMENT

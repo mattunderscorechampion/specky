@@ -26,35 +26,34 @@
 
 package com.example
 
-type TestType {
-  Integer num
-}
+type TestType
+  properties
+    Integer num
 
-value FirstValue : TestType {
-  Integer num
-  String str
-}
 
-value SecondValue {
-  Integer num
-  Double dbl
-  options {
-      builder
-    }
-}
+value FirstValue : TestType
+  properties
+    Integer num
+    String str
 
-value ValueWithBooleans {
-  Integer num
-  Boolean boolVal
-  options {
+
+value SecondValue
+  properties
+    Integer num
+    Double dbl
+  options
+    builder
+
+value ValueWithBooleans
+  properties
+    Integer num
+    Boolean boolVal
+  options
     immutable builder
-  }
-}
 
-bean FirstBean {
-  Integer num default 5
-  String str
-  options {
+bean FirstBean
+  properties
+    Integer num default 5
+    String str
+  options
     constructor
-  }
-}

@@ -26,54 +26,48 @@
 
 package com.mattunderscore.specky.dsl.model.test
 
-imports {
+imports
     com.mattunderscore.specky.dsl.model.test.DSLConstructionMethod
-}
 
-value DSLPropertyDesc {
-    String name
-    String typeName
-    List<String> typeParameters
-    boolean optionalProperty
-    optional String defaultValue default null
-    options {
+
+value DSLPropertyDesc
+    properties
+        String name
+        String typeName
+        List<String> typeParameters
+        boolean optionalProperty
+        optional String defaultValue default null
+    options
         immutable builder
-    }
-}
 
-value DSLViewDesc {
-    String name
-    List<DSLPropertyDesc> properties
-    options {
+value DSLViewDesc
+    properties
+        String name
+        List<DSLPropertyDesc> props
+    options
         immutable builder
-    }
-}
 
-type DSLTypeDesc {
-    String name
-    List<DSLPropertyDesc> properties
-    DSLConstructionMethod constructionMethod
-    List<String> supertypes
-}
+type DSLTypeDesc
+    properties
+        String name
+        List<DSLPropertyDesc> props
+        DSLConstructionMethod constructionMethod
+        List<String> supertypes
 
-value DSLValueDesc : DSLTypeDesc {
-    options {
+
+value DSLValueDesc : DSLTypeDesc
+    options
         immutable builder
-    }
-}
 
-value DSLBeanDesc : DSLTypeDesc {
-    options {
+value DSLBeanDesc : DSLTypeDesc
+    options
         immutable builder
-    }
-}
 
-value DSLSpecDesc {
-    String packageName
-    List<String> importTypes
-    List<DSLTypeDesc> values
-    List<DSLViewDesc> views
-    options {
+value DSLSpecDesc
+    properties
+        String packageName
+        List<String> importTypes
+        List<DSLTypeDesc> values
+        List<DSLViewDesc> views
+    options
         immutable builder
-    }
-}

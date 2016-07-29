@@ -26,56 +26,49 @@
 
 package com.mattunderscore.specky.model.test
 
-imports {
+imports
     com.mattunderscore.specky.model.test.ConstructionMethod
-}
 
-value PropertyDesc {
-    String name
-    String typeName
-    List<String> typeParameters
-    boolean optionalProperty
-    boolean override
-    optional String defaultValue default null
-    options {
+value PropertyDesc
+    properties
+        String name
+        String typeName
+        List<String> typeParameters
+        boolean optionalProperty
+        boolean override
+        optional String defaultValue default null
+    options
         immutable builder
-    }
-}
 
-value ViewDesc {
-    String packageName
-    String name
-    List<PropertyDesc> properties
-    options {
+value ViewDesc
+    properties
+        String packageName
+        String name
+        List<PropertyDesc> props
+    options
         immutable builder
-    }
-}
 
-type TypeDesc {
-    String packageName
-    String name
-    List<PropertyDesc> properties
-    ConstructionMethod constructionMethod
-    List<String> supertypes
-}
+type TypeDesc
+    properties
+        String packageName
+        String name
+        List<PropertyDesc> props
+        ConstructionMethod constructionMethod
+        List<String> supertypes
 
-value ValueDesc : TypeDesc {
-    options {
+
+value ValueDesc : TypeDesc
+    options
         immutable builder
-    }
-}
 
-value BeanDesc : TypeDesc {
-    options {
+value BeanDesc : TypeDesc
+    options
         immutable builder
-    }
-}
 
-value SpecDesc {
-    List<String> importTypes
-    List<TypeDesc> values
-    List<ViewDesc> views
-    options {
+value SpecDesc
+    properties
+        List<String> importTypes
+        List<TypeDesc> values
+        List<ViewDesc> views
+    options
         immutable builder
-    }
-}
