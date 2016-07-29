@@ -34,7 +34,7 @@ construction
     ;
 
 default_value
-    :    DEFAULT ANYTHING
+    :    DEFAULT LITERAL_INLINE_WS ANYTHING
     ;
 
 typeParameters
