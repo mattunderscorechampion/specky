@@ -41,8 +41,21 @@ typeParameters
     :   OPEN_TYPE_PARAMETERS Identifier (INLINE_WS Identifier)* CLOSE_TYPE_PARAMETERS
     ;
 
+propertyName
+    :   Identifier
+    |   VALUE
+    |   BEAN
+    |   TYPE
+    |   CONSTRUCTOR
+    |   MUTABLE_BUILDER
+    |   OPTIONAL
+    |   PROPERTIES
+    |   IMPORT
+    |   OPTIONS
+    ;
+
 property
-    :   (OPTIONAL INLINE_WS)? Identifier typeParameters? INLINE_WS Identifier (INLINE_WS default_value)?
+    :   (OPTIONAL INLINE_WS)? Identifier typeParameters? INLINE_WS propertyName (INLINE_WS default_value)?
     ;
 
 qualifiedName

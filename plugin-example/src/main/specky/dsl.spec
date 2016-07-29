@@ -33,9 +33,9 @@ imports
 value DSLPropertyDesc
     properties
         String name
-        String typeName
+        String type
         List<String> typeParameters
-        boolean optionalProperty
+        boolean optional
         optional String defaultValue default null
     options
         immutable builder
@@ -43,14 +43,14 @@ value DSLPropertyDesc
 value DSLViewDesc
     properties
         String name
-        List<DSLPropertyDesc> props
+        List<DSLPropertyDesc> properties
     options
         immutable builder
 
 type DSLTypeDesc
     properties
         String name
-        List<DSLPropertyDesc> props
+        List<DSLPropertyDesc> properties
         DSLConstructionMethod constructionMethod
         List<String> supertypes
 

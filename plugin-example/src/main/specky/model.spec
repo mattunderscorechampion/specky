@@ -32,9 +32,9 @@ imports
 value PropertyDesc
     properties
         String name
-        String typeName
+        String type
         List<String> typeParameters
-        boolean optionalProperty
+        boolean optional
         boolean override
         optional String defaultValue default null
     options
@@ -44,7 +44,7 @@ value ViewDesc
     properties
         String packageName
         String name
-        List<PropertyDesc> props
+        List<PropertyDesc> properties
     options
         immutable builder
 
@@ -52,7 +52,7 @@ type TypeDesc
     properties
         String packageName
         String name
-        List<PropertyDesc> props
+        List<PropertyDesc> properties
         ConstructionMethod constructionMethod
         List<String> supertypes
 

@@ -165,12 +165,10 @@ public final class SpecBuilder {
         return DSLPropertyDesc
             .builder()
             .name(context
-                .Identifier()
-                .get(1)
+                .propertyName()
                 .getText())
             .typeName(context
                 .Identifier()
-                .get(0)
                 .getText())
             .typeParameters(typeParameters)
             .optionalProperty(context.OPTIONAL() != null)
