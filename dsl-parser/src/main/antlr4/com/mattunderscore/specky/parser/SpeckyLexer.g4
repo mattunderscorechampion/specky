@@ -53,14 +53,6 @@ OPTIONAL
     : 'optional'
     ;
 
-OPEN_BLOCK
-    : '{'
-    ;
-
-CLOSE_BLOCK
-    : '}'
-    ;
-
 OPEN_TYPE_PARAMETERS
     : '<'
     ;
