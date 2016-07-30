@@ -31,32 +31,32 @@ imports
 
 value PropertyDesc "Description of a property."
     properties
-        String name
-        String type
+        String name "Name of the property."
+        String type "Type name of the property."
         List<String> typeParameters
-        boolean optional
-        boolean override
-        optional String defaultValue default null
+        boolean optional "If the property is optional."
+        boolean override "If the property is inherited."
+        optional String defaultValue default null "The default value of the property."
     options
         immutable builder
 
 value ViewDesc "Description of a view."
     properties
-        String packageName
-        String name
-        List<PropertyDesc> properties
-        optional String description default null
+        String packageName "Name of the package the view is in."
+        String name "Name of the view."
+        List<PropertyDesc> properties "Properties of the view."
+        optional String description default null "Description of the view."
     options
         immutable builder
 
 type TypeDesc "Description of a type."
     properties
-        String packageName
-        String name
-        List<PropertyDesc> properties
-        ConstructionMethod constructionMethod
-        List<String> supertypes
-        optional String description default null
+        String packageName "Name of the package the type is in."
+        String name "Name of the type."
+        List<PropertyDesc> properties "Properties of the type."
+        ConstructionMethod constructionMethod "Construction method of the type."
+        List<String> supertypes "Supertypes of the type."
+        optional String description default null "Description of the type."
 
 
 value ValueDesc : TypeDesc "Description of a value type."
@@ -69,8 +69,8 @@ value BeanDesc : TypeDesc "Description of a bean type."
 
 value SpecDesc "Description of a specification."
     properties
-        List<String> importTypes
-        List<TypeDesc> values
-        List<ViewDesc> views
+        List<String> importTypes "Types from outside the specification to import."
+        List<TypeDesc> types "Types of the specification."
+        List<ViewDesc> views "Views of the specification."
     options
         immutable builder

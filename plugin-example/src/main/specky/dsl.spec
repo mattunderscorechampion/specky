@@ -32,29 +32,29 @@ imports
 
 value DSLPropertyDesc "Description of a property."
     properties
-        String name
-        String type
+        String name "Name of the property."
+        String type "Type name of the property."
         List<String> typeParameters
-        boolean optional
-        optional String defaultValue default null
+        boolean optional "If the property is optional."
+        optional String defaultValue default null "The default value of the property."
     options
         immutable builder
 
 value DSLViewDesc "Description of a view."
     properties
-        String name
-        List<DSLPropertyDesc> properties
-        optional String description default null
+        String name "Name of the view."
+        List<DSLPropertyDesc> properties "Properties of the view."
+        optional String description default null "Description of the view."
     options
         immutable builder
 
 type DSLTypeDesc "Description of a type."
     properties
-        String name
-        List<DSLPropertyDesc> properties
-        DSLConstructionMethod constructionMethod
-        List<String> supertypes
-        optional String description default null
+        String name "Name of the type."
+        List<DSLPropertyDesc> properties "Properties of the type."
+        DSLConstructionMethod constructionMethod "Construction method of the type."
+        List<String> supertypes "Supertypes of the type."
+        optional String description default null "Description of the type."
 
 
 value DSLValueDesc : DSLTypeDesc "Description of a value type."
@@ -67,9 +67,9 @@ value DSLBeanDesc : DSLTypeDesc "Description of a bean type."
 
 value DSLSpecDesc "Description of a specification."
     properties
-        String packageName
-        List<String> importTypes
-        List<DSLTypeDesc> values
-        List<DSLViewDesc> views
+        String packageName "Name of the package the specification describes."
+        List<String> importTypes "Types from outside the specification to import."
+        List<DSLTypeDesc> types "Types of the specification."
+        List<DSLViewDesc> views "Views of the specification."
     options
         immutable builder

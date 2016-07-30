@@ -55,7 +55,7 @@ propertyName
     ;
 
 property
-    :   (OPTIONAL INLINE_WS)? Identifier typeParameters? INLINE_WS propertyName (INLINE_WS default_value)?
+    :   (OPTIONAL INLINE_WS)? Identifier typeParameters? INLINE_WS propertyName (INLINE_WS default_value)? (INLINE_WS StringLiteral)?
     ;
 
 qualifiedName
