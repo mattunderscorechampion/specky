@@ -63,4 +63,11 @@ public final class MutableValueResolverTest {
 
         resolver.register("some", "other").register("some", "again");
     }
+
+    @Test(expected = NullPointerException.class)
+    public void registerNullValue() {
+        final MutableValueResolver resolver = new MutableValueResolver();
+
+        resolver.register("some", null);
+    }
 }

@@ -47,8 +47,8 @@ public final class MutableValueResolver implements DefaultValueResolver {
      * @throws IllegalArgumentException if a mapping already exists
      */
     public MutableValueResolver register(String type, String defaultValue) {
-        Objects.nonNull(type);
-        Objects.nonNull(defaultValue);
+        Objects.requireNonNull(type);
+        Objects.requireNonNull(defaultValue);
         final String currentValue = typeToValue.putIfAbsent(type, defaultValue);
         if (currentValue != null && !currentValue.equals(defaultValue)) {
             throw new IllegalArgumentException("The type " + type + " is already registered to " + defaultValue);
