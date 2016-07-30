@@ -36,6 +36,7 @@ value DSLPropertyDesc {
     List<String> typeParameters
     boolean optionalProperty
     optional String defaultValue default null
+    optional String description default null
     options {
         immutable builder
     }
@@ -44,7 +45,7 @@ value DSLPropertyDesc {
 value DSLViewDesc {
     String name
     List<DSLPropertyDesc> properties
-    optional String description
+    optional String description default null
     options {
         immutable builder
     }
@@ -55,7 +56,7 @@ type DSLTypeDesc {
     List<DSLPropertyDesc> properties
     DSLConstructionMethod constructionMethod
     List<String> supertypes
-    optional String description
+    optional String description default null
 }
 
 

@@ -37,6 +37,7 @@ value PropertyDesc {
     boolean optionalProperty
     boolean override
     optional String defaultValue default null
+    optional String description default null
     options {
         immutable builder
     }
@@ -46,7 +47,7 @@ value ViewDesc {
     String packageName
     String name
     List<PropertyDesc> properties
-    optional String description
+    optional String description default null
     options {
         immutable builder
     }
@@ -58,7 +59,7 @@ type TypeDesc {
     List<PropertyDesc> properties
     ConstructionMethod constructionMethod
     List<String> supertypes
-    optional String description
+    optional String description default null
 }
 
 value ValueDesc : TypeDesc {
