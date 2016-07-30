@@ -121,7 +121,6 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
     }
 
     private PropertyDesc getViewProperty(DSLPropertyDesc dslPropertyDesc) {
-        final String defaultValue = dslPropertyDesc.getDefaultValue();
         final String resolvedType = typeResolver.resolveOrThrow(dslPropertyDesc.getTypeName());
         return PropertyDesc
             .builder()
@@ -132,11 +131,25 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                 .stream()
                 .map(typeResolver::resolveOrThrow)
                 .collect(toList()))
-            .defaultValue(defaultValue == null && !dslPropertyDesc.isOptionalProperty() ?
-                valueResolver.resolve(resolvedType).get() :
-                defaultValue)
+            .defaultValue(getDefaultValue(dslPropertyDesc, resolvedType))
             .optionalProperty(dslPropertyDesc.isOptionalProperty())
             .override(true)
             .build();
+    }
+
+    private String getDefaultValue(DSLPropertyDesc dslPropertyDesc, String resolvedType) {
+        final String defaultValue = dslPropertyDesc.getDefaultValue();
+
+        if (defaultValue != null) {
+            return defaultValue;
+        }
+
+        final String typeDefaultValue = valueResolver.resolve(resolvedType).get();
+        if (!dslPropertyDesc.isOptionalProperty() && "null".equals(typeDefaultValue)) {
+            throw new IllegalStateException(
+                "The property " + dslPropertyDesc.getName() + " is not optional but has no default type");
+        }
+
+        return typeDefaultValue;
     }
 }
