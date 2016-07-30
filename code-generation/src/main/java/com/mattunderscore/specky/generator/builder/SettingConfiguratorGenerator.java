@@ -29,6 +29,8 @@ import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
+import java.util.Objects;
+
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
 import com.mattunderscore.specky.generator.StatementGeneratorForType;
 import com.mattunderscore.specky.model.PropertyDesc;
@@ -59,12 +61,26 @@ public final class SettingConfiguratorGenerator implements MethodGeneratorForPro
     public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc, PropertyDesc propertyDesc) {
         final TypeName type = getType(propertyDesc);
         final ParameterSpec constructorParameter = ParameterSpec.builder(type, propertyDesc.getName()).build();
-        return methodBuilder(propertyDesc.getName())
+        MethodSpec.Builder methodBuilder = methodBuilder(propertyDesc.getName())
             .addModifiers(PUBLIC)
             .addJavadoc(javadoc, propertyDesc.getName())
             .returns(ClassName.get(typeDesc.getPackageName(), typeDesc.getName(), "Builder"))
-            .addParameter(constructorParameter)
-            .addStatement("this.$L = $N", propertyDesc.getName(), constructorParameter)
+            .addParameter(constructorParameter);
+
+        if (!propertyDesc.isOptionalProperty() && !type.isPrimitive()) {
+            methodBuilder = methodBuilder
+                .addStatement(
+                    "this.$L = $T.requireNonNull($N)",
+                    propertyDesc.getName(),
+                    ClassName.get(Objects.class),
+                    constructorParameter);
+        }
+        else {
+            methodBuilder = methodBuilder
+                .addStatement("this.$L = $N", propertyDesc.getName(), constructorParameter);
+        }
+
+        return methodBuilder
             .addStatement("return " + returnStatementGenerator.generate(typeDesc))
             .build();
     }
