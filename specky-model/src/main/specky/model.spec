@@ -44,6 +44,7 @@ value PropertyDesc {
 }
 
 value ViewDesc {
+    optional String author default null
     String packageName
     String name
     List<PropertyDesc> properties
@@ -54,6 +55,7 @@ value ViewDesc {
 }
 
 type TypeDesc {
+    optional String author default null
     String packageName
     String name
     List<PropertyDesc> properties

@@ -24,6 +24,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+author "Matt Champion"
+
 package com.mattunderscore.specky.dsl.model.test
 
 imports
@@ -68,6 +70,7 @@ value DSLBeanDesc : DSLTypeDesc "Description of a bean type."
 
 value DSLSpecDesc "Description of a specification."
     properties
+        optional String author "Author of the specification."
         String packageName "Name of the package the specification describes."
         List<String> importTypes "Types from outside the specification to import."
         List<DSLTypeDesc> types "Types of the specification."

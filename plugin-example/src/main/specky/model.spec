@@ -24,6 +24,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+author "Matt Champion"
+
 package com.mattunderscore.specky.model.test
 
 imports
@@ -43,6 +45,7 @@ value PropertyDesc "Description of a property."
 
 value ViewDesc "Description of a view."
     properties
+        optional String author "Author of the specification."
         String packageName "Name of the package the view is in."
         String name "Name of the view."
         List<PropertyDesc> properties "Properties of the view."
@@ -52,6 +55,7 @@ value ViewDesc "Description of a view."
 
 type TypeDesc "Description of a type."
     properties
+        optional String author "Author of the type."
         String packageName "Name of the package the type is in."
         String name "Name of the type."
         List<PropertyDesc> properties "Properties of the type."

@@ -73,6 +73,7 @@ value DSLBeanDesc : DSLTypeDesc {
 }
 
 value DSLSpecDesc {
+    optional String author default null
     String packageName
     List<DSLImportDesc> importTypes
     List<DSLTypeDesc> values

@@ -112,6 +112,10 @@ PROPERTIES
     : 'properties'
     ;
 
+AUTHOR
+    :   'author'
+    ;
+
 INLINE_WS
     : [ ]+ -> channel(HIDDEN)
     ;

@@ -52,6 +52,7 @@ propertyName
     |   PROPERTIES
     |   IMPORT
     |   OPTIONS
+    |   AUTHOR
     ;
 
 property
@@ -96,9 +97,14 @@ typeSpec
         (INLINE_WS? props)?
     ;
 
+author
+    :   AUTHOR INLINE_WS StringLiteral
+    ;
+
 spec
     :   LINE_BREAK*
-        package_name LINE_BREAK*
+        (author LINE_BREAK+)?
+        package_name LINE_BREAK+
         (imports LINE_BREAK*)?
         ((typeSpec | implementationSpec) LINE_BREAK*)+
     ;
