@@ -23,16 +23,36 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.dsl.model.test;
+package com.mattunderscore.specky.value.resolver;
+
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
- * Stand-in for description of construction method for a DSL type.
- *
- * @author Matt Champion on 19/07/16
+ * A mutable resolver.
+ * @author Matt Champion on 30/07/2016
  */
-public enum DSLConstructionMethod {
+public final class MutableValueResolver implements DefaultValueResolver {
+    private final ConcurrentMap<String, String> typeToValue = new ConcurrentHashMap<>(10, 0.5f, 2);
+
+    @Override
+    public Optional<String> resolve(String type) {
+        return Optional.ofNullable(typeToValue.get(type));
+    }
+
     /**
-     * Default value for test.
+     * Register a default value for a type.
+     * @throws IllegalArgumentException if a mapping already exists
      */
-    DEFAULT
+    public MutableValueResolver register(String type, String defaultValue) {
+        Objects.nonNull(type);
+        Objects.nonNull(defaultValue);
+        final String currentValue = typeToValue.putIfAbsent(type, defaultValue);
+        if (currentValue != null && !currentValue.equals(defaultValue)) {
+            throw new IllegalArgumentException("The type " + type + " is already registered to " + defaultValue);
+        }
+        return this;
+    }
 }

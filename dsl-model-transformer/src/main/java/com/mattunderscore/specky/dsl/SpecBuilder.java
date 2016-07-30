@@ -25,8 +25,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.dsl;
 
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
+
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
+import com.mattunderscore.specky.dsl.model.DSLImportDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
@@ -36,17 +45,9 @@ import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.ImplementationSpecContext;
 import com.mattunderscore.specky.parser.Specky.ImportsContext;
 import com.mattunderscore.specky.parser.Specky.PropertyContext;
-import com.mattunderscore.specky.parser.Specky.QualifiedNameContext;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.Specky.TypeParametersContext;
 import com.mattunderscore.specky.parser.Specky.TypeSpecContext;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
-import java.util.List;
-
-import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Processor for the ANTLR4 generated AST. Returns a better representation of the DSL.
@@ -65,14 +66,19 @@ public final class SpecBuilder {
      * @return a {@link DSLSpecDesc} from a {@link SpecContext}.
      */
     public DSLSpecDesc build(SpecContext context) {
-        final ImportsContext importsContext = context
-                .imports();
-        final List<String> imports = importsContext == null ?
+        final ImportsContext importsContext = context.imports();
+        final List<DSLImportDesc> imports = importsContext == null ?
             emptyList() :
             importsContext
-                .qualifiedName()
+                .singleImport()
                 .stream()
-                .map(QualifiedNameContext::getText)
+                .map(singleImportContext -> DSLImportDesc
+                    .builder()
+                    .typeName(singleImportContext.qualifiedName().getText())
+                    .defaultValue(singleImportContext.default_value() == null ?
+                        null :
+                        singleImportContext.default_value().ANYTHING().getText())
+                    .build())
                 .collect(toList());
         return DSLSpecDesc
             .builder()

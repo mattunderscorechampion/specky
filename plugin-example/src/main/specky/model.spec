@@ -27,7 +27,7 @@
 package com.mattunderscore.specky.model.test
 
 imports
-    com.mattunderscore.specky.model.test.ConstructionMethod
+    com.mattunderscore.specky.model.test.ConstructionMethod default ConstructionMethod.DEFAULT
 
 value PropertyDesc
     properties

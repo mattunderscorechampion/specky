@@ -23,16 +23,44 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.dsl.model.test;
+package com.mattunderscore.specky.value.resolver;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Optional;
+
+import org.junit.Test;
 
 /**
- * Stand-in for description of construction method for a DSL type.
+ * Unit tests for {@link MutableValueResolver}.
  *
- * @author Matt Champion on 19/07/16
+ * @author Matt Champion on 30/07/2016
  */
-public enum DSLConstructionMethod {
-    /**
-     * Default value for test.
-     */
-    DEFAULT
+public final class MutableValueResolverTest {
+
+    @Test
+    public void resolveNone() {
+        final MutableValueResolver resolver = new MutableValueResolver();
+
+        final Optional<String> none = resolver.resolve("none");
+        assertFalse(none.isPresent());
+    }
+
+    @Test
+    public void registerAndResolve() {
+        final MutableValueResolver resolver = new MutableValueResolver();
+
+        final Optional<String> some = resolver.register("some", "other").resolve("some");
+        assertTrue(some.isPresent());
+        assertEquals("other", some.get());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void registerTwice() {
+        final MutableValueResolver resolver = new MutableValueResolver();
+
+        resolver.register("some", "other").register("some", "again");
+    }
 }

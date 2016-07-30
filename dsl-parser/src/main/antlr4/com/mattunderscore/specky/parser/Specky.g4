@@ -66,9 +66,13 @@ package_name
     :   PACKAGE INLINE_WS qualifiedName
     ;
 
+singleImport
+    :   qualifiedName (INLINE_WS default_value)?
+    ;
+
 imports
     :   IMPORT LINE_BREAK
-        (INLINE_WS? qualifiedName LINE_BREAK)+
+        (INLINE_WS? singleImport LINE_BREAK)+
     ;
 
 props

@@ -30,5 +30,9 @@ package com.mattunderscore.specky.model.test;
  *
  * @author Matt Champion
  */
-public final class ConstructionMethod {
+public enum ConstructionMethod {
+    /**
+     * Default value for test.
+     */
+    DEFAULT
 }

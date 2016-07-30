@@ -71,9 +71,17 @@ value DSLBeanDesc : DSLTypeDesc {
 
 value DSLSpecDesc {
     String packageName
-    List<String> importTypes
+    List<DSLImportDesc> importTypes
     List<DSLTypeDesc> values
     List<DSLViewDesc> views
+    options {
+        immutable builder
+    }
+}
+
+value DSLImportDesc {
+    String typeName
+    optional String defaultValue default null
     options {
         immutable builder
     }

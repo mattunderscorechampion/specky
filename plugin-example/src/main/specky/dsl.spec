@@ -27,7 +27,7 @@
 package com.mattunderscore.specky.dsl.model.test
 
 imports
-    com.mattunderscore.specky.dsl.model.test.DSLConstructionMethod
+    com.mattunderscore.specky.dsl.model.test.DSLConstructionMethod default DSLConstructionMethod.DEFAULT
 
 
 value DSLPropertyDesc
