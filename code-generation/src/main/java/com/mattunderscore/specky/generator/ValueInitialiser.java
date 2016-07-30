@@ -49,6 +49,7 @@ public final class ValueInitialiser implements TypeInitialiser {
                         typeDesc.getDescription() == null ?
                         "Value type $L.\n\nAuto-generated from specification." :
                         typeDesc.getDescription())
+                    .setAuthor(typeDesc.getAuthor())
                     .toJavaDoc(),
                 typeDesc.getName());
     }

@@ -57,6 +57,7 @@ public final class ViewGenerator {
                         typeDesc.getDescription() == null ?
                         "View type $L.\n\nAuto-generated from specification." :
                         typeDesc.getDescription())
+                    .setAuthor(typeDesc.getAuthor())
                     .toJavaDoc(),
                 typeDesc.getName());
 

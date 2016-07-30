@@ -49,6 +49,7 @@ public final class BeanInitialiser implements TypeInitialiser {
                         typeDesc.getDescription() == null ?
                         "Bean type $L.\n\nAuto-generated from specification." :
                         typeDesc.getDescription())
+                    .setAuthor(typeDesc.getAuthor())
                     .toJavaDoc(),
                 typeDesc.getName());
     }

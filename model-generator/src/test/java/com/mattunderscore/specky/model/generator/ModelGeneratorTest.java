@@ -34,6 +34,7 @@ public final class ModelGeneratorTest {
     public void simple() {
         final DSLSpecDesc spec = DSLSpecDesc
             .builder()
+            .author("")
             .packageName("com.example")
             .views(emptyList())
             .values(singletonList(DSLValueDesc
@@ -79,6 +80,7 @@ public final class ModelGeneratorTest {
     public void extending() {
         final DSLSpecDesc spec = DSLSpecDesc
             .builder()
+            .author("")
             .packageName("com.example")
             .views(singletonList(DSLViewDesc
                 .builder()

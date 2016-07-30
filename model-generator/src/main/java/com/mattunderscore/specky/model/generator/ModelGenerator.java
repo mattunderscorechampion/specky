@@ -88,24 +88,22 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
     }
 
     private List<TypeDesc> getTypes(TypeDeriver typeDeriver, DSLSpecDesc dslSpecDesc) {
-        final String packageName = dslSpecDesc.getPackageName();
         return dslSpecDesc
             .getValues()
             .stream()
-            .map(dslTypeDesc -> typeDeriver.deriveType(packageName, dslTypeDesc))
+            .map(dslTypeDesc -> typeDeriver.deriveType(dslSpecDesc, dslTypeDesc))
             .collect(toList());
     }
 
     private List<ViewDesc> getViews(DSLSpecDesc dslSpecDesc) {
-        final String packageName = dslSpecDesc.getPackageName();
         return dslSpecDesc
             .getViews()
             .stream()
-            .map(dslTypeDesc -> getView(packageName, dslTypeDesc))
+            .map(dslTypeDesc -> getView(dslSpecDesc.getAuthor(), dslSpecDesc.getPackageName(), dslTypeDesc))
             .collect(toList());
     }
 
-    private ViewDesc getView(String packageName, DSLViewDesc dslViewDesc) {
+    private ViewDesc getView(String author, String packageName, DSLViewDesc dslViewDesc) {
         final List<PropertyDesc> properties = dslViewDesc
             .getProperties()
             .stream()
@@ -114,6 +112,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
 
         return ViewDesc
             .builder()
+            .author(author)
             .packageName(packageName)
             .name(dslViewDesc.getName())
             .properties(properties)

@@ -35,6 +35,7 @@ import java.util.Map;
 
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
+import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
 import com.mattunderscore.specky.model.BeanDesc;
@@ -68,11 +69,12 @@ public final class TypeDeriver {
     /**
      * @return the fully derived type
      */
-    public TypeDesc deriveType(String packageName, DSLTypeDesc dslTypeDesc) {
+    public TypeDesc deriveType(DSLSpecDesc specDesc, DSLTypeDesc dslTypeDesc) {
         if (dslTypeDesc instanceof DSLValueDesc) {
             return ValueDesc
                 .builder()
-                .packageName(packageName)
+                .author(specDesc.getAuthor())
+                .packageName(specDesc.getPackageName())
                 .name(dslTypeDesc.getName())
                 .constructionMethod(get(dslTypeDesc.getConstructionMethod()))
                 .properties(deriveProperties(dslTypeDesc))
@@ -83,7 +85,8 @@ public final class TypeDeriver {
         else {
             return BeanDesc
                 .builder()
-                .packageName(packageName)
+                .author(specDesc.getAuthor())
+                .packageName(specDesc.getPackageName())
                 .name(dslTypeDesc.getName())
                 .constructionMethod(get(dslTypeDesc.getConstructionMethod()))
                 .properties(deriveProperties(dslTypeDesc))

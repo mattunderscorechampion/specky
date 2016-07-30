@@ -31,18 +31,34 @@ package com.mattunderscore.specky.javapoet.javadoc;
  * @author Matt Champion on 17/06/2016
  */
 public final class JavaDocTypeBuilder {
+    private String author;
     private String description;
 
     /*package*/ JavaDocTypeBuilder() {
     }
 
     /**
-     * Set the description for the method.
-     * @param description the description of the method
+     * Set the description for the type.
+     * @param description the description of the type
      * @return this builder
      */
     public JavaDocTypeBuilder setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    /**
+     * Set the author for the type.
+     * @param author the author of the type
+     * @return this builder
+     */
+    public JavaDocTypeBuilder setAuthor(String author) {
+        if ("".equals(author)) {
+            this.author = null;
+        }
+        else {
+            this.author = author;
+        }
         return this;
     }
 
@@ -54,6 +70,13 @@ public final class JavaDocTypeBuilder {
         if (description != null) {
             stringBuilder
                 .append(description)
+                .append("\n\n");
+        }
+
+        if (author != null) {
+            stringBuilder
+                .append("@author ")
+                .append(author)
                 .append('\n');
         }
 

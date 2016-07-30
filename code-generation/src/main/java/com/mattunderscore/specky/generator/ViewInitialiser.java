@@ -43,6 +43,7 @@ public final class ViewInitialiser implements TypeInitialiser {
             .addJavadoc(
                 docType()
                     .setDescription("View type $L.\n\nAuto-generated from specification.")
+                    .setAuthor(typeDesc.getAuthor())
                     .toJavaDoc(),
                 typeDesc.getName());
     }
