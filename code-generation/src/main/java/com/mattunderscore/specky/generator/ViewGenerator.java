@@ -34,6 +34,7 @@ import static java.lang.Character.toUpperCase;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
+import com.mattunderscore.specky.javapoet.javadoc.JavaDocMethodBuilder;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.ViewDesc;
 import com.squareup.javapoet.TypeSpec;
@@ -59,17 +60,25 @@ public final class ViewGenerator {
                     .toJavaDoc(),
                 typeDesc.getName());
 
-        for (final PropertyDesc view : typeDesc.getProperties()) {
+        for (final PropertyDesc propertyDesc : typeDesc.getProperties()) {
+            final JavaDocMethodBuilder javaDocMethodBuilder = docMethod();
+
+            if (propertyDesc.getDescription() == null || "".equals(propertyDesc.getDescription())) {
+                javaDocMethodBuilder.setMethodDescription("Getter for the property $1L.");
+            }
+            else {
+                javaDocMethodBuilder.setMethodDescription(propertyDesc.getDescription());
+            }
+
             builder
-                .addMethod(methodBuilder(getAccessorName(view.getName()))
+                .addMethod(methodBuilder(getAccessorName(propertyDesc.getName()))
                     .addJavadoc(
-                        docMethod()
-                            .setMethodDescription("Getter for the property $1L.")
+                        javaDocMethodBuilder
                             .setReturnsDescription("the value of $1L")
                             .toJavaDoc(),
-                        view.getName())
+                        propertyDesc.getName())
                     .addModifiers(ABSTRACT, PUBLIC)
-                    .returns(getType(view))
+                    .returns(getType(propertyDesc))
                     .build());
         }
 

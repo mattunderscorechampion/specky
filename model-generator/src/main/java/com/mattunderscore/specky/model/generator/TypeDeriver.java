@@ -200,6 +200,7 @@ public final class TypeDeriver {
                     defaultValue)
             .optionalProperty(dslPropertyDesc.isOptionalProperty())
             .override(false)
+            .description(dslPropertyDesc.getDescription())
             .build();
     }
 }

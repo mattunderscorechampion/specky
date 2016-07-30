@@ -32,6 +32,7 @@ import static java.lang.Character.toUpperCase;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
+import com.mattunderscore.specky.javapoet.javadoc.JavaDocMethodBuilder;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
@@ -59,11 +60,19 @@ public final class AccessorGenerator implements MethodGeneratorForProperty {
                 .build();
         }
         else {
+            final JavaDocMethodBuilder javaDocMethodBuilder = docMethod();
+
+            if (propertyDesc.getDescription() == null || "".equals(propertyDesc.getDescription())) {
+                javaDocMethodBuilder.setMethodDescription("Getter for the property $1L.");
+            }
+            else {
+                javaDocMethodBuilder.setMethodDescription(propertyDesc.getDescription());
+            }
+
             return methodBuilder(getAccessorName(propertyDesc))
                 .addModifiers(PUBLIC)
                 .addJavadoc(
-                    docMethod()
-                        .setMethodDescription("Getter for the property $1L.")
+                    javaDocMethodBuilder
                         .setReturnsDescription("the value of $1L")
                         .toJavaDoc(),
                     propertyDesc.getName())

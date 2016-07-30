@@ -135,6 +135,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .defaultValue(getDefaultValue(dslPropertyDesc, resolvedType))
             .optionalProperty(dslPropertyDesc.isOptionalProperty())
             .override(true)
+            .description(dslPropertyDesc.getDescription())
             .build();
     }
 

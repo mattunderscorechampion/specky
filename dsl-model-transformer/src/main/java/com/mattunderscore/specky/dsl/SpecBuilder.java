@@ -190,6 +190,9 @@ public final class SpecBuilder {
             .typeParameters(typeParameters)
             .optionalProperty(context.OPTIONAL() != null)
             .defaultValue(defaultValue)
+            .description(context.StringLiteral() == null ?
+                null :
+                context.StringLiteral().getText().substring(1, context.StringLiteral().getText().length() - 1))
             .build();
     }
 
