@@ -128,6 +128,10 @@ Identifier
     :   Letter LetterOrDigit*
     ;
 
+StringLiteral
+    :   '"' ~[\r\n]+ '"'
+    ;
+
 mode LITERAL;
 
 LITERAL_INLINE_WS

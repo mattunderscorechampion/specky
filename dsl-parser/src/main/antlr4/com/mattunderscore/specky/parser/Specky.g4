@@ -86,13 +86,13 @@ opts
     ;
 
 implementationSpec
-    :   (VALUE | BEAN ) INLINE_WS Identifier (INLINE_WS EXTENDS INLINE_WS Identifier)? LINE_BREAK
+    :   (VALUE | BEAN ) INLINE_WS Identifier (INLINE_WS EXTENDS INLINE_WS Identifier)? (INLINE_WS StringLiteral)? LINE_BREAK
         (INLINE_WS? props)?
         (INLINE_WS? opts)?
     ;
 
 typeSpec
-    :   TYPE INLINE_WS Identifier LINE_BREAK
+    :   TYPE INLINE_WS Identifier (INLINE_WS StringLiteral)? LINE_BREAK
         (INLINE_WS? props)?
     ;
 

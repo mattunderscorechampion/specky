@@ -126,7 +126,11 @@ public final class SpecBuilder {
                 .name(typeName)
                 .properties(properties)
                 .constructionMethod(constructionMethod)
-                .supertypes(supertypes).build();
+                .supertypes(supertypes)
+                .description(context.StringLiteral() == null ?
+                    "Value type $L.\n\nAuto-generated from specification." :
+                    context.StringLiteral().getText().substring(1, context.StringLiteral().getText().length() - 1))
+                .build();
         }
         else {
             return DSLBeanDesc
@@ -134,7 +138,11 @@ public final class SpecBuilder {
                 .name(typeName)
                 .properties(properties)
                 .constructionMethod(constructionMethod)
-                .supertypes(supertypes).build();
+                .supertypes(supertypes)
+                .description(context.StringLiteral() == null ?
+                    "Bean type $L.\n\nAuto-generated from specification." :
+                    context.StringLiteral().getText().substring(1, context.StringLiteral().getText().length() - 1))
+                .build();
         }
     }
 
@@ -152,6 +160,9 @@ public final class SpecBuilder {
                 .builder()
                 .name(typeName)
                 .properties(properties)
+                .description(context.StringLiteral() == null ?
+                    "View type $L.\n\nAuto-generated from specification." :
+                    context.StringLiteral().getText().substring(1, context.StringLiteral().getText().length() - 1))
                 .build();
         }
 

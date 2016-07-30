@@ -44,6 +44,7 @@ value DSLPropertyDesc {
 value DSLViewDesc {
     String name
     List<DSLPropertyDesc> properties
+    optional String description
     options {
         immutable builder
     }
@@ -54,6 +55,7 @@ type DSLTypeDesc {
     List<DSLPropertyDesc> properties
     DSLConstructionMethod constructionMethod
     List<String> supertypes
+    optional String description
 }
 
 

@@ -46,6 +46,7 @@ value ViewDesc {
     String packageName
     String name
     List<PropertyDesc> properties
+    optional String description
     options {
         immutable builder
     }
@@ -57,6 +58,7 @@ type TypeDesc {
     List<PropertyDesc> properties
     ConstructionMethod constructionMethod
     List<String> supertypes
+    optional String description
 }
 
 value ValueDesc : TypeDesc {

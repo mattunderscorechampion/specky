@@ -52,7 +52,10 @@ public final class ViewGenerator {
             .addModifiers(PUBLIC)
             .addJavadoc(
                 docType()
-                    .setDescription("View type $L.\n\nAuto-generated from specification.")
+                    .setDescription(
+                        typeDesc.getDescription() == null ?
+                        "View type $L.\n\nAuto-generated from specification." :
+                        typeDesc.getDescription())
                     .toJavaDoc(),
                 typeDesc.getName());
 

@@ -30,7 +30,7 @@ imports
     com.mattunderscore.specky.dsl.model.test.DSLConstructionMethod default DSLConstructionMethod.DEFAULT
 
 
-value DSLPropertyDesc
+value DSLPropertyDesc "Description of a property."
     properties
         String name
         String type
@@ -40,30 +40,32 @@ value DSLPropertyDesc
     options
         immutable builder
 
-value DSLViewDesc
+value DSLViewDesc "Description of a view."
     properties
         String name
         List<DSLPropertyDesc> properties
+        optional String description default null
     options
         immutable builder
 
-type DSLTypeDesc
+type DSLTypeDesc "Description of a type."
     properties
         String name
         List<DSLPropertyDesc> properties
         DSLConstructionMethod constructionMethod
         List<String> supertypes
+        optional String description default null
 
 
-value DSLValueDesc : DSLTypeDesc
+value DSLValueDesc : DSLTypeDesc "Description of a value type."
     options
         immutable builder
 
-value DSLBeanDesc : DSLTypeDesc
+value DSLBeanDesc : DSLTypeDesc "Description of a bean type."
     options
         immutable builder
 
-value DSLSpecDesc
+value DSLSpecDesc "Description of a specification."
     properties
         String packageName
         List<String> importTypes

@@ -45,7 +45,10 @@ public final class BeanInitialiser implements TypeInitialiser {
             .addModifiers(PUBLIC, FINAL)
             .addJavadoc(
                 docType()
-                    .setDescription("Bean type $L.\n\nAuto-generated from specification.")
+                    .setDescription(
+                        typeDesc.getDescription() == null ?
+                        "Bean type $L.\n\nAuto-generated from specification." :
+                        typeDesc.getDescription())
                     .toJavaDoc(),
                 typeDesc.getName());
     }

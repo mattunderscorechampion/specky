@@ -77,6 +77,7 @@ public final class TypeDeriver {
                 .constructionMethod(get(dslTypeDesc.getConstructionMethod()))
                 .properties(deriveProperties(dslTypeDesc))
                 .supertypes(dslTypeDesc.getSupertypes())
+                .description(dslTypeDesc.getDescription())
                 .build();
         }
         else {
@@ -87,6 +88,7 @@ public final class TypeDeriver {
                 .constructionMethod(get(dslTypeDesc.getConstructionMethod()))
                 .properties(deriveProperties(dslTypeDesc))
                 .supertypes(dslTypeDesc.getSupertypes())
+                .description(dslTypeDesc.getDescription())
                 .build();
         }
     }

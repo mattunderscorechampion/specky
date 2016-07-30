@@ -45,7 +45,10 @@ public final class ValueInitialiser implements TypeInitialiser {
             .addModifiers(PUBLIC, FINAL)
             .addJavadoc(
                 docType()
-                    .setDescription("Value type $L.\n\nAuto-generated from specification.")
+                    .setDescription(
+                        typeDesc.getDescription() == null ?
+                        "Value type $L.\n\nAuto-generated from specification." :
+                        typeDesc.getDescription())
                     .toJavaDoc(),
                 typeDesc.getName());
     }

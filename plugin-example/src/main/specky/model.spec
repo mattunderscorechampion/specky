@@ -29,7 +29,7 @@ package com.mattunderscore.specky.model.test
 imports
     com.mattunderscore.specky.model.test.ConstructionMethod default ConstructionMethod.DEFAULT
 
-value PropertyDesc
+value PropertyDesc "Description of a property."
     properties
         String name
         String type
@@ -40,32 +40,34 @@ value PropertyDesc
     options
         immutable builder
 
-value ViewDesc
+value ViewDesc "Description of a view."
     properties
         String packageName
         String name
         List<PropertyDesc> properties
+        optional String description default null
     options
         immutable builder
 
-type TypeDesc
+type TypeDesc "Description of a type."
     properties
         String packageName
         String name
         List<PropertyDesc> properties
         ConstructionMethod constructionMethod
         List<String> supertypes
+        optional String description default null
 
 
-value ValueDesc : TypeDesc
+value ValueDesc : TypeDesc "Description of a value type."
     options
         immutable builder
 
-value BeanDesc : TypeDesc
+value BeanDesc : TypeDesc "Description of a bean type."
     options
         immutable builder
 
-value SpecDesc
+value SpecDesc "Description of a specification."
     properties
         List<String> importTypes
         List<TypeDesc> values
