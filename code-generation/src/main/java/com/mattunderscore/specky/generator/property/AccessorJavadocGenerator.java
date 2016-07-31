@@ -23,47 +23,38 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.generator;
+package com.mattunderscore.specky.generator.property;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
-import static com.squareup.javapoet.MethodSpec.methodBuilder;
-import static java.lang.Character.toUpperCase;
-import static javax.lang.model.element.Modifier.ABSTRACT;
-import static javax.lang.model.element.Modifier.PUBLIC;
+import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
 
-import com.mattunderscore.specky.generator.property.AccessorJavadocGenerator;
+import com.mattunderscore.specky.javapoet.javadoc.JavaDocMethodBuilder;
 import com.mattunderscore.specky.model.PropertyDesc;
-import com.mattunderscore.specky.model.ViewDesc;
-import com.squareup.javapoet.TypeSpec;
 
 /**
- * Generator for views.
- * @author Matt Champion on 25/06/2016
+ * Generator for accessor javadoc.
+ * @author Matt Champion on 31/07/2016
  */
-public final class ViewGenerator {
-    private final ViewInitialiser viewInitialiser = new ViewInitialiser();
-    private final AccessorJavadocGenerator accessorJavadocGenerator = new AccessorJavadocGenerator();
-
+public final class AccessorJavadocGenerator {
     /**
-     * @return the view type
+     * @return Javadoc for property.
      */
-    public TypeSpec generateView(ViewDesc typeDesc) {
-        final TypeSpec.Builder builder = viewInitialiser.create(typeDesc);
+    public String generateJavaDoc(PropertyDesc propertyDesc) {
+        final JavaDocMethodBuilder javaDocMethodBuilder = docMethod();
 
-        for (final PropertyDesc propertyDesc : typeDesc.getProperties()) {
-
-            builder
-                .addMethod(methodBuilder(getAccessorName(propertyDesc.getName()))
-                    .addJavadoc(accessorJavadocGenerator.generateJavaDoc(propertyDesc))
-                    .addModifiers(ABSTRACT, PUBLIC)
-                    .returns(getType(propertyDesc))
-                    .build());
+        if (propertyDesc.getDescription() == null || "".equals(propertyDesc.getDescription())) {
+            javaDocMethodBuilder.setMethodDescription("Getter for the property " + propertyDesc.getName() + ".\n");
+        }
+        else {
+            javaDocMethodBuilder.setMethodDescription(
+                "Getter for the property " +
+                    propertyDesc.getName() +
+                    ".\n<p>\n" +
+                    propertyDesc.getDescription() +
+                    "\n");
         }
 
-        return builder.build();
-    }
-
-    private static String getAccessorName(String propertyName) {
-        return "get" + toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
+        return javaDocMethodBuilder
+            .setReturnsDescription("the value of " + propertyDesc.getName())
+            .toJavaDoc();
     }
 }

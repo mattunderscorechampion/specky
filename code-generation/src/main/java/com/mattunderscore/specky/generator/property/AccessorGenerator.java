@@ -26,13 +26,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator.property;
 
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
-import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static java.lang.Character.toUpperCase;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
-import com.mattunderscore.specky.javapoet.javadoc.JavaDocMethodBuilder;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
@@ -43,6 +41,8 @@ import com.squareup.javapoet.MethodSpec;
  * @author Matt Champion on 21/06/2016
  */
 public final class AccessorGenerator implements MethodGeneratorForProperty {
+    private final AccessorJavadocGenerator accessorJavadocGenerator = new AccessorJavadocGenerator();
+
     /**
      * Constructor.
      */
@@ -60,23 +60,9 @@ public final class AccessorGenerator implements MethodGeneratorForProperty {
                 .build();
         }
         else {
-            final JavaDocMethodBuilder javaDocMethodBuilder = docMethod();
-
-            if (propertyDesc.getDescription() == null || "".equals(propertyDesc.getDescription())) {
-                javaDocMethodBuilder.setMethodDescription("Getter for the property $1L.\n");
-            }
-            else {
-                javaDocMethodBuilder.setMethodDescription(
-                    "Getter for the property $1L.\n<p>\n" + propertyDesc.getDescription() + "\n");
-            }
-
             return methodBuilder(getAccessorName(propertyDesc))
                 .addModifiers(PUBLIC)
-                .addJavadoc(
-                    javaDocMethodBuilder
-                        .setReturnsDescription("the value of $1L")
-                        .toJavaDoc(),
-                    propertyDesc.getName())
+                .addJavadoc(accessorJavadocGenerator.generateJavaDoc(propertyDesc))
                 .returns(getType(propertyDesc))
                 .addStatement("return $N", propertyDesc.getName())
                 .build();
