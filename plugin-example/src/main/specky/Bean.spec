@@ -31,7 +31,7 @@ package com.example
 
 bean PersonBean : PersonType
     properties
-        long birthTimestamp
+        long birthTimestamp "Timestamp of birth."
     options
         constructor
 

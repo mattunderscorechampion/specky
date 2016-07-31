@@ -29,7 +29,7 @@ package com.example
 type PersonType
     properties
         int id
-        String name
+        String name "Name of person."
 
 
 type TypeWithDefault

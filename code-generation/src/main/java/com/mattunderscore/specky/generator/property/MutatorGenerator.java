@@ -26,7 +26,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator.property;
 
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
-import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static java.lang.Character.toUpperCase;
 import static javax.lang.model.element.Modifier.PUBLIC;
@@ -47,6 +46,8 @@ import com.squareup.javapoet.TypeName;
  * @author Matt Champion on 21/06/2016
  */
 public final class MutatorGenerator implements MethodGeneratorForProperty {
+    private final MutatorJavadocGenerator mutatorJavadocGenerator = new MutatorJavadocGenerator();
+
     @Override
     public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc, PropertyDesc propertyDesc) {
         final TypeName type = getType(propertyDesc);
@@ -54,12 +55,7 @@ public final class MutatorGenerator implements MethodGeneratorForProperty {
         final MethodSpec.Builder setterSpec = methodBuilder(getMutatorName(propertyDesc.getName()))
             .addModifiers(PUBLIC)
             .addParameter(parameterSpec)
-            .addJavadoc(
-                docMethod()
-                    .setMethodDescription("Setter for the property $1L.")
-                    .addParameter("$2L", "the new value of $1L")
-                    .toJavaDoc(),
-                propertyDesc.getName(), propertyDesc.getName())
+            .addJavadoc(mutatorJavadocGenerator.generateJavaDoc(propertyDesc))
             .returns(TypeName.VOID);
 
         if (!propertyDesc.isOptional() && !type.isPrimitive()) {
