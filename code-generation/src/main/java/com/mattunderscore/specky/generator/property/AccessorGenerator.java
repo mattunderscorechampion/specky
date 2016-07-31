@@ -63,10 +63,11 @@ public final class AccessorGenerator implements MethodGeneratorForProperty {
             final JavaDocMethodBuilder javaDocMethodBuilder = docMethod();
 
             if (propertyDesc.getDescription() == null || "".equals(propertyDesc.getDescription())) {
-                javaDocMethodBuilder.setMethodDescription("Getter for the property $1L.");
+                javaDocMethodBuilder.setMethodDescription("Getter for the property $1L.\n");
             }
             else {
-                javaDocMethodBuilder.setMethodDescription(propertyDesc.getDescription());
+                javaDocMethodBuilder.setMethodDescription(
+                    "Getter for the property $1L.\n<p>\n" + propertyDesc.getDescription() + "\n");
             }
 
             return methodBuilder(getAccessorName(propertyDesc))

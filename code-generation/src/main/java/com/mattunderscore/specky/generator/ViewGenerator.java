@@ -27,9 +27,7 @@ package com.mattunderscore.specky.generator;
 
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
-import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
-import static com.squareup.javapoet.TypeSpec.interfaceBuilder;
 import static java.lang.Character.toUpperCase;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.PUBLIC;
@@ -56,10 +54,11 @@ public final class ViewGenerator {
             final JavaDocMethodBuilder javaDocMethodBuilder = docMethod();
 
             if (propertyDesc.getDescription() == null || "".equals(propertyDesc.getDescription())) {
-                javaDocMethodBuilder.setMethodDescription("Getter for the property $1L.");
+                javaDocMethodBuilder.setMethodDescription("Getter for the property $1L.\n");
             }
             else {
-                javaDocMethodBuilder.setMethodDescription(propertyDesc.getDescription());
+                javaDocMethodBuilder.setMethodDescription(
+                    "Getter for the property $1L.\n<p>\n" + propertyDesc.getDescription() + "\n");
             }
 
             builder
