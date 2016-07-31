@@ -152,15 +152,15 @@ public final class TypeDeriver {
     }
 
     private void checkMegableProperties(PropertyDesc currentProperty, PropertyDesc newProperty) {
-        if (!newProperty.getTypeName().equals(currentProperty.getTypeName())) {
+        if (!newProperty.getType().equals(currentProperty.getType())) {
             throw new IllegalArgumentException("Conflicting property declarations for " +
                 currentProperty.getName() +
                 ". Types " +
-                currentProperty.getTypeName() +
+                currentProperty.getType() +
                 " and " +
-                newProperty.getTypeName());
+                newProperty.getType());
         }
-        else if (newProperty.isOptionalProperty() != currentProperty.isOptionalProperty()) {
+        else if (newProperty.isOptional() != currentProperty.isOptional()) {
             throw new IllegalArgumentException("Conflicting property declarations for " +
                 currentProperty.getName() +
                 ". Cannot be both optional and required.");
@@ -187,21 +187,21 @@ public final class TypeDeriver {
 
     private PropertyDesc get(DSLPropertyDesc dslPropertyDesc) {
         final String defaultValue = dslPropertyDesc.getDefaultValue();
-        final String resolvedType = typeResolver.resolveOrThrow(dslPropertyDesc.getTypeName());
+        final String resolvedType = typeResolver.resolveOrThrow(dslPropertyDesc.getType());
         return PropertyDesc
             .builder()
             .name(dslPropertyDesc.getName())
-            .typeName(resolvedType)
+            .type(resolvedType)
             .typeParameters(dslPropertyDesc
                 .getTypeParameters()
                 .stream()
                 .map(typeResolver::resolveOrThrow)
                 .collect(toList()))
             .defaultValue(
-                defaultValue == null && !dslPropertyDesc.isOptionalProperty() ?
+                defaultValue == null && !dslPropertyDesc.isOptional() ?
                     valueResolver.resolve(resolvedType).get() :
                     defaultValue)
-            .optionalProperty(dslPropertyDesc.isOptionalProperty())
+            .optional(dslPropertyDesc.isOptional())
             .override(false)
             .description(dslPropertyDesc.getDescription())
             .build();

@@ -65,7 +65,7 @@ public final class SpecBuilderTest {
 
         assertEquals("com.example", specDesc.getPackageName());
         final List<DSLViewDesc> views = specDesc.getViews();
-        final List<DSLTypeDesc> values = specDesc.getValues();
+        final List<DSLTypeDesc> values = specDesc.getTypes();
         assertEquals(1, views.size());
         assertEquals(4, values.size());
 
@@ -76,7 +76,7 @@ public final class SpecBuilderTest {
 
         final DSLPropertyDesc propertyDesc0 = properties0.get(0);
         assertEquals("num", propertyDesc0.getName());
-        assertEquals("Integer", propertyDesc0.getTypeName());
+        assertEquals("Integer", propertyDesc0.getType());
 
         final DSLTypeDesc valueDesc0 = values.get(0);
         assertEquals("FirstValue", valueDesc0.getName());
@@ -88,10 +88,10 @@ public final class SpecBuilderTest {
 
         final DSLPropertyDesc propertyDesc1 = properties1.get(0);
         assertEquals("num", propertyDesc1.getName());
-        assertEquals("Integer", propertyDesc1.getTypeName());
+        assertEquals("Integer", propertyDesc1.getType());
         final DSLPropertyDesc propertyDesc2 = properties1.get(1);
         assertEquals("str", propertyDesc2.getName());
-        assertEquals("String", propertyDesc2.getTypeName());
+        assertEquals("String", propertyDesc2.getType());
 
         final DSLTypeDesc valueDesc1 = values.get(1);
         assertEquals("SecondValue", valueDesc1.getName());
@@ -100,10 +100,10 @@ public final class SpecBuilderTest {
 
         final DSLPropertyDesc propertyDesc3 = properties2.get(0);
         assertEquals("num", propertyDesc3.getName());
-        assertEquals("Integer", propertyDesc3.getTypeName());
+        assertEquals("Integer", propertyDesc3.getType());
         final DSLPropertyDesc propertyDesc4 = properties2.get(1);
         assertEquals("dbl", propertyDesc4.getName());
-        assertEquals("Double", propertyDesc4.getTypeName());
+        assertEquals("Double", propertyDesc4.getType());
 
         final DSLTypeDesc valueDesc2 = values.get(2);
         assertEquals("ValueWithBooleans", valueDesc2.getName());
@@ -112,10 +112,10 @@ public final class SpecBuilderTest {
 
         final DSLPropertyDesc propertyDesc5 = properties3.get(0);
         assertEquals("num", propertyDesc5.getName());
-        assertEquals("Integer", propertyDesc5.getTypeName());
+        assertEquals("Integer", propertyDesc5.getType());
         final DSLPropertyDesc propertyDesc6 = properties3.get(1);
         assertEquals("boolVal", propertyDesc6.getName());
-        assertEquals("Boolean", propertyDesc6.getTypeName());
+        assertEquals("Boolean", propertyDesc6.getType());
 
         final DSLTypeDesc beanSpec0 = values.get(3);
         assertEquals("FirstBean", beanSpec0.getName());
@@ -124,10 +124,10 @@ public final class SpecBuilderTest {
 
         final DSLPropertyDesc propertyDesc7 = properties4.get(0);
         assertEquals("num", propertyDesc7.getName());
-        assertEquals("Integer", propertyDesc7.getTypeName());
+        assertEquals("Integer", propertyDesc7.getType());
         assertEquals("5", propertyDesc7.getDefaultValue());
         final DSLPropertyDesc propertyDesc8 = properties4.get(1);
         assertEquals("str", propertyDesc8.getName());
-        assertEquals("String", propertyDesc8.getTypeName());
+        assertEquals("String", propertyDesc8.getType());
     }
 }

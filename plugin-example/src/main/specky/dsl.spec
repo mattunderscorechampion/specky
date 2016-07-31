@@ -72,8 +72,15 @@ value DSLSpecDesc "Description of a specification."
     properties
         optional String author "Author of the specification."
         String packageName "Name of the package the specification describes."
-        List<String> importTypes "Types from outside the specification to import."
+        List<DSLImportDesc> importTypes "Types from outside the specification to import."
         List<DSLTypeDesc> types "Types of the specification."
         List<DSLViewDesc> views "Views of the specification."
+    options
+        immutable builder
+
+value DSLImportDesc "Description of the import of a type from outside the specification."
+    properties
+        String typeName "The name of the type."
+        optional String defaultValue default null "The default value of the type."
     options
         immutable builder

@@ -48,10 +48,10 @@ public final class GeneratorUtils {
     public static TypeName getType(PropertyDesc property) {
         final List<String> typeParameters = property.getTypeParameters();
         if (typeParameters.size() > 0) {
-            return getType(property.getTypeName(), typeParameters);
+            return getType(property.getType(), typeParameters);
         }
         else {
-            return getType(property.getTypeName());
+            return getType(property.getType());
         }
     }
 

@@ -68,7 +68,7 @@ public final class Generator {
     public List<JavaFile> generate(SpecDesc specDesc) {
         final List<JavaFile> result = new ArrayList<>();
         result.addAll(specDesc
-            .getValues()
+            .getTypes()
             .stream()
             .map(valueSpec -> generateTypeFile(specDesc, valueSpec))
             .collect(Collectors.toList()));

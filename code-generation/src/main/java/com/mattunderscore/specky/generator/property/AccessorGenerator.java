@@ -84,7 +84,7 @@ public final class AccessorGenerator implements MethodGeneratorForProperty {
 
     private static String getAccessorName(PropertyDesc property) {
         final String propertyName = property.getName();
-        if (property.getTypeName().equals("boolean")) {
+        if (property.getType().equals("boolean")) {
             return "is" + toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
         }
         else {

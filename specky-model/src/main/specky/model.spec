@@ -24,63 +24,58 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+author "Matt Champion"
+
 package com.mattunderscore.specky.model
 
-imports {
-    com.mattunderscore.specky.model.ConstructionMethod
-}
+imports
+    com.mattunderscore.specky.model.ConstructionMethod default ConstructionMethod.CONSTRUCTOR
 
-value PropertyDesc {
-    String name
-    String typeName
-    List<String> typeParameters
-    boolean optionalProperty
-    boolean override
-    optional String defaultValue default null
-    optional String description default null
-    options {
+value PropertyDesc "Description of a property."
+    properties
+        String name "Name of the property."
+        String type "Type name of the property."
+        List<String> typeParameters
+        boolean optional "If the property is optional."
+        boolean override "If the property is inherited."
+        optional String defaultValue default null "Default value of the property."
+        optional String description default null "Description of the property."
+    options
         immutable builder
-    }
-}
 
-value ViewDesc {
-    optional String author default null
-    String packageName
-    String name
-    List<PropertyDesc> properties
-    optional String description default null
-    options {
+value ViewDesc "Description of a view."
+    properties
+        optional String author "Author of the specification."
+        String packageName "Name of the package the view is in."
+        String name "Name of the view."
+        List<PropertyDesc> properties "Properties of the view."
+        optional String description default null "Description of the view."
+    options
         immutable builder
-    }
-}
 
-type TypeDesc {
-    optional String author default null
-    String packageName
-    String name
-    List<PropertyDesc> properties
-    ConstructionMethod constructionMethod
-    List<String> supertypes
-    optional String description default null
-}
+type TypeDesc "Description of a type."
+    properties
+        optional String author "Author of the type."
+        String packageName "Name of the package the type is in."
+        String name "Name of the type."
+        List<PropertyDesc> properties "Properties of the type."
+        ConstructionMethod constructionMethod "Construction method of the type."
+        List<String> supertypes "Supertypes of the type."
+        optional String description default null "Description of the type."
 
-value ValueDesc : TypeDesc {
-    options {
+
+value ValueDesc : TypeDesc "Description of a value type."
+    options
         immutable builder
-    }
-}
 
-value BeanDesc : TypeDesc {
-    options {
+value BeanDesc : TypeDesc "Description of a bean type."
+    options
         immutable builder
-    }
-}
 
-value SpecDesc {
-    List<String> importTypes
-    List<TypeDesc> values
-    List<ViewDesc> views
-    options {
+value SpecDesc "Description of a specification."
+    properties
+        List<String> importTypes "Types from outside the specification to import."
+        List<TypeDesc> types "Types of the specification."
+        List<ViewDesc> views "Views of the specification."
+    options
         immutable builder
-    }
-}

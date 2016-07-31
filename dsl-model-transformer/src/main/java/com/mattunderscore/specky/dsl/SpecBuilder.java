@@ -96,7 +96,7 @@ public final class SpecBuilder {
                 .stream()
                 .map(this::createView)
                 .collect(toList()))
-            .values(context
+            .types(context
                 .implementationSpec()
                 .stream()
                 .map(this::createType)
@@ -191,11 +191,11 @@ public final class SpecBuilder {
             .name(context
                 .propertyName()
                 .getText())
-            .typeName(context
+            .type(context
                 .Identifier()
                 .getText())
             .typeParameters(typeParameters)
-            .optionalProperty(context.OPTIONAL() != null)
+            .optional(context.OPTIONAL() != null)
             .defaultValue(defaultValue)
             .description(context.StringLiteral() == null ?
                 null :

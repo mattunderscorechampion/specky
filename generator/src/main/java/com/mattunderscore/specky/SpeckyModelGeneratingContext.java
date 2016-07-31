@@ -61,7 +61,7 @@ public final class SpeckyModelGeneratingContext {
                 }
             });
             spec.getViews().forEach(view -> typeResolver.registerTypeName(spec.getPackageName(), view.getName()));
-            spec.getValues().forEach(value -> typeResolver.registerTypeName(spec.getPackageName(), value.getName()));
+            spec.getTypes().forEach(type -> typeResolver.registerTypeName(spec.getPackageName(), type.getName()));
         });
 
         modelGenerator = new ModelGenerator(

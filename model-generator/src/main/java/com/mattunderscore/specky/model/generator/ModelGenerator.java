@@ -77,7 +77,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
 
         return SpecDesc
             .builder()
-            .values(
+            .types(
                 dslSpecs
                     .stream()
                     .map(dslSpecDesc -> getTypes(typeDeriver, dslSpecDesc))
@@ -89,7 +89,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
 
     private List<TypeDesc> getTypes(TypeDeriver typeDeriver, DSLSpecDesc dslSpecDesc) {
         return dslSpecDesc
-            .getValues()
+            .getTypes()
             .stream()
             .map(dslTypeDesc -> typeDeriver.deriveType(dslSpecDesc, dslTypeDesc))
             .collect(toList());
@@ -121,18 +121,18 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
     }
 
     private PropertyDesc getViewProperty(DSLPropertyDesc dslPropertyDesc) {
-        final String resolvedType = typeResolver.resolveOrThrow(dslPropertyDesc.getTypeName());
+        final String resolvedType = typeResolver.resolveOrThrow(dslPropertyDesc.getType());
         return PropertyDesc
             .builder()
             .name(dslPropertyDesc.getName())
-            .typeName(resolvedType)
+            .type(resolvedType)
             .typeParameters(dslPropertyDesc
                 .getTypeParameters()
                 .stream()
                 .map(typeResolver::resolveOrThrow)
                 .collect(toList()))
             .defaultValue(getDefaultValue(dslPropertyDesc, resolvedType))
-            .optionalProperty(dslPropertyDesc.isOptionalProperty())
+            .optional(dslPropertyDesc.isOptional())
             .override(true)
             .description(dslPropertyDesc.getDescription())
             .build();
@@ -146,7 +146,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
         }
 
         final String typeDefaultValue = valueResolver.resolve(resolvedType).get();
-        if (!dslPropertyDesc.isOptionalProperty() && "null".equals(typeDefaultValue)) {
+        if (!dslPropertyDesc.isOptional() && "null".equals(typeDefaultValue)) {
             throw new IllegalStateException(
                 "The property " + dslPropertyDesc.getName() + " is not optional but has no default type");
         }

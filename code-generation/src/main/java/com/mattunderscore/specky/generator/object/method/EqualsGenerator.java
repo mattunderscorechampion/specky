@@ -82,13 +82,13 @@ public final class EqualsGenerator implements MethodGeneratorForType {
 
     private String generatePropertyComparison(PropertyDesc propertyDesc) {
         final String name = propertyDesc.getName();
-        final String type = propertyDesc.getTypeName();
+        final String type = propertyDesc.getType();
 
         if ("int".equals(type) || "boolean".equals(type) || "double".equals(type) || "long".equals(type)) {
             return "this." + name + " == " + "that." + name;
         }
 
-        if (propertyDesc.isOptionalProperty()) {
+        if (propertyDesc.isOptional()) {
             return "(this." +
                 name +
                 " == null && that." +

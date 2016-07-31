@@ -62,7 +62,7 @@ public final class MutatorGenerator implements MethodGeneratorForProperty {
                 propertyDesc.getName(), propertyDesc.getName())
             .returns(TypeName.VOID);
 
-        if (!propertyDesc.isOptionalProperty() && !type.isPrimitive()) {
+        if (!propertyDesc.isOptional() && !type.isPrimitive()) {
             setterSpec.addStatement("$T.requireNonNull($N)", ClassName.get(Objects.class), propertyDesc.getName());
         }
 

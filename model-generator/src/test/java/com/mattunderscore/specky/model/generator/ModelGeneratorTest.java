@@ -1,5 +1,14 @@
 package com.mattunderscore.specky.model.generator;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
@@ -14,14 +23,6 @@ import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
 import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
 import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver;
 import com.mattunderscore.specky.value.resolver.NullValueResolver;
-import org.junit.Test;
-
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests for {@link ModelGenerator}.
@@ -37,7 +38,7 @@ public final class ModelGeneratorTest {
             .author("")
             .packageName("com.example")
             .views(emptyList())
-            .values(singletonList(DSLValueDesc
+            .types(singletonList(DSLValueDesc
                 .builder()
                 .name("Example")
                 .supertypes(emptyList())
@@ -46,15 +47,15 @@ public final class ModelGeneratorTest {
                     .builder()
                     .name("intProp")
                     .typeParameters(emptyList())
-                    .optionalProperty(false)
-                    .typeName("int")
+                    .optional(false)
+                    .type("int")
                     .build()))
                 .build()))
             .build();
 
         final SpecTypeResolver typeResolver = new SpecTypeResolver();
         spec.getViews().forEach(view -> typeResolver.registerTypeName(spec.getPackageName(), view.getName()));
-        spec.getValues().forEach(value -> typeResolver.registerTypeName(spec.getPackageName(), value.getName()));
+        spec.getTypes().forEach(value -> typeResolver.registerTypeName(spec.getPackageName(), value.getName()));
         final ModelGenerator generator = new ModelGenerator(
             singletonList(spec),
             new TypeResolverBuilder().registerResolver(typeResolver).build(),
@@ -65,15 +66,15 @@ public final class ModelGeneratorTest {
         final SpecDesc specDesc = generator.get();
 
         assertNotNull(specDesc);
-        assertEquals(1, specDesc.getValues().size());
-        final TypeDesc typeDesc = specDesc.getValues().get(0);
+        assertEquals(1, specDesc.getTypes().size());
+        final TypeDesc typeDesc = specDesc.getTypes().get(0);
         assertEquals("com.example", typeDesc.getPackageName());
         assertEquals("Example", typeDesc.getName());
         assertEquals(ConstructionMethod.CONSTRUCTOR, typeDesc.getConstructionMethod());
         assertEquals(1, typeDesc.getProperties().size());
         final PropertyDesc property = typeDesc.getProperties().get(0);
         assertEquals("intProp", property.getName());
-        assertEquals("int", property.getTypeName());
+        assertEquals("int", property.getType());
     }
 
     @Test
@@ -88,13 +89,13 @@ public final class ModelGeneratorTest {
                 .properties(singletonList(DSLPropertyDesc
                     .builder()
                     .name("objectProp")
-                    .typeName("Object")
+                    .type("Object")
                     .typeParameters(emptyList())
                     .defaultValue("Integer.ZERO")
-                    .optionalProperty(false)
+                    .optional(false)
                     .build()))
                 .build()))
-            .values(singletonList(DSLValueDesc
+            .types(singletonList(DSLValueDesc
                 .builder()
                 .name("Example")
                 .supertypes(singletonList("com.example.SuperType"))
@@ -102,8 +103,8 @@ public final class ModelGeneratorTest {
                 .properties(singletonList(DSLPropertyDesc
                     .builder()
                     .name("intProp")
-                    .optionalProperty(false)
-                    .typeName("int")
+                    .optional(false)
+                    .type("int")
                     .typeParameters(emptyList())
                     .build()))
                 .build()))
@@ -111,7 +112,7 @@ public final class ModelGeneratorTest {
 
         final SpecTypeResolver typeResolver = new SpecTypeResolver();
         spec.getViews().forEach(view -> typeResolver.registerTypeName(spec.getPackageName(), view.getName()));
-        spec.getValues().forEach(value -> typeResolver.registerTypeName(spec.getPackageName(), value.getName()));
+        spec.getTypes().forEach(value -> typeResolver.registerTypeName(spec.getPackageName(), value.getName()));
         final ModelGenerator generator = new ModelGenerator(
             singletonList(spec),
             new TypeResolverBuilder().registerResolver(typeResolver).build(),
@@ -122,20 +123,20 @@ public final class ModelGeneratorTest {
         final SpecDesc specDesc = generator.get();
 
         assertNotNull(specDesc);
-        assertEquals(1, specDesc.getValues().size());
-        final TypeDesc typeDesc = specDesc.getValues().get(0);
+        assertEquals(1, specDesc.getTypes().size());
+        final TypeDesc typeDesc = specDesc.getTypes().get(0);
         assertEquals("com.example", typeDesc.getPackageName());
         assertEquals("Example", typeDesc.getName());
         assertEquals(ConstructionMethod.CONSTRUCTOR, typeDesc.getConstructionMethod());
         assertEquals(2, typeDesc.getProperties().size());
         final PropertyDesc property0 = typeDesc.getProperties().get(1);
         assertEquals("intProp", property0.getName());
-        assertEquals("int", property0.getTypeName());
+        assertEquals("int", property0.getType());
         assertEquals("0", property0.getDefaultValue());
         assertFalse(property0.isOverride());
         final PropertyDesc property1 = typeDesc.getProperties().get(0);
         assertEquals("objectProp", property1.getName());
-        assertEquals("java.lang.Object", property1.getTypeName());
+        assertEquals("java.lang.Object", property1.getType());
         assertTrue(property1.isOverride());
         assertEquals("Integer.ZERO", property1.getDefaultValue());
     }
