@@ -27,22 +27,29 @@ package com.mattunderscore.specky.generator;
 
 import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
 import static com.squareup.javapoet.TypeSpec.interfaceBuilder;
+import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.model.ViewDesc;
 import com.squareup.javapoet.TypeSpec;
 
 /**
  * {@link TypeInitialiser} for views.
  * @author Matt Champion on 10/07/2016
  */
-public final class ViewInitialiser implements TypeInitialiser {
-    @Override
-    public TypeSpec.Builder create(SpecDesc specDesc, TypeDesc typeDesc) {
+public final class ViewInitialiser {
+
+    /**
+     * @return a type builder for views
+     */
+    public TypeSpec.Builder create(ViewDesc typeDesc) {
         return interfaceBuilder(typeDesc.getName())
+            .addModifiers(PUBLIC)
             .addJavadoc(
                 docType()
-                    .setDescription("View type $L.\n\nAuto-generated from specification.")
+                    .setDescription(
+                        typeDesc.getDescription() == null ?
+                            "View type $L.\n\nAuto-generated from specification." :
+                            typeDesc.getDescription())
                     .setAuthor(typeDesc.getAuthor())
                     .toJavaDoc(),
                 typeDesc.getName());

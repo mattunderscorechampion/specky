@@ -44,22 +44,13 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 25/06/2016
  */
 public final class ViewGenerator {
+    private final ViewInitialiser viewInitialiser = new ViewInitialiser();
 
     /**
      * @return the view type
      */
     public TypeSpec generateView(ViewDesc typeDesc) {
-        final TypeSpec.Builder builder = interfaceBuilder(typeDesc.getName())
-            .addModifiers(PUBLIC)
-            .addJavadoc(
-                docType()
-                    .setDescription(
-                        typeDesc.getDescription() == null ?
-                        "View type $L.\n\nAuto-generated from specification." :
-                        typeDesc.getDescription())
-                    .setAuthor(typeDesc.getAuthor())
-                    .toJavaDoc(),
-                typeDesc.getName());
+        final TypeSpec.Builder builder = viewInitialiser.create(typeDesc);
 
         for (final PropertyDesc propertyDesc : typeDesc.getProperties()) {
             final JavaDocMethodBuilder javaDocMethodBuilder = docMethod();
