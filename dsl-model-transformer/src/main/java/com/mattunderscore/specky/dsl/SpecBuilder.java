@@ -197,6 +197,13 @@ public final class SpecBuilder {
             .typeParameters(typeParameters)
             .optional(context.OPTIONAL() != null)
             .defaultValue(defaultValue)
+            .constraint(context.constraint_expression() == null ?
+                null :
+                context
+                    .constraint_expression()
+                    .ExpressionLiteral()
+                    .getText()
+                    .substring(1, context.constraint_expression().ExpressionLiteral().getText().length() - 1))
             .description(context.StringLiteral() == null ?
                 null :
                 context.StringLiteral().getText().substring(1, context.StringLiteral().getText().length() - 1))

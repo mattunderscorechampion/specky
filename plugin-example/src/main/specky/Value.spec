@@ -82,3 +82,5 @@ value ValueOverridingDefault : TypeWithDefault
 value WithConstraint
     properties
         int number constraint [> 20] "A constrained property"
+    options
+            builder

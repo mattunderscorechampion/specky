@@ -48,6 +48,7 @@ import com.squareup.javapoet.TypeName;
 public final class SettingConfiguratorGenerator implements MethodGeneratorForProperty {
     private final String javadoc;
     private final StatementGeneratorForType returnStatementGenerator;
+    private final ConstraintGenerator constraintGenerator = new ConstraintGenerator();
 
     /**
      * Constructor.
@@ -75,12 +76,13 @@ public final class SettingConfiguratorGenerator implements MethodGeneratorForPro
                     ClassName.get(Objects.class),
                     constructorParameter);
         }
-        else {
-            methodBuilder = methodBuilder
-                .addStatement("this.$L = $N", propertyDesc.getName(), constructorParameter);
+
+        if (propertyDesc.getConstraint() != null) {
+            methodBuilder.addCode(constraintGenerator.generate(propertyDesc));
         }
 
         return methodBuilder
+            .addStatement("this.$L = $N", propertyDesc.getName(), constructorParameter)
             .addStatement("return " + returnStatementGenerator.generate(typeDesc))
             .build();
     }
