@@ -104,6 +104,10 @@ EXTENDS
     : ':'
     ;
 
+CONSTRAINT
+    :   'constraint'
+    ;
+
 IMPORT
     : 'imports'
     ;
@@ -130,6 +134,10 @@ LINE_COMMENT
 
 Identifier
     :   Letter LetterOrDigit*
+    ;
+
+ExpressionLiteral
+    :   '[' ~[\r\n]+ ']'
     ;
 
 StringLiteral

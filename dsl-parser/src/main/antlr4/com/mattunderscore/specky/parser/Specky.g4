@@ -53,10 +53,15 @@ propertyName
     |   IMPORT
     |   OPTIONS
     |   AUTHOR
+    |   CONSTRAINT
+    ;
+
+constraint_expression
+    : CONSTRAINT INLINE_WS ExpressionLiteral
     ;
 
 property
-    :   (OPTIONAL INLINE_WS)? Identifier typeParameters? INLINE_WS propertyName (INLINE_WS default_value)? (INLINE_WS StringLiteral)?
+    :   (OPTIONAL INLINE_WS)? Identifier typeParameters? INLINE_WS propertyName (INLINE_WS default_value)? (INLINE_WS constraint_expression)? (INLINE_WS StringLiteral)?
     ;
 
 qualifiedName
