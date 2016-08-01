@@ -31,7 +31,6 @@ package com.mattunderscore.specky.dsl.model
 imports
     com.mattunderscore.specky.dsl.model.DSLConstructionMethod default DSLConstructionMethod.CONSTRUCTOR
 
-
 value DSLPropertyDesc "Description of a property."
     properties
         String name "Name of the property."
@@ -39,6 +38,7 @@ value DSLPropertyDesc "Description of a property."
         List<String> typeParameters
         boolean optional "If the property is optional."
         optional String defaultValue default null "Default value of the property."
+        optional String constraint default null "Constraint applied to the property."
         optional String description default null "Description of the property."
     options
         immutable builder
@@ -58,7 +58,6 @@ type DSLTypeDesc "Description of a type."
         DSLConstructionMethod constructionMethod "Construction method of the type."
         List<String> supertypes "Supertypes of the type."
         optional String description default null "Description of the type."
-
 
 value DSLValueDesc : DSLTypeDesc "Description of a value type."
     options
@@ -84,4 +83,3 @@ value DSLImportDesc "Description of the import of a type from outside the specif
         optional String defaultValue default null "The default value of the type."
     options
         immutable builder
-

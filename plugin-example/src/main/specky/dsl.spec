@@ -39,6 +39,7 @@ value DSLPropertyDesc "Description of a property."
         List<String> typeParameters
         boolean optional "If the property is optional."
         optional String defaultValue default null "Default value of the property."
+        optional String constraint default null "Constraint applied to the property."
         optional String description default null "Description of the property."
     options
         immutable builder

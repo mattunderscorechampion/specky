@@ -132,6 +132,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                 .map(typeResolver::resolveOrThrow)
                 .collect(toList()))
             .defaultValue(getDefaultValue(dslPropertyDesc, resolvedType))
+            .constraint(dslPropertyDesc.getConstraint())
             .optional(dslPropertyDesc.isOptional())
             .override(true)
             .description(dslPropertyDesc.getDescription())
