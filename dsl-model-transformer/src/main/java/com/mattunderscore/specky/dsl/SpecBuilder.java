@@ -34,6 +34,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
+import com.mattunderscore.specky.dsl.model.DSLConstraintDesc;
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
 import com.mattunderscore.specky.dsl.model.DSLImportDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
@@ -199,11 +200,17 @@ public final class SpecBuilder {
             .defaultValue(defaultValue)
             .constraint(context.constraint_expression() == null ?
                 null :
-                context
-                    .constraint_expression()
-                    .ExpressionLiteral()
-                    .getText()
-                    .substring(1, context.constraint_expression().ExpressionLiteral().getText().length() - 1))
+                DSLConstraintDesc
+                    .builder()
+                    .operator(context
+                        .constraint_expression()
+                        .constraint_operator()
+                        .getText())
+                    .literal(context
+                        .constraint_expression()
+                        .constraint_literal()
+                        .getText())
+                    .build())
             .description(context.StringLiteral() == null ?
                 null :
                 context.StringLiteral().getText().substring(1, context.StringLiteral().getText().length() - 1))

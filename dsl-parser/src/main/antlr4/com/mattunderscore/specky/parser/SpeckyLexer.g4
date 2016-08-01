@@ -104,10 +104,6 @@ EXTENDS
     : ':'
     ;
 
-CONSTRAINT
-    :   'constraint'
-    ;
-
 IMPORT
     : 'imports'
     ;
@@ -136,8 +132,8 @@ Identifier
     :   Letter LetterOrDigit*
     ;
 
-ExpressionLiteral
-    :   '[' ~[\r\n]+ ']'
+CONSTRAINT_EXPRESSION
+    :   '[constraint' -> pushMode(CONSTRAINT_MODE)
     ;
 
 StringLiteral
@@ -152,4 +148,26 @@ LITERAL_INLINE_WS
 
 ANYTHING
     : ~[ \t\r\n\u000C]+ -> popMode
+    ;
+
+mode CONSTRAINT_MODE;
+
+CONSTRAINT_INLINE_WS
+    : [ ]+ -> channel(HIDDEN)
+    ;
+
+GREATER_THAN
+    : '>'
+    ;
+
+LESS_THAN
+    : '<'
+    ;
+
+INTEGER_LITERAL
+    : [0-9]+
+    ;
+
+CONSTRAINT_END
+    : ']' -> popMode
     ;

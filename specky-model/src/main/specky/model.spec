@@ -39,7 +39,7 @@ value PropertyDesc "Description of a property."
         boolean optional "If the property is optional."
         boolean override "If the property is inherited."
         optional String defaultValue default null "Default value of the property."
-        optional String constraint default null "Constraint applied to the property."
+        optional ConstraintDesc constraint default null "Constraint applied to the property."
         optional String description default null "Description of the property."
     options
         immutable builder
@@ -80,3 +80,11 @@ value SpecDesc "Description of a specification."
         List<ViewDesc> views "Views of the specification."
     options
         immutable builder
+
+value ConstraintDesc "Description of a constraint."
+    properties
+        String operator "An operator."
+        String literal "A literal value."
+    options
+        immutable builder
+

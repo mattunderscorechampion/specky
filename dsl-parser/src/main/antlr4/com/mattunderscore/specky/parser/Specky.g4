@@ -53,11 +53,19 @@ propertyName
     |   IMPORT
     |   OPTIONS
     |   AUTHOR
-    |   CONSTRAINT
+    ;
+
+constraint_operator
+    :   GREATER_THAN
+    |   LESS_THAN
+    ;
+
+constraint_literal
+    :   INTEGER_LITERAL
     ;
 
 constraint_expression
-    : CONSTRAINT INLINE_WS ExpressionLiteral
+    :   CONSTRAINT_EXPRESSION CONSTRAINT_INLINE_WS constraint_operator CONSTRAINT_INLINE_WS constraint_literal CONSTRAINT_END
     ;
 
 property

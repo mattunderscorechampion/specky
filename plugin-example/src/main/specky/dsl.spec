@@ -39,7 +39,7 @@ value DSLPropertyDesc "Description of a property."
         List<String> typeParameters
         boolean optional "If the property is optional."
         optional String defaultValue default null "Default value of the property."
-        optional String constraint default null "Constraint applied to the property."
+        optional DSLConstraintDesc constraint default null "Constraint applied to the property."
         optional String description default null "Description of the property."
     options
         immutable builder
@@ -83,5 +83,12 @@ value DSLImportDesc "Description of the import of a type from outside the specif
     properties
         String typeName "The name of the type."
         optional String defaultValue default null "The default value of the type."
+    options
+        immutable builder
+
+value DSLConstraintDesc "Description of a constraint."
+    properties
+        String operator "An operator."
+        String literal "A literal value."
     options
         immutable builder

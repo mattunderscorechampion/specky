@@ -36,6 +36,7 @@ import java.util.function.Supplier;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLViewDesc;
+import com.mattunderscore.specky.model.ConstraintDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
@@ -132,7 +133,14 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                 .map(typeResolver::resolveOrThrow)
                 .collect(toList()))
             .defaultValue(getDefaultValue(dslPropertyDesc, resolvedType))
-            .constraint(dslPropertyDesc.getConstraint())
+            .constraint(
+                dslPropertyDesc.getConstraint() == null ?
+                    null :
+                    ConstraintDesc
+                        .builder()
+                        .operator(dslPropertyDesc.getConstraint().getOperator())
+                        .literal(dslPropertyDesc.getConstraint().getLiteral())
+                        .build())
             .optional(dslPropertyDesc.isOptional())
             .override(true)
             .description(dslPropertyDesc.getDescription())

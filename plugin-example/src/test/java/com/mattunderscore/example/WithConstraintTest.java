@@ -38,13 +38,23 @@ import com.example.WithConstraint;
  */
 public final class WithConstraintTest {
     @Test(expected = IllegalArgumentException.class)
-    public void testConstraintViolation() {
-        WithConstraint.builder().number(5);
+    public void testMinConstraintViolation() {
+        WithConstraint.builder().minNumber(5);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMaxConstraintViolation() {
+        WithConstraint.builder().maxNumber(21);
     }
 
     @Test
     public void testConstraint() {
-        final WithConstraint withConstraint = WithConstraint.builder().number(21).build();
-        assertEquals(21, withConstraint.getNumber());
+        final WithConstraint withConstraint = WithConstraint
+            .builder()
+            .minNumber(21)
+            .maxNumber(5)
+            .build();
+        assertEquals(21, withConstraint.getMinNumber());
+        assertEquals(5, withConstraint.getMaxNumber());
     }
 }

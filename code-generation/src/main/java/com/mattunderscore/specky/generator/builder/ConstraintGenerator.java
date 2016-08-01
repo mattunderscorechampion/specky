@@ -25,6 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.builder;
 
+import com.mattunderscore.specky.model.ConstraintDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.squareup.javapoet.CodeBlock;
 
@@ -37,12 +38,21 @@ public final class ConstraintGenerator {
      * Generate constraint checking code.
      */
     public CodeBlock generate(PropertyDesc propertyDesc) {
-        final String constraint = propertyDesc.getConstraint();
-        if (constraint.charAt(0) == '>') {
-            final int lowerLimit = Integer.parseInt(constraint.substring(2));
+        final ConstraintDesc constraint = propertyDesc.getConstraint();
+        if (">".equals(constraint.getOperator())) {
+            final int lowerLimit = Integer.parseInt(constraint.getLiteral());
             return CodeBlock
                 .builder()
                 .beginControlFlow("if ($L <= $L)", propertyDesc.getName(), lowerLimit)
+                .addStatement("throw new IllegalArgumentException(\"Constraint violated\")")
+                .endControlFlow()
+                .build();
+        }
+        else if ("<".equals(constraint.getOperator())) {
+            final int upperLimit = Integer.parseInt(constraint.getLiteral());
+            return CodeBlock
+                .builder()
+                .beginControlFlow("if ($L >= $L)", propertyDesc.getName(), upperLimit)
                 .addStatement("throw new IllegalArgumentException(\"Constraint violated\")")
                 .endControlFlow()
                 .build();
