@@ -57,6 +57,24 @@ public final class ConstraintGenerator {
                 .endControlFlow()
                 .build();
         }
+        else if (">=".equals(constraint.getOperator())) {
+            final int lowerLimit = Integer.parseInt(constraint.getLiteral());
+            return CodeBlock
+                .builder()
+                .beginControlFlow("if ($L < $L)", propertyDesc.getName(), lowerLimit)
+                .addStatement("throw new IllegalArgumentException(\"Constraint violated\")")
+                .endControlFlow()
+                .build();
+        }
+        else if ("<=".equals(constraint.getOperator())) {
+            final int upperLimit = Integer.parseInt(constraint.getLiteral());
+            return CodeBlock
+                .builder()
+                .beginControlFlow("if ($L > $L)", propertyDesc.getName(), upperLimit)
+                .addStatement("throw new IllegalArgumentException(\"Constraint violated\")")
+                .endControlFlow()
+                .build();
+        }
         throw new IllegalArgumentException("Constraint not valid");
     }
 }

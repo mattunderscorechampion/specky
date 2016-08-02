@@ -156,6 +156,14 @@ CONSTRAINT_INLINE_WS
     : [ ]+ -> channel(HIDDEN)
     ;
 
+GREATER_THAN_OR_EQUAL
+    : '>='
+    ;
+
+LESS_THAN_OR_EQUAL
+    : '<='
+    ;
+
 GREATER_THAN
     : '>'
     ;
