@@ -35,6 +35,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
 import com.mattunderscore.specky.dsl.model.DSLConstraintDesc;
+import com.mattunderscore.specky.dsl.model.DSLConstraintOperator;
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
 import com.mattunderscore.specky.dsl.model.DSLImportDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
@@ -202,10 +203,9 @@ public final class SpecBuilder {
                 null :
                 DSLConstraintDesc
                     .builder()
-                    .operator(context
+                    .operator(toConstraintOperator(context
                         .constraint_expression()
-                        .constraint_operator()
-                        .getText())
+                        .constraint_operator()))
                     .literal(context
                         .constraint_expression()
                         .constraint_literal()
@@ -215,6 +215,25 @@ public final class SpecBuilder {
                 null :
                 context.StringLiteral().getText().substring(1, context.StringLiteral().getText().length() - 1))
             .build();
+    }
+
+    private DSLConstraintOperator toConstraintOperator(Specky.Constraint_operatorContext operatorContext) {
+        final String operatorContextText = operatorContext.getText();
+        if ("<=".equals(operatorContextText)) {
+            return DSLConstraintOperator.LESS_THAN_OR_EQUAL;
+        }
+        else if (">=".equals(operatorContextText)) {
+            return DSLConstraintOperator.GREATER_THAN_OR_EQUAL;
+        }
+        else if ("<".equals(operatorContextText)) {
+            return DSLConstraintOperator.LESS_THAN;
+        }
+        else if (">".equals(operatorContextText)) {
+            return DSLConstraintOperator.GREATER_THAN;
+        }
+        else {
+            throw new IllegalArgumentException("Unsupported operator");
+        }
     }
 
     private DSLConstructionMethod toConstructionDesc(ImplementationSpecContext typeSpec) {

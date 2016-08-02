@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mattunderscore.specky.dsl.model.DSLConstraintOperator;
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
@@ -40,6 +41,7 @@ import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ConstraintDesc;
+import com.mattunderscore.specky.model.ConstraintOperator;
 import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.TypeDesc;
@@ -207,12 +209,27 @@ public final class TypeDeriver {
                     null :
                     ConstraintDesc
                         .builder()
-                        .operator(dslPropertyDesc.getConstraint().getOperator())
+                        .operator(toConstraintOperator(dslPropertyDesc.getConstraint().getOperator()))
                         .literal(dslPropertyDesc.getConstraint().getLiteral())
                         .build())
             .optional(dslPropertyDesc.isOptional())
             .override(false)
             .description(dslPropertyDesc.getDescription())
             .build();
+    }
+
+    private ConstraintOperator toConstraintOperator(DSLConstraintOperator operator) {
+        switch (operator) {
+            case LESS_THAN:
+                return ConstraintOperator.LESS_THAN;
+            case GREATER_THAN:
+                return ConstraintOperator.GREATER_THAN;
+            case LESS_THAN_OR_EQUAL:
+                return ConstraintOperator.LESS_THAN_OR_EQUAL;
+            case GREATER_THAN_OR_EQUAL:
+                return ConstraintOperator.GREATER_THAN_OR_EQUAL;
+            default:
+                throw new IllegalArgumentException("Unsupported operation");
+        }
     }
 }

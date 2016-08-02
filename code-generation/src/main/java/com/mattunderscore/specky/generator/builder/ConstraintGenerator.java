@@ -39,42 +39,29 @@ public final class ConstraintGenerator {
      */
     public CodeBlock generate(PropertyDesc propertyDesc) {
         final ConstraintDesc constraint = propertyDesc.getConstraint();
-        if (">".equals(constraint.getOperator())) {
-            final int lowerLimit = Integer.parseInt(constraint.getLiteral());
-            return CodeBlock
-                .builder()
-                .beginControlFlow("if ($L <= $L)", propertyDesc.getName(), lowerLimit)
-                .addStatement("throw new IllegalArgumentException(\"Constraint violated\")")
-                .endControlFlow()
-                .build();
+        CodeBlock.Builder builder = CodeBlock.builder();
+
+        final int bound = Integer.parseInt(constraint.getLiteral());
+        switch (constraint.getOperator()) {
+            case GREATER_THAN:
+                builder = builder.beginControlFlow("if ($L <= $L)", propertyDesc.getName(), bound);
+                break;
+            case LESS_THAN:
+                builder = builder.beginControlFlow("if ($L >= $L)", propertyDesc.getName(), bound);
+                break;
+            case GREATER_THAN_OR_EQUAL:
+                builder = builder.beginControlFlow("if ($L < $L)", propertyDesc.getName(), bound);
+                break;
+            case LESS_THAN_OR_EQUAL:
+                builder = builder.beginControlFlow("if ($L > $L)", propertyDesc.getName(), bound);
+                break;
+            default:
+                throw new IllegalArgumentException("Constraint not valid");
         }
-        else if ("<".equals(constraint.getOperator())) {
-            final int upperLimit = Integer.parseInt(constraint.getLiteral());
-            return CodeBlock
-                .builder()
-                .beginControlFlow("if ($L >= $L)", propertyDesc.getName(), upperLimit)
-                .addStatement("throw new IllegalArgumentException(\"Constraint violated\")")
-                .endControlFlow()
-                .build();
-        }
-        else if (">=".equals(constraint.getOperator())) {
-            final int lowerLimit = Integer.parseInt(constraint.getLiteral());
-            return CodeBlock
-                .builder()
-                .beginControlFlow("if ($L < $L)", propertyDesc.getName(), lowerLimit)
-                .addStatement("throw new IllegalArgumentException(\"Constraint violated\")")
-                .endControlFlow()
-                .build();
-        }
-        else if ("<=".equals(constraint.getOperator())) {
-            final int upperLimit = Integer.parseInt(constraint.getLiteral());
-            return CodeBlock
-                .builder()
-                .beginControlFlow("if ($L > $L)", propertyDesc.getName(), upperLimit)
-                .addStatement("throw new IllegalArgumentException(\"Constraint violated\")")
-                .endControlFlow()
-                .build();
-        }
-        throw new IllegalArgumentException("Constraint not valid");
+
+        return builder
+            .addStatement("throw new IllegalArgumentException(\"Constraint violated\")")
+            .endControlFlow()
+            .build();
     }
 }

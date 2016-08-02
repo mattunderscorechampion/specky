@@ -30,6 +30,7 @@ package com.mattunderscore.specky.dsl.model
 
 imports
     com.mattunderscore.specky.dsl.model.DSLConstructionMethod default DSLConstructionMethod.CONSTRUCTOR
+    com.mattunderscore.specky.dsl.model.DSLConstraintOperator
 
 value DSLPropertyDesc "Description of a property."
     properties
@@ -86,7 +87,7 @@ value DSLImportDesc "Description of the import of a type from outside the specif
 
 value DSLConstraintDesc "Description of a constraint."
     properties
-        String operator "An operator."
+        DSLConstraintOperator operator "An operator."
         String literal "A literal value."
     options
         immutable builder
