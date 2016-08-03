@@ -62,16 +62,30 @@ constraint_operator
     |   LESS_THAN_OR_EQUAL
     ;
 
+constraint_combining_operator
+    :   CONJUNCTION
+    |   DISJUNCTION
+    ;
+
 constraint_literal
     :   INTEGER_LITERAL
     ;
 
+constraint_unary_expression
+    :   constraint_operator CONSTRAINT_INLINE_WS constraint_literal
+    ;
+
 constraint_expression
-    :   CONSTRAINT_EXPRESSION CONSTRAINT_INLINE_WS constraint_operator CONSTRAINT_INLINE_WS constraint_literal CONSTRAINT_END
+    :   constraint_unary_expression
+    |   constraint_expression CONSTRAINT_INLINE_WS constraint_combining_operator CONSTRAINT_INLINE_WS constraint_expression
+    ;
+
+constraint_statement
+    :   CONSTRAINT_EXPRESSION CONSTRAINT_INLINE_WS constraint_expression CONSTRAINT_END
     ;
 
 property
-    :   (OPTIONAL INLINE_WS)? Identifier typeParameters? INLINE_WS propertyName (INLINE_WS default_value)? (INLINE_WS constraint_expression)? (INLINE_WS StringLiteral)?
+    :   (OPTIONAL INLINE_WS)? Identifier typeParameters? INLINE_WS propertyName (INLINE_WS default_value)? (INLINE_WS constraint_statement)? (INLINE_WS StringLiteral)?
     ;
 
 qualifiedName

@@ -172,6 +172,14 @@ LESS_THAN
     : '<'
     ;
 
+CONJUNCTION
+    : '&'
+    ;
+
+DISJUNCTION
+    : '|'
+    ;
+
 INTEGER_LITERAL
     : [0-9]+
     ;

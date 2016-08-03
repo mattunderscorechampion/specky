@@ -34,6 +34,8 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
+import com.mattunderscore.specky.dsl.model.DSLBinaryConstraintDesc;
+import com.mattunderscore.specky.dsl.model.DSLBinaryConstraintOperator;
 import com.mattunderscore.specky.dsl.model.DSLConstraintDesc;
 import com.mattunderscore.specky.dsl.model.DSLConstraintOperator;
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
@@ -41,6 +43,7 @@ import com.mattunderscore.specky.dsl.model.DSLImportDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
+import com.mattunderscore.specky.dsl.model.DSLUnaryConstraintDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
 import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.mattunderscore.specky.parser.Specky;
@@ -199,23 +202,51 @@ public final class SpecBuilder {
             .typeParameters(typeParameters)
             .optional(context.OPTIONAL() != null)
             .defaultValue(defaultValue)
-            .constraint(context.constraint_expression() == null ?
-                null :
-                DSLConstraintDesc
-                    .builder()
-                    .operator(toConstraintOperator(context
-                        .constraint_expression()
-                        .constraint_operator()))
-                    .literal(context
-                        .constraint_expression()
-                        .constraint_literal()
-                        .getText())
-                    .build())
+            .constraint(createConstraint(context.constraint_statement()))
             .description(context.StringLiteral() == null ?
                 null :
                 context.StringLiteral().getText().substring(1, context.StringLiteral().getText().length() - 1))
             .build();
     }
+
+    private DSLConstraintDesc createConstraint(Specky.Constraint_statementContext statementContext) {
+        if (statementContext == null) {
+            return null;
+        }
+
+        final Specky.Constraint_expressionContext expression = statementContext.constraint_expression();
+        return createConstraint(expression);
+    }
+
+    private DSLConstraintDesc createConstraint(Specky.Constraint_expressionContext expression) {
+        final Specky.Constraint_unary_expressionContext unaryExpression = expression.constraint_unary_expression();
+        if (unaryExpression == null) {
+            final Specky.Constraint_expressionContext leftConstraint = expression.constraint_expression().get(0);
+            final Specky.Constraint_expressionContext rightConstraint = expression.constraint_expression().get(1);
+            final DSLBinaryConstraintOperator operator = toConstraintOperator(expression.constraint_combining_operator());
+
+            return DSLConstraintDesc
+                .builder()
+                .binaryConstraint(DSLBinaryConstraintDesc
+                    .builder()
+                    .constraint0(createConstraint(leftConstraint))
+                    .constraint1(createConstraint(rightConstraint))
+                    .operator(operator)
+                    .build())
+                .build();
+        }
+        else {
+            return DSLConstraintDesc
+                .builder()
+                .unaryConstraint(DSLUnaryConstraintDesc
+                    .builder()
+                    .operator(toConstraintOperator(unaryExpression.constraint_operator()))
+                    .literal(unaryExpression.constraint_literal().getText())
+                    .build())
+                .build();
+        }
+    }
+
 
     private DSLConstraintOperator toConstraintOperator(Specky.Constraint_operatorContext operatorContext) {
         final String operatorContextText = operatorContext.getText();
@@ -230,6 +261,19 @@ public final class SpecBuilder {
         }
         else if (">".equals(operatorContextText)) {
             return DSLConstraintOperator.GREATER_THAN;
+        }
+        else {
+            throw new IllegalArgumentException("Unsupported operator");
+        }
+    }
+
+    private DSLBinaryConstraintOperator toConstraintOperator(Specky.Constraint_combining_operatorContext operatorContext) {
+        final String operatorContextText = operatorContext.getText();
+        if ("&".equals(operatorContextText)) {
+            return DSLBinaryConstraintOperator.CONJUNCTION;
+        }
+        else if ("|".equals(operatorContextText)) {
+            return DSLBinaryConstraintOperator.DISJUNCTION;
         }
         else {
             throw new IllegalArgumentException("Unsupported operator");

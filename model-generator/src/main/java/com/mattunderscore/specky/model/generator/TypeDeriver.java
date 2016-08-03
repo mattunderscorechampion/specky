@@ -33,18 +33,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mattunderscore.specky.dsl.model.DSLBinaryConstraintOperator;
+import com.mattunderscore.specky.dsl.model.DSLConstraintDesc;
 import com.mattunderscore.specky.dsl.model.DSLConstraintOperator;
 import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
+import com.mattunderscore.specky.dsl.model.DSLUnaryConstraintDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
 import com.mattunderscore.specky.model.BeanDesc;
+import com.mattunderscore.specky.model.BinaryConstraintDesc;
+import com.mattunderscore.specky.model.BinaryConstraintOperator;
 import com.mattunderscore.specky.model.ConstraintDesc;
 import com.mattunderscore.specky.model.ConstraintOperator;
 import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.model.UnaryConstraintDesc;
 import com.mattunderscore.specky.model.ValueDesc;
 import com.mattunderscore.specky.model.ViewDesc;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
@@ -204,18 +210,51 @@ public final class TypeDeriver {
                 defaultValue == null && !dslPropertyDesc.isOptional() ?
                     valueResolver.resolve(resolvedType).get() :
                     defaultValue)
-            .constraint(
-                dslPropertyDesc.getConstraint() == null ?
-                    null :
-                    ConstraintDesc
-                        .builder()
-                        .operator(toConstraintOperator(dslPropertyDesc.getConstraint().getOperator()))
-                        .literal(dslPropertyDesc.getConstraint().getLiteral())
-                        .build())
+            .constraint(toConstraint(dslPropertyDesc.getConstraint()))
             .optional(dslPropertyDesc.isOptional())
             .override(false)
             .description(dslPropertyDesc.getDescription())
             .build();
+    }
+
+    private ConstraintDesc toConstraint(DSLConstraintDesc dslConstraintDesc) {
+        if (dslConstraintDesc == null) {
+            return null;
+        }
+
+        final DSLUnaryConstraintDesc unaryConstraint = dslConstraintDesc.getUnaryConstraint();
+        if (unaryConstraint != null) {
+            return ConstraintDesc
+                .builder()
+                .unaryConstraint(UnaryConstraintDesc
+                    .builder()
+                    .literal(unaryConstraint.getLiteral())
+                    .operator(toConstraintOperator(unaryConstraint.getOperator()))
+                    .build())
+                .build();
+        }
+        else {
+            return ConstraintDesc
+                .builder()
+                .binaryConstraint(BinaryConstraintDesc
+                    .builder()
+                    .operator(toConstraintOperator(dslConstraintDesc.getBinaryConstraint().getOperator()))
+                    .constraint0(toConstraint(dslConstraintDesc.getBinaryConstraint().getConstraint0()))
+                    .constraint1(toConstraint(dslConstraintDesc.getBinaryConstraint().getConstraint1()))
+                    .build())
+                .build();
+        }
+    }
+
+    private BinaryConstraintOperator toConstraintOperator(DSLBinaryConstraintOperator operator) {
+        switch (operator) {
+            case DISJUNCTION:
+                return BinaryConstraintOperator.DISJUNCTION;
+            case CONJUNCTION:
+                return BinaryConstraintOperator.CONJUNCTION;
+            default:
+                throw new IllegalArgumentException("Unsupported operation");
+        }
     }
 
     private ConstraintOperator toConstraintOperator(DSLConstraintOperator operator) {

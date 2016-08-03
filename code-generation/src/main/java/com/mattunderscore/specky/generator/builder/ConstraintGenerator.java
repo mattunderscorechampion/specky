@@ -27,6 +27,7 @@ package com.mattunderscore.specky.generator.builder;
 
 import com.mattunderscore.specky.model.ConstraintDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
+import com.mattunderscore.specky.model.UnaryConstraintDesc;
 import com.squareup.javapoet.CodeBlock;
 
 /**
@@ -38,30 +39,43 @@ public final class ConstraintGenerator {
      * Generate constraint checking code.
      */
     public CodeBlock generate(PropertyDesc propertyDesc) {
-        final ConstraintDesc constraint = propertyDesc.getConstraint();
-        CodeBlock.Builder builder = CodeBlock.builder();
+        final CodeBlock.Builder builder = CodeBlock.builder();
 
-        final int bound = Integer.parseInt(constraint.getLiteral());
-        switch (constraint.getOperator()) {
+        generate(builder, propertyDesc, propertyDesc.getConstraint());
+        return builder.build();
+    }
+
+    private void generate(CodeBlock.Builder builder, PropertyDesc propertyDesc, ConstraintDesc constraintDesc) {
+        final UnaryConstraintDesc unaryConstraint = constraintDesc.getUnaryConstraint();
+        if (unaryConstraint != null) {
+            generate(builder, propertyDesc, unaryConstraint);
+        }
+        else {
+            throw new UnsupportedOperationException("Code generator for binary expressions not yet supported");
+        }
+    }
+
+    private void generate(CodeBlock.Builder builder, PropertyDesc propertyDesc, UnaryConstraintDesc unaryConstraintDesc) {
+        final int bound = Integer.parseInt(unaryConstraintDesc.getLiteral());
+        switch (unaryConstraintDesc.getOperator()) {
             case GREATER_THAN:
-                builder = builder.beginControlFlow("if ($L <= $L)", propertyDesc.getName(), bound);
+                builder.beginControlFlow("if ($L <= $L)", propertyDesc.getName(), bound);
                 break;
             case LESS_THAN:
-                builder = builder.beginControlFlow("if ($L >= $L)", propertyDesc.getName(), bound);
+                builder.beginControlFlow("if ($L >= $L)", propertyDesc.getName(), bound);
                 break;
             case GREATER_THAN_OR_EQUAL:
-                builder = builder.beginControlFlow("if ($L < $L)", propertyDesc.getName(), bound);
+                builder.beginControlFlow("if ($L < $L)", propertyDesc.getName(), bound);
                 break;
             case LESS_THAN_OR_EQUAL:
-                builder = builder.beginControlFlow("if ($L > $L)", propertyDesc.getName(), bound);
+                builder.beginControlFlow("if ($L > $L)", propertyDesc.getName(), bound);
                 break;
             default:
                 throw new IllegalArgumentException("Constraint not valid");
         }
 
-        return builder
+        builder
             .addStatement("throw new IllegalArgumentException(\"Constraint violated\")")
-            .endControlFlow()
-            .build();
+            .endControlFlow();
     }
 }
