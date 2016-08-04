@@ -33,11 +33,11 @@ import java.util.List;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import com.mattunderscore.specky.constraint.model.BinaryConstraintDesc;
 import com.mattunderscore.specky.constraint.model.BinaryConstraintOperator;
+import com.mattunderscore.specky.constraint.model.CompoundConstraintDesc;
 import com.mattunderscore.specky.constraint.model.ConstraintDesc;
 import com.mattunderscore.specky.constraint.model.ConstraintOperator;
-import com.mattunderscore.specky.constraint.model.UnaryConstraintDesc;
+import com.mattunderscore.specky.constraint.model.PredicateDesc;
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
 import com.mattunderscore.specky.dsl.model.DSLImportDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
@@ -219,15 +219,15 @@ public final class SpecBuilder {
     }
 
     private ConstraintDesc createConstraint(Specky.Constraint_expressionContext expression) {
-        final Specky.Constraint_unary_expressionContext unaryExpression = expression.constraint_unary_expression();
+        final Specky.Constraint_predicateContext unaryExpression = expression.constraint_predicate();
         if (unaryExpression == null) {
-            final Specky.Constraint_expressionContext leftConstraint = expression.constraint_expression().get(0);
-            final Specky.Constraint_expressionContext rightConstraint = expression.constraint_expression().get(1);
-            final BinaryConstraintOperator operator = toConstraintOperator(expression.constraint_combining_operator());
+            final Specky.Constraint_expressionContext leftConstraint = expression.constraint_expression(0);
+            final Specky.Constraint_expressionContext rightConstraint = expression.constraint_expression(1);
+            final BinaryConstraintOperator operator = toConstraintOperator(expression.constraint_compound_operator());
 
             return ConstraintDesc
                 .builder()
-                .binaryConstraint(BinaryConstraintDesc
+                .binaryConstraint(CompoundConstraintDesc
                     .builder()
                     .constraint0(createConstraint(leftConstraint))
                     .constraint1(createConstraint(rightConstraint))
@@ -238,7 +238,7 @@ public final class SpecBuilder {
         else {
             return ConstraintDesc
                 .builder()
-                .unaryConstraint(UnaryConstraintDesc
+                .unaryConstraint(PredicateDesc
                     .builder()
                     .operator(toConstraintOperator(unaryExpression.constraint_operator()))
                     .literal(unaryExpression.constraint_literal().getText())
@@ -267,7 +267,7 @@ public final class SpecBuilder {
         }
     }
 
-    private BinaryConstraintOperator toConstraintOperator(Specky.Constraint_combining_operatorContext operatorContext) {
+    private BinaryConstraintOperator toConstraintOperator(Specky.Constraint_compound_operatorContext operatorContext) {
         final String operatorContextText = operatorContext.getText();
         if ("&".equals(operatorContextText)) {
             return BinaryConstraintOperator.CONJUNCTION;

@@ -62,7 +62,7 @@ constraint_operator
     |   LESS_THAN_OR_EQUAL
     ;
 
-constraint_combining_operator
+constraint_compound_operator
     :   CONJUNCTION
     |   DISJUNCTION
     ;
@@ -71,13 +71,13 @@ constraint_literal
     :   INTEGER_LITERAL
     ;
 
-constraint_unary_expression
+constraint_predicate
     :   constraint_operator CONSTRAINT_INLINE_WS constraint_literal
     ;
 
 constraint_expression
-    :   constraint_unary_expression
-    |   constraint_expression CONSTRAINT_INLINE_WS constraint_combining_operator CONSTRAINT_INLINE_WS constraint_expression
+    :   constraint_predicate
+    |   constraint_expression CONSTRAINT_INLINE_WS constraint_compound_operator CONSTRAINT_INLINE_WS constraint_expression
     ;
 
 constraint_statement

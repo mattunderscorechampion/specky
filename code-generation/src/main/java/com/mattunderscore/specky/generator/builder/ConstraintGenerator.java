@@ -27,7 +27,7 @@ package com.mattunderscore.specky.generator.builder;
 
 import com.mattunderscore.specky.constraint.model.BinaryConstraintOperator;
 import com.mattunderscore.specky.constraint.model.ConstraintDesc;
-import com.mattunderscore.specky.constraint.model.UnaryConstraintDesc;
+import com.mattunderscore.specky.constraint.model.PredicateDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.squareup.javapoet.CodeBlock;
 
@@ -47,7 +47,7 @@ public final class ConstraintGenerator {
     }
 
     private void generate(CodeBlock.Builder builder, String propertyName, ConstraintDesc constraintDesc) {
-        final UnaryConstraintDesc unaryConstraint = constraintDesc.getUnaryConstraint();
+        final PredicateDesc unaryConstraint = constraintDesc.getUnaryConstraint();
         if (unaryConstraint != null) {
             generate(builder, propertyName, unaryConstraint);
         }
@@ -69,9 +69,9 @@ public final class ConstraintGenerator {
         }
     }
 
-    private void generate(CodeBlock.Builder builder, String propertyName, UnaryConstraintDesc unaryConstraintDesc) {
-        final int bound = Integer.parseInt(unaryConstraintDesc.getLiteral());
-        switch (unaryConstraintDesc.getOperator()) {
+    private void generate(CodeBlock.Builder builder, String propertyName, PredicateDesc predicate) {
+        final int bound = Integer.parseInt(predicate.getLiteral());
+        switch (predicate.getOperator()) {
             case GREATER_THAN:
                 builder.beginControlFlow("if ($L <= $L)", propertyName, bound);
                 break;
@@ -85,7 +85,7 @@ public final class ConstraintGenerator {
                 builder.beginControlFlow("if ($L > $L)", propertyName, bound);
                 break;
             default:
-                throw new IllegalArgumentException("Operator unknown " + unaryConstraintDesc.getOperator());
+                throw new IllegalArgumentException("Operator unknown " + predicate.getOperator());
         }
 
         builder

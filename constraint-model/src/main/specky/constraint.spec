@@ -32,14 +32,14 @@ imports
     com.mattunderscore.specky.constraint.model.ConstraintOperator
     com.mattunderscore.specky.constraint.model.BinaryConstraintOperator
 
-value UnaryConstraintDesc "Description of a constraint."
+value PredicateDesc "Description of a constraint."
     properties
         ConstraintOperator operator "An operator."
         String literal "A literal value."
     options
         immutable builder
 
-value BinaryConstraintDesc "Description of a constraint."
+value CompoundConstraintDesc "Description of a constraint."
     properties
         ConstraintDesc constraint0
         BinaryConstraintOperator operator "An operator."
@@ -49,7 +49,8 @@ value BinaryConstraintDesc "Description of a constraint."
 
 value ConstraintDesc "Description of a constraint."
     properties
-        optional BinaryConstraintDesc binaryConstraint
-        optional UnaryConstraintDesc unaryConstraint
+        optional CompoundConstraintDesc binaryConstraint
+        optional PredicateDesc unaryConstraint
+        optional ConstraintDesc negatedConstraint
     options
         immutable builder

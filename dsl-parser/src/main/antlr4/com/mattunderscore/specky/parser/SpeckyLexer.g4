@@ -184,6 +184,18 @@ INTEGER_LITERAL
     : [0-9]+
     ;
 
+NEGATION
+    :   '!'
+    ;
+
+OPEN_PARENTHESIS
+    :   '('
+    ;
+
+CLOSE_PARENTHESIS
+    :   ')'
+    ;
+
 CONSTRAINT_END
     : ']' -> popMode
     ;
