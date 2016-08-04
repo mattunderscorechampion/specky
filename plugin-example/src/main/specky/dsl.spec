@@ -29,7 +29,7 @@ author "Matt Champion"
 package com.mattunderscore.specky.dsl.model.test
 
 imports
-    com.mattunderscore.specky.dsl.model.test.DSLConstructionMethod default DSLConstructionMethod.DEFAULT
+    com.mattunderscore.specky.dsl.model.test.ConstructionMethod default ConstructionMethod.DEFAULT
 
 
 value DSLPropertyDesc "Description of a property."
@@ -39,7 +39,7 @@ value DSLPropertyDesc "Description of a property."
         List<String> typeParameters
         boolean optional "If the property is optional."
         optional String defaultValue default null "Default value of the property."
-        optional DSLConstraintDesc constraint default null "Constraint applied to the property."
+        optional ConstraintDesc constraint default null "Constraint applied to the property."
         optional String description default null "Description of the property."
     options
         immutable builder
@@ -56,7 +56,7 @@ type DSLTypeDesc "Description of a type."
     properties
         String name "Name of the type."
         List<DSLPropertyDesc> properties "Properties of the type."
-        DSLConstructionMethod constructionMethod "Construction method of the type."
+        ConstructionMethod constructionMethod "Construction method of the type."
         List<String> supertypes "Supertypes of the type."
         optional String description default null "Description of the type."
 
@@ -83,12 +83,5 @@ value DSLImportDesc "Description of the import of a type from outside the specif
     properties
         String typeName "The name of the type."
         optional String defaultValue default null "The default value of the type."
-    options
-        immutable builder
-
-value DSLConstraintDesc "Description of a constraint."
-    properties
-        String operator "An operator."
-        String literal "A literal value."
     options
         immutable builder

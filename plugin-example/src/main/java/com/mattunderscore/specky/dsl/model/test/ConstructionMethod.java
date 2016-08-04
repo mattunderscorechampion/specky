@@ -23,12 +23,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.model.test;
+package com.mattunderscore.specky.dsl.model.test;
 
 /**
- * Stand-in for description of construction method for a type.
+ * Stand-in for description of construction method for a DSL type.
  *
- * @author Matt Champion
+ * @author Matt Champion on 19/07/16
  */
 public enum ConstructionMethod {
     /**

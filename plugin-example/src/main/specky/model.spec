@@ -29,7 +29,7 @@ author "Matt Champion"
 package com.mattunderscore.specky.model.test
 
 imports
-    com.mattunderscore.specky.model.test.ConstructionMethod default ConstructionMethod.DEFAULT
+    com.mattunderscore.specky.dsl.model.test.ConstructionMethod default ConstructionMethod.DEFAULT
 
 value PropertyDesc "Description of a property."
     properties
@@ -78,12 +78,5 @@ value SpecDesc "Description of a specification."
         List<String> importTypes "Types from outside the specification to import."
         List<TypeDesc> types "Types of the specification."
         List<ViewDesc> views "Views of the specification."
-    options
-        immutable builder
-
-value ConstraintDesc "Description of a constraint."
-    properties
-        String operator "An operator."
-        String literal "A literal value."
     options
         immutable builder
