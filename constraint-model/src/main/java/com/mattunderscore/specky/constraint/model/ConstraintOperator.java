@@ -46,5 +46,9 @@ public enum ConstraintOperator {
     /**
      * Greater than or equal to operator.
      */
-    GREATER_THAN_OR_EQUAL
+    GREATER_THAN_OR_EQUAL,
+    /**
+     * Equal to operator.
+     */
+    EQUAL_TO
 }

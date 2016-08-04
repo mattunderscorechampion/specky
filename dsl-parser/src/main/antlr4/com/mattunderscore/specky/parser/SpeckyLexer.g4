@@ -196,6 +196,10 @@ CLOSE_PARENTHESIS
     :   ')'
     ;
 
+EQUAL_TO
+    :   '='
+    ;
+
 CONSTRAINT_END
     : ']' -> popMode
     ;

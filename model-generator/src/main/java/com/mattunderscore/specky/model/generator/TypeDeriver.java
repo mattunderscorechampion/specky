@@ -33,8 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.mattunderscore.specky.constraint.model.BinaryConstraintOperator;
-import com.mattunderscore.specky.constraint.model.ConstraintOperator;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
@@ -193,30 +191,5 @@ public final class TypeDeriver {
             .override(false)
             .description(dslPropertyDesc.getDescription())
             .build();
-    }
-    private BinaryConstraintOperator toConstraintOperator(BinaryConstraintOperator operator) {
-        switch (operator) {
-            case DISJUNCTION:
-                return BinaryConstraintOperator.DISJUNCTION;
-            case CONJUNCTION:
-                return BinaryConstraintOperator.CONJUNCTION;
-            default:
-                throw new IllegalArgumentException("Unsupported operation");
-        }
-    }
-
-    private ConstraintOperator toConstraintOperator(ConstraintOperator operator) {
-        switch (operator) {
-            case LESS_THAN:
-                return ConstraintOperator.LESS_THAN;
-            case GREATER_THAN:
-                return ConstraintOperator.GREATER_THAN;
-            case LESS_THAN_OR_EQUAL:
-                return ConstraintOperator.LESS_THAN_OR_EQUAL;
-            case GREATER_THAN_OR_EQUAL:
-                return ConstraintOperator.GREATER_THAN_OR_EQUAL;
-            default:
-                throw new IllegalArgumentException("Unsupported operation");
-        }
     }
 }

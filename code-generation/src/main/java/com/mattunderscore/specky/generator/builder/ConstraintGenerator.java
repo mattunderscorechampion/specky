@@ -115,6 +115,9 @@ public final class ConstraintGenerator {
             case LESS_THAN_OR_EQUAL:
                 builder.beginControlFlow("if ($L > $L)", propertyName, bound);
                 break;
+            case EQUAL_TO:
+                builder.beginControlFlow("if ($L != $L)", propertyName, bound);
+                break;
             default:
                 throw new IllegalArgumentException("Operator unknown " + predicate.getOperator());
         }
@@ -138,6 +141,9 @@ public final class ConstraintGenerator {
                 break;
             case LESS_THAN_OR_EQUAL:
                 builder.beginControlFlow("if ($L <= $L)", propertyName, bound);
+                break;
+            case EQUAL_TO:
+                builder.beginControlFlow("if ($L == $L)", propertyName, bound);
                 break;
             default:
                 throw new IllegalArgumentException("Operator unknown " + predicate.getOperator());

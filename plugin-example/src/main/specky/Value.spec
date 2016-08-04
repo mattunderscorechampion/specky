@@ -88,5 +88,7 @@ value WithConstraint
         int range [constraint >= 5 & < 20] "A constrained property."
         int unnecessary [constraint ( < 20 )] "A constrained property."
         int negated [constraint ! < 20] "A constrained property."
+        int single [constraint = 20] "A constrained property."
+        int anythingElse [constraint ! = 20] "A constrained property."
     options
         builder

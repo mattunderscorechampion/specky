@@ -278,6 +278,9 @@ public final class SpecBuilder {
         else if (">".equals(operatorContextText)) {
             return ConstraintOperator.GREATER_THAN;
         }
+        else if ("=".equals(operatorContextText)) {
+            return ConstraintOperator.EQUAL_TO;
+        }
         else {
             throw new IllegalArgumentException("Unsupported operator");
         }

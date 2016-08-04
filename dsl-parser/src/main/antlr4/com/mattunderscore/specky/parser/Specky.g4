@@ -60,6 +60,7 @@ constraint_operator
     |   LESS_THAN
     |   GREATER_THAN_OR_EQUAL
     |   LESS_THAN_OR_EQUAL
+    |   EQUAL_TO
     ;
 
 constraint_compound_operator
