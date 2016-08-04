@@ -85,5 +85,6 @@ value WithConstraint
         int maxNumber [constraint < 20] "A constrained property."
         int upperBound [constraint <= 20] "A constrained property."
         int lowerBound [constraint >= 20] "A constrained property."
+        int range [constraint >= 5 & < 20] "A constrained property."
     options
         builder

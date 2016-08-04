@@ -25,6 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.builder;
 
+import com.mattunderscore.specky.constraint.model.BinaryConstraintOperator;
 import com.mattunderscore.specky.constraint.model.ConstraintDesc;
 import com.mattunderscore.specky.constraint.model.UnaryConstraintDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
@@ -51,7 +52,20 @@ public final class ConstraintGenerator {
             generate(builder, propertyName, unaryConstraint);
         }
         else {
-            throw new UnsupportedOperationException("Code generator for binary expressions not yet supported");
+            final BinaryConstraintOperator operator = constraintDesc.getBinaryConstraint().getOperator();
+            switch (operator) {
+                case CONJUNCTION:
+                    generate(builder, propertyName, constraintDesc.getBinaryConstraint().getConstraint0());
+                    generate(builder, propertyName, constraintDesc.getBinaryConstraint().getConstraint1());
+                    break;
+
+                case DISJUNCTION:
+                    throw new UnsupportedOperationException("Disjunction not supported");
+
+                default:
+                    throw new IllegalArgumentException("Operator unknown " + operator);
+            }
+
         }
     }
 
@@ -71,7 +85,7 @@ public final class ConstraintGenerator {
                 builder.beginControlFlow("if ($L > $L)", propertyName, bound);
                 break;
             default:
-                throw new IllegalArgumentException("Constraint not valid");
+                throw new IllegalArgumentException("Operator unknown " + unaryConstraintDesc.getOperator());
         }
 
         builder
