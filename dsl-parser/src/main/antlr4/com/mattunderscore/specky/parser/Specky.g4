@@ -77,11 +77,16 @@ constraint_predicate
 
 constraint_expression
     :   constraint_predicate
-    |   constraint_expression CONSTRAINT_INLINE_WS constraint_compound_operator CONSTRAINT_INLINE_WS constraint_expression
+    |   NEGATION CONSTRAINT_INLINE_WS constraint_expression
+    |   OPEN_PARENTHESIS CONSTRAINT_INLINE_WS constraint_expression CONSTRAINT_INLINE_WS CLOSE_PARENTHESIS
+    ;
+
+constraint_compound_expression
+    :   constraint_expression (CONSTRAINT_INLINE_WS constraint_compound_operator CONSTRAINT_INLINE_WS constraint_expression)?
     ;
 
 constraint_statement
-    :   CONSTRAINT_EXPRESSION CONSTRAINT_INLINE_WS constraint_expression CONSTRAINT_END
+    :   CONSTRAINT_EXPRESSION CONSTRAINT_INLINE_WS constraint_compound_expression CONSTRAINT_END
     ;
 
 property

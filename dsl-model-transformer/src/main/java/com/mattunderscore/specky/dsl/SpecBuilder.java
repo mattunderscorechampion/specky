@@ -214,13 +214,16 @@ public final class SpecBuilder {
             return null;
         }
 
-        final Specky.Constraint_expressionContext expression = statementContext.constraint_expression();
+        final Specky.Constraint_compound_expressionContext expression = statementContext.constraint_compound_expression();
         return createConstraint(expression);
     }
 
-    private ConstraintDesc createConstraint(Specky.Constraint_expressionContext expression) {
-        final Specky.Constraint_predicateContext unaryExpression = expression.constraint_predicate();
-        if (unaryExpression == null) {
+    private ConstraintDesc createConstraint(Specky.Constraint_compound_expressionContext expression) {
+        final List<Specky.Constraint_expressionContext> subexpressions = expression.constraint_expression();
+        if (subexpressions.size() == 1) {
+            return createConstraint(subexpressions.get(0));
+        }
+        else {
             final Specky.Constraint_expressionContext leftConstraint = expression.constraint_expression(0);
             final Specky.Constraint_expressionContext rightConstraint = expression.constraint_expression(1);
             final BinaryConstraintOperator operator = toConstraintOperator(expression.constraint_compound_operator());
@@ -235,7 +238,11 @@ public final class SpecBuilder {
                     .build())
                 .build();
         }
-        else {
+    }
+
+    private ConstraintDesc createConstraint(Specky.Constraint_expressionContext expression) {
+        final Specky.Constraint_predicateContext unaryExpression = expression.constraint_predicate();
+        if (unaryExpression != null) {
             return ConstraintDesc
                 .builder()
                 .unaryConstraint(PredicateDesc
@@ -244,6 +251,15 @@ public final class SpecBuilder {
                     .literal(unaryExpression.constraint_literal().getText())
                     .build())
                 .build();
+        }
+        else if (expression.NEGATION() != null) {
+            return ConstraintDesc
+                .builder()
+                .negatedConstraint(createConstraint(expression.constraint_expression()))
+                .build();
+        }
+        else {
+            return createConstraint(expression.constraint_expression());
         }
     }
 
