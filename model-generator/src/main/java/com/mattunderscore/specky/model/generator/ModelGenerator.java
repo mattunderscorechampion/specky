@@ -33,17 +33,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import com.mattunderscore.specky.dsl.model.DSLBinaryConstraintOperator;
+import com.mattunderscore.specky.model.BinaryConstraintOperator;
+import com.mattunderscore.specky.model.ConstraintOperator;
 import com.mattunderscore.specky.dsl.model.DSLConstraintDesc;
-import com.mattunderscore.specky.dsl.model.DSLConstraintOperator;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLUnaryConstraintDesc;
 import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.mattunderscore.specky.model.BinaryConstraintDesc;
-import com.mattunderscore.specky.model.BinaryConstraintOperator;
 import com.mattunderscore.specky.model.ConstraintDesc;
-import com.mattunderscore.specky.model.ConstraintOperator;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
@@ -177,7 +175,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
         }
     }
 
-    private BinaryConstraintOperator toConstraintOperator(DSLBinaryConstraintOperator operator) {
+    private BinaryConstraintOperator toConstraintOperator(BinaryConstraintOperator operator) {
         switch (operator) {
             case DISJUNCTION:
                 return BinaryConstraintOperator.DISJUNCTION;
@@ -188,7 +186,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
         }
     }
 
-    private ConstraintOperator toConstraintOperator(DSLConstraintOperator operator) {
+    private ConstraintOperator toConstraintOperator(ConstraintOperator operator) {
         switch (operator) {
             case LESS_THAN:
                 return ConstraintOperator.LESS_THAN;

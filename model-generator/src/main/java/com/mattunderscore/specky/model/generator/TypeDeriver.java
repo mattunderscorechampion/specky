@@ -33,10 +33,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.mattunderscore.specky.dsl.model.DSLBinaryConstraintOperator;
+import com.mattunderscore.specky.model.BinaryConstraintOperator;
+import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.dsl.model.DSLConstraintDesc;
-import com.mattunderscore.specky.dsl.model.DSLConstraintOperator;
-import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
+import com.mattunderscore.specky.model.ConstraintOperator;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
@@ -44,10 +44,7 @@ import com.mattunderscore.specky.dsl.model.DSLUnaryConstraintDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.BinaryConstraintDesc;
-import com.mattunderscore.specky.model.BinaryConstraintOperator;
 import com.mattunderscore.specky.model.ConstraintDesc;
-import com.mattunderscore.specky.model.ConstraintOperator;
-import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.UnaryConstraintDesc;
@@ -181,7 +178,7 @@ public final class TypeDeriver {
         return declaredProperty;
     }
 
-    private ConstructionMethod get(DSLConstructionMethod method) {
+    private ConstructionMethod get(ConstructionMethod method) {
         switch (method) {
             case CONSTRUCTOR:
                 return ConstructionMethod.CONSTRUCTOR;
@@ -246,7 +243,7 @@ public final class TypeDeriver {
         }
     }
 
-    private BinaryConstraintOperator toConstraintOperator(DSLBinaryConstraintOperator operator) {
+    private BinaryConstraintOperator toConstraintOperator(BinaryConstraintOperator operator) {
         switch (operator) {
             case DISJUNCTION:
                 return BinaryConstraintOperator.DISJUNCTION;
@@ -257,7 +254,7 @@ public final class TypeDeriver {
         }
     }
 
-    private ConstraintOperator toConstraintOperator(DSLConstraintOperator operator) {
+    private ConstraintOperator toConstraintOperator(ConstraintOperator operator) {
         switch (operator) {
             case LESS_THAN:
                 return ConstraintOperator.LESS_THAN;

@@ -33,12 +33,12 @@ import java.util.List;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import com.mattunderscore.specky.model.BinaryConstraintOperator;
+import com.mattunderscore.specky.model.ConstraintOperator;
+import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
 import com.mattunderscore.specky.dsl.model.DSLBinaryConstraintDesc;
-import com.mattunderscore.specky.dsl.model.DSLBinaryConstraintOperator;
 import com.mattunderscore.specky.dsl.model.DSLConstraintDesc;
-import com.mattunderscore.specky.dsl.model.DSLConstraintOperator;
-import com.mattunderscore.specky.dsl.model.DSLConstructionMethod;
 import com.mattunderscore.specky.dsl.model.DSLImportDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
@@ -119,7 +119,7 @@ public final class SpecBuilder {
                 .stream()
                 .map(this::createProperty)
                 .collect(toList());
-        final DSLConstructionMethod constructionMethod = toConstructionDesc(context);
+        final ConstructionMethod constructionMethod = toConstructionDesc(context);
         final List<String> supertypes;
         if (context.Identifier().size() > 1) {
             supertypes = context
@@ -223,7 +223,7 @@ public final class SpecBuilder {
         if (unaryExpression == null) {
             final Specky.Constraint_expressionContext leftConstraint = expression.constraint_expression().get(0);
             final Specky.Constraint_expressionContext rightConstraint = expression.constraint_expression().get(1);
-            final DSLBinaryConstraintOperator operator = toConstraintOperator(expression.constraint_combining_operator());
+            final BinaryConstraintOperator operator = toConstraintOperator(expression.constraint_combining_operator());
 
             return DSLConstraintDesc
                 .builder()
@@ -248,54 +248,54 @@ public final class SpecBuilder {
     }
 
 
-    private DSLConstraintOperator toConstraintOperator(Specky.Constraint_operatorContext operatorContext) {
+    private ConstraintOperator toConstraintOperator(Specky.Constraint_operatorContext operatorContext) {
         final String operatorContextText = operatorContext.getText();
         if ("<=".equals(operatorContextText)) {
-            return DSLConstraintOperator.LESS_THAN_OR_EQUAL;
+            return ConstraintOperator.LESS_THAN_OR_EQUAL;
         }
         else if (">=".equals(operatorContextText)) {
-            return DSLConstraintOperator.GREATER_THAN_OR_EQUAL;
+            return ConstraintOperator.GREATER_THAN_OR_EQUAL;
         }
         else if ("<".equals(operatorContextText)) {
-            return DSLConstraintOperator.LESS_THAN;
+            return ConstraintOperator.LESS_THAN;
         }
         else if (">".equals(operatorContextText)) {
-            return DSLConstraintOperator.GREATER_THAN;
+            return ConstraintOperator.GREATER_THAN;
         }
         else {
             throw new IllegalArgumentException("Unsupported operator");
         }
     }
 
-    private DSLBinaryConstraintOperator toConstraintOperator(Specky.Constraint_combining_operatorContext operatorContext) {
+    private BinaryConstraintOperator toConstraintOperator(Specky.Constraint_combining_operatorContext operatorContext) {
         final String operatorContextText = operatorContext.getText();
         if ("&".equals(operatorContextText)) {
-            return DSLBinaryConstraintOperator.CONJUNCTION;
+            return BinaryConstraintOperator.CONJUNCTION;
         }
         else if ("|".equals(operatorContextText)) {
-            return DSLBinaryConstraintOperator.DISJUNCTION;
+            return BinaryConstraintOperator.DISJUNCTION;
         }
         else {
             throw new IllegalArgumentException("Unsupported operator");
         }
     }
 
-    private DSLConstructionMethod toConstructionDesc(ImplementationSpecContext typeSpec) {
+    private ConstructionMethod toConstructionDesc(ImplementationSpecContext typeSpec) {
         final Specky.OptsContext options = typeSpec.opts();
 
         if (options == null || options.construction() == null) {
-            return DSLConstructionMethod.CONSTRUCTOR;
+            return ConstructionMethod.CONSTRUCTOR;
         }
 
         final String token = options.construction().getText();
         if ("constructor".equals(token)) {
-            return DSLConstructionMethod.CONSTRUCTOR;
+            return ConstructionMethod.CONSTRUCTOR;
         }
         else if ("builder".equals(token)) {
-            return DSLConstructionMethod.MUTABLE_BUILDER;
+            return ConstructionMethod.MUTABLE_BUILDER;
         }
         else if ("immutable builder".equals(token)) {
-            return DSLConstructionMethod.IMMUTABLE_BUILDER;
+            return ConstructionMethod.IMMUTABLE_BUILDER;
         }
         else {
             throw new IllegalArgumentException("Unsupported type");

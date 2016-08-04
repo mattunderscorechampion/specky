@@ -9,6 +9,13 @@
 
     <artifactId>specky-model</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.mattunderscore.code.generation.specky</groupId>
+            <artifactId>dsl-model</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

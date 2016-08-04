@@ -29,9 +29,9 @@ author "Matt Champion"
 package com.mattunderscore.specky.dsl.model
 
 imports
-    com.mattunderscore.specky.dsl.model.DSLConstructionMethod default DSLConstructionMethod.CONSTRUCTOR
-    com.mattunderscore.specky.dsl.model.DSLConstraintOperator
-    com.mattunderscore.specky.dsl.model.DSLBinaryConstraintOperator
+    com.mattunderscore.specky.model.ConstructionMethod default ConstructionMethod.CONSTRUCTOR
+    com.mattunderscore.specky.model.ConstraintOperator
+    com.mattunderscore.specky.model.BinaryConstraintOperator
 
 value DSLPropertyDesc "Description of a property."
     properties
@@ -57,7 +57,7 @@ type DSLTypeDesc "Description of a type."
     properties
         String name "Name of the type."
         List<DSLPropertyDesc> properties "Properties of the type."
-        DSLConstructionMethod constructionMethod "Construction method of the type."
+        ConstructionMethod constructionMethod "Construction method of the type."
         List<String> supertypes "Supertypes of the type."
         optional String description default null "Description of the type."
 
@@ -88,7 +88,7 @@ value DSLImportDesc "Description of the import of a type from outside the specif
 
 value DSLUnaryConstraintDesc "Description of a constraint."
     properties
-        DSLConstraintOperator operator "An operator."
+        ConstraintOperator operator "An operator."
         String literal "A literal value."
     options
         immutable builder
@@ -96,7 +96,7 @@ value DSLUnaryConstraintDesc "Description of a constraint."
 value DSLBinaryConstraintDesc "Description of a constraint."
     properties
         DSLConstraintDesc constraint0
-        DSLBinaryConstraintOperator operator "An operator."
+        BinaryConstraintOperator operator "An operator."
         DSLConstraintDesc constraint1
     options
         immutable builder
