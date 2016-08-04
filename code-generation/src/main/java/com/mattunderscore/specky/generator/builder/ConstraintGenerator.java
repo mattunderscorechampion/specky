@@ -41,34 +41,34 @@ public final class ConstraintGenerator {
     public CodeBlock generate(PropertyDesc propertyDesc) {
         final CodeBlock.Builder builder = CodeBlock.builder();
 
-        generate(builder, propertyDesc, propertyDesc.getConstraint());
+        generate(builder, propertyDesc.getName(), propertyDesc.getConstraint());
         return builder.build();
     }
 
-    private void generate(CodeBlock.Builder builder, PropertyDesc propertyDesc, ConstraintDesc constraintDesc) {
+    private void generate(CodeBlock.Builder builder, String propertyName, ConstraintDesc constraintDesc) {
         final UnaryConstraintDesc unaryConstraint = constraintDesc.getUnaryConstraint();
         if (unaryConstraint != null) {
-            generate(builder, propertyDesc, unaryConstraint);
+            generate(builder, propertyName, unaryConstraint);
         }
         else {
             throw new UnsupportedOperationException("Code generator for binary expressions not yet supported");
         }
     }
 
-    private void generate(CodeBlock.Builder builder, PropertyDesc propertyDesc, UnaryConstraintDesc unaryConstraintDesc) {
+    private void generate(CodeBlock.Builder builder, String propertyName, UnaryConstraintDesc unaryConstraintDesc) {
         final int bound = Integer.parseInt(unaryConstraintDesc.getLiteral());
         switch (unaryConstraintDesc.getOperator()) {
             case GREATER_THAN:
-                builder.beginControlFlow("if ($L <= $L)", propertyDesc.getName(), bound);
+                builder.beginControlFlow("if ($L <= $L)", propertyName, bound);
                 break;
             case LESS_THAN:
-                builder.beginControlFlow("if ($L >= $L)", propertyDesc.getName(), bound);
+                builder.beginControlFlow("if ($L >= $L)", propertyName, bound);
                 break;
             case GREATER_THAN_OR_EQUAL:
-                builder.beginControlFlow("if ($L < $L)", propertyDesc.getName(), bound);
+                builder.beginControlFlow("if ($L < $L)", propertyName, bound);
                 break;
             case LESS_THAN_OR_EQUAL:
-                builder.beginControlFlow("if ($L > $L)", propertyDesc.getName(), bound);
+                builder.beginControlFlow("if ($L > $L)", propertyName, bound);
                 break;
             default:
                 throw new IllegalArgumentException("Constraint not valid");
