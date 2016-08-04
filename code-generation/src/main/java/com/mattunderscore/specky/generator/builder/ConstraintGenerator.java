@@ -48,8 +48,12 @@ public final class ConstraintGenerator {
 
     private void generate(CodeBlock.Builder builder, String propertyName, ConstraintDesc constraintDesc) {
         final PredicateDesc unaryConstraint = constraintDesc.getUnaryConstraint();
+        final ConstraintDesc negatedConstraint = constraintDesc.getNegatedConstraint();
         if (unaryConstraint != null) {
             generate(builder, propertyName, unaryConstraint);
+        }
+        else if (negatedConstraint != null) {
+            generateNegation(builder, propertyName, negatedConstraint);
         }
         else {
             final BinaryConstraintOperator operator = constraintDesc.getBinaryConstraint().getOperator();
@@ -61,6 +65,33 @@ public final class ConstraintGenerator {
 
                 case DISJUNCTION:
                     throw new UnsupportedOperationException("Disjunction not supported");
+
+                default:
+                    throw new IllegalArgumentException("Operator unknown " + operator);
+            }
+
+        }
+    }
+
+    private void generateNegation(CodeBlock.Builder builder, String propertyName, ConstraintDesc negatedConstraint) {
+        final PredicateDesc unaryConstraint = negatedConstraint.getUnaryConstraint();
+        final ConstraintDesc constraint = negatedConstraint.getNegatedConstraint();
+        if (unaryConstraint != null) {
+            generateNegation(builder, propertyName, unaryConstraint);
+        }
+        else if (constraint != null) {
+            generate(builder, propertyName, constraint);
+        }
+        else {
+            final BinaryConstraintOperator operator = negatedConstraint.getBinaryConstraint().getOperator();
+            switch (operator) {
+                case CONJUNCTION:
+                    throw new UnsupportedOperationException("Negated conjunction not supported");
+
+                case DISJUNCTION:
+                    generateNegation(builder, propertyName, negatedConstraint.getBinaryConstraint().getConstraint0());
+                    generateNegation(builder, propertyName, negatedConstraint.getBinaryConstraint().getConstraint1());
+                    break;
 
                 default:
                     throw new IllegalArgumentException("Operator unknown " + operator);
@@ -83,6 +114,30 @@ public final class ConstraintGenerator {
                 break;
             case LESS_THAN_OR_EQUAL:
                 builder.beginControlFlow("if ($L > $L)", propertyName, bound);
+                break;
+            default:
+                throw new IllegalArgumentException("Operator unknown " + predicate.getOperator());
+        }
+
+        builder
+            .addStatement("throw new IllegalArgumentException(\"Constraint violated\")")
+            .endControlFlow();
+    }
+
+    private void generateNegation(CodeBlock.Builder builder, String propertyName, PredicateDesc predicate) {
+        final int bound = Integer.parseInt(predicate.getLiteral());
+        switch (predicate.getOperator()) {
+            case GREATER_THAN:
+                builder.beginControlFlow("if ($L > $L)", propertyName, bound);
+                break;
+            case LESS_THAN:
+                builder.beginControlFlow("if ($L < $L)", propertyName, bound);
+                break;
+            case GREATER_THAN_OR_EQUAL:
+                builder.beginControlFlow("if ($L >= $L)", propertyName, bound);
+                break;
+            case LESS_THAN_OR_EQUAL:
+                builder.beginControlFlow("if ($L <= $L)", propertyName, bound);
                 break;
             default:
                 throw new IllegalArgumentException("Operator unknown " + predicate.getOperator());

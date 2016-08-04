@@ -67,6 +67,16 @@ public final class WithConstraintTest {
         WithConstraint.builder().range(25);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testUnnecessaryViolation() {
+        WithConstraint.builder().unnecessary(25);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNegatedViolation() {
+        WithConstraint.builder().negated(15);
+    }
+
     @Test
     public void testConstraint() {
         final WithConstraint withConstraint = WithConstraint
@@ -76,11 +86,15 @@ public final class WithConstraintTest {
             .upperBound(20)
             .lowerBound(20)
             .range(15)
+            .unnecessary(15)
+            .negated(25)
             .build();
         assertEquals(21, withConstraint.getMinNumber());
         assertEquals(5, withConstraint.getMaxNumber());
         assertEquals(20, withConstraint.getUpperBound());
         assertEquals(20, withConstraint.getLowerBound());
         assertEquals(15, withConstraint.getRange());
+        assertEquals(15, withConstraint.getUnnecessary());
+        assertEquals(25, withConstraint.getNegated());
     }
 }
