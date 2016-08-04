@@ -25,9 +25,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.builder;
 
-import com.mattunderscore.specky.model.ConstraintDesc;
+import com.mattunderscore.specky.constraint.model.ConstraintDesc;
+import com.mattunderscore.specky.constraint.model.UnaryConstraintDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
-import com.mattunderscore.specky.model.UnaryConstraintDesc;
 import com.squareup.javapoet.CodeBlock;
 
 /**

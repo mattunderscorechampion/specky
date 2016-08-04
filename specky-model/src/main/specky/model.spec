@@ -30,8 +30,7 @@ package com.mattunderscore.specky.model
 
 imports
     com.mattunderscore.specky.model.ConstructionMethod default ConstructionMethod.CONSTRUCTOR
-    com.mattunderscore.specky.model.ConstraintOperator
-    com.mattunderscore.specky.model.BinaryConstraintOperator
+    com.mattunderscore.specky.constraint.model.ConstraintDesc
 
 value PropertyDesc "Description of a property."
     properties
@@ -82,26 +81,3 @@ value SpecDesc "Description of a specification."
         List<ViewDesc> views "Views of the specification."
     options
         immutable builder
-
-value UnaryConstraintDesc "Description of a constraint."
-    properties
-        ConstraintOperator operator "An operator."
-        String literal "A literal value."
-    options
-        immutable builder
-
-value BinaryConstraintDesc "Description of a constraint."
-    properties
-        ConstraintDesc constraint0
-        BinaryConstraintOperator operator "An operator."
-        ConstraintDesc constraint1
-    options
-        immutable builder
-
-value ConstraintDesc "Description of a constraint."
-    properties
-        optional BinaryConstraintDesc binaryConstraint
-        optional UnaryConstraintDesc unaryConstraint
-    options
-        immutable builder
-
