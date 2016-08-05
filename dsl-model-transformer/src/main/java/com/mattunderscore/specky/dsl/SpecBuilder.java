@@ -268,6 +268,8 @@ public final class SpecBuilder {
                 return ConstraintOperator.GREATER_THAN_OR_EQUAL;
             case GREATER_THAN:
                 return ConstraintOperator.LESS_THAN_OR_EQUAL;
+            case EQUAL_TO:
+                return ConstraintOperator.NOT_EQUAL_TO;
             default:
                 throw new IllegalArgumentException("Unsupported operator");
         }

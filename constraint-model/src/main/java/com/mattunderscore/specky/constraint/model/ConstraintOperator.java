@@ -50,5 +50,9 @@ public enum ConstraintOperator {
     /**
      * Equal to operator.
      */
-    EQUAL_TO
+    EQUAL_TO,
+    /**
+     * Not equal to operator.
+     */
+    NOT_EQUAL_TO
 }

@@ -81,6 +81,8 @@ public final class ConstraintGenerator {
                 return propertyName + " > " + predicateDesc.getLiteral();
             case EQUAL_TO:
                 return propertyName + " != " + predicateDesc.getLiteral();
+            case NOT_EQUAL_TO:
+                return propertyName + " == " + predicateDesc.getLiteral();
             default:
                 throw new IllegalArgumentException("Operator unknown " + operator);
         }
