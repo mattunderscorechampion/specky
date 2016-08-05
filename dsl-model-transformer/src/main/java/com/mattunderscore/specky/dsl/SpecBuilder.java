@@ -214,29 +214,62 @@ public final class SpecBuilder {
             return null;
         }
 
-        final Specky.Constraint_compound_expressionContext expression = statementContext.constraint_compound_expression();
+        final Specky.Constraint_conjunctions_expressionContext expression =
+            statementContext.constraint_conjunctions_expression();
         return createConstraint(expression);
     }
 
-    private ConstraintDesc createConstraint(Specky.Constraint_compound_expressionContext expression) {
-        final List<Specky.Constraint_expressionContext> subexpressions = expression.constraint_expression();
-        if (subexpressions.size() == 1) {
-            return createConstraint(subexpressions.get(0));
+    private ConstraintDesc createConstraint(Specky.Constraint_conjunctions_expressionContext expression) {
+        final List<Specky.Constraint_disjunctions_expressionContext> subexpressions =
+            expression.constraint_disjunctions_expression();
+
+        ConstraintDesc constraintDesc = null;
+        for (final Specky.Constraint_disjunctions_expressionContext subexpression : subexpressions) {
+            final ConstraintDesc next = createConstraint(subexpression);
+            if (constraintDesc == null) {
+                constraintDesc = next;
+            }
+            else {
+                constraintDesc = ConstraintDesc
+                    .builder()
+                    .binaryConstraint(CompoundConstraintDesc
+                        .builder()
+                        .constraint0(constraintDesc)
+                        .constraint1(next)
+                        .operator(BinaryConstraintOperator.CONJUNCTION)
+                        .build())
+                    .build();
+            }
+        }
+
+        return constraintDesc;
+    }
+
+    private ConstraintDesc createConstraint(Specky.Constraint_disjunctions_expressionContext expression) {
+        if (expression.OPEN_PARENTHESIS() == null) {
+            return createConstraint(expression.constraint_expression(0));
         }
         else {
-            final Specky.Constraint_expressionContext leftConstraint = expression.constraint_expression(0);
-            final Specky.Constraint_expressionContext rightConstraint = expression.constraint_expression(1);
-            final BinaryConstraintOperator operator = toConstraintOperator(expression.constraint_compound_operator());
-
-            return ConstraintDesc
-                .builder()
-                .binaryConstraint(CompoundConstraintDesc
-                    .builder()
-                    .constraint0(createConstraint(leftConstraint))
-                    .constraint1(createConstraint(rightConstraint))
-                    .operator(operator)
-                    .build())
-                .build();
+            final List<Specky.Constraint_expressionContext> subexpressions = expression.constraint_expression();
+            ConstraintDesc constraintDesc = null;
+            for (final Specky.Constraint_expressionContext subexpression : subexpressions) {
+                final ConstraintDesc next = createConstraint(subexpression);
+                if (constraintDesc == null) {
+                    constraintDesc = next;
+                }
+                else {
+                    constraintDesc = ConstraintDesc
+                        .builder()
+                        .binaryConstraint(CompoundConstraintDesc
+                            .builder()
+                            .constraint0(constraintDesc)
+                            .constraint1(next)
+                            .operator(BinaryConstraintOperator.DISJUNCTION)
+                            .build())
+                        .build();
+                }
+            }
+            return constraintDesc;
         }
     }
 
@@ -280,19 +313,6 @@ public final class SpecBuilder {
         }
         else if ("=".equals(operatorContextText)) {
             return ConstraintOperator.EQUAL_TO;
-        }
-        else {
-            throw new IllegalArgumentException("Unsupported operator");
-        }
-    }
-
-    private BinaryConstraintOperator toConstraintOperator(Specky.Constraint_compound_operatorContext operatorContext) {
-        final String operatorContextText = operatorContext.getText();
-        if ("&".equals(operatorContextText)) {
-            return BinaryConstraintOperator.CONJUNCTION;
-        }
-        else if ("|".equals(operatorContextText)) {
-            return BinaryConstraintOperator.DISJUNCTION;
         }
         else {
             throw new IllegalArgumentException("Unsupported operator");

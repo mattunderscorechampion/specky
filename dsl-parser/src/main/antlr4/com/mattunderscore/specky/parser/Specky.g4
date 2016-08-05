@@ -63,11 +63,6 @@ constraint_operator
     |   EQUAL_TO
     ;
 
-constraint_compound_operator
-    :   CONJUNCTION
-    |   DISJUNCTION
-    ;
-
 constraint_literal
     :   INTEGER_LITERAL
     ;
@@ -79,15 +74,19 @@ constraint_predicate
 constraint_expression
     :   constraint_predicate
     |   NEGATION CONSTRAINT_INLINE_WS constraint_expression
-    |   OPEN_PARENTHESIS CONSTRAINT_INLINE_WS constraint_expression CONSTRAINT_INLINE_WS CLOSE_PARENTHESIS
     ;
 
-constraint_compound_expression
-    :   constraint_expression (CONSTRAINT_INLINE_WS constraint_compound_operator CONSTRAINT_INLINE_WS constraint_expression)?
+constraint_disjunctions_expression
+    :   constraint_expression
+    |   OPEN_PARENTHESIS CONSTRAINT_INLINE_WS constraint_expression (CONSTRAINT_INLINE_WS DISJUNCTION CONSTRAINT_INLINE_WS constraint_expression)* CONSTRAINT_INLINE_WS CLOSE_PARENTHESIS
+    ;
+
+constraint_conjunctions_expression
+    :   constraint_disjunctions_expression (CONSTRAINT_INLINE_WS CONJUNCTION CONSTRAINT_INLINE_WS constraint_disjunctions_expression)*
     ;
 
 constraint_statement
-    :   CONSTRAINT_EXPRESSION CONSTRAINT_INLINE_WS constraint_compound_expression CONSTRAINT_END
+    :   CONSTRAINT_EXPRESSION CONSTRAINT_INLINE_WS constraint_conjunctions_expression CONSTRAINT_END
     ;
 
 property
