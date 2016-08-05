@@ -33,10 +33,9 @@ import java.util.List;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import com.mattunderscore.specky.constraint.model.BinaryConstraintOperator;
-import com.mattunderscore.specky.constraint.model.CompoundConstraintDesc;
-import com.mattunderscore.specky.constraint.model.ConstraintDesc;
 import com.mattunderscore.specky.constraint.model.ConstraintOperator;
+import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
+import com.mattunderscore.specky.constraint.model.NFDisjointPredicates;
 import com.mattunderscore.specky.constraint.model.PredicateDesc;
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
 import com.mattunderscore.specky.dsl.model.DSLImportDesc;
@@ -209,7 +208,7 @@ public final class SpecBuilder {
             .build();
     }
 
-    private ConstraintDesc createConstraint(Specky.Constraint_statementContext statementContext) {
+    private NFConjoinedDisjointPredicates createConstraint(Specky.Constraint_statementContext statementContext) {
         if (statementContext == null) {
             return null;
         }
@@ -219,83 +218,60 @@ public final class SpecBuilder {
         return createConstraint(expression);
     }
 
-    private ConstraintDesc createConstraint(Specky.Constraint_conjunctions_expressionContext expression) {
+    private NFConjoinedDisjointPredicates createConstraint(Specky.Constraint_conjunctions_expressionContext expression) {
         final List<Specky.Constraint_disjunctions_expressionContext> subexpressions =
             expression.constraint_disjunctions_expression();
 
-        ConstraintDesc constraintDesc = null;
-        for (final Specky.Constraint_disjunctions_expressionContext subexpression : subexpressions) {
-            final ConstraintDesc next = createConstraint(subexpression);
-            if (constraintDesc == null) {
-                constraintDesc = next;
-            }
-            else {
-                constraintDesc = ConstraintDesc
-                    .builder()
-                    .binaryConstraint(CompoundConstraintDesc
-                        .builder()
-                        .constraint0(constraintDesc)
-                        .constraint1(next)
-                        .operator(BinaryConstraintOperator.CONJUNCTION)
-                        .build())
-                    .build();
-            }
-        }
-
-        return constraintDesc;
+        return NFConjoinedDisjointPredicates
+            .builder()
+            .predicates(subexpressions.stream().map(this::createConstraint).collect(toList()))
+            .build();
     }
 
-    private ConstraintDesc createConstraint(Specky.Constraint_disjunctions_expressionContext expression) {
-        if (expression.OPEN_PARENTHESIS() == null) {
-            return createConstraint(expression.constraint_expression(0));
-        }
-        else {
-            final List<Specky.Constraint_expressionContext> subexpressions = expression.constraint_expression();
-            ConstraintDesc constraintDesc = null;
-            for (final Specky.Constraint_expressionContext subexpression : subexpressions) {
-                final ConstraintDesc next = createConstraint(subexpression);
-                if (constraintDesc == null) {
-                    constraintDesc = next;
-                }
-                else {
-                    constraintDesc = ConstraintDesc
-                        .builder()
-                        .binaryConstraint(CompoundConstraintDesc
-                            .builder()
-                            .constraint0(constraintDesc)
-                            .constraint1(next)
-                            .operator(BinaryConstraintOperator.DISJUNCTION)
-                            .build())
-                        .build();
-                }
-            }
-            return constraintDesc;
-        }
+    private NFDisjointPredicates createConstraint(Specky.Constraint_disjunctions_expressionContext expression) {
+        return NFDisjointPredicates
+            .builder()
+            .predicates(expression.constraint_expression().stream().map(this::createConstraint).collect(toList()))
+            .build();
     }
 
-    private ConstraintDesc createConstraint(Specky.Constraint_expressionContext expression) {
-        final Specky.Constraint_predicateContext unaryExpression = expression.constraint_predicate();
-        if (unaryExpression != null) {
-            return ConstraintDesc
+    private PredicateDesc createConstraint(Specky.Constraint_expressionContext expression) {
+        final Specky.Constraint_predicateContext predicate = expression.constraint_predicate();
+        final Specky.Constraint_expressionContext negatedExpression = expression.constraint_expression();
+
+        assert predicate != null || negatedExpression != null : "Should either be predicate or negated expression";
+
+        if (predicate != null) {
+            return PredicateDesc
                 .builder()
-                .unaryConstraint(PredicateDesc
-                    .builder()
-                    .operator(toConstraintOperator(unaryExpression.constraint_operator()))
-                    .literal(unaryExpression.constraint_literal().getText())
-                    .build())
-                .build();
-        }
-        else if (expression.NEGATION() != null) {
-            return ConstraintDesc
-                .builder()
-                .negatedConstraint(createConstraint(expression.constraint_expression()))
+                .operator(toConstraintOperator(predicate.constraint_operator()))
+                .literal(predicate.constraint_literal().getText())
                 .build();
         }
         else {
-            return createConstraint(expression.constraint_expression());
+            final PredicateDesc predicateToNegate = createConstraint(expression.constraint_expression());
+            return PredicateDesc
+                .builder()
+                .operator(negateOperator(predicateToNegate.getOperator()))
+                .literal(predicateToNegate.getLiteral())
+                .build();
         }
     }
 
+    private ConstraintOperator negateOperator(ConstraintOperator operator) {
+        switch (operator) {
+            case LESS_THAN_OR_EQUAL:
+                return ConstraintOperator.GREATER_THAN;
+            case GREATER_THAN_OR_EQUAL:
+                return ConstraintOperator.LESS_THAN;
+            case LESS_THAN:
+                return ConstraintOperator.GREATER_THAN_OR_EQUAL;
+            case GREATER_THAN:
+                return ConstraintOperator.LESS_THAN_OR_EQUAL;
+            default:
+                throw new IllegalArgumentException("Unsupported operator");
+        }
+    }
 
     private ConstraintOperator toConstraintOperator(Specky.Constraint_operatorContext operatorContext) {
         final String operatorContextText = operatorContext.getText();

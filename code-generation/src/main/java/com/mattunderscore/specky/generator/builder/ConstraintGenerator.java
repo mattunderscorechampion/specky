@@ -25,14 +25,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.builder;
 
-import com.mattunderscore.specky.constraint.model.BinaryConstraintOperator;
-import com.mattunderscore.specky.constraint.model.ConstraintDesc;
+import static java.util.stream.Collectors.joining;
+
+import com.mattunderscore.specky.constraint.model.ConstraintOperator;
+import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
+import com.mattunderscore.specky.constraint.model.NFDisjointPredicates;
 import com.mattunderscore.specky.constraint.model.PredicateDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.squareup.javapoet.CodeBlock;
 
 /**
  * Constraint generator.
+ *
  * @author Matt Champion on 01/08/2016
  */
 public final class ConstraintGenerator {
@@ -46,111 +50,39 @@ public final class ConstraintGenerator {
         return builder.build();
     }
 
-    private void generate(CodeBlock.Builder builder, String propertyName, ConstraintDesc constraintDesc) {
-        final PredicateDesc unaryConstraint = constraintDesc.getUnaryConstraint();
-        final ConstraintDesc negatedConstraint = constraintDesc.getNegatedConstraint();
-        if (unaryConstraint != null) {
-            generate(builder, propertyName, unaryConstraint);
-        }
-        else if (negatedConstraint != null) {
-            generateNegation(builder, propertyName, negatedConstraint);
-        }
-        else {
-            final BinaryConstraintOperator operator = constraintDesc.getBinaryConstraint().getOperator();
-            switch (operator) {
-                case CONJUNCTION:
-                    generate(builder, propertyName, constraintDesc.getBinaryConstraint().getConstraint0());
-                    generate(builder, propertyName, constraintDesc.getBinaryConstraint().getConstraint1());
-                    break;
-
-                case DISJUNCTION:
-                    throw new UnsupportedOperationException("Disjunction not supported");
-
-                default:
-                    throw new IllegalArgumentException("Operator unknown " + operator);
-            }
-
-        }
+    private void generate(CodeBlock.Builder builder, String propertyName, NFConjoinedDisjointPredicates constraintDesc) {
+        constraintDesc
+            .getPredicates()
+            .forEach(disjointPredicates -> generate(builder, propertyName, disjointPredicates));
     }
 
-    private void generateNegation(CodeBlock.Builder builder, String propertyName, ConstraintDesc negatedConstraint) {
-        final PredicateDesc unaryConstraint = negatedConstraint.getUnaryConstraint();
-        final ConstraintDesc constraint = negatedConstraint.getNegatedConstraint();
-        if (unaryConstraint != null) {
-            generateNegation(builder, propertyName, unaryConstraint);
-        }
-        else if (constraint != null) {
-            generate(builder, propertyName, constraint);
-        }
-        else {
-            final BinaryConstraintOperator operator = negatedConstraint.getBinaryConstraint().getOperator();
-            switch (operator) {
-                case CONJUNCTION:
-                    throw new UnsupportedOperationException("Negated conjunction not supported");
-
-                case DISJUNCTION:
-                    generateNegation(builder, propertyName, negatedConstraint.getBinaryConstraint().getConstraint0());
-                    generateNegation(builder, propertyName, negatedConstraint.getBinaryConstraint().getConstraint1());
-                    break;
-
-                default:
-                    throw new IllegalArgumentException("Operator unknown " + operator);
-            }
-
-        }
-    }
-
-    private void generate(CodeBlock.Builder builder, String propertyName, PredicateDesc predicate) {
-        final int bound = Integer.parseInt(predicate.getLiteral());
-        switch (predicate.getOperator()) {
-            case GREATER_THAN:
-                builder.beginControlFlow("if ($L <= $L)", propertyName, bound);
-                break;
-            case LESS_THAN:
-                builder.beginControlFlow("if ($L >= $L)", propertyName, bound);
-                break;
-            case GREATER_THAN_OR_EQUAL:
-                builder.beginControlFlow("if ($L < $L)", propertyName, bound);
-                break;
-            case LESS_THAN_OR_EQUAL:
-                builder.beginControlFlow("if ($L > $L)", propertyName, bound);
-                break;
-            case EQUAL_TO:
-                builder.beginControlFlow("if ($L != $L)", propertyName, bound);
-                break;
-            default:
-                throw new IllegalArgumentException("Operator unknown " + predicate.getOperator());
-        }
-
+    private void generate(CodeBlock.Builder builder, String propertyName, NFDisjointPredicates disjointPredicates) {
+        final String checks = disjointPredicates
+            .getPredicates()
+            .stream()
+            .map(predicateDesc -> generate(propertyName, predicateDesc))
+            .collect(joining(" || "));
         builder
+            .beginControlFlow("if (" + checks + ")")
             .addStatement("throw new IllegalArgumentException(\"Constraint violated\")")
             .endControlFlow();
     }
 
-    private void generateNegation(CodeBlock.Builder builder, String propertyName, PredicateDesc predicate) {
-        final int bound = Integer.parseInt(predicate.getLiteral());
-        switch (predicate.getOperator()) {
+    private String generate(String propertyName, PredicateDesc predicateDesc) {
+        final ConstraintOperator operator = predicateDesc.getOperator();
+        switch (operator) {
             case GREATER_THAN:
-                builder.beginControlFlow("if ($L > $L)", propertyName, bound);
-                break;
+                return propertyName + " <= " + predicateDesc.getLiteral();
             case LESS_THAN:
-                builder.beginControlFlow("if ($L < $L)", propertyName, bound);
-                break;
+                return propertyName + " >= " + predicateDesc.getLiteral();
             case GREATER_THAN_OR_EQUAL:
-                builder.beginControlFlow("if ($L >= $L)", propertyName, bound);
-                break;
+                return propertyName + " < " + predicateDesc.getLiteral();
             case LESS_THAN_OR_EQUAL:
-                builder.beginControlFlow("if ($L <= $L)", propertyName, bound);
-                break;
+                return propertyName + " > " + predicateDesc.getLiteral();
             case EQUAL_TO:
-                builder.beginControlFlow("if ($L == $L)", propertyName, bound);
-                break;
+                return propertyName + " != " + predicateDesc.getLiteral();
             default:
-                throw new IllegalArgumentException("Operator unknown " + predicate.getOperator());
+                throw new IllegalArgumentException("Operator unknown " + operator);
         }
-
-        builder
-            .addStatement("throw new IllegalArgumentException(\"Constraint violated\")")
-            .endControlFlow();
     }
 }

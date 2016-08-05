@@ -30,7 +30,7 @@ package com.mattunderscore.specky.model
 
 imports
     com.mattunderscore.specky.model.ConstructionMethod default ConstructionMethod.CONSTRUCTOR
-    com.mattunderscore.specky.constraint.model.ConstraintDesc
+    com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates
 
 value PropertyDesc "Description of a property."
     properties
@@ -40,7 +40,7 @@ value PropertyDesc "Description of a property."
         boolean optional "If the property is optional."
         boolean override "If the property is inherited."
         optional String defaultValue default null "Default value of the property."
-        optional ConstraintDesc constraint default null "Constraint applied to the property."
+        optional NFConjoinedDisjointPredicates constraint default null "Constraint applied to the property."
         optional String description default null "Description of the property."
     options
         immutable builder
