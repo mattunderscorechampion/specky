@@ -54,3 +54,15 @@ value ConstraintDesc "Description of a constraint."
         optional ConstraintDesc negatedConstraint
     options
         immutable builder
+
+value NFDisjointPredicates "Disjunction of predicates."
+    properties
+        List<PredicateDesc> predicates "The predicates."
+    options
+        immutable builder
+
+value NFConjoinedDisjointPredicates "Conujunction of disjunctions of predicates."
+    properties
+        List<NFDisjointPredicates> predicates "The disjunctions of predicates."
+    options
+        immutable builder
