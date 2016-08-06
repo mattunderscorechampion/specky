@@ -25,26 +25,34 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.constraint;
 
+import com.mattunderscore.specky.constraint.model.ConstraintOperator;
 import com.mattunderscore.specky.constraint.model.PredicateDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 
 /**
- * Implementation of {@link PropertyPredicateViolationGenerator}.
- *
+ * Implementation of {@link PropertyPredicateViolationGenerator} for {@code int}s and {@code double}s.
  * @author Matt Champion on 06/08/2016
  */
-public final class PropertyPredicateViolationGeneratorImpl implements PropertyPredicateViolationGenerator {
-    private final PropertyPredicateViolationGenerator simpleGenerator = new VerySimplePredicateViolationGenerator();
-
+/*package*/ final class VerySimplePredicateViolationGenerator implements PropertyPredicateViolationGenerator {
     @Override
     public String generate(PropertyDesc propertyDesc, PredicateDesc predicateDesc) {
-        final String type = propertyDesc.getType();
-        switch (type) {
-            case "int":
-            case "double":
-                return simpleGenerator.generate(propertyDesc, predicateDesc);
+        final ConstraintOperator operator = predicateDesc.getOperator();
+        final String propertyName = propertyDesc.getName();
+        switch (operator) {
+            case GREATER_THAN:
+                return propertyName + " <= " + predicateDesc.getLiteral();
+            case LESS_THAN:
+                return propertyName + " >= " + predicateDesc.getLiteral();
+            case GREATER_THAN_OR_EQUAL:
+                return propertyName + " < " + predicateDesc.getLiteral();
+            case LESS_THAN_OR_EQUAL:
+                return propertyName + " > " + predicateDesc.getLiteral();
+            case EQUAL_TO:
+                return propertyName + " != " + predicateDesc.getLiteral();
+            case NOT_EQUAL_TO:
+                return propertyName + " == " + predicateDesc.getLiteral();
             default:
-                throw new IllegalArgumentException("Constraints not supported for type " + type);
+                throw new IllegalArgumentException("Operator unknown " + operator);
         }
     }
 }
