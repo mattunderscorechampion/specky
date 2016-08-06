@@ -33,6 +33,7 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForType;
+import com.mattunderscore.specky.generator.constraint.PropertyConstraintGenerator;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.FieldSpec;
@@ -45,6 +46,7 @@ import com.squareup.javapoet.TypeName;
  * @author Matt Champion on 13/06/2016
  */
 public final class DefaultConstructorGenerator implements MethodGeneratorForType {
+    private final PropertyConstraintGenerator propertyConstraintGenerator = new PropertyConstraintGenerator();
 
     @Override
     public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
@@ -64,6 +66,10 @@ public final class DefaultConstructorGenerator implements MethodGeneratorForType
                 final String defaultValue = propertyDesc.getDefaultValue();
 
                 if (defaultValue == null) {
+                    if (propertyDesc.getConstraint() != null) {
+                        constructor.addCode(propertyConstraintGenerator.generate(propertyDesc));
+                    }
+
                     // If the property does not have a default value add a parameter
                     final ParameterSpec constructorParameter = ParameterSpec.builder(type, propertyDesc.getName()).build();
                     constructor
@@ -74,6 +80,10 @@ public final class DefaultConstructorGenerator implements MethodGeneratorForType
                     // If the property has a default value use it
                     constructor
                         .addStatement("this.$N = $L", fieldSpec, defaultValue);
+
+                    if (propertyDesc.getConstraint() != null) {
+                        constructor.addCode(propertyConstraintGenerator.generate(propertyDesc));
+                    }
                 }
             });
 
