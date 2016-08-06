@@ -49,7 +49,7 @@ public final class WithConstraintTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testUpperBoundViolation() {
-        WithConstraint.builder().upperBound(21);
+        WithConstraint.builder().upperBound(21L);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -118,7 +118,7 @@ public final class WithConstraintTest {
             .builder()
             .minNumber(21)
             .maxNumber(5)
-            .upperBound(20)
+            .upperBound(20L)
             .lowerBound(20)
             .range(15)
             .unnecessary(15)
@@ -134,8 +134,8 @@ public final class WithConstraintTest {
             .lowerBoundDbl(21.0)
             .build();
         assertEquals(21, withConstraint.getMinNumber());
-        assertEquals(5, (int)withConstraint.getMaxNumber());
-        assertEquals(20, withConstraint.getUpperBound());
+        assertEquals(5, (int) withConstraint.getMaxNumber());
+        assertEquals(20, (long) withConstraint.getUpperBound());
         assertEquals(20, withConstraint.getLowerBound());
         assertEquals(15, withConstraint.getRange());
         assertEquals(15, withConstraint.getUnnecessary());

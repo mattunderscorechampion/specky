@@ -29,34 +29,27 @@ import com.mattunderscore.specky.constraint.model.PredicateDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 
 /**
- * Implementation of {@link PropertyPredicateViolationGenerator}.
- *
+ * Turns {@code int} literals into {@code long} literals.
  * @author Matt Champion on 06/08/2016
  */
-public final class PropertyPredicateViolationGeneratorImpl implements PropertyPredicateViolationGenerator {
-    private final PropertyPredicateViolationGenerator simpleGenerator = new VerySimplePredicateViolationGenerator();
-    private final PropertyPredicateViolationGenerator boxedGenerator = new BoxedPredicateViolationGenerator();
-    private final PropertyPredicateViolationGenerator longSimpleGenerator =
-        new LongWrapperPropertyPredicateViolationGenerator(new VerySimplePredicateViolationGenerator());
-    private final PropertyPredicateViolationGenerator longBoxedGenerator =
-        new LongWrapperPropertyPredicateViolationGenerator(new BoxedPredicateViolationGenerator());
+/*package*/ final class LongWrapperPropertyPredicateViolationGenerator implements PropertyPredicateViolationGenerator {
+    private final PropertyPredicateViolationGenerator delegate;
+
+    /**
+     * Constructor.
+     */
+    LongWrapperPropertyPredicateViolationGenerator(PropertyPredicateViolationGenerator delegate) {
+        this.delegate = delegate;
+    }
 
     @Override
     public String generate(PropertyDesc propertyDesc, PredicateDesc predicateDesc) {
-        final String type = propertyDesc.getType();
-        switch (type) {
-            case "int":
-            case "double":
-                return simpleGenerator.generate(propertyDesc, predicateDesc);
-            case "java.lang.Integer":
-            case "java.lang.Double":
-                return boxedGenerator.generate(propertyDesc, predicateDesc);
-            case "long":
-                return longSimpleGenerator.generate(propertyDesc, predicateDesc);
-            case "java.lang.Long":
-                return longBoxedGenerator.generate(propertyDesc, predicateDesc);
-            default:
-                throw new IllegalArgumentException("Constraints not supported for type " + type);
-        }
+        return delegate.generate(
+            propertyDesc,
+            PredicateDesc
+                .builder()
+                .operator(predicateDesc.getOperator())
+                .literal(predicateDesc.getLiteral() + "L")
+                .build());
     }
 }
