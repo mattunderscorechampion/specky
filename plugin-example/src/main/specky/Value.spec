@@ -91,5 +91,6 @@ value WithConstraint
         int single [constraint = 20] "A constrained property."
         int anythingElse [constraint ! = 20] "A constrained property."
         int disjoint [constraint  (= 20 | = 21 | = 23)] "A constrained property."
+        double minDbl [constraint > 20.0] "A constrained property."
     options
         builder

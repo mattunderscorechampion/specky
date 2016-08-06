@@ -64,7 +64,8 @@ constraint_operator
     ;
 
 constraint_literal
-    :   INTEGER_LITERAL
+    :   REAL_LITERAL
+    |   INTEGER_LITERAL
     ;
 
 constraint_predicate
