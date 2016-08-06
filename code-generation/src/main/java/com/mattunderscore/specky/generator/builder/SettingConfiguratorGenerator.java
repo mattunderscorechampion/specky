@@ -72,8 +72,7 @@ public final class SettingConfiguratorGenerator implements MethodGeneratorForPro
         if (!propertyDesc.isOptional() && !type.isPrimitive()) {
             methodBuilder = methodBuilder
                 .addStatement(
-                    "this.$L = $T.requireNonNull($N)",
-                    propertyDesc.getName(),
+                    "$T.requireNonNull($N)",
                     ClassName.get(Objects.class),
                     constructorParameter);
         }
