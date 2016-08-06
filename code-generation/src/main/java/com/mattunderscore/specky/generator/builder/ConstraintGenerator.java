@@ -61,7 +61,7 @@ public final class ConstraintGenerator {
             .getPredicates()
             .stream()
             .map(predicateDesc -> generate(propertyName, predicateDesc))
-            .collect(joining(" || "));
+            .collect(joining(" && "));
         builder
             .beginControlFlow("if (" + checks + ")")
             .addStatement("throw new IllegalArgumentException(\"Constraint violated\")")
