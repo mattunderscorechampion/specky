@@ -37,6 +37,7 @@ import com.mattunderscore.specky.constraint.model.ConstraintOperator;
 import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
 import com.mattunderscore.specky.constraint.model.NFDisjointPredicates;
 import com.mattunderscore.specky.constraint.model.PredicateDesc;
+import com.mattunderscore.specky.constraint.model.SubjectModifier;
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
 import com.mattunderscore.specky.dsl.model.DSLImportDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
@@ -257,7 +258,13 @@ public final class SpecBuilder {
                 .build();
         }
         else {
-            throw new UnsupportedOperationException("Subject modifiers not yet supported");
+            final PredicateDesc predicateOfSubject = createConstraint(subexpression);
+            return PredicateDesc
+                .builder()
+                .subject(expression.HAS_SOME() != null ? SubjectModifier.HAS_SOME : SubjectModifier.SIZE_OF)
+                .operator(predicateOfSubject.getOperator())
+                .literal(predicateOfSubject.getLiteral())
+                .build();
         }
     }
 

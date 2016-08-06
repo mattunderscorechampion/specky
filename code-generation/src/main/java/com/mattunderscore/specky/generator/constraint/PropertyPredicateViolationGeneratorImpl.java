@@ -25,7 +25,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.constraint;
 
+import static java.util.Arrays.asList;
+
+import java.util.List;
+
 import com.mattunderscore.specky.constraint.model.PredicateDesc;
+import com.mattunderscore.specky.constraint.model.SubjectModifier;
 import com.mattunderscore.specky.model.PropertyDesc;
 
 /**
@@ -34,6 +39,7 @@ import com.mattunderscore.specky.model.PropertyDesc;
  * @author Matt Champion on 06/08/2016
  */
 public final class PropertyPredicateViolationGeneratorImpl implements PropertyPredicateViolationGenerator {
+    private static final List<String> COLLECTION_TYPES = asList("java.util.Set", "java.util.List");
     private final PropertyPredicateViolationGenerator simpleGenerator = new VerySimplePredicateViolationGenerator();
     private final PropertyPredicateViolationGenerator boxedGenerator = new BoxedPredicateViolationGenerator();
     private final PropertyPredicateViolationGenerator longSimpleGenerator =
@@ -48,6 +54,19 @@ public final class PropertyPredicateViolationGeneratorImpl implements PropertyPr
 
     @Override
     public String generate(PropertyDesc propertyDesc, PredicateDesc predicateDesc) {
+        final String type = propertyDesc.getType();
+
+        validateSubjectModifier(predicateDesc, type);
+
+        if (COLLECTION_TYPES.contains(type)) {
+            return generateCollectionConstraint(propertyDesc, predicateDesc);
+        }
+        else {
+            return generateValueConstraint(propertyDesc, predicateDesc);
+        }
+    }
+
+    private String generateValueConstraint(PropertyDesc propertyDesc, PredicateDesc predicateDesc) {
         final String type = propertyDesc.getType();
         switch (type) {
             case "int":
@@ -68,6 +87,37 @@ public final class PropertyPredicateViolationGeneratorImpl implements PropertyPr
                 return equalsGenerator.generate(propertyDesc, predicateDesc);
             default:
                 throw new IllegalArgumentException("Constraints not supported for type " + type);
+        }
+    }
+
+    private String generateCollectionConstraint(PropertyDesc propertyDesc, PredicateDesc predicateDesc) {
+        if (predicateDesc.getSubject() == SubjectModifier.SIZE_OF) {
+            final PropertyDesc modifiedSubject  = PropertyDesc
+                .builder()
+                .name(propertyDesc.getName() + ".size()")
+                .type("int")
+                .optional(propertyDesc.isOptional())
+                .build();
+            final PredicateDesc modifiedPredicate = PredicateDesc
+                .builder()
+                .operator(predicateDesc.getOperator())
+                .literal(predicateDesc.getLiteral())
+                .build();
+            return generate(modifiedSubject, modifiedPredicate);
+        }
+        else {
+            throw new IllegalArgumentException("Existential qualification not yet supported");
+        }
+    }
+
+    private void validateSubjectModifier(PredicateDesc predicateDesc, String type) {
+        if (predicateDesc.getSubject() == SubjectModifier.IDENTITY && COLLECTION_TYPES.contains(type)) {
+
+            throw new IllegalArgumentException("A subject modifier is required for working on collections");
+        }
+        else if (predicateDesc.getSubject() != SubjectModifier.IDENTITY && !COLLECTION_TYPES.contains(type)) {
+
+            throw new IllegalArgumentException("A subject modifier is only allowed for working on collections, not " + type);
         }
     }
 }

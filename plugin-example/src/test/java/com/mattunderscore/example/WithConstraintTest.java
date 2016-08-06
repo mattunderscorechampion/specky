@@ -25,10 +25,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.example;
 
+import static java.util.Collections.singleton;
 import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collections;
 
 import org.junit.Test;
 
@@ -120,6 +122,11 @@ public final class WithConstraintTest {
         WithConstraint.builder().choice("c");
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testNotEmptyViolation() {
+        WithConstraint.builder().notEmpty(Collections.emptySet());
+    }
+
     @Test
     public void testConstraint() {
         final WithConstraint withConstraint = WithConstraint
@@ -142,6 +149,7 @@ public final class WithConstraintTest {
             .lowerBoundDbl(21.0)
             .choice("a")
             .choice("b")
+            .notEmpty(singleton("a"))
             .build();
         assertEquals(21, withConstraint.getMinNumber());
         assertEquals(5, (int) withConstraint.getMaxNumber());
@@ -158,5 +166,6 @@ public final class WithConstraintTest {
         assertEquals(new BigDecimal("20.0"), withConstraint.getUpperBoundDbl());
         assertEquals(21.0, withConstraint.getLowerBoundDbl(), 0.01);
         assertEquals("b", withConstraint.getChoice());
+        assertEquals(singleton("a"), withConstraint.getNotEmpty());
     }
 }

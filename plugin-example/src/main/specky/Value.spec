@@ -96,5 +96,6 @@ value WithConstraint
         BigDecimal upperBoundDbl [constraint <= 20.0] "A constrained property."
         double lowerBoundDbl [constraint >= 20.0] "A constrained property."
         String choice [constraint (= "a" | = "b")] "A constrained property."
+        Set<String> notEmpty [constraint # > 0] "A constrained property."
     options
         builder
