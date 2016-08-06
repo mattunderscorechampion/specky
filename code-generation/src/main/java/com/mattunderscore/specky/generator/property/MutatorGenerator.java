@@ -33,6 +33,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import java.util.Objects;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
+import com.mattunderscore.specky.generator.constraint.PropertyConstraintGenerator;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
@@ -47,6 +48,7 @@ import com.squareup.javapoet.TypeName;
  */
 public final class MutatorGenerator implements MethodGeneratorForProperty {
     private final MutatorJavadocGenerator mutatorJavadocGenerator = new MutatorJavadocGenerator();
+    private final PropertyConstraintGenerator propertyConstraintGenerator = new PropertyConstraintGenerator();
 
     @Override
     public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc, PropertyDesc propertyDesc) {
@@ -62,9 +64,13 @@ public final class MutatorGenerator implements MethodGeneratorForProperty {
             setterSpec.addStatement("$T.requireNonNull($N)", ClassName.get(Objects.class), propertyDesc.getName());
         }
 
-        setterSpec.addStatement("this.$N = $N", propertyDesc.getName(), parameterSpec);
+        if (propertyDesc.getConstraint() != null) {
+            setterSpec.addCode(propertyConstraintGenerator.generate(propertyDesc));
+        }
 
-        return setterSpec.build();
+        return setterSpec
+            .addStatement("this.$N = $N", propertyDesc.getName(), parameterSpec)
+            .build();
     }
 
     private static String getMutatorName(String propertyName) {
