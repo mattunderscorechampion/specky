@@ -90,5 +90,6 @@ value WithConstraint
         int negated [constraint ! < 20] "A constrained property."
         int single [constraint = 20] "A constrained property."
         int anythingElse [constraint ! = 20] "A constrained property."
+        int disjoint [constraint  (= 20 | = 21 | = 23)] "A constrained property."
     options
         builder

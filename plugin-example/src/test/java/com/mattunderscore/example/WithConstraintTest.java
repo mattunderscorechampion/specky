@@ -87,6 +87,11 @@ public final class WithConstraintTest {
         WithConstraint.builder().anythingElse(20);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testDisjointViolation() {
+        WithConstraint.builder().disjoint(25);
+    }
+
     @Test
     public void testConstraint() {
         final WithConstraint withConstraint = WithConstraint
@@ -100,6 +105,9 @@ public final class WithConstraintTest {
             .negated(25)
             .single(20)
             .anythingElse(15)
+            .disjoint(20)
+            .disjoint(21)
+            .disjoint(23)
             .build();
         assertEquals(21, withConstraint.getMinNumber());
         assertEquals(5, withConstraint.getMaxNumber());
@@ -110,5 +118,6 @@ public final class WithConstraintTest {
         assertEquals(25, withConstraint.getNegated());
         assertEquals(20, withConstraint.getSingle());
         assertEquals(15, withConstraint.getAnythingElse());
+        assertEquals(23, withConstraint.getDisjoint());
     }
 }
