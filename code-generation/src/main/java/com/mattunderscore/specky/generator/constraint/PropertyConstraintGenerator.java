@@ -23,7 +23,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.generator.builder;
+package com.mattunderscore.specky.generator.constraint;
 
 import static java.util.stream.Collectors.joining;
 
@@ -35,11 +35,11 @@ import com.mattunderscore.specky.model.PropertyDesc;
 import com.squareup.javapoet.CodeBlock;
 
 /**
- * Constraint generator.
+ * Constraint generator for property constraints.
  *
  * @author Matt Champion on 01/08/2016
  */
-public final class ConstraintGenerator {
+public final class PropertyConstraintGenerator {
     /**
      * Generate constraint checking code.
      */

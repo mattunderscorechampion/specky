@@ -33,6 +33,7 @@ import java.util.Objects;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
 import com.mattunderscore.specky.generator.StatementGeneratorForType;
+import com.mattunderscore.specky.generator.constraint.PropertyConstraintGenerator;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
@@ -48,7 +49,7 @@ import com.squareup.javapoet.TypeName;
 public final class SettingConfiguratorGenerator implements MethodGeneratorForProperty {
     private final String javadoc;
     private final StatementGeneratorForType returnStatementGenerator;
-    private final ConstraintGenerator constraintGenerator = new ConstraintGenerator();
+    private final PropertyConstraintGenerator propertyConstraintGenerator = new PropertyConstraintGenerator();
 
     /**
      * Constructor.
@@ -78,7 +79,7 @@ public final class SettingConfiguratorGenerator implements MethodGeneratorForPro
         }
 
         if (propertyDesc.getConstraint() != null) {
-            methodBuilder.addCode(constraintGenerator.generate(propertyDesc));
+            methodBuilder.addCode(propertyConstraintGenerator.generate(propertyDesc));
         }
 
         return methodBuilder
