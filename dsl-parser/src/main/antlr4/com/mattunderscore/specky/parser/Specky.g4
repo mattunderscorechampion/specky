@@ -78,7 +78,7 @@ constraint_expression
 
 constraint_disjunctions_expression
     :   constraint_expression
-    |   OPEN_PARENTHESIS CONSTRAINT_INLINE_WS constraint_expression (CONSTRAINT_INLINE_WS DISJUNCTION CONSTRAINT_INLINE_WS constraint_expression)* CONSTRAINT_INLINE_WS CLOSE_PARENTHESIS
+    |   OPEN_PARENTHESIS CONSTRAINT_INLINE_WS? constraint_expression (CONSTRAINT_INLINE_WS DISJUNCTION CONSTRAINT_INLINE_WS constraint_expression)* CONSTRAINT_INLINE_WS? CLOSE_PARENTHESIS
     ;
 
 constraint_conjunctions_expression
