@@ -115,6 +115,11 @@ public final class WithConstraintTest {
         WithConstraint.builder().lowerBoundDbl(19);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testChoiceViolation() {
+        WithConstraint.builder().choice("c");
+    }
+
     @Test
     public void testConstraint() {
         final WithConstraint withConstraint = WithConstraint
@@ -135,6 +140,8 @@ public final class WithConstraintTest {
             .maxDbl(15.0)
             .upperBoundDbl(new BigDecimal("20.0"))
             .lowerBoundDbl(21.0)
+            .choice("a")
+            .choice("b")
             .build();
         assertEquals(21, withConstraint.getMinNumber());
         assertEquals(5, (int) withConstraint.getMaxNumber());
@@ -150,5 +157,6 @@ public final class WithConstraintTest {
         assertEquals(15.0, withConstraint.getMaxDbl(), 0.01);
         assertEquals(new BigDecimal("20.0"), withConstraint.getUpperBoundDbl());
         assertEquals(21.0, withConstraint.getLowerBoundDbl(), 0.01);
+        assertEquals("b", withConstraint.getChoice());
     }
 }

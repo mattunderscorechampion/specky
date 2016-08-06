@@ -137,7 +137,7 @@ CONSTRAINT_EXPRESSION
     ;
 
 StringLiteral
-    :   '"' ~[\r\n]+ '"'
+    :   '"' ~[\r\n"]+ '"'
     ;
 
 mode LITERAL;
@@ -186,6 +186,10 @@ REAL_LITERAL
 
 INTEGER_LITERAL
     :   ('+'|'-')? [0-9]+
+    ;
+
+STRING_LITERAL
+    :   '"' ~[\r\n"]+ '"'
     ;
 
 NEGATION
