@@ -82,7 +82,7 @@ value ValueOverridingDefault : TypeWithDefault
 value WithConstraint
     properties
         int minNumber [constraint > 20] "A constrained property."
-        int maxNumber [constraint < 20] "A constrained property."
+        Integer maxNumber [constraint < 20] "A constrained property."
         int upperBound [constraint <= 20] "A constrained property."
         int lowerBound [constraint >= 20] "A constrained property."
         int range [constraint >= 5 & < 20] "A constrained property."
@@ -92,5 +92,8 @@ value WithConstraint
         int anythingElse [constraint ! = 20] "A constrained property."
         int disjoint [constraint  (= 20 | = 21 | = 23)] "A constrained property."
         double minDbl [constraint > 20.0] "A constrained property."
+        Double maxDbl [constraint < 20.0] "A constrained property."
+        double upperBoundDbl [constraint <= 20.0] "A constrained property."
+        double lowerBoundDbl [constraint >= 20.0] "A constrained property."
     options
         builder

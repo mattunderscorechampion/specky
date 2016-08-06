@@ -92,6 +92,26 @@ public final class WithConstraintTest {
         WithConstraint.builder().disjoint(25);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testMinDoubleConstraintViolation() {
+        WithConstraint.builder().minDbl(20);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMaxDobuleConstraintViolation() {
+        WithConstraint.builder().maxDbl(20.0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpperBoundDoubleViolation() {
+        WithConstraint.builder().upperBoundDbl(21);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testLowerBoundDoubleViolation() {
+        WithConstraint.builder().lowerBoundDbl(19);
+    }
+
     @Test
     public void testConstraint() {
         final WithConstraint withConstraint = WithConstraint
@@ -108,9 +128,13 @@ public final class WithConstraintTest {
             .disjoint(20)
             .disjoint(21)
             .disjoint(23)
+            .minDbl(21.0)
+            .maxDbl(15.0)
+            .upperBoundDbl(20.0)
+            .lowerBoundDbl(21.0)
             .build();
         assertEquals(21, withConstraint.getMinNumber());
-        assertEquals(5, withConstraint.getMaxNumber());
+        assertEquals(5, (int)withConstraint.getMaxNumber());
         assertEquals(20, withConstraint.getUpperBound());
         assertEquals(20, withConstraint.getLowerBound());
         assertEquals(15, withConstraint.getRange());
@@ -119,5 +143,9 @@ public final class WithConstraintTest {
         assertEquals(20, withConstraint.getSingle());
         assertEquals(15, withConstraint.getAnythingElse());
         assertEquals(23, withConstraint.getDisjoint());
+        assertEquals(21.0, withConstraint.getMinDbl(), 0.01);
+        assertEquals(15.0, withConstraint.getMaxDbl(), 0.01);
+        assertEquals(20.0, withConstraint.getUpperBoundDbl(), 0.01);
+        assertEquals(21.0, withConstraint.getLowerBoundDbl(), 0.01);
     }
 }

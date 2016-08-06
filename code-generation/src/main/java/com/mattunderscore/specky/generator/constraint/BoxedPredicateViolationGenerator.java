@@ -25,30 +25,35 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.constraint;
 
+import com.mattunderscore.specky.constraint.model.ConstraintOperator;
 import com.mattunderscore.specky.constraint.model.PredicateDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 
 /**
- * Implementation of {@link PropertyPredicateViolationGenerator}.
+ * Implementation of {@link PropertyPredicateViolationGenerator} for {@link Integer}s and {@link Double}s.
  *
  * @author Matt Champion on 06/08/2016
  */
-public final class PropertyPredicateViolationGeneratorImpl implements PropertyPredicateViolationGenerator {
-    private final PropertyPredicateViolationGenerator simpleGenerator = new VerySimplePredicateViolationGenerator();
-    private final PropertyPredicateViolationGenerator boxedGenerator = new BoxedPredicateViolationGenerator();
-
+public final class BoxedPredicateViolationGenerator implements PropertyPredicateViolationGenerator {
     @Override
     public String generate(PropertyDesc propertyDesc, PredicateDesc predicateDesc) {
-        final String type = propertyDesc.getType();
-        switch (type) {
-            case "int":
-            case "double":
-                return simpleGenerator.generate(propertyDesc, predicateDesc);
-            case "java.lang.Integer":
-            case "java.lang.Double":
-                return boxedGenerator.generate(propertyDesc, predicateDesc);
+        final ConstraintOperator operator = predicateDesc.getOperator();
+        final String propertyName = propertyDesc.getName();
+        switch (operator) {
+            case GREATER_THAN:
+                return propertyName + ".compareTo(" + predicateDesc.getLiteral() + ") <= 0";
+            case LESS_THAN:
+                return propertyName + ".compareTo(" + predicateDesc.getLiteral() + ") >= 0";
+            case GREATER_THAN_OR_EQUAL:
+                return propertyName + ".compareTo(" + predicateDesc.getLiteral() + ") < 0";
+            case LESS_THAN_OR_EQUAL:
+                return propertyName + ".compareTo(" + predicateDesc.getLiteral() + ") > 0";
+            case EQUAL_TO:
+                return propertyName + ".compareTo(" + predicateDesc.getLiteral() + ") != 0";
+            case NOT_EQUAL_TO:
+                return propertyName + ".compareTo(" + predicateDesc.getLiteral() + ") == 0";
             default:
-                throw new IllegalArgumentException("Constraints not supported for type " + type);
+                throw new IllegalArgumentException("Operator unknown " + operator);
         }
     }
 }
