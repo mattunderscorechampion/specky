@@ -237,9 +237,9 @@ public final class SpecBuilder {
 
     private PredicateDesc createConstraint(Specky.Constraint_expressionContext expression) {
         final Specky.Constraint_predicateContext predicate = expression.constraint_predicate();
-        final Specky.Constraint_expressionContext negatedExpression = expression.constraint_expression();
+        final Specky.Constraint_expressionContext subexpression = expression.constraint_expression();
 
-        assert predicate != null || negatedExpression != null : "Should either be predicate or negated expression";
+        assert predicate != null || subexpression != null : "Should either be predicate or another expression";
 
         if (predicate != null) {
             return PredicateDesc
@@ -248,13 +248,16 @@ public final class SpecBuilder {
                 .literal(predicate.constraint_literal().getText())
                 .build();
         }
-        else {
-            final PredicateDesc predicateToNegate = createConstraint(expression.constraint_expression());
+        else if (expression.NEGATION() != null) {
+            final PredicateDesc predicateToNegate = createConstraint(subexpression);
             return PredicateDesc
                 .builder()
                 .operator(negateOperator(predicateToNegate.getOperator()))
                 .literal(predicateToNegate.getLiteral())
                 .build();
+        }
+        else {
+            throw new UnsupportedOperationException("Subject modifiers not yet supported");
         }
     }
 

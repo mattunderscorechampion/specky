@@ -180,6 +180,14 @@ DISJUNCTION
     : '|'
     ;
 
+SIZE_OF
+    : '#'
+    ;
+
+HAS_SOME
+    : 'e'
+    ;
+
 REAL_LITERAL
     :   ('+'|'-')? [0-9]* '.' [0-9]+
     ;

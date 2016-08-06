@@ -76,6 +76,8 @@ constraint_predicate
 constraint_expression
     :   constraint_predicate
     |   NEGATION CONSTRAINT_INLINE_WS constraint_expression
+    |   SIZE_OF CONSTRAINT_INLINE_WS constraint_expression
+    |   HAS_SOME CONSTRAINT_INLINE_WS constraint_expression
     ;
 
 constraint_disjunctions_expression
