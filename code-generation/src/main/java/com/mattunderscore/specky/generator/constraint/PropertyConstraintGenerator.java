@@ -38,7 +38,7 @@ import com.squareup.javapoet.CodeBlock;
  * @author Matt Champion on 01/08/2016
  */
 public final class PropertyConstraintGenerator {
-    private final PropertyPredicateViolationGenerator predicateGenerator = new PropertyPredicateViolationGenerator();
+    private final PropertyPredicateViolationGenerator predicateGenerator = new PropertyPredicateViolationGeneratorImpl();
 
     /**
      * Generate constraint checking code.

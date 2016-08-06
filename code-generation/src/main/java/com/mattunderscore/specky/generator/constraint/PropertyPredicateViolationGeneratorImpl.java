@@ -25,17 +25,35 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.constraint;
 
+import com.mattunderscore.specky.constraint.model.ConstraintOperator;
 import com.mattunderscore.specky.constraint.model.PredicateDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 
 /**
- * Generator for Java expressions that evaluate to true if a property predicate is violated.
+ * Implementation of {@link PropertyPredicateViolationGenerator}.
  *
  * @author Matt Champion on 06/08/2016
  */
-public interface PropertyPredicateViolationGenerator {
-    /**
-     * Generate expression.
-     */
-    String generate(PropertyDesc propertyDesc, PredicateDesc predicateDesc);
+public final class PropertyPredicateViolationGeneratorImpl implements PropertyPredicateViolationGenerator {
+    @Override
+    public String generate(PropertyDesc propertyDesc, PredicateDesc predicateDesc) {
+        final ConstraintOperator operator = predicateDesc.getOperator();
+        final String propertyName = propertyDesc.getName();
+        switch (operator) {
+            case GREATER_THAN:
+                return propertyName + " <= " + predicateDesc.getLiteral();
+            case LESS_THAN:
+                return propertyName + " >= " + predicateDesc.getLiteral();
+            case GREATER_THAN_OR_EQUAL:
+                return propertyName + " < " + predicateDesc.getLiteral();
+            case LESS_THAN_OR_EQUAL:
+                return propertyName + " > " + predicateDesc.getLiteral();
+            case EQUAL_TO:
+                return propertyName + " != " + predicateDesc.getLiteral();
+            case NOT_EQUAL_TO:
+                return propertyName + " == " + predicateDesc.getLiteral();
+            default:
+                throw new IllegalArgumentException("Operator unknown " + operator);
+        }
+    }
 }
