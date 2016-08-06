@@ -27,6 +27,9 @@ package com.mattunderscore.example;
 
 import static org.junit.Assert.assertEquals;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 import org.junit.Test;
 
 import com.example.ValueWithList;
@@ -59,12 +62,12 @@ public final class WithConstraintTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testRangeLowViolation() {
-        WithConstraint.builder().range(3);
+        WithConstraint.builder().range(new BigInteger("3"));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testRangeHighViolation() {
-        WithConstraint.builder().range(25);
+        WithConstraint.builder().range(new BigInteger("25"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -104,7 +107,7 @@ public final class WithConstraintTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testUpperBoundDoubleViolation() {
-        WithConstraint.builder().upperBoundDbl(21);
+        WithConstraint.builder().upperBoundDbl(new BigDecimal("21"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -120,7 +123,7 @@ public final class WithConstraintTest {
             .maxNumber(5)
             .upperBound(20L)
             .lowerBound(20)
-            .range(15)
+            .range(new BigInteger("15"))
             .unnecessary(15)
             .negated(25)
             .single(20)
@@ -130,14 +133,14 @@ public final class WithConstraintTest {
             .disjoint(23)
             .minDbl(21.0)
             .maxDbl(15.0)
-            .upperBoundDbl(20.0)
+            .upperBoundDbl(new BigDecimal("20.0"))
             .lowerBoundDbl(21.0)
             .build();
         assertEquals(21, withConstraint.getMinNumber());
         assertEquals(5, (int) withConstraint.getMaxNumber());
         assertEquals(20, (long) withConstraint.getUpperBound());
         assertEquals(20, withConstraint.getLowerBound());
-        assertEquals(15, withConstraint.getRange());
+        assertEquals(new BigInteger("15"), withConstraint.getRange());
         assertEquals(15, withConstraint.getUnnecessary());
         assertEquals(25, withConstraint.getNegated());
         assertEquals(20, withConstraint.getSingle());
@@ -145,7 +148,7 @@ public final class WithConstraintTest {
         assertEquals(23, withConstraint.getDisjoint());
         assertEquals(21.0, withConstraint.getMinDbl(), 0.01);
         assertEquals(15.0, withConstraint.getMaxDbl(), 0.01);
-        assertEquals(20.0, withConstraint.getUpperBoundDbl(), 0.01);
+        assertEquals(new BigDecimal("20.0"), withConstraint.getUpperBoundDbl());
         assertEquals(21.0, withConstraint.getLowerBoundDbl(), 0.01);
     }
 }

@@ -40,6 +40,10 @@ public final class PropertyPredicateViolationGeneratorImpl implements PropertyPr
         new LongWrapperPropertyPredicateViolationGenerator(new VerySimplePredicateViolationGenerator());
     private final PropertyPredicateViolationGenerator longBoxedGenerator =
         new LongWrapperPropertyPredicateViolationGenerator(new BoxedPredicateViolationGenerator());
+    private final PropertyPredicateViolationGenerator bigIntegerGenerator =
+        new BigIntegerWrapperPropertyPredicateViolationGenerator(new BoxedPredicateViolationGenerator());
+    private final PropertyPredicateViolationGenerator bigDecimalGenerator =
+        new BigDecimalWrapperPropertyPredicateViolationGenerator(new BoxedPredicateViolationGenerator());
 
     @Override
     public String generate(PropertyDesc propertyDesc, PredicateDesc predicateDesc) {
@@ -55,6 +59,10 @@ public final class PropertyPredicateViolationGeneratorImpl implements PropertyPr
                 return longSimpleGenerator.generate(propertyDesc, predicateDesc);
             case "java.lang.Long":
                 return longBoxedGenerator.generate(propertyDesc, predicateDesc);
+            case "java.math.BigInteger":
+                return bigIntegerGenerator.generate(propertyDesc, predicateDesc);
+            case "java.math.BigDecimal":
+                return bigDecimalGenerator.generate(propertyDesc, predicateDesc);
             default:
                 throw new IllegalArgumentException("Constraints not supported for type " + type);
         }

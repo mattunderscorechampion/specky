@@ -85,7 +85,7 @@ value WithConstraint
         Integer maxNumber [constraint < 20] "A constrained property."
         Long upperBound [constraint <= 20] "A constrained property."
         long lowerBound [constraint >= 20] "A constrained property."
-        int range [constraint >= 5 & < 20] "A constrained property."
+        BigInteger range [constraint >= 5 & < 20] "A constrained property."
         int unnecessary [constraint < 20] "A constrained property."
         int negated [constraint ! < 20] "A constrained property."
         int single [constraint = 20] "A constrained property."
@@ -93,7 +93,7 @@ value WithConstraint
         int disjoint [constraint  (= 20 | = 21 | = 23)] "A constrained property."
         double minDbl [constraint > 20.0] "A constrained property."
         Double maxDbl [constraint < 20.0] "A constrained property."
-        double upperBoundDbl [constraint <= 20.0] "A constrained property."
+        BigDecimal upperBoundDbl [constraint <= 20.0] "A constrained property."
         double lowerBoundDbl [constraint >= 20.0] "A constrained property."
     options
         builder
