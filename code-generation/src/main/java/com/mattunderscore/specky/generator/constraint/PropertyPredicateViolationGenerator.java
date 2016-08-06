@@ -25,46 +25,37 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.constraint;
 
-import static java.util.stream.Collectors.joining;
-
-import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
-import com.mattunderscore.specky.constraint.model.NFDisjointPredicates;
+import com.mattunderscore.specky.constraint.model.ConstraintOperator;
+import com.mattunderscore.specky.constraint.model.PredicateDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
-import com.squareup.javapoet.CodeBlock;
 
 /**
- * Constraint generator for property constraints.
+ * Generator for Java expressions that evalutate to true if a property predicate is violated.
  *
- * @author Matt Champion on 01/08/2016
+ * @author Matt Champion on 06/08/2016
  */
-public final class PropertyConstraintGenerator {
-    private final PropertyPredicateViolationGenerator predicateGenerator = new PropertyPredicateViolationGenerator();
-
+public final class PropertyPredicateViolationGenerator {
     /**
-     * Generate constraint checking code.
+     * Generate expression.
      */
-    public CodeBlock generate(PropertyDesc propertyDesc) {
-        final CodeBlock.Builder builder = CodeBlock.builder();
-
-        generate(builder, propertyDesc, propertyDesc.getConstraint());
-        return builder.build();
-    }
-
-    private void generate(CodeBlock.Builder builder, PropertyDesc propertyDesc, NFConjoinedDisjointPredicates constraintDesc) {
-        constraintDesc
-            .getPredicates()
-            .forEach(disjointPredicates -> generate(builder, propertyDesc, disjointPredicates));
-    }
-
-    private void generate(CodeBlock.Builder builder, PropertyDesc propertyDesc, NFDisjointPredicates disjointPredicates) {
-        final String checks = disjointPredicates
-            .getPredicates()
-            .stream()
-            .map(predicateDesc -> predicateGenerator.generate(propertyDesc, predicateDesc))
-            .collect(joining(" && "));
-        builder
-            .beginControlFlow("if (" + checks + ")")
-            .addStatement("throw new IllegalArgumentException(\"Constraint violated\")")
-            .endControlFlow();
+    public String generate(PropertyDesc propertyDesc, PredicateDesc predicateDesc) {
+        final ConstraintOperator operator = predicateDesc.getOperator();
+        final String propertyName = propertyDesc.getName();
+        switch (operator) {
+            case GREATER_THAN:
+                return propertyName + " <= " + predicateDesc.getLiteral();
+            case LESS_THAN:
+                return propertyName + " >= " + predicateDesc.getLiteral();
+            case GREATER_THAN_OR_EQUAL:
+                return propertyName + " < " + predicateDesc.getLiteral();
+            case LESS_THAN_OR_EQUAL:
+                return propertyName + " > " + predicateDesc.getLiteral();
+            case EQUAL_TO:
+                return propertyName + " != " + predicateDesc.getLiteral();
+            case NOT_EQUAL_TO:
+                return propertyName + " == " + predicateDesc.getLiteral();
+            default:
+                throw new IllegalArgumentException("Operator unknown " + operator);
+        }
     }
 }
