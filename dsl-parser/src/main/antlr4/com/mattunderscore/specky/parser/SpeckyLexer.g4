@@ -48,6 +48,15 @@ LetterOrDigit
         {Character.isJavaIdentifierPart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
     ;
 
+fragment
+MULTILINE_QUOTE
+    : '"""'
+    ;
+
+LICENCE
+    :   'licence'
+    ;
+
 VALUE
     : 'value'
     ;
@@ -138,6 +147,10 @@ CONSTRAINT_EXPRESSION
 
 StringLiteral
     :   '"' ~[\r\n"]+ '"'
+    ;
+
+MULTILINE_STRING_LITERAL
+    :   MULTILINE_QUOTE (.)+? MULTILINE_QUOTE
     ;
 
 mode LITERAL;

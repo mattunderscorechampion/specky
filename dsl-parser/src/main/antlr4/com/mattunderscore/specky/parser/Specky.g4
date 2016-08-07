@@ -139,8 +139,13 @@ author
     :   AUTHOR INLINE_WS StringLiteral
     ;
 
+licence
+    :   LICENCE INLINE_WS (MULTILINE_STRING_LITERAL | StringLiteral)
+    ;
+
 spec
     :   LINE_BREAK*
+        (licence LINE_BREAK+)?
         (author LINE_BREAK+)?
         package_name LINE_BREAK+
         (imports LINE_BREAK*)?
