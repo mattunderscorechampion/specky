@@ -27,6 +27,10 @@ parser grammar Specky;
 
 options { tokenVocab=SpeckyLexer; }
 
+string_value
+    :   (StringLiteral | MULTILINE_STRING_LITERAL)
+    ;
+
 construction
     :   CONSTRUCTOR
     |   MUTABLE_BUILDER
@@ -136,11 +140,11 @@ typeSpec
     ;
 
 author
-    :   AUTHOR INLINE_WS StringLiteral
+    :   AUTHOR INLINE_WS string_value
     ;
 
 licence
-    :   LICENCE INLINE_WS (MULTILINE_STRING_LITERAL | StringLiteral)
+    :   LICENCE INLINE_WS string_value
     ;
 
 spec

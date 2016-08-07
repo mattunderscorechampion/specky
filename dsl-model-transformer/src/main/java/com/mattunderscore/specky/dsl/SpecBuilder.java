@@ -87,13 +87,7 @@ public final class SpecBuilder {
                 .collect(toList());
         return DSLSpecDesc
             .builder()
-            .author(context.author() == null ?
-                null :
-                context
-                    .author()
-                    .StringLiteral()
-                    .getText()
-                    .substring(1, context.author().StringLiteral().getText().length() - 1))
+            .author(context.author() == null ? null : toValue(context.author().string_value()))
             .packageName(context.package_name().qualifiedName().getText())
             .importTypes(imports)
             .views(context
@@ -326,6 +320,18 @@ public final class SpecBuilder {
         }
         else {
             throw new IllegalArgumentException("Unsupported type");
+        }
+    }
+
+    private String toValue(Specky.String_valueContext stringValue) {
+        final TerminalNode multiline = stringValue.MULTILINE_STRING_LITERAL();
+        if (multiline != null) {
+            final String literal = multiline.getText();
+            return literal.substring(3, literal.length() - 3);
+        }
+        else {
+            final String literal = stringValue.StringLiteral().getText();
+            return literal.substring(1, literal.length() - 1);
         }
     }
 }
