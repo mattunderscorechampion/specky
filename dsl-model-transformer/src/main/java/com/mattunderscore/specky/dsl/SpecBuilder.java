@@ -87,7 +87,8 @@ public final class SpecBuilder {
                 .collect(toList());
         return DSLSpecDesc
             .builder()
-            .author(context.author() == null ? null : toValue(context.author().string_value()))
+            .ifThen(context.author() != null, builder -> builder.author(toValue(context.author().string_value())))
+            .ifThen(context.licence() != null, builder -> builder.licence(toValue(context.licence().string_value())))
             .packageName(context.package_name().qualifiedName().getText())
             .importTypes(imports)
             .views(context

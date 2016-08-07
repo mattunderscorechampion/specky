@@ -70,7 +70,8 @@ value DSLBeanDesc : DSLTypeDesc "Description of a bean type."
 
 value DSLSpecDesc "Description of a specification."
     properties
-        optional String author "Author of the specification."
+        optional String author default null "Author of the specification."
+        optional String licence default null "Copyright and licence information."
         String packageName "Name of the package the specification describes."
         List<DSLImportDesc> importTypes "Types from outside the specification to import."
         List<DSLTypeDesc> types "Types of the specification."
