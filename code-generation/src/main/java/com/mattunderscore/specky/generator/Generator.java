@@ -25,10 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
@@ -36,6 +32,10 @@ import com.mattunderscore.specky.model.ValueDesc;
 import com.mattunderscore.specky.model.ViewDesc;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Code generator for specification.
@@ -87,6 +87,7 @@ public final class Generator {
         return JavaFile
             .builder(typeDesc.getPackageName(), typeSpec)
             .indent(codeStyle.getIndent())
+            .skipJavaLangImports(true)
             .build();
     }
 
