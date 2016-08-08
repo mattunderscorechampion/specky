@@ -25,6 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.code.generation.specky;
 
+import com.google.googlejavaformat.java.FormatterException;
 import com.mattunderscore.specky.SpeckyDSLFileStreamingContext;
 import com.mattunderscore.specky.SpeckyModelGeneratingContext;
 import com.mattunderscore.specky.SpeckyWritingContext;
@@ -112,7 +113,7 @@ public class GenerateMojo extends AbstractMojo {
         try {
             speckyWritingContext.write();
         }
-        catch (IOException e) {
+        catch (IOException | FormatterException e) {
             throw new MojoFailureException("Failed to write generated source code", e);
         }
 

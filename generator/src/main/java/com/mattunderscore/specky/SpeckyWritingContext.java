@@ -25,12 +25,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import com.google.googlejavaformat.java.Formatter;
+import com.google.googlejavaformat.java.FormatterException;
+import com.google.googlejavaformat.java.JavaFormatterOptions;
+import com.google.googlejavaformat.java.JavaFormatterOptions.JavadocFormatter;
+import com.google.googlejavaformat.java.JavaFormatterOptions.SortImports;
+import com.google.googlejavaformat.java.JavaFormatterOptions.Style;
+import com.squareup.javapoet.JavaFile;
+
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.squareup.javapoet.JavaFile;
+import static java.nio.file.StandardOpenOption.CREATE;
+import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
+import static java.nio.file.StandardOpenOption.WRITE;
 
 /**
  * Writes generated Java code to file system.
@@ -40,10 +52,12 @@ import com.squareup.javapoet.JavaFile;
 public final class SpeckyWritingContext {
     private final AtomicBoolean consumed = new AtomicBoolean(false);
     private final List<JavaFile> javaFiles;
+    private final Formatter codeFormatter;
     private volatile Path targetPath;
 
     /*package*/ SpeckyWritingContext(List<JavaFile> javaFiles) {
         this.javaFiles = javaFiles;
+        codeFormatter = new Formatter(new JavaFormatterOptions(JavadocFormatter.NONE, Style.AOSP, SortImports.ALSO));
     }
 
     /**
@@ -58,10 +72,18 @@ public final class SpeckyWritingContext {
      * Write files.
      * @throws IllegalStateException if has been called before
      */
-    public void write() throws IOException {
+    public void write() throws IOException, FormatterException {
         if (consumed.compareAndSet(false, true)) {
             for (final JavaFile file : javaFiles) {
-                file.writeTo(targetPath);
+                final String formattedSource = codeFormatter.formatSource(file.toString());
+                Path outputPath = targetPath;
+                final String[] packageNameParts = file.packageName.split("\\.");
+                for (final String packageNamePart : packageNameParts) {
+                    outputPath = outputPath.resolve(packageNamePart);
+                }
+                Files.createDirectories(outputPath);
+                outputPath = outputPath.resolve(file.typeSpec.name + ".java");
+                Files.write(outputPath, formattedSource.getBytes(Charset.forName("UTF-8")), CREATE, WRITE, TRUNCATE_EXISTING);
             }
         }
         else {
