@@ -45,7 +45,6 @@ public final class Generator {
     private final ValueGenerator valueGenerator;
     private final BeanGenerator beanGenerator;
     private final ViewGenerator viewGenerator;
-    private final CodeStyle codeStyle;
 
     /**
      * Constructor.
@@ -53,13 +52,11 @@ public final class Generator {
     public Generator(
             ValueGenerator valueGenerator,
             BeanGenerator beanGenerator,
-            ViewGenerator viewGenerator,
-            CodeStyle codeStyle) {
+            ViewGenerator viewGenerator) {
 
         this.valueGenerator = valueGenerator;
         this.beanGenerator = beanGenerator;
         this.viewGenerator = viewGenerator;
-        this.codeStyle = codeStyle;
     }
 
     /**
@@ -86,7 +83,6 @@ public final class Generator {
         final TypeSpec typeSpec = generateType(specDesc, typeDesc);
         return JavaFile
             .builder(typeDesc.getPackageName(), typeSpec)
-            .indent(codeStyle.getIndent())
             .skipJavaLangImports(true)
             .build();
     }
@@ -95,7 +91,6 @@ public final class Generator {
         final TypeSpec typeSpec = generateView(viewDesc);
         return JavaFile
             .builder(viewDesc.getPackageName(), typeSpec)
-            .indent(codeStyle.getIndent())
             .build();
     }
 

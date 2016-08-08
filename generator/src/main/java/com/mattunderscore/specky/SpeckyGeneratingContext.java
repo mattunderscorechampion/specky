@@ -25,19 +25,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
-import static com.mattunderscore.specky.generator.object.method.ToStringGenerator.COMMA_AND_SPACE_SEPARATOR;
-import static com.mattunderscore.specky.generator.object.method.ToStringGenerator.SIMPLE_PROPERTY_FORMATTER;
-import static com.mattunderscore.specky.generator.object.method.ToStringGenerator.SQUARE_BRACKETS;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import com.mattunderscore.specky.generator.BeanGenerator;
 import com.mattunderscore.specky.generator.BeanInitialiser;
-import com.mattunderscore.specky.generator.CodeStyle;
 import com.mattunderscore.specky.generator.ConstructionMethodAppender;
 import com.mattunderscore.specky.generator.Generator;
 import com.mattunderscore.specky.generator.SuperTypeAppender;
@@ -61,6 +50,16 @@ import com.mattunderscore.specky.generator.property.MutatorGenerator;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.JavaFile;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.mattunderscore.specky.generator.object.method.ToStringGenerator.COMMA_AND_SPACE_SEPARATOR;
+import static com.mattunderscore.specky.generator.object.method.ToStringGenerator.SIMPLE_PROPERTY_FORMATTER;
+import static com.mattunderscore.specky.generator.object.method.ToStringGenerator.SQUARE_BRACKETS;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+
 /**
  * Generates Java code.
  *
@@ -76,7 +75,6 @@ public final class SpeckyGeneratingContext {
             SIMPLE_PROPERTY_FORMATTER);
     private AccessorGenerator accessorGenerator = new AccessorGenerator();
     private MutatorGenerator mutatorGenerator = new MutatorGenerator();
-    private CodeStyle codeStyle = CodeStyle.builder().spaces(4).build();
 
     /*package*/ SpeckyGeneratingContext(SpecDesc spec) {
         this.spec = spec;
@@ -103,14 +101,6 @@ public final class SpeckyGeneratingContext {
      */
     public SpeckyGeneratingContext mutatorGenerator(MutatorGenerator mutatorGenerator) {
         this.mutatorGenerator = mutatorGenerator;
-        return this;
-    }
-
-    /**
-     * Set the code style.
-     */
-    public SpeckyGeneratingContext codeStyle(CodeStyle codeStyle) {
-        this.codeStyle = codeStyle;
         return this;
     }
 
@@ -150,8 +140,7 @@ public final class SpeckyGeneratingContext {
                     superTypeAppender,
                     asList(accessorGenerator, mutatorGenerator),
                     asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
-                new ViewGenerator(),
-                codeStyle);
+                new ViewGenerator());
 
             final List<JavaFile> javaFiles = new ArrayList<>();
             javaFiles.addAll(generator.generate(spec));
