@@ -57,6 +57,7 @@ propertyName
     |   IMPORT
     |   OPTIONS
     |   AUTHOR
+    |   LICENCE
     ;
 
 constraint_operator
