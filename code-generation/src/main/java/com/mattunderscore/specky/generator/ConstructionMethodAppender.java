@@ -29,7 +29,7 @@ import java.util.List;
 
 import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.squareup.javapoet.TypeSpec;
 
 /**
@@ -54,7 +54,7 @@ public final class ConstructionMethodAppender implements TypeAppender {
     }
 
     @Override
-    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
+    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, ImplementationDesc valueDesc) {
         if (valueDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR) {
             constructorGenerators.forEach(generator -> typeSpecBuilder
                 .addMethod(generator.generate(specDesc, valueDesc)));

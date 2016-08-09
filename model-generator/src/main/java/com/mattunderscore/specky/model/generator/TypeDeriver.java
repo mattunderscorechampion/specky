@@ -38,8 +38,8 @@ import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
 import com.mattunderscore.specky.model.BeanDesc;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
-import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ValueDesc;
 import com.mattunderscore.specky.model.ViewDesc;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
@@ -67,7 +67,7 @@ public final class TypeDeriver {
     /**
      * @return the fully derived type
      */
-    public TypeDesc deriveType(DSLSpecDesc specDesc, DSLTypeDesc dslTypeDesc) {
+    public ImplementationDesc deriveType(DSLSpecDesc specDesc, DSLTypeDesc dslTypeDesc) {
         if (dslTypeDesc instanceof DSLValueDesc) {
             return ValueDesc
                 .builder()

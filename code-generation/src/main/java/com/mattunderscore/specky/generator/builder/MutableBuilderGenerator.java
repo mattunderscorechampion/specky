@@ -40,7 +40,7 @@ import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.TypeInitialiser;
 import com.mattunderscore.specky.generator.constructor.ConstructorForBuiltTypeGenerator;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
@@ -85,7 +85,7 @@ public final class MutableBuilderGenerator implements TypeAppender {
     }
 
     @Override
-    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
+    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, ImplementationDesc valueDesc) {
         final TypeSpec.Builder builder = typeInitialiser.create(specDesc, valueDesc);
 
         valueDesc

@@ -34,7 +34,7 @@ import java.util.Objects;
 import com.mattunderscore.specky.generator.MethodGeneratorForType;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
@@ -46,7 +46,7 @@ import com.squareup.javapoet.TypeName;
 public final class HashCodeGenerator implements MethodGeneratorForType {
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
+    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
         return methodBuilder("hashCode")
             .addAnnotation(Override.class)
             .addModifiers(PUBLIC)
@@ -54,7 +54,7 @@ public final class HashCodeGenerator implements MethodGeneratorForType {
             .addStatement(
                 "return $T.hash($L)",
                 ClassName.get(Objects.class),
-                typeDesc
+                implementationDesc
                     .getProperties()
                     .stream()
                     .map(PropertyDesc::getName)

@@ -31,9 +31,9 @@ import static java.util.stream.Collectors.joining;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForType;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -83,17 +83,17 @@ public final class ToStringGenerator implements MethodGeneratorForType {
     }
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
+    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
         return methodBuilder("toString")
             .returns(ClassName.get(String.class))
             .addModifiers(PUBLIC)
             .addAnnotation(AnnotationSpec.builder(Override.class).build())
-            .addCode(generateImplementation(typeDesc))
+            .addCode(generateImplementation(implementationDesc))
             .build();
     }
 
-    private CodeBlock generateImplementation(TypeDesc typeDesc) {
-        final String properties = typeDesc
+    private CodeBlock generateImplementation(ImplementationDesc implementationDesc) {
+        final String properties = implementationDesc
             .getProperties()
             .stream()
             .map(propertyFormatter::formatProperty)
@@ -102,7 +102,7 @@ public final class ToStringGenerator implements MethodGeneratorForType {
             .builder()
             .addStatement(
                 "return \"$L$L$L$L\"",
-                typeDesc.getName(),
+                implementationDesc.getName(),
                 propertyListBookend.getPrefix(),
                 properties,
                 propertyListBookend.getSuffix())

@@ -30,7 +30,7 @@ import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.squareup.javapoet.TypeSpec;
 
 /**
@@ -39,18 +39,18 @@ import com.squareup.javapoet.TypeSpec;
  */
 public final class BeanInitialiser implements TypeInitialiser {
     @Override
-    public TypeSpec.Builder create(SpecDesc specDesc, TypeDesc typeDesc) {
+    public TypeSpec.Builder create(SpecDesc specDesc, ImplementationDesc implementationDesc) {
         return TypeSpec
-            .classBuilder(typeDesc.getName())
+            .classBuilder(implementationDesc.getName())
             .addModifiers(PUBLIC, FINAL)
             .addJavadoc(
                 docType()
                     .setDescription(
-                        typeDesc.getDescription() == null ?
+                        implementationDesc.getDescription() == null ?
                         "Bean type $L.\n\nAuto-generated from specification." :
-                        typeDesc.getDescription())
-                    .setAuthor(typeDesc.getAuthor())
+                        implementationDesc.getDescription())
+                    .setAuthor(implementationDesc.getAuthor())
                     .toJavaDoc(),
-                typeDesc.getName());
+                implementationDesc.getName());
     }
 }

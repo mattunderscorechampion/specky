@@ -7,6 +7,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.mattunderscore.specky.model.ImplementationDesc;
 import org.junit.Test;
 
 import com.mattunderscore.specky.model.ConstructionMethod;
@@ -16,7 +17,6 @@ import com.mattunderscore.specky.dsl.model.DSLValueDesc;
 import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
 import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
@@ -66,12 +66,12 @@ public final class ModelGeneratorTest {
 
         assertNotNull(specDesc);
         assertEquals(1, specDesc.getTypes().size());
-        final TypeDesc typeDesc = specDesc.getTypes().get(0);
-        assertEquals("com.example", typeDesc.getPackageName());
-        assertEquals("Example", typeDesc.getName());
-        assertEquals(ConstructionMethod.CONSTRUCTOR, typeDesc.getConstructionMethod());
-        assertEquals(1, typeDesc.getProperties().size());
-        final PropertyDesc property = typeDesc.getProperties().get(0);
+        final ImplementationDesc implementationDesc = specDesc.getTypes().get(0);
+        assertEquals("com.example", implementationDesc.getPackageName());
+        assertEquals("Example", implementationDesc.getName());
+        assertEquals(ConstructionMethod.CONSTRUCTOR, implementationDesc.getConstructionMethod());
+        assertEquals(1, implementationDesc.getProperties().size());
+        final PropertyDesc property = implementationDesc.getProperties().get(0);
         assertEquals("intProp", property.getName());
         assertEquals("int", property.getType());
     }
@@ -123,17 +123,17 @@ public final class ModelGeneratorTest {
 
         assertNotNull(specDesc);
         assertEquals(1, specDesc.getTypes().size());
-        final TypeDesc typeDesc = specDesc.getTypes().get(0);
-        assertEquals("com.example", typeDesc.getPackageName());
-        assertEquals("Example", typeDesc.getName());
-        assertEquals(ConstructionMethod.CONSTRUCTOR, typeDesc.getConstructionMethod());
-        assertEquals(2, typeDesc.getProperties().size());
-        final PropertyDesc property0 = typeDesc.getProperties().get(1);
+        final ImplementationDesc implementationDesc = specDesc.getTypes().get(0);
+        assertEquals("com.example", implementationDesc.getPackageName());
+        assertEquals("Example", implementationDesc.getName());
+        assertEquals(ConstructionMethod.CONSTRUCTOR, implementationDesc.getConstructionMethod());
+        assertEquals(2, implementationDesc.getProperties().size());
+        final PropertyDesc property0 = implementationDesc.getProperties().get(1);
         assertEquals("intProp", property0.getName());
         assertEquals("int", property0.getType());
         assertEquals("0", property0.getDefaultValue());
         assertFalse(property0.isOverride());
-        final PropertyDesc property1 = typeDesc.getProperties().get(0);
+        final PropertyDesc property1 = implementationDesc.getProperties().get(0);
         assertEquals("objectProp", property1.getName());
         assertEquals("java.lang.Object", property1.getType());
         assertTrue(property1.isOverride());

@@ -32,9 +32,9 @@ import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForType;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
@@ -46,14 +46,14 @@ import com.squareup.javapoet.TypeName;
  */
 public final class ConstructorForBuiltTypeGenerator implements MethodGeneratorForType {
     @Override
-    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
+    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
         final MethodSpec.Builder constructor = constructorBuilder()
             .addModifiers(PRIVATE)
             .addJavadoc(docMethod()
                 .setMethodDescription("Constructor.")
                 .toJavaDoc());
 
-        typeDesc.getProperties().forEach(property -> addProperty(constructor, property));
+        implementationDesc.getProperties().forEach(property -> addProperty(constructor, property));
 
         return constructor.build();
     }

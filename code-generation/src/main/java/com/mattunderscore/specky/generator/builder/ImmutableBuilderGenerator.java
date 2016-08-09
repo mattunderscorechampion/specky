@@ -39,9 +39,9 @@ import com.mattunderscore.specky.generator.MethodGeneratorForType;
 import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.TypeInitialiser;
 import com.mattunderscore.specky.generator.constructor.ConstructorForBuiltTypeGenerator;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
@@ -86,7 +86,7 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
     }
 
     @Override
-    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc valueDesc) {
+    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, ImplementationDesc valueDesc) {
         final TypeSpec.Builder builder = typeInitialiser.create(specDesc, valueDesc);
 
         valueDesc
@@ -123,7 +123,7 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
             .addType(builder.build());
     }
 
-    private String newBuilder(TypeDesc valueDesc) {
+    private String newBuilder(ImplementationDesc valueDesc) {
         return "return new Builder(" +
             valueDesc
                 .getProperties()
@@ -133,7 +133,7 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
             ')';
     }
 
-    private String defaultBuilder(TypeDesc valueDesc) {
+    private String defaultBuilder(ImplementationDesc valueDesc) {
         return "return new Builder(" +
             valueDesc
                 .getProperties()

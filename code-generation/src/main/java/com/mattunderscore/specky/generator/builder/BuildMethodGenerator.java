@@ -34,9 +34,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForType;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
@@ -48,7 +48,7 @@ import com.squareup.javapoet.TypeName;
 public final class BuildMethodGenerator implements MethodGeneratorForType {
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, TypeDesc valueDesc) {
+    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc valueDesc) {
         final MethodSpec.Builder buildMethod = methodBuilder("build")
             .addModifiers(PUBLIC)
             .returns(ClassName.get(valueDesc.getPackageName(), valueDesc.getName()))
@@ -63,7 +63,7 @@ public final class BuildMethodGenerator implements MethodGeneratorForType {
         return buildMethod.build();
     }
 
-    private void addReturnStatement(MethodSpec.Builder buildMethod, TypeDesc valueDesc) {
+    private void addReturnStatement(MethodSpec.Builder buildMethod, ImplementationDesc valueDesc) {
         buildMethod.addStatement(
             "return new $T(" +
             valueDesc
@@ -75,7 +75,7 @@ public final class BuildMethodGenerator implements MethodGeneratorForType {
             ClassName.get(valueDesc.getPackageName(), valueDesc.getName()));
     }
 
-    private void addValidationStatements(MethodSpec.Builder methodSpecBuilder, TypeDesc valueDesc) {
+    private void addValidationStatements(MethodSpec.Builder methodSpecBuilder, ImplementationDesc valueDesc) {
         valueDesc
             .getProperties()
             .stream()

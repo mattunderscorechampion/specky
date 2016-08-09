@@ -26,8 +26,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator;
 
 import com.mattunderscore.specky.model.BeanDesc;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ValueDesc;
 import com.mattunderscore.specky.model.ViewDesc;
 import com.squareup.javapoet.JavaFile;
@@ -80,13 +80,13 @@ public final class Generator {
         return result;
     }
 
-    private JavaFile generateTypeFile(SpecDesc specDesc, TypeDesc typeDesc) {
-        final TypeSpec typeSpec = generateType(specDesc, typeDesc);
+    private JavaFile generateTypeFile(SpecDesc specDesc, ImplementationDesc implementationDesc) {
+        final TypeSpec typeSpec = generateType(specDesc, implementationDesc);
         final Builder builder = JavaFile
-            .builder(typeDesc.getPackageName(), typeSpec);
+            .builder(implementationDesc.getPackageName(), typeSpec);
 
-        if (typeDesc.getLicence() != null) {
-            builder.addFileComment(typeDesc.getLicence());
+        if (implementationDesc.getLicence() != null) {
+            builder.addFileComment(implementationDesc.getLicence());
         }
 
         return builder
@@ -108,12 +108,12 @@ public final class Generator {
             .build();
     }
 
-    private TypeSpec generateType(SpecDesc specDesc, TypeDesc typeDesc) {
-        if (typeDesc instanceof ValueDesc) {
-            return valueGenerator.generateValue(specDesc, (ValueDesc) typeDesc);
+    private TypeSpec generateType(SpecDesc specDesc, ImplementationDesc implementationDesc) {
+        if (implementationDesc instanceof ValueDesc) {
+            return valueGenerator.generateValue(specDesc, (ValueDesc) implementationDesc);
         }
-        else if (typeDesc instanceof BeanDesc) {
-            return beanGenerator.generateBean(specDesc, (BeanDesc) typeDesc);
+        else if (implementationDesc instanceof BeanDesc) {
+            return beanGenerator.generateBean(specDesc, (BeanDesc) implementationDesc);
         }
         else {
             throw new IllegalArgumentException("Unknown type to generate");

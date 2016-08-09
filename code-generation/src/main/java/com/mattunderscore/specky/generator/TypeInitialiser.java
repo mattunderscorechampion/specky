@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator;
 
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.squareup.javapoet.TypeSpec;
 
 /**
@@ -37,5 +37,5 @@ public interface TypeInitialiser {
     /**
      * @return A new type builder
      */
-    TypeSpec.Builder create(SpecDesc specDesc, TypeDesc typeDesc);
+    TypeSpec.Builder create(SpecDesc specDesc, ImplementationDesc implementationDesc);
 }

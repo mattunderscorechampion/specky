@@ -32,9 +32,9 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import java.util.stream.Collectors;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForType;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
@@ -49,17 +49,17 @@ public final class EqualsGenerator implements MethodGeneratorForType {
     private final ParameterSpec other = ParameterSpec.builder(OBJECT, "other").build();
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
+    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
         return methodBuilder("equals")
             .addAnnotation(Override.class)
             .addModifiers(PUBLIC)
             .addParameter(other)
             .returns(TypeName.BOOLEAN)
-            .addCode(generateBlock(typeDesc))
+            .addCode(generateBlock(implementationDesc))
             .build();
     }
 
-    private CodeBlock generateBlock(TypeDesc typeDesc) {
+    private CodeBlock generateBlock(ImplementationDesc implementationDesc) {
         final CodeBlock.Builder codeBlock = CodeBlock
             .builder()
             .beginControlFlow("if ($N == this)", other)
@@ -70,8 +70,8 @@ public final class EqualsGenerator implements MethodGeneratorForType {
             .endControlFlow()
             .addStatement(
                 "final $1T that = ($1T) $2N",
-                ClassName.get(typeDesc.getPackageName(), typeDesc.getName()), other)
-            .addStatement("return " + typeDesc
+                ClassName.get(implementationDesc.getPackageName(), implementationDesc.getName()), other)
+            .addStatement("return " + implementationDesc
                 .getProperties()
                 .stream()
                 .map(this::generatePropertyComparison)

@@ -33,7 +33,7 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 import com.mattunderscore.specky.generator.TypeInitialiser;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.squareup.javapoet.TypeSpec;
 
 /**
@@ -42,13 +42,13 @@ import com.squareup.javapoet.TypeSpec;
  */
 public final class BuilderInitialiser implements TypeInitialiser {
     @Override
-    public TypeSpec.Builder create(SpecDesc specDesc, TypeDesc typeDesc) {
+    public TypeSpec.Builder create(SpecDesc specDesc, ImplementationDesc implementationDesc) {
         return classBuilder("Builder")
             .addModifiers(PUBLIC, FINAL, STATIC)
             .addJavadoc(
                 docType()
                     .setDescription("The builder for $L.")
                     .toJavaDoc(),
-                typeDesc.getName());
+                implementationDesc.getName());
     }
 }

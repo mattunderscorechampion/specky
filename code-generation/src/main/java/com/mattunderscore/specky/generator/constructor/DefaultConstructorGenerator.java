@@ -34,8 +34,8 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForType;
 import com.mattunderscore.specky.generator.constraint.PropertyConstraintGenerator;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
@@ -49,14 +49,14 @@ public final class DefaultConstructorGenerator implements MethodGeneratorForType
     private final PropertyConstraintGenerator propertyConstraintGenerator = new PropertyConstraintGenerator();
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
+    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
         final MethodSpec.Builder constructor = constructorBuilder()
             .addModifiers(PUBLIC)
             .addJavadoc(docMethod()
                 .setMethodDescription("Default constructor.")
                 .toJavaDoc());
 
-        typeDesc
+        implementationDesc
             .getProperties()
             .stream()
             .forEach(propertyDesc -> {

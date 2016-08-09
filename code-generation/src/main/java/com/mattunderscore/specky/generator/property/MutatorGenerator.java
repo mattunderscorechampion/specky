@@ -36,7 +36,7 @@ import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
 import com.mattunderscore.specky.generator.constraint.PropertyConstraintGenerator;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
@@ -51,7 +51,7 @@ public final class MutatorGenerator implements MethodGeneratorForProperty {
     private final PropertyConstraintGenerator propertyConstraintGenerator = new PropertyConstraintGenerator();
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc, PropertyDesc propertyDesc) {
+    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc, PropertyDesc propertyDesc) {
         final TypeName type = getType(propertyDesc);
         final ParameterSpec parameterSpec = ParameterSpec.builder(type, propertyDesc.getName()).build();
         final MethodSpec.Builder setterSpec = methodBuilder(getMutatorName(propertyDesc.getName()))

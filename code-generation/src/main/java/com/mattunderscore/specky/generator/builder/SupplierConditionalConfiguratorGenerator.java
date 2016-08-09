@@ -33,8 +33,8 @@ import java.util.function.Supplier;
 import javax.lang.model.element.Modifier;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForType;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
@@ -56,8 +56,8 @@ public final class SupplierConditionalConfiguratorGenerator implements MethodGen
     }
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc) {
-        final ClassName builderType = ClassName.get(typeDesc.getPackageName(), typeDesc.getName(), "Builder");
+    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
+        final ClassName builderType = ClassName.get(implementationDesc.getPackageName(), implementationDesc.getName(), "Builder");
         final ParameterSpec conditionParameter = ParameterSpec
                 .builder(get(Supplier.class, Boolean.class), "condition")
                 .build();

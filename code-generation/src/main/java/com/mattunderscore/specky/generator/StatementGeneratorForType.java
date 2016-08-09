@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.model.ImplementationDesc;
 
 /**
  * Statement generator for types.
@@ -35,5 +35,5 @@ public interface StatementGeneratorForType {
     /**
      * @return the generated statement
      */
-    String generate(TypeDesc typeDesc);
+    String generate(ImplementationDesc implementationDesc);
 }

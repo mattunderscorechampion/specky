@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.model.ImplementationDesc;
 
 /**
  * 'this' expression.
@@ -33,7 +33,7 @@ import com.mattunderscore.specky.model.TypeDesc;
  */
 public final class This implements StatementGeneratorForType {
     @Override
-    public String generate(TypeDesc typeDesc) {
+    public String generate(ImplementationDesc implementationDesc) {
         return "this";
     }
 }

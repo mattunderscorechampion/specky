@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 import com.mattunderscore.specky.generator.StatementGeneratorForType;
 import com.mattunderscore.specky.model.PropertyDesc;
-import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.model.ImplementationDesc;
 
 /**
  * Instantiate a new builder copying all properties.
@@ -37,9 +37,9 @@ import com.mattunderscore.specky.model.TypeDesc;
  */
 public final class InstantiateNewBuilder implements StatementGeneratorForType {
     @Override
-    public String generate(TypeDesc typeDesc) {
+    public String generate(ImplementationDesc implementationDesc) {
         return "new Builder(" +
-            typeDesc
+            implementationDesc
                 .getProperties()
                 .stream()
                 .map(PropertyDesc::getName)

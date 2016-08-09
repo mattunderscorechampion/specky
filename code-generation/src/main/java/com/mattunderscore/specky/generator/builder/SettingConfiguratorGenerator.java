@@ -34,9 +34,9 @@ import java.util.Objects;
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
 import com.mattunderscore.specky.generator.StatementGeneratorForType;
 import com.mattunderscore.specky.generator.constraint.PropertyConstraintGenerator;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
@@ -60,13 +60,13 @@ public final class SettingConfiguratorGenerator implements MethodGeneratorForPro
     }
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc, PropertyDesc propertyDesc) {
+    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc, PropertyDesc propertyDesc) {
         final TypeName type = getType(propertyDesc);
         final ParameterSpec constructorParameter = ParameterSpec.builder(type, propertyDesc.getName()).build();
         MethodSpec.Builder methodBuilder = methodBuilder(propertyDesc.getName())
             .addModifiers(PUBLIC)
             .addJavadoc(javadoc, propertyDesc.getName())
-            .returns(ClassName.get(typeDesc.getPackageName(), typeDesc.getName(), "Builder"))
+            .returns(ClassName.get(implementationDesc.getPackageName(), implementationDesc.getName(), "Builder"))
             .addParameter(constructorParameter);
 
         if (!propertyDesc.isOptional() && !type.isPrimitive()) {
@@ -83,7 +83,7 @@ public final class SettingConfiguratorGenerator implements MethodGeneratorForPro
 
         return methodBuilder
             .addStatement("this.$L = $N", propertyDesc.getName(), constructorParameter)
-            .addStatement("return " + returnStatementGenerator.generate(typeDesc))
+            .addStatement("return " + returnStatementGenerator.generate(implementationDesc))
             .build();
     }
 }

@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator;
 
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.squareup.javapoet.MethodSpec;
 
 /**
@@ -37,8 +37,8 @@ public interface MethodGeneratorForType {
     /**
      * Generate a new method.
      * @param specDesc the specification description
-     * @param typeDesc the type description
+     * @param implementationDesc the type description
      * @return the method
      */
-    MethodSpec generate(SpecDesc specDesc, TypeDesc typeDesc);
+    MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc);
 }

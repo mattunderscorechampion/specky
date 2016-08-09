@@ -38,7 +38,7 @@ import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.ViewDesc;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
@@ -87,7 +87,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .build();
     }
 
-    private List<TypeDesc> getTypes(TypeDeriver typeDeriver, DSLSpecDesc dslSpecDesc) {
+    private List<ImplementationDesc> getTypes(TypeDeriver typeDeriver, DSLSpecDesc dslSpecDesc) {
         return dslSpecDesc
             .getTypes()
             .stream()
