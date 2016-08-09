@@ -25,14 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator;
 
-import static java.util.stream.Collectors.toList;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
@@ -44,6 +36,16 @@ import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ValueDesc;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Fully derive a type from its superinterfaces.
@@ -96,19 +98,10 @@ public final class TypeDeriver {
     }
 
     private List<PropertyDesc> deriveProperties(DSLTypeDesc dslTypeDesc) {
-        for (final String type : dslTypeDesc.getSupertypes()) {
-            final String resolvedType = typeResolver.resolveOrThrow(type);
-            final TypeDesc typeDesc = views.get(resolvedType);
-            if (typeDesc == null) {
-                throw new IllegalArgumentException("View not found for " + resolvedType + " in " + views);
-            }
-        }
+        final List<TypeDesc> resolveSupertypes = resolveSupertypes(dslTypeDesc);
 
-        final List<PropertyDesc> inheritedProperties = dslTypeDesc
-            .getSupertypes()
+        final List<PropertyDesc> inheritedProperties = resolveSupertypes
             .stream()
-            .map(typeResolver::resolveOrThrow)
-            .map(views::get)
             .map(TypeDesc::getProperties)
             .flatMap(Collection::stream)
             .collect(toList());
@@ -129,7 +122,7 @@ public final class TypeDeriver {
                 knownProperties.put(propertyName, property);
             }
             else {
-                checkMegableProperties(currentProperty, property);
+                checkMergableProperties(currentProperty, property);
             }
         }
         for (final PropertyDesc property : declaredProperties) {
@@ -150,7 +143,39 @@ public final class TypeDeriver {
         return allProperties;
     }
 
-    private void checkMegableProperties(PropertyDesc currentProperty, PropertyDesc newProperty) {
+    private List<TypeDesc> resolveSupertypes(DSLTypeDesc dslTypeDesc) {
+        final List<TypeDesc> typeDescs = new ArrayList<>();
+        resolveSupertypes(dslTypeDesc, typeDescs, new HashSet<>());
+        return typeDescs;
+    }
+
+    private void resolveSupertypes(DSLTypeDesc dslTypeDesc, List<TypeDesc> typeDescs, Set<TypeDesc> setOfTypes) {
+        dslTypeDesc
+            .getSupertypes()
+            .stream()
+            .map(typeResolver::resolveOrThrow)
+            .map(views::get).forEach(typeDesc -> {
+                if (setOfTypes.add(typeDesc)) {
+                    resolveSupertypes(typeDesc, typeDescs, setOfTypes);
+                    typeDescs.add(typeDesc);
+                }
+            });
+    }
+
+    private void resolveSupertypes(TypeDesc firstTypeDesc, List<TypeDesc> typeDescs, Set<TypeDesc> setOfTypes) {
+        firstTypeDesc
+            .getSupertypes()
+            .stream()
+            .map(typeResolver::resolveOrThrow)
+            .map(views::get).forEach(typeDesc -> {
+                if (setOfTypes.add(typeDesc)) {
+                    resolveSupertypes(typeDesc, typeDescs, setOfTypes);
+                    typeDescs.add(typeDesc);
+                }
+            });
+    }
+
+    private void checkMergableProperties(PropertyDesc currentProperty, PropertyDesc newProperty) {
         if (!newProperty.getType().equals(currentProperty.getType())) {
             throw new IllegalArgumentException("Conflicting property declarations for " +
                 currentProperty.getName() +
@@ -167,7 +192,7 @@ public final class TypeDeriver {
     }
 
     private PropertyDesc mergeDeclaredProperty(PropertyDesc currentProperty, PropertyDesc declaredProperty) {
-        checkMegableProperties(currentProperty, declaredProperty);
+        checkMergableProperties(currentProperty, declaredProperty);
         return declaredProperty;
     }
 

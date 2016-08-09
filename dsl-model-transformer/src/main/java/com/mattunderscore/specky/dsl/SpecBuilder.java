@@ -154,22 +154,35 @@ public final class SpecBuilder {
 
     private DSLViewDesc createView(TypeSpecContext context) {
         final String typeName = context.Identifier().getText();
+        final List<String> supertypes;
+        if (context.supertypes() != null) {
+            supertypes = context
+                .supertypes()
+                .Identifier()
+                .stream()
+                .map(TerminalNode::getText)
+                .collect(toList());
+        }
+        else {
+            supertypes = emptyList();
+        }
         final List<DSLPropertyDesc> properties = context.props() == null ?
             emptyList() :
             context
-                .props()
-                .property()
-                .stream()
-                .map(this::createProperty)
-                .collect(toList());
+            .props()
+            .property()
+            .stream()
+            .map(this::createProperty)
+            .collect(toList());
         return DSLViewDesc
-                .builder()
-                .name(typeName)
-                .properties(properties)
-                .description(context.StringLiteral() == null ?
-                    "View type $L.\n\nAuto-generated from specification." :
-                    context.StringLiteral().getText().substring(1, context.StringLiteral().getText().length() - 1))
-                .build();
+            .builder()
+            .name(typeName)
+            .properties(properties)
+            .supertypes(supertypes)
+            .description(context.StringLiteral() == null ?
+                "View type $L.\n\nAuto-generated from specification." :
+                context.StringLiteral().getText().substring(1, context.StringLiteral().getText().length() - 1))
+            .build();
         }
 
     private DSLPropertyDesc createProperty(PropertyContext context) {

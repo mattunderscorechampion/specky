@@ -35,6 +35,7 @@ import com.mattunderscore.specky.generator.TypeInitialiser;
 import com.mattunderscore.specky.generator.ValueGenerator;
 import com.mattunderscore.specky.generator.ValueInitialiser;
 import com.mattunderscore.specky.generator.ViewGenerator;
+import com.mattunderscore.specky.generator.ViewInitialiser;
 import com.mattunderscore.specky.generator.builder.BuildMethodGenerator;
 import com.mattunderscore.specky.generator.builder.BuilderInitialiser;
 import com.mattunderscore.specky.generator.builder.ImmutableBuilderGenerator;
@@ -46,6 +47,7 @@ import com.mattunderscore.specky.generator.object.method.EqualsGenerator;
 import com.mattunderscore.specky.generator.object.method.HashCodeGenerator;
 import com.mattunderscore.specky.generator.object.method.ToStringGenerator;
 import com.mattunderscore.specky.generator.property.AccessorGenerator;
+import com.mattunderscore.specky.generator.property.AccessorJavadocGenerator;
 import com.mattunderscore.specky.generator.property.MutatorGenerator;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.JavaFile;
@@ -140,7 +142,7 @@ public final class SpeckyGeneratingContext {
                     superTypeAppender,
                     asList(accessorGenerator, mutatorGenerator),
                     asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
-                new ViewGenerator());
+                new ViewGenerator(new ViewInitialiser(), new AccessorJavadocGenerator()));
 
             final List<JavaFile> javaFiles = new ArrayList<>();
             javaFiles.addAll(generator.generate(spec));

@@ -52,6 +52,7 @@ value TypeDesc "Description of a type."
         String packageName "Name of the package the view is in."
         String name "Name of the view."
         List<PropertyDesc> properties "Properties of the view."
+        List<String> supertypes "Supertypes of the type."
         optional String description default null "Description of the view."
     options
         immutable builder

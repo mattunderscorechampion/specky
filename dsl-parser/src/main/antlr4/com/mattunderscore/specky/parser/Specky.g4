@@ -140,7 +140,7 @@ implementationSpec
     ;
 
 typeSpec
-    :   TYPE INLINE_WS Identifier (INLINE_WS StringLiteral)? LINE_BREAK
+    :   TYPE INLINE_WS Identifier (INLINE_WS supertypes)? (INLINE_WS StringLiteral)? LINE_BREAK
         (INLINE_WS? props)?
     ;
 

@@ -44,39 +44,43 @@ value PropertyDesc "Description of a property."
     options
         immutable builder
 
-value ViewDesc "Description of a view."
+type FileDesc "Description of a file."
     properties
-        optional String author "Author of the specification."
-        String packageName "Name of the package the view is in."
-        String name "Name of the view."
+        optional String licence default null "License of the type."
+        optional String author default null "Author of the file."
+
+type JavaTypeDesc "Description of a Java type."
+    properties
+        String packageName "Name of the package the type is in."
+        String name "Name of the type."
+
+value TypeDesc : FileDesc JavaTypeDesc "Description of a type."
+    properties
         List<PropertyDesc> properties "Properties of the view."
         optional String description default null "Description of the view."
     options
         immutable builder
 
-type TypeDesc "Description of a type."
+type ImplementationDesc : FileDesc JavaTypeDesc "Description of an implementation."
     properties
-        optional String author "Author of the type."
-        String packageName "Name of the package the type is in."
-        String name "Name of the type."
         List<PropertyDesc> properties "Properties of the type."
         ConstructionMethod constructionMethod "Construction method of the type."
         List<String> supertypes "Supertypes of the type."
         optional String description default null "Description of the type."
 
 
-value ValueDesc : TypeDesc "Description of a value type."
+value ValueDesc : ImplementationDesc "Description of a value type."
     options
         immutable builder
 
-value BeanDesc : TypeDesc "Description of a bean type."
+value BeanDesc : ImplementationDesc "Description of a bean type."
     options
         immutable builder
 
 value SpecDesc "Description of a specification."
     properties
         List<String> importTypes "Types from outside the specification to import."
-        List<TypeDesc> types "Types of the specification."
-        List<ViewDesc> views "Views of the specification."
+        List<ImplementationDesc> types "Types of the specification."
+        List<TypeDesc> views "Views of the specification."
     options
         immutable builder

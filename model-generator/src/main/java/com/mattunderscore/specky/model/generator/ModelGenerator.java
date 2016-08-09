@@ -117,6 +117,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .packageName(dslSpecDesc.getPackageName())
             .name(dslViewDesc.getName())
             .properties(properties)
+            .supertypes(dslViewDesc.getSupertypes())
             .description(dslViewDesc.getDescription())
             .build();
     }
