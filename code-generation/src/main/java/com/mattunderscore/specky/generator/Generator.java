@@ -31,6 +31,7 @@ import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ValueDesc;
 import com.mattunderscore.specky.model.ViewDesc;
 import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.JavaFile.Builder;
 import com.squareup.javapoet.TypeSpec;
 
 import java.util.ArrayList;
@@ -81,16 +82,28 @@ public final class Generator {
 
     private JavaFile generateTypeFile(SpecDesc specDesc, TypeDesc typeDesc) {
         final TypeSpec typeSpec = generateType(specDesc, typeDesc);
-        return JavaFile
-            .builder(typeDesc.getPackageName(), typeSpec)
+        final Builder builder = JavaFile
+            .builder(typeDesc.getPackageName(), typeSpec);
+
+        if (typeDesc.getLicence() != null) {
+            builder.addFileComment(typeDesc.getLicence());
+        }
+
+        return builder
             .skipJavaLangImports(true)
             .build();
     }
 
     private JavaFile generateViewFile(ViewDesc viewDesc) {
         final TypeSpec typeSpec = generateView(viewDesc);
-        return JavaFile
-            .builder(viewDesc.getPackageName(), typeSpec)
+        final Builder builder = JavaFile
+            .builder(viewDesc.getPackageName(), typeSpec);
+
+        if (viewDesc.getLicence() != null) {
+            builder.addFileComment(viewDesc.getLicence());
+        }
+
+        return builder
             .skipJavaLangImports(true)
             .build();
     }

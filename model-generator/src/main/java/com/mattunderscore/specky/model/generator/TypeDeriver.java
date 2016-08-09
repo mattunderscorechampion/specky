@@ -71,6 +71,7 @@ public final class TypeDeriver {
         if (dslTypeDesc instanceof DSLValueDesc) {
             return ValueDesc
                 .builder()
+                .licence(specDesc.getLicence())
                 .author(specDesc.getAuthor())
                 .packageName(specDesc.getPackageName())
                 .name(dslTypeDesc.getName())

@@ -47,7 +47,8 @@ value PropertyDesc "Description of a property."
 
 value ViewDesc "Description of a view."
     properties
-        optional String author "Author of the specification."
+        optional String licence default null "License of the type."
+        optional String author default null "Author of the specification."
         String packageName "Name of the package the view is in."
         String name "Name of the view."
         List<PropertyDesc> properties "Properties of the view."
@@ -57,7 +58,8 @@ value ViewDesc "Description of a view."
 
 type TypeDesc "Description of a type."
     properties
-        optional String author "Author of the type."
+        optional String licence default null "License of the type."
+        optional String author default null "Author of the type."
         String packageName "Name of the package the type is in."
         String name "Name of the type."
         List<PropertyDesc> properties "Properties of the type."

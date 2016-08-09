@@ -99,11 +99,11 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
         return dslSpecDesc
             .getViews()
             .stream()
-            .map(dslTypeDesc -> getView(dslSpecDesc.getAuthor(), dslSpecDesc.getPackageName(), dslTypeDesc))
+            .map(dslTypeDesc -> getView(dslSpecDesc, dslTypeDesc))
             .collect(toList());
     }
 
-    private ViewDesc getView(String author, String packageName, DSLViewDesc dslViewDesc) {
+    private ViewDesc getView(DSLSpecDesc dslSpecDesc, DSLViewDesc dslViewDesc) {
         final List<PropertyDesc> properties = dslViewDesc
             .getProperties()
             .stream()
@@ -112,8 +112,9 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
 
         return ViewDesc
             .builder()
-            .author(author)
-            .packageName(packageName)
+            .licence(dslSpecDesc.getLicence())
+            .author(dslSpecDesc.getAuthor())
+            .packageName(dslSpecDesc.getPackageName())
             .name(dslViewDesc.getName())
             .properties(properties)
             .description(dslViewDesc.getDescription())
