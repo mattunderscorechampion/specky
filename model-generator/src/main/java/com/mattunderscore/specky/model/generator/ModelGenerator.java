@@ -39,7 +39,7 @@ import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
-import com.mattunderscore.specky.model.ViewDesc;
+import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 
@@ -64,13 +64,13 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
     @Override
     public SpecDesc get() {
 
-        final List<ViewDesc> views = dslSpecs
+        final List<TypeDesc> views = dslSpecs
             .stream()
             .map(this::getViews)
             .flatMap(Collection::stream)
             .collect(toList());
 
-        final Map<String, ViewDesc> mappedViews = views
+        final Map<String, TypeDesc> mappedViews = views
             .stream()
             .collect(toMap(viewDesc -> viewDesc.getPackageName() + "." + viewDesc.getName(), viewDesc -> viewDesc));
         final TypeDeriver typeDeriver = new TypeDeriver(typeResolver, valueResolver, mappedViews);
@@ -95,7 +95,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .collect(toList());
     }
 
-    private List<ViewDesc> getViews(DSLSpecDesc dslSpecDesc) {
+    private List<TypeDesc> getViews(DSLSpecDesc dslSpecDesc) {
         return dslSpecDesc
             .getViews()
             .stream()
@@ -103,14 +103,14 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .collect(toList());
     }
 
-    private ViewDesc getView(DSLSpecDesc dslSpecDesc, DSLViewDesc dslViewDesc) {
+    private TypeDesc getView(DSLSpecDesc dslSpecDesc, DSLViewDesc dslViewDesc) {
         final List<PropertyDesc> properties = dslViewDesc
             .getProperties()
             .stream()
             .map(this::getViewProperty)
             .collect(toList());
 
-        return ViewDesc
+        return TypeDesc
             .builder()
             .licence(dslSpecDesc.getLicence())
             .author(dslSpecDesc.getAuthor())

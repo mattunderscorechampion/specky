@@ -28,8 +28,8 @@ package com.mattunderscore.specky.generator;
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ValueDesc;
-import com.mattunderscore.specky.model.ViewDesc;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.JavaFile.Builder;
 import com.squareup.javapoet.TypeSpec;
@@ -94,13 +94,13 @@ public final class Generator {
             .build();
     }
 
-    private JavaFile generateViewFile(ViewDesc viewDesc) {
-        final TypeSpec typeSpec = generateView(viewDesc);
+    private JavaFile generateViewFile(TypeDesc typeDesc) {
+        final TypeSpec typeSpec = generateView(typeDesc);
         final Builder builder = JavaFile
-            .builder(viewDesc.getPackageName(), typeSpec);
+            .builder(typeDesc.getPackageName(), typeSpec);
 
-        if (viewDesc.getLicence() != null) {
-            builder.addFileComment(viewDesc.getLicence());
+        if (typeDesc.getLicence() != null) {
+            builder.addFileComment(typeDesc.getLicence());
         }
 
         return builder
@@ -120,7 +120,7 @@ public final class Generator {
         }
     }
 
-    private TypeSpec generateView(ViewDesc typeDesc) {
+    private TypeSpec generateView(TypeDesc typeDesc) {
         return viewGenerator.generateView(typeDesc);
     }
 }

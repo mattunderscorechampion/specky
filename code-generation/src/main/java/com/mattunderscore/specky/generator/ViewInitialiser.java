@@ -29,7 +29,7 @@ import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
 import static com.squareup.javapoet.TypeSpec.interfaceBuilder;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.model.ViewDesc;
+import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.TypeSpec;
 
 /**
@@ -41,7 +41,7 @@ public final class ViewInitialiser {
     /**
      * @return a type builder for views
      */
-    public TypeSpec.Builder create(ViewDesc typeDesc) {
+    public TypeSpec.Builder create(TypeDesc typeDesc) {
         return interfaceBuilder(typeDesc.getName())
             .addModifiers(PUBLIC)
             .addJavadoc(

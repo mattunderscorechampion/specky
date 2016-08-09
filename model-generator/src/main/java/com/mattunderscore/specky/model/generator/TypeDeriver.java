@@ -40,8 +40,8 @@ import com.mattunderscore.specky.dsl.model.DSLValueDesc;
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
+import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ValueDesc;
-import com.mattunderscore.specky.model.ViewDesc;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 
@@ -53,12 +53,12 @@ import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 public final class TypeDeriver {
     private final TypeResolver typeResolver;
     private final DefaultValueResolver valueResolver;
-    private final Map<String, ViewDesc> views;
+    private final Map<String, TypeDesc> views;
 
     /**
      * Constructor.
      */
-    public TypeDeriver(TypeResolver typeResolver, DefaultValueResolver valueResolver, Map<String, ViewDesc> views) {
+    public TypeDeriver(TypeResolver typeResolver, DefaultValueResolver valueResolver, Map<String, TypeDesc> views) {
         this.typeResolver = typeResolver;
         this.valueResolver = valueResolver;
         this.views = views;
@@ -98,8 +98,8 @@ public final class TypeDeriver {
     private List<PropertyDesc> deriveProperties(DSLTypeDesc dslTypeDesc) {
         for (final String type : dslTypeDesc.getSupertypes()) {
             final String resolvedType = typeResolver.resolveOrThrow(type);
-            final ViewDesc dslViewDesc = views.get(resolvedType);
-            if (dslViewDesc == null) {
+            final TypeDesc typeDesc = views.get(resolvedType);
+            if (typeDesc == null) {
                 throw new IllegalArgumentException("View not found for " + resolvedType + " in " + views);
             }
         }
@@ -109,7 +109,7 @@ public final class TypeDeriver {
             .stream()
             .map(typeResolver::resolveOrThrow)
             .map(views::get)
-            .map(ViewDesc::getProperties)
+            .map(TypeDesc::getProperties)
             .flatMap(Collection::stream)
             .collect(toList());
 

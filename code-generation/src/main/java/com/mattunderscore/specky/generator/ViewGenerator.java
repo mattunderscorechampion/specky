@@ -33,7 +33,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 
 import com.mattunderscore.specky.generator.property.AccessorJavadocGenerator;
 import com.mattunderscore.specky.model.PropertyDesc;
-import com.mattunderscore.specky.model.ViewDesc;
+import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.TypeSpec;
 
 /**
@@ -47,7 +47,7 @@ public final class ViewGenerator {
     /**
      * @return the view type
      */
-    public TypeSpec generateView(ViewDesc typeDesc) {
+    public TypeSpec generateView(TypeDesc typeDesc) {
         final TypeSpec.Builder builder = viewInitialiser.create(typeDesc);
 
         for (final PropertyDesc propertyDesc : typeDesc.getProperties()) {

@@ -45,7 +45,7 @@ value PropertyDesc "Description of a property."
     options
         immutable builder
 
-value ViewDesc "Description of a view."
+value TypeDesc "Description of a type."
     properties
         optional String licence default null "License of the type."
         optional String author default null "Author of the specification."
@@ -56,7 +56,7 @@ value ViewDesc "Description of a view."
     options
         immutable builder
 
-type ImplementationDesc "Description of a type."
+type ImplementationDesc "Description of an implementation."
     properties
         optional String licence default null "License of the type."
         optional String author default null "Author of the type."
@@ -80,6 +80,6 @@ value SpecDesc "Description of a specification."
     properties
         List<String> importTypes "Types from outside the specification to import."
         List<ImplementationDesc> types "Types of the specification."
-        List<ViewDesc> views "Views of the specification."
+        List<TypeDesc> views "Views of the specification."
     options
         immutable builder
