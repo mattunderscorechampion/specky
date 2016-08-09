@@ -31,10 +31,10 @@ import com.mattunderscore.specky.constraint.model.NFDisjointPredicates;
 import com.mattunderscore.specky.constraint.model.PredicateDesc;
 import com.mattunderscore.specky.constraint.model.SubjectModifier;
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
+import com.mattunderscore.specky.dsl.model.DSLImplementationDesc;
 import com.mattunderscore.specky.dsl.model.DSLImportDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
 import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;
@@ -103,7 +103,7 @@ public final class SpecBuilder {
             .build();
     }
 
-    private DSLTypeDesc createType(ImplementationSpecContext context) {
+    private DSLImplementationDesc createType(ImplementationSpecContext context) {
         final String typeName = context.Identifier().getText();
         final List<DSLPropertyDesc> properties = context.props() == null ?
             emptyList() :

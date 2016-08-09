@@ -53,7 +53,7 @@ value DSLViewDesc "Description of a view."
     options
         immutable builder
 
-type DSLTypeDesc "Description of a type."
+type DSLImplementationDesc "Description of an implementation."
     properties
         String name "Name of the type."
         List<DSLPropertyDesc> properties "Properties of the type."
@@ -61,11 +61,11 @@ type DSLTypeDesc "Description of a type."
         List<String> supertypes "Supertypes of the type."
         optional String description default null "Description of the type."
 
-value DSLValueDesc : DSLTypeDesc "Description of a value type."
+value DSLValueDesc : DSLImplementationDesc "Description of a value type."
     options
         immutable builder
 
-value DSLBeanDesc : DSLTypeDesc "Description of a bean type."
+value DSLBeanDesc : DSLImplementationDesc "Description of a bean type."
     options
         immutable builder
 
@@ -75,7 +75,7 @@ value DSLSpecDesc "Description of a specification."
         optional String licence default null "Copyright and licence information."
         String packageName "Name of the package the specification describes."
         List<DSLImportDesc> importTypes "Types from outside the specification to import."
-        List<DSLTypeDesc> types "Types of the specification."
+        List<DSLImplementationDesc> types "Types of the specification."
         List<DSLViewDesc> views "Views of the specification."
     options
         immutable builder

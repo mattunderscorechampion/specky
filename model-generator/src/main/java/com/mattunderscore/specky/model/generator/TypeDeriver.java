@@ -25,9 +25,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator;
 
+import com.mattunderscore.specky.dsl.model.DSLImplementationDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
@@ -69,18 +69,18 @@ public final class TypeDeriver {
     /**
      * @return the fully derived type
      */
-    public ImplementationDesc deriveType(DSLSpecDesc specDesc, DSLTypeDesc dslTypeDesc) {
-        if (dslTypeDesc instanceof DSLValueDesc) {
+    public ImplementationDesc deriveType(DSLSpecDesc specDesc, DSLImplementationDesc dslImplementationDesc) {
+        if (dslImplementationDesc instanceof DSLValueDesc) {
             return ValueDesc
                 .builder()
                 .licence(specDesc.getLicence())
                 .author(specDesc.getAuthor())
                 .packageName(specDesc.getPackageName())
-                .name(dslTypeDesc.getName())
-                .constructionMethod(dslTypeDesc.getConstructionMethod())
-                .properties(deriveProperties(dslTypeDesc))
-                .supertypes(dslTypeDesc.getSupertypes())
-                .description(dslTypeDesc.getDescription())
+                .name(dslImplementationDesc.getName())
+                .constructionMethod(dslImplementationDesc.getConstructionMethod())
+                .properties(deriveProperties(dslImplementationDesc))
+                .supertypes(dslImplementationDesc.getSupertypes())
+                .description(dslImplementationDesc.getDescription())
                 .build();
         }
         else {
@@ -88,17 +88,17 @@ public final class TypeDeriver {
                 .builder()
                 .author(specDesc.getAuthor())
                 .packageName(specDesc.getPackageName())
-                .name(dslTypeDesc.getName())
-                .constructionMethod(dslTypeDesc.getConstructionMethod())
-                .properties(deriveProperties(dslTypeDesc))
-                .supertypes(dslTypeDesc.getSupertypes())
-                .description(dslTypeDesc.getDescription())
+                .name(dslImplementationDesc.getName())
+                .constructionMethod(dslImplementationDesc.getConstructionMethod())
+                .properties(deriveProperties(dslImplementationDesc))
+                .supertypes(dslImplementationDesc.getSupertypes())
+                .description(dslImplementationDesc.getDescription())
                 .build();
         }
     }
 
-    private List<PropertyDesc> deriveProperties(DSLTypeDesc dslTypeDesc) {
-        final List<TypeDesc> resolveSupertypes = resolveSupertypes(dslTypeDesc);
+    private List<PropertyDesc> deriveProperties(DSLImplementationDesc dslImplementationDesc) {
+        final List<TypeDesc> resolveSupertypes = resolveSupertypes(dslImplementationDesc);
 
         final List<PropertyDesc> inheritedProperties = resolveSupertypes
             .stream()
@@ -106,7 +106,7 @@ public final class TypeDeriver {
             .flatMap(Collection::stream)
             .collect(toList());
 
-        final List<PropertyDesc> declaredProperties = dslTypeDesc
+        final List<PropertyDesc> declaredProperties = dslImplementationDesc
             .getProperties()
             .stream()
             .map(this::get)
@@ -143,14 +143,17 @@ public final class TypeDeriver {
         return allProperties;
     }
 
-    private List<TypeDesc> resolveSupertypes(DSLTypeDesc dslTypeDesc) {
+    private List<TypeDesc> resolveSupertypes(DSLImplementationDesc dslImplementationDesc) {
         final List<TypeDesc> typeDescs = new ArrayList<>();
-        resolveSupertypes(dslTypeDesc, typeDescs, new HashSet<>());
+        resolveSupertypes(dslImplementationDesc, typeDescs, new HashSet<>());
         return typeDescs;
     }
 
-    private void resolveSupertypes(DSLTypeDesc dslTypeDesc, List<TypeDesc> typeDescs, Set<TypeDesc> setOfTypes) {
-        dslTypeDesc
+    private void resolveSupertypes(
+            DSLImplementationDesc dslImplementationDesc,
+            List<TypeDesc> typeDescs,
+            Set<TypeDesc> setOfTypes) {
+        dslImplementationDesc
             .getSupertypes()
             .stream()
             .map(typeResolver::resolveOrThrow)

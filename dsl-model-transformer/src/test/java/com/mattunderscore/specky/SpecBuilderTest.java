@@ -26,9 +26,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky;
 
 import com.mattunderscore.specky.dsl.SpecBuilder;
+import com.mattunderscore.specky.dsl.model.DSLImplementationDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
@@ -65,7 +65,7 @@ public final class SpecBuilderTest {
 
         assertEquals("com.example", specDesc.getPackageName());
         final List<DSLViewDesc> views = specDesc.getViews();
-        final List<DSLTypeDesc> values = specDesc.getTypes();
+        final List<DSLImplementationDesc> values = specDesc.getTypes();
         assertEquals(1, views.size());
         assertEquals(4, values.size());
 
@@ -78,7 +78,7 @@ public final class SpecBuilderTest {
         assertEquals("num", propertyDesc0.getName());
         assertEquals("Integer", propertyDesc0.getType());
 
-        final DSLTypeDesc valueDesc0 = values.get(0);
+        final DSLImplementationDesc valueDesc0 = values.get(0);
         assertEquals("FirstValue", valueDesc0.getName());
         final List<DSLPropertyDesc> properties1 = valueDesc0.getProperties();
         assertEquals(2, properties1.size());
@@ -93,7 +93,7 @@ public final class SpecBuilderTest {
         assertEquals("str", propertyDesc2.getName());
         assertEquals("String", propertyDesc2.getType());
 
-        final DSLTypeDesc valueDesc1 = values.get(1);
+        final DSLImplementationDesc valueDesc1 = values.get(1);
         assertEquals("SecondValue", valueDesc1.getName());
         final List<DSLPropertyDesc> properties2 = valueDesc1.getProperties();
         assertEquals(2, properties2.size());
@@ -105,7 +105,7 @@ public final class SpecBuilderTest {
         assertEquals("dbl", propertyDesc4.getName());
         assertEquals("Double", propertyDesc4.getType());
 
-        final DSLTypeDesc valueDesc2 = values.get(2);
+        final DSLImplementationDesc valueDesc2 = values.get(2);
         assertEquals("ValueWithBooleans", valueDesc2.getName());
         final List<DSLPropertyDesc> properties3 = valueDesc2.getProperties();
         assertEquals(2, properties3.size());
@@ -117,7 +117,7 @@ public final class SpecBuilderTest {
         assertEquals("boolVal", propertyDesc6.getName());
         assertEquals("Boolean", propertyDesc6.getType());
 
-        final DSLTypeDesc beanSpec0 = values.get(3);
+        final DSLImplementationDesc beanSpec0 = values.get(3);
         assertEquals("FirstBean", beanSpec0.getName());
         final List<DSLPropertyDesc> properties4 = beanSpec0.getProperties();
         assertEquals(2, properties4.size());
