@@ -35,8 +35,8 @@ import com.mattunderscore.specky.dsl.model.DSLImplementationDesc;
 import com.mattunderscore.specky.dsl.model.DSLImportDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
+import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
-import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.ImplementationSpecContext;
@@ -152,7 +152,7 @@ public final class SpecBuilder {
         }
     }
 
-    private DSLViewDesc createView(TypeSpecContext context) {
+    private DSLTypeDesc createView(TypeSpecContext context) {
         final String typeName = context.Identifier().getText();
         final List<String> supertypes;
         if (context.supertypes() != null) {
@@ -174,7 +174,7 @@ public final class SpecBuilder {
             .stream()
             .map(this::createProperty)
             .collect(toList());
-        return DSLViewDesc
+        return DSLTypeDesc
             .builder()
             .name(typeName)
             .properties(properties)

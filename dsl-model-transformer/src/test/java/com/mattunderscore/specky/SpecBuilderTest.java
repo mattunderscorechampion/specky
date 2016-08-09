@@ -29,7 +29,7 @@ import com.mattunderscore.specky.dsl.SpecBuilder;
 import com.mattunderscore.specky.dsl.model.DSLImplementationDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLViewDesc;
+import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.SpeckyLexer;
@@ -64,12 +64,12 @@ public final class SpecBuilderTest {
         final DSLSpecDesc specDesc = specBuilder.build(spec);
 
         assertEquals("com.example", specDesc.getPackageName());
-        final List<DSLViewDesc> views = specDesc.getViews();
+        final List<DSLTypeDesc> views = specDesc.getViews();
         final List<DSLImplementationDesc> values = specDesc.getTypes();
         assertEquals(1, views.size());
         assertEquals(4, values.size());
 
-        final DSLViewDesc typeDesc0 = views.get(0);
+        final DSLTypeDesc typeDesc0 = views.get(0);
         assertEquals("TestType", typeDesc0.getName());
         final List<DSLPropertyDesc> properties0 = typeDesc0.getProperties();
         assertEquals(1, properties0.size());

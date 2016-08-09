@@ -35,7 +35,7 @@ import java.util.function.Supplier;
 
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLViewDesc;
+import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
@@ -103,8 +103,8 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .collect(toList());
     }
 
-    private TypeDesc getView(DSLSpecDesc dslSpecDesc, DSLViewDesc dslViewDesc) {
-        final List<PropertyDesc> properties = dslViewDesc
+    private TypeDesc getView(DSLSpecDesc dslSpecDesc, DSLTypeDesc dslTypeDesc) {
+        final List<PropertyDesc> properties = dslTypeDesc
             .getProperties()
             .stream()
             .map(this::getViewProperty)
@@ -115,10 +115,10 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .licence(dslSpecDesc.getLicence())
             .author(dslSpecDesc.getAuthor())
             .packageName(dslSpecDesc.getPackageName())
-            .name(dslViewDesc.getName())
+            .name(dslTypeDesc.getName())
             .properties(properties)
-            .supertypes(dslViewDesc.getSupertypes())
-            .description(dslViewDesc.getDescription())
+            .supertypes(dslTypeDesc.getSupertypes())
+            .description(dslTypeDesc.getDescription())
             .build();
     }
 

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import org.junit.Test;
 
@@ -14,7 +15,6 @@ import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
-import com.mattunderscore.specky.dsl.model.DSLViewDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
@@ -82,7 +82,7 @@ public final class ModelGeneratorTest {
             .builder()
             .author("")
             .packageName("com.example")
-            .views(singletonList(DSLViewDesc
+            .views(singletonList(DSLTypeDesc
                 .builder()
                 .name("SuperType")
                 .properties(singletonList(DSLPropertyDesc

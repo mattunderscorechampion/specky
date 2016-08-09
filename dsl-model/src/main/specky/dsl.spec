@@ -44,7 +44,7 @@ value DSLPropertyDesc "Description of a property."
     options
         immutable builder
 
-value DSLViewDesc "Description of a view."
+value DSLTypeDesc "Description of a type."
     properties
         String name "Name of the view."
         List<DSLPropertyDesc> properties "Properties of the view."
@@ -76,7 +76,7 @@ value DSLSpecDesc "Description of a specification."
         String packageName "Name of the package the specification describes."
         List<DSLImportDesc> importTypes "Types from outside the specification to import."
         List<DSLImplementationDesc> types "Types of the specification."
-        List<DSLViewDesc> views "Views of the specification."
+        List<DSLTypeDesc> views "Views of the specification."
     options
         immutable builder
 
