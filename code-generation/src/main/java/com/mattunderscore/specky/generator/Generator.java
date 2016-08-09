@@ -91,6 +91,7 @@ public final class Generator {
         final TypeSpec typeSpec = generateView(viewDesc);
         return JavaFile
             .builder(viewDesc.getPackageName(), typeSpec)
+            .skipJavaLangImports(true)
             .build();
     }
 
