@@ -25,14 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.dsl;
 
-import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
-
-import java.util.List;
-
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
 import com.mattunderscore.specky.constraint.model.ConstraintOperator;
 import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
 import com.mattunderscore.specky.constraint.model.NFDisjointPredicates;
@@ -53,6 +45,13 @@ import com.mattunderscore.specky.parser.Specky.PropertyContext;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.Specky.TypeParametersContext;
 import com.mattunderscore.specky.parser.Specky.TypeSpecContext;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
+import java.util.List;
+
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Processor for the ANTLR4 generated AST. Returns a better representation of the DSL.
@@ -105,7 +104,7 @@ public final class SpecBuilder {
     }
 
     private DSLTypeDesc createType(ImplementationSpecContext context) {
-        final String typeName = context.Identifier().get(0).getText();
+        final String typeName = context.Identifier().getText();
         final List<DSLPropertyDesc> properties = context.props() == null ?
             emptyList() :
             context
@@ -116,10 +115,10 @@ public final class SpecBuilder {
                 .collect(toList());
         final ConstructionMethod constructionMethod = toConstructionDesc(context);
         final List<String> supertypes;
-        if (context.Identifier().size() > 1) {
+        if (context.supertypes() != null) {
             supertypes = context
+                .supertypes()
                 .Identifier()
-                .subList(1, context.Identifier().size())
                 .stream()
                 .map(TerminalNode::getText)
                 .collect(toList());

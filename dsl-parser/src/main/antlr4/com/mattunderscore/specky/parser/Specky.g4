@@ -129,8 +129,12 @@ opts
         INLINE_WS? construction? LINE_BREAK
     ;
 
+supertypes
+    :   EXTENDS (INLINE_WS Identifier)+
+    ;
+
 implementationSpec
-    :   (VALUE | BEAN ) INLINE_WS Identifier (INLINE_WS EXTENDS INLINE_WS Identifier)? (INLINE_WS StringLiteral)? LINE_BREAK
+    :   (VALUE | BEAN ) INLINE_WS Identifier (INLINE_WS supertypes)? (INLINE_WS StringLiteral)? LINE_BREAK
         (INLINE_WS? props)?
         (INLINE_WS? opts)?
     ;
