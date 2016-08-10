@@ -45,29 +45,23 @@ value PropertyDesc "Description of a property."
     options
         immutable builder
 
-value TypeDesc "Description of a type."
-    properties
-        optional String licence default null "License of the type."
-        optional String author default null "Author of the specification."
-        String packageName "Name of the package the view is in."
-        String name "Name of the view."
-        List<PropertyDesc> properties "Properties of the view."
-        List<String> supertypes "Supertypes of the type."
-        optional String description default null "Description of the view."
-    options
-        immutable builder
-
-type ImplementationDesc "Description of an implementation."
+type TypeDesc "Description of a type."
     properties
         optional String licence default null "License of the type."
         optional String author default null "Author of the type."
         String packageName "Name of the package the type is in."
         String name "Name of the type."
         List<PropertyDesc> properties "Properties of the type."
-        ConstructionMethod constructionMethod "Construction method of the type."
         List<String> supertypes "Supertypes of the type."
         optional String description default null "Description of the type."
 
+value AbstractTypeDesc : TypeDesc "Description of an abstract type."
+    options
+        immutable builder
+
+type ImplementationDesc : TypeDesc "Description of an implementation."
+    properties
+        ConstructionMethod constructionMethod "Construction method of the type."
 
 value ValueDesc : ImplementationDesc "Description of a value type."
     options
@@ -81,6 +75,6 @@ value SpecDesc "Description of a specification."
     properties
         List<String> importTypes "Types from outside the specification to import."
         List<ImplementationDesc> types "Types of the specification."
-        List<TypeDesc> views "Views of the specification."
+        List<AbstractTypeDesc> views "Views of the specification."
     options
         immutable builder

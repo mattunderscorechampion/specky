@@ -29,10 +29,10 @@ import com.mattunderscore.specky.dsl.model.DSLImplementationDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
+import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
-import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ValueDesc;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
@@ -55,12 +55,12 @@ import static java.util.stream.Collectors.toList;
 public final class TypeDeriver {
     private final TypeResolver typeResolver;
     private final DefaultValueResolver valueResolver;
-    private final Map<String, TypeDesc> views;
+    private final Map<String, AbstractTypeDesc> views;
 
     /**
      * Constructor.
      */
-    public TypeDeriver(TypeResolver typeResolver, DefaultValueResolver valueResolver, Map<String, TypeDesc> views) {
+    public TypeDeriver(TypeResolver typeResolver, DefaultValueResolver valueResolver, Map<String, AbstractTypeDesc> views) {
         this.typeResolver = typeResolver;
         this.valueResolver = valueResolver;
         this.views = views;
@@ -98,11 +98,11 @@ public final class TypeDeriver {
     }
 
     private List<PropertyDesc> deriveProperties(DSLImplementationDesc dslImplementationDesc) {
-        final List<TypeDesc> resolveSupertypes = resolveSupertypes(dslImplementationDesc);
+        final List<AbstractTypeDesc> resolveSupertypes = resolveSupertypes(dslImplementationDesc);
 
         final List<PropertyDesc> inheritedProperties = resolveSupertypes
             .stream()
-            .map(TypeDesc::getProperties)
+            .map(AbstractTypeDesc::getProperties)
             .flatMap(Collection::stream)
             .collect(toList());
 
@@ -143,16 +143,16 @@ public final class TypeDeriver {
         return allProperties;
     }
 
-    private List<TypeDesc> resolveSupertypes(DSLImplementationDesc dslImplementationDesc) {
-        final List<TypeDesc> typeDescs = new ArrayList<>();
+    private List<AbstractTypeDesc> resolveSupertypes(DSLImplementationDesc dslImplementationDesc) {
+        final List<AbstractTypeDesc> typeDescs = new ArrayList<>();
         resolveSupertypes(dslImplementationDesc, typeDescs, new HashSet<>());
         return typeDescs;
     }
 
     private void resolveSupertypes(
             DSLImplementationDesc dslImplementationDesc,
-            List<TypeDesc> typeDescs,
-            Set<TypeDesc> setOfTypes) {
+            List<AbstractTypeDesc> typeDescs,
+            Set<AbstractTypeDesc> setOfTypes) {
         dslImplementationDesc
             .getSupertypes()
             .stream()
@@ -165,7 +165,10 @@ public final class TypeDeriver {
             });
     }
 
-    private void resolveSupertypes(TypeDesc firstTypeDesc, List<TypeDesc> typeDescs, Set<TypeDesc> setOfTypes) {
+    private void resolveSupertypes(
+            AbstractTypeDesc firstTypeDesc,
+            List<AbstractTypeDesc> typeDescs,
+            Set<AbstractTypeDesc> setOfTypes) {
         firstTypeDesc
             .getSupertypes()
             .stream()
