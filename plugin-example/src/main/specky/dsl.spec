@@ -31,7 +31,6 @@ package com.mattunderscore.specky.dsl.model.test
 imports
     com.mattunderscore.specky.dsl.model.test.ConstructionMethod default ConstructionMethod.DEFAULT
 
-
 value DSLPropertyDesc "Description of a property."
     properties
         String name "Name of the property."
@@ -44,28 +43,26 @@ value DSLPropertyDesc "Description of a property."
     options
         immutable builder
 
-value DSLViewDesc "Description of a view."
-    properties
-        String name "Name of the view."
-        List<DSLPropertyDesc> properties "Properties of the view."
-        optional String description default null "Description of the view."
-    options
-        immutable builder
-
 type DSLTypeDesc "Description of a type."
     properties
         String name "Name of the type."
         List<DSLPropertyDesc> properties "Properties of the type."
-        ConstructionMethod constructionMethod "Construction method of the type."
         List<String> supertypes "Supertypes of the type."
         optional String description default null "Description of the type."
 
-
-value DSLValueDesc : DSLTypeDesc "Description of a value type."
+value DSLAbstractTypeDesc : DSLTypeDesc "Description of an abstract type."
     options
         immutable builder
 
-value DSLBeanDesc : DSLTypeDesc "Description of a bean type."
+type DSLImplementationDesc : DSLTypeDesc "Description of an implementation."
+    properties
+        ConstructionMethod constructionMethod "Construction method of the type."
+
+value DSLValueDesc : DSLImplementationDesc "Description of a value type."
+    options
+        immutable builder
+
+value DSLBeanDesc : DSLImplementationDesc "Description of a bean type."
     options
         immutable builder
 
@@ -75,8 +72,8 @@ value DSLSpecDesc "Description of a specification."
         optional String licence default null "Copyright and licence information."
         String packageName "Name of the package the specification describes."
         List<DSLImportDesc> importTypes "Types from outside the specification to import."
-        List<DSLTypeDesc> types "Types of the specification."
-        List<DSLViewDesc> views "Views of the specification."
+        List<DSLImplementationDesc> types "Types of the specification."
+        List<DSLAbstractTypeDesc> views "Views of the specification."
     options
         immutable builder
 
