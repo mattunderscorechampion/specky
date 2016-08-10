@@ -7,6 +7,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.mattunderscore.specky.dsl.model.DSLAbstractTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import org.junit.Test;
@@ -82,7 +83,7 @@ public final class ModelGeneratorTest {
             .builder()
             .author("")
             .packageName("com.example")
-            .views(singletonList(DSLTypeDesc
+            .views(singletonList(DSLAbstractTypeDesc
                 .builder()
                 .name("SuperType")
                 .properties(singletonList(DSLPropertyDesc

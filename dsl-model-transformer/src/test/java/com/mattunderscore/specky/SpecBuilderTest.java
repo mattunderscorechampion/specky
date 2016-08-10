@@ -26,10 +26,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky;
 
 import com.mattunderscore.specky.dsl.SpecBuilder;
+import com.mattunderscore.specky.dsl.model.DSLAbstractTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLImplementationDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.SpeckyLexer;
@@ -64,12 +64,12 @@ public final class SpecBuilderTest {
         final DSLSpecDesc specDesc = specBuilder.build(spec);
 
         assertEquals("com.example", specDesc.getPackageName());
-        final List<DSLTypeDesc> views = specDesc.getViews();
+        final List<DSLAbstractTypeDesc> views = specDesc.getViews();
         final List<DSLImplementationDesc> values = specDesc.getTypes();
         assertEquals(1, views.size());
         assertEquals(4, values.size());
 
-        final DSLTypeDesc typeDesc0 = views.get(0);
+        final DSLAbstractTypeDesc typeDesc0 = views.get(0);
         assertEquals("TestType", typeDesc0.getName());
         final List<DSLPropertyDesc> properties0 = typeDesc0.getProperties();
         assertEquals(1, properties0.size());
