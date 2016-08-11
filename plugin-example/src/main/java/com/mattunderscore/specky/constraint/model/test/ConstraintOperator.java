@@ -26,25 +26,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.constraint.model.test;
 
 /**
- * Constraint operator.
+ * Stand-in for description for constraint operator.
  *
  * @author Matt Champion
  */
 public enum ConstraintOperator {
-    /**
-     * Less than operator.
-     */
-    LESS_THAN,
-    /**
-     * Greater than operator.
-     */
-    GREATER_THAN,
-    /**
-     * Less than or equal to operator.
-     */
-    LESS_THAN_OR_EQUAL,
-    /**
-     * Greater than or equal to operator.
-     */
-    GREATER_THAN_OR_EQUAL
 }

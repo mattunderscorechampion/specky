@@ -26,17 +26,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.constraint.model.test;
 
 /**
- * Binary constraint operator.
+ * Stand-in for description for binary constraint operator.
  *
  * @author Matt Champion
  */
 public enum BinaryConstraintOperator {
-    /**
-     * Conjunction constraint operator.
-     */
-    CONJUNCTION,
-    /**
-     * Disjunction constraint operator.
-     */
-    DISJUNCTION
 }

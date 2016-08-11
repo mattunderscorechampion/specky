@@ -39,21 +39,21 @@ value PropertyDesc "Description of a property."
         List<String> typeParameters
         boolean optional "If the property is optional."
         boolean override "If the property is inherited."
-        optional String defaultValue default null "Default value of the property."
-        optional NFConjoinedDisjointPredicates constraint default null "Constraint applied to the property."
-        optional String description default null "Description of the property."
+        optional String defaultValue "Default value of the property."
+        optional NFConjoinedDisjointPredicates constraint "Constraint applied to the property."
+        optional String description "Description of the property."
     options
         immutable builder
 
 type TypeDesc "Description of a type."
     properties
-        optional String licence default null "Licence of the type."
-        optional String author default null "Author of the type."
+        optional String licence "Licence of the type."
+        optional String author "Author of the type."
         String packageName "Name of the package the type is in."
         String name "Name of the type."
         List<PropertyDesc> properties "Properties of the type."
         List<String> supertypes "Supertypes of the type."
-        optional String description default null "Description of the type."
+        optional String description "Description of the type."
 
 value AbstractTypeDesc : TypeDesc "Description of an abstract type."
     options

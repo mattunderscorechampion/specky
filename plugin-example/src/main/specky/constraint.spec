@@ -29,11 +29,13 @@ author "Matt Champion"
 package com.mattunderscore.specky.constraint.model.test
 
 imports
-    com.mattunderscore.specky.constraint.model.test.ConstraintOperator
     com.mattunderscore.specky.constraint.model.test.BinaryConstraintOperator
+    com.mattunderscore.specky.constraint.model.test.ConstraintOperator
+    com.mattunderscore.specky.constraint.model.test.SubjectModifier default SubjectModifier.IDENTITY
 
 value PredicateDesc "Description of a constraint."
     properties
+        SubjectModifier subject "The subject of the constraint."
         ConstraintOperator operator "An operator."
         String literal "A literal value."
     options

@@ -38,9 +38,9 @@ value DSLPropertyDesc "Description of a property."
         String type "Type name of the property."
         List<String> typeParameters
         boolean optional "If the property is optional."
-        optional String defaultValue default null "Default value of the property."
-        optional NFConjoinedDisjointPredicates constraint default null "Constraint applied to the property."
-        optional String description default null "Description of the property."
+        optional String defaultValue "Default value of the property."
+        optional NFConjoinedDisjointPredicates constraint "Constraint applied to the property."
+        optional String description "Description of the property."
     options
         immutable builder
 
@@ -49,7 +49,7 @@ type DSLTypeDesc "Description of a type."
         String name "Name of the type."
         List<DSLPropertyDesc> properties "Properties of the type."
         List<String> supertypes "Supertypes of the type."
-        optional String description default null "Description of the type."
+        optional String description "Description of the type."
 
 value DSLAbstractTypeDesc : DSLTypeDesc "Description of an abstract type."
     options
@@ -69,8 +69,8 @@ value DSLBeanDesc : DSLImplementationDesc "Description of a bean type."
 
 value DSLSpecDesc "Description of a specification."
     properties
-        optional String author default null "Author of the specification."
-        optional String licence default null "Copyright and licence information."
+        optional String author "Author of the specification."
+        optional String licence "Copyright and licence information."
         String packageName "Name of the package the specification describes."
         List<DSLImportDesc> importTypes "Types from outside the specification to import."
         List<DSLImplementationDesc> types "Types of the specification."
@@ -81,6 +81,6 @@ value DSLSpecDesc "Description of a specification."
 value DSLImportDesc "Description of the import of a type from outside the specification."
     properties
         String typeName "The name of the type."
-        optional String defaultValue default null "The default value of the type."
+        optional String defaultValue "The default value of the type."
     options
         immutable builder
