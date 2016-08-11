@@ -47,7 +47,7 @@ value PropertyDesc "Description of a property."
 
 type TypeDesc "Description of a type."
     properties
-        optional String licence default null "License of the type."
+        optional String licence default null "Licence of the type."
         optional String author default null "Author of the type."
         String packageName "Name of the package the type is in."
         String name "Name of the type."
