@@ -99,3 +99,7 @@ value WithConstraint
         Set<String> notEmpty [constraint # > 0] "A constrained property."
     options
         builder
+
+value OptionalIntImpl : OptionalInt
+    options
+        builder

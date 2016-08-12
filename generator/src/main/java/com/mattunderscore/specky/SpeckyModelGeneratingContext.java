@@ -31,7 +31,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.generator.ModelGenerator;
+import com.mattunderscore.specky.type.resolver.PropertyTypeResolver;
 import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
+import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
 import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
 import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver;
@@ -64,9 +66,11 @@ public final class SpeckyModelGeneratingContext {
             spec.getTypes().forEach(type -> typeResolver.registerTypeName(spec.getPackageName(), type.getName()));
         });
 
+        final TypeResolver resolver = new TypeResolverBuilder().registerResolver(typeResolver).build();
         modelGenerator = new ModelGenerator(
             specs,
-            new TypeResolverBuilder().registerResolver(typeResolver).build(),
+            resolver,
+            new PropertyTypeResolver(resolver),
             new CompositeValueResolver()
                 .with(new JavaStandardDefaultValueResolver())
                 .with(mutableValueResolver)

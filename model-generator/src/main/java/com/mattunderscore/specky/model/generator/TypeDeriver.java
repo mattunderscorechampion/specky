@@ -25,17 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator;
 
-import com.mattunderscore.specky.dsl.model.DSLImplementationDesc;
-import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
-import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLValueDesc;
-import com.mattunderscore.specky.model.AbstractTypeDesc;
-import com.mattunderscore.specky.model.BeanDesc;
-import com.mattunderscore.specky.model.ImplementationDesc;
-import com.mattunderscore.specky.model.PropertyDesc;
-import com.mattunderscore.specky.model.ValueDesc;
-import com.mattunderscore.specky.type.resolver.TypeResolver;
-import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
+import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,7 +35,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static java.util.stream.Collectors.toList;
+import com.mattunderscore.specky.dsl.model.DSLImplementationDesc;
+import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
+import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
+import com.mattunderscore.specky.dsl.model.DSLValueDesc;
+import com.mattunderscore.specky.model.AbstractTypeDesc;
+import com.mattunderscore.specky.model.BeanDesc;
+import com.mattunderscore.specky.model.ImplementationDesc;
+import com.mattunderscore.specky.model.PropertyDesc;
+import com.mattunderscore.specky.model.ValueDesc;
+import com.mattunderscore.specky.type.resolver.PropertyTypeResolver;
+import com.mattunderscore.specky.type.resolver.TypeResolver;
+import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 
 /**
  * Fully derive a type from its superinterfaces.
@@ -54,14 +55,20 @@ import static java.util.stream.Collectors.toList;
  */
 public final class TypeDeriver {
     private final TypeResolver typeResolver;
+    private final PropertyTypeResolver propertyTypeResolver;
     private final DefaultValueResolver valueResolver;
     private final Map<String, AbstractTypeDesc> views;
 
     /**
      * Constructor.
      */
-    public TypeDeriver(TypeResolver typeResolver, DefaultValueResolver valueResolver, Map<String, AbstractTypeDesc> views) {
+    public TypeDeriver(
+            TypeResolver typeResolver,
+            PropertyTypeResolver propertyTypeResolver,
+            DefaultValueResolver valueResolver,
+            Map<String, AbstractTypeDesc> views) {
         this.typeResolver = typeResolver;
+        this.propertyTypeResolver = propertyTypeResolver;
         this.valueResolver = valueResolver;
         this.views = views;
     }
@@ -204,7 +211,7 @@ public final class TypeDeriver {
 
     private PropertyDesc get(DSLPropertyDesc dslPropertyDesc) {
         final String defaultValue = dslPropertyDesc.getDefaultValue();
-        final String resolvedType = typeResolver.resolveOrThrow(dslPropertyDesc.getType());
+        final String resolvedType = propertyTypeResolver.resolveOrThrow(dslPropertyDesc);
         return PropertyDesc
             .builder()
             .name(dslPropertyDesc.getName())

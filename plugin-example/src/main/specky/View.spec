@@ -36,3 +36,6 @@ type TypeWithDefault
     properties
         int number default 6
 
+type OptionalInt
+    properties
+        optional int opt

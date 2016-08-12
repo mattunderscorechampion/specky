@@ -25,6 +25,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator;
 
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
@@ -32,16 +40,9 @@ import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.type.resolver.PropertyTypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
-
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 
 /**
  * Generator for the model from the DSL model.
@@ -50,14 +51,20 @@ import static java.util.stream.Collectors.toMap;
 public final class ModelGenerator implements Supplier<SpecDesc> {
     private final List<DSLSpecDesc> dslSpecs;
     private final TypeResolver typeResolver;
+    private final PropertyTypeResolver propertyTypeResolver;
     private final DefaultValueResolver valueResolver;
 
     /**
      * Constructor.
      */
-    public ModelGenerator(List<DSLSpecDesc> dslSpecs, TypeResolver typeResolver, DefaultValueResolver valueResolver) {
+    public ModelGenerator(
+            List<DSLSpecDesc> dslSpecs,
+            TypeResolver typeResolver,
+            PropertyTypeResolver propertyTypeResolver,
+            DefaultValueResolver valueResolver) {
         this.dslSpecs = dslSpecs;
         this.typeResolver = typeResolver;
+        this.propertyTypeResolver = propertyTypeResolver;
         this.valueResolver = valueResolver;
     }
 
@@ -73,7 +80,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
         final Map<String, AbstractTypeDesc> mappedViews = views
             .stream()
             .collect(toMap(viewDesc -> viewDesc.getPackageName() + "." + viewDesc.getName(), viewDesc -> viewDesc));
-        final TypeDeriver typeDeriver = new TypeDeriver(typeResolver, valueResolver, mappedViews);
+        final TypeDeriver typeDeriver = new TypeDeriver(typeResolver, propertyTypeResolver, valueResolver, mappedViews);
 
         return SpecDesc
             .builder()
@@ -123,7 +130,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
     }
 
     private PropertyDesc getViewProperty(DSLPropertyDesc dslPropertyDesc) {
-        final String resolvedType = typeResolver.resolveOrThrow(dslPropertyDesc.getType());
+        final String resolvedType = propertyTypeResolver.resolveOrThrow(dslPropertyDesc);
         return PropertyDesc
             .builder()
             .name(dslPropertyDesc.getName())
