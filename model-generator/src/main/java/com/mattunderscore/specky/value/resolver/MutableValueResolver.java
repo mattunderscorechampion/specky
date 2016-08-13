@@ -25,6 +25,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
+import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
+
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,8 +40,8 @@ public final class MutableValueResolver implements DefaultValueResolver {
     private final ConcurrentMap<String, String> typeToValue = new ConcurrentHashMap<>(10, 0.5f, 2);
 
     @Override
-    public Optional<String> resolve(String type) {
-        return Optional.ofNullable(typeToValue.get(type));
+    public Optional<String> resolve(DSLPropertyDesc propertyDesc, String resolvedType) {
+        return Optional.ofNullable(typeToValue.get(resolvedType));
     }
 
     /**

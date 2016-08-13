@@ -103,3 +103,7 @@ value WithConstraint
 value OptionalIntImpl : OptionalInt
     options
         builder
+
+value DefaultTestValue : DefaultTest
+    options
+        builder

@@ -31,6 +31,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 
+import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import org.junit.Test;
 
 /**
@@ -40,11 +41,14 @@ import org.junit.Test;
  */
 public final class MutableValueResolverTest {
 
+    private final DSLPropertyDesc noneProperty = DSLPropertyDesc.builder().type("none").build();
+    private final DSLPropertyDesc someProperty = DSLPropertyDesc.builder().type("some").build();
+
     @Test
     public void resolveNone() {
         final MutableValueResolver resolver = new MutableValueResolver();
 
-        final Optional<String> none = resolver.resolve("none");
+        final Optional<String> none = resolver.resolve(noneProperty, "none");
         assertFalse(none.isPresent());
     }
 
@@ -52,7 +56,7 @@ public final class MutableValueResolverTest {
     public void registerAndResolve() {
         final MutableValueResolver resolver = new MutableValueResolver();
 
-        final Optional<String> some = resolver.register("some", "other").resolve("some");
+        final Optional<String> some = resolver.register("some", "other").resolve(someProperty, "some");
         assertTrue(some.isPresent());
         assertEquals("other", some.get());
     }

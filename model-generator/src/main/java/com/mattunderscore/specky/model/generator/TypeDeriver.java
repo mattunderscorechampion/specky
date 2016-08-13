@@ -223,7 +223,7 @@ public final class TypeDeriver {
                 .collect(toList()))
             .defaultValue(
                 defaultValue == null && !dslPropertyDesc.isOptional() ?
-                    valueResolver.resolve(resolvedType).get() :
+                    valueResolver.resolve(dslPropertyDesc, resolvedType).get() :
                     defaultValue)
             .constraint(dslPropertyDesc.getConstraint())
             .optional(dslPropertyDesc.isOptional())

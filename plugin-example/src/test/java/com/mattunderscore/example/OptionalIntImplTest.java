@@ -49,6 +49,13 @@ public final class OptionalIntImplTest {
     }
 
     @Test
+    public void testDefault() {
+        final OptionalInt value = OptionalIntImpl.builder().build();
+
+        assertNull(value.getOpt());
+    }
+
+    @Test
     public void test() {
         final OptionalInt value = OptionalIntImpl.builder().opt(7).build();
 

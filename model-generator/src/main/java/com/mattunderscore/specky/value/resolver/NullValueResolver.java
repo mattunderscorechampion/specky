@@ -25,6 +25,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
+import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
+
 import static java.util.Arrays.asList;
 
 import java.util.HashSet;
@@ -39,8 +41,8 @@ public final class NullValueResolver implements DefaultValueResolver {
     private static final Set<String> PRIMITIVE_TYPES = new HashSet<>(asList("int", "boolean", "double"));
 
     @Override
-    public Optional<String> resolve(String type) {
-        if (PRIMITIVE_TYPES.contains(type)) {
+    public Optional<String> resolve(DSLPropertyDesc propertyDesc, String resolvedType) {
+        if (PRIMITIVE_TYPES.contains(resolvedType)) {
             return Optional.empty();
         }
 

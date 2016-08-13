@@ -25,6 +25,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
+import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
+
 import static java.util.Arrays.copyOf;
 
 import java.util.Optional;
@@ -49,10 +51,10 @@ public final class CompositeValueResolver implements DefaultValueResolver {
     }
 
     @Override
-    public Optional<String> resolve(String type) {
+    public Optional<String> resolve(DSLPropertyDesc propertyDesc, String resolvedType) {
         return Stream
             .of(resolvers)
-            .map(resolver -> resolver.resolve(type))
+            .map(resolver -> resolver.resolve(propertyDesc, resolvedType))
             .filter(Optional::isPresent)
             .map(Optional::get)
             .findFirst();

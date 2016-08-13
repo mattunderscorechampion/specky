@@ -155,7 +155,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             return defaultValue;
         }
 
-        final String typeDefaultValue = valueResolver.resolve(resolvedType).get();
+        final String typeDefaultValue = valueResolver.resolve(dslPropertyDesc, resolvedType).get();
         if (!dslPropertyDesc.isOptional() && "null".equals(typeDefaultValue)) {
             throw new IllegalStateException(
                 "The property " + dslPropertyDesc.getName() + " is not optional but has no default type");

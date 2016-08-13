@@ -7,6 +7,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.mattunderscore.specky.value.resolver.OptionalValueResolver;
 import org.junit.Test;
 
 import com.mattunderscore.specky.dsl.model.DSLAbstractTypeDesc;
@@ -122,6 +123,7 @@ public final class ModelGeneratorTest {
             resolver,
             new PropertyTypeResolver(resolver),
             new CompositeValueResolver()
+                .with(new OptionalValueResolver())
                 .with(new JavaStandardDefaultValueResolver())
                 .with(new NullValueResolver()));
 

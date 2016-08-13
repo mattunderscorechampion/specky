@@ -39,6 +39,7 @@ import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
 import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver;
 import com.mattunderscore.specky.value.resolver.MutableValueResolver;
 import com.mattunderscore.specky.value.resolver.NullValueResolver;
+import com.mattunderscore.specky.value.resolver.OptionalValueResolver;
 
 /**
  * Generates a model from the DSL model.
@@ -72,6 +73,7 @@ public final class SpeckyModelGeneratingContext {
             resolver,
             new PropertyTypeResolver(resolver),
             new CompositeValueResolver()
+                .with(new OptionalValueResolver())
                 .with(new JavaStandardDefaultValueResolver())
                 .with(mutableValueResolver)
                 .with(new NullValueResolver()));

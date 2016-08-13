@@ -28,6 +28,7 @@ package com.mattunderscore.specky.value.resolver;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import org.junit.Test;
 
 /**
@@ -37,15 +38,18 @@ import org.junit.Test;
  */
 public final class NullValueResolverTest {
 
+    private final DSLPropertyDesc stringProperty = DSLPropertyDesc.builder().type("java.lang.String").build();
+    private final DSLPropertyDesc intProperty = DSLPropertyDesc.builder().type("int").build();
+
     private final NullValueResolver resolver = new NullValueResolver();
 
     @Test
     public void objectsAreNull() {
-        assertEquals("null", resolver.resolve("java.lang.String").get());
+        assertEquals("null", resolver.resolve(stringProperty, "java.lang.String").get());
     }
 
     @Test
     public void primitivesUnresolved() {
-        assertFalse(resolver.resolve("int").isPresent());
+        assertFalse(resolver.resolve(intProperty, "int").isPresent());
     }
 }

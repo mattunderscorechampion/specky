@@ -28,6 +28,7 @@ package com.mattunderscore.specky.value.resolver;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import org.junit.Test;
 
 /**
@@ -36,15 +37,17 @@ import org.junit.Test;
  * @author Matt Champion on 25/06/2016
  */
 public final class CompositeValueResolverTest {
+    private final DSLPropertyDesc stringProperty = DSLPropertyDesc.builder().type("java.lang.String").build();
+
     final CompositeValueResolver resolver = new CompositeValueResolver();
 
     @Test
     public void resolve() {
-        assertFalse(resolver.resolve("java.lang.String").isPresent());
+        assertFalse(resolver.resolve(stringProperty, "java.lang.String").isPresent());
     }
 
     @Test
     public void with() {
-        assertEquals("null", resolver.with(new NullValueResolver()).resolve("java.lang.String").get());
+        assertEquals("null", resolver.with(new NullValueResolver()).resolve(stringProperty, "java.lang.String").get());
     }
 }

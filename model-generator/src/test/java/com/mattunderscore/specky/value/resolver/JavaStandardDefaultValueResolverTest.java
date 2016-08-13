@@ -27,6 +27,7 @@ package com.mattunderscore.specky.value.resolver;
 
 import static org.junit.Assert.assertEquals;
 
+import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import org.junit.Test;
 
 /**
@@ -36,40 +37,48 @@ import org.junit.Test;
  */
 public final class JavaStandardDefaultValueResolverTest {
 
+    private final DSLPropertyDesc stringProperty = DSLPropertyDesc.builder().type("java.lang.String").build();
+    private final DSLPropertyDesc intProperty = DSLPropertyDesc.builder().type("int").build();
+    private final DSLPropertyDesc doubleProperty = DSLPropertyDesc.builder().type("double").build();
+    private final DSLPropertyDesc booleanProperty = DSLPropertyDesc.builder().type("boolean").build();
+    private final DSLPropertyDesc boxedIntProperty = DSLPropertyDesc.builder().type("java.lang.Integer").build();
+    private final DSLPropertyDesc boxedDoubleProperty = DSLPropertyDesc.builder().type("java.lang.Double").build();
+    private final DSLPropertyDesc boxedBooleanProperty = DSLPropertyDesc.builder().type("java.lang.Boolean").build();
+
     private final JavaStandardDefaultValueResolver resolver = new JavaStandardDefaultValueResolver();
 
     @Test
     public void resolveBool() {
-        assertEquals("false", resolver.resolve("boolean").get());
+        assertEquals("false", resolver.resolve(booleanProperty, "boolean").get());
     }
 
     @Test
     public void resolveBoolean() {
-        assertEquals("false", resolver.resolve("java.lang.Boolean").get());
+        assertEquals("false", resolver.resolve(boxedBooleanProperty, "java.lang.Boolean").get());
     }
 
     @Test
     public void resolveInt() {
-        assertEquals("0", resolver.resolve("int").get());
+        assertEquals("0", resolver.resolve(intProperty, "int").get());
     }
 
     @Test
     public void resolveDbl() {
-        assertEquals("0.0", resolver.resolve("double").get());
+        assertEquals("0.0", resolver.resolve(doubleProperty, "double").get());
     }
 
     @Test
     public void getString() {
-        assertEquals("\"\"", resolver.resolve("java.lang.String").get());
+        assertEquals("\"\"", resolver.resolve(stringProperty, "java.lang.String").get());
     }
 
     @Test
     public void getInteger() {
-        assertEquals("0", resolver.resolve("java.lang.Integer").get());
+        assertEquals("0", resolver.resolve(boxedIntProperty, "java.lang.Integer").get());
     }
 
     @Test
     public void getDouble() {
-        assertEquals("0.0", resolver.resolve("java.lang.Double").get());
+        assertEquals("0.0", resolver.resolve(boxedDoubleProperty, "java.lang.Double").get());
     }
 }

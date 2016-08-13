@@ -39,3 +39,20 @@ type TypeWithDefault
 type OptionalInt
     properties
         optional int opt
+
+type DefaultTest
+    properties
+        int reqInt
+        long reqLong
+        double reqDouble
+        boolean reqBoolean
+        Integer reqBoxedInt
+        Long reqBoxedLong
+        Double reqBoxedDouble
+        Boolean reqBoxedBoolean
+        String reqString
+        BigInteger reqBigInt
+        BigDecimal reqBigDecimal
+        Object reqObject
+        List<String> reqList
+        Set<String> reqSet

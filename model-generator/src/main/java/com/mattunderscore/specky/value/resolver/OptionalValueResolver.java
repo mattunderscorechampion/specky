@@ -30,12 +30,17 @@ import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import java.util.Optional;
 
 /**
- * Resolve default value for a type.
- * @author Matt Champion on 23/06/2016
+ * Resolve value for optional properties.
+ * @author Matt Champion on 13/08/16
  */
-public interface DefaultValueResolver {
-    /**
-     * @return A default value or empty if it could not be resolved
-     */
-    Optional<String> resolve(DSLPropertyDesc propertyDesc, String resolvedType);
+public final class OptionalValueResolver implements DefaultValueResolver {
+    @Override
+    public Optional<String> resolve(DSLPropertyDesc propertyDesc, String resolvedType) {
+        if (propertyDesc.isOptional()) {
+            return Optional.of("null");
+        }
+        else {
+            return Optional.empty();
+        }
+    }
 }
