@@ -56,3 +56,17 @@ type DefaultTest
         Object reqObject
         List<String> reqList
         Set<String> reqSet
+        optional int optInt
+        optional long optLong
+        optional double optDouble
+        optional boolean optBoolean
+        optional Integer optBoxedInt
+        optional Long optBoxedLong
+        optional Double optBoxedDouble
+        optional Boolean optBoxedBoolean
+        optional String optString
+        optional BigInteger optBigInt
+        optional BigDecimal optBigDecimal
+        optional Object optObject
+        optional List<String> optList
+        optional Set<String> optSet
