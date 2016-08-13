@@ -64,7 +64,7 @@ public final class ViewGenerator {
         for (final PropertyDesc propertyDesc : typeDesc.getProperties()) {
 
             builder
-                .addMethod(methodBuilder(getAccessorName(propertyDesc.getName()))
+                .addMethod(methodBuilder(getAccessorName(propertyDesc))
                     .addJavadoc(accessorJavadocGenerator.generateJavaDoc(propertyDesc))
                     .addModifiers(ABSTRACT, PUBLIC)
                     .returns(getType(propertyDesc))
@@ -80,7 +80,13 @@ public final class ViewGenerator {
         return builder.build();
     }
 
-    private static String getAccessorName(String propertyName) {
-        return "get" + toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
+    private static String getAccessorName(PropertyDesc property) {
+        final String propertyName = property.getName();
+        if (property.getType().equals("boolean")) {
+            return "is" + toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
+        }
+        else {
+            return "get" + toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
+        }
     }
 }
