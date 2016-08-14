@@ -61,7 +61,10 @@ public final class SpecBuilderTest {
         final SpecContext spec = parser.spec();
         final SpecBuilder specBuilder = new SpecBuilder();
 
-        final DSLSpecDesc specDesc = specBuilder.build(spec);
+        final List<DSLSpecDesc> specDescs = specBuilder.build(spec);
+
+        assertEquals(1, specDescs.size());
+        final DSLSpecDesc specDesc = specDescs.get(0);
 
         assertEquals("com.example", specDesc.getPackageName());
         final List<DSLAbstractTypeDesc> views = specDesc.getViews();

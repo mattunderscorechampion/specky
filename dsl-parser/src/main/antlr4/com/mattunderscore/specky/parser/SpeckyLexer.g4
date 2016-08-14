@@ -53,6 +53,10 @@ MULTILINE_QUOTE
     :   '"""'
     ;
 
+SECTION
+    :   'section'
+    ;
+
 LICENCE
     :   'licence'
     ;

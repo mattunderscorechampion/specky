@@ -67,9 +67,17 @@ public final class SpecBuilder {
     }
 
     /**
-     * @return a {@link DSLSpecDesc} from a {@link SpecContext}.
+     * @return the list of {@link DSLSpecDesc} from a {@link SpecContext}.
      */
-    public DSLSpecDesc build(SpecContext context) {
+    public List<DSLSpecDesc> build(SpecContext context) {
+        return context
+            .sectionContent()
+            .stream()
+            .map(this::build)
+            .collect(toList());
+    }
+
+    private DSLSpecDesc build(Specky.SectionContentContext context) {
         final ImportsContext importsContext = context.imports();
         final List<DSLImportDesc> imports = importsContext == null ?
             emptyList() :
@@ -84,6 +92,7 @@ public final class SpecBuilder {
                         singleImportContext.default_value().ANYTHING().getText())
                     .build())
                 .collect(toList());
+
         return DSLSpecDesc
             .builder()
             .ifThen(context.author() != null, builder -> builder.author(toValue(context.author().string_value())))

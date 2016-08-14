@@ -58,6 +58,7 @@ propertyName
     |   OPTIONS
     |   AUTHOR
     |   LICENCE
+    |   SECTION
     ;
 
 constraint_operator
@@ -152,11 +153,14 @@ licence
     :   LICENCE INLINE_WS string_value
     ;
 
-spec
-    :   LINE_BREAK*
-        (licence LINE_BREAK+)?
+sectionContent
+    :   (licence LINE_BREAK+)?
         (author LINE_BREAK+)?
         package_name LINE_BREAK+
         (imports LINE_BREAK*)?
         ((typeSpec | implementationSpec) LINE_BREAK*)+
+    ;
+
+spec
+    :   LINE_BREAK* sectionContent? (SECTION LINE_BREAK* sectionContent)*
     ;

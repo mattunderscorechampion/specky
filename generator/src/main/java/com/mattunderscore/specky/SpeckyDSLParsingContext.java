@@ -75,8 +75,9 @@ public final class SpeckyDSLParsingContext {
             final List<DSLSpecDesc> specs = new ArrayList<>();
             for (final Specky.SpecContext specContext : specContexts) {
                 final SpecBuilder specBuilder = new SpecBuilder();
-                final DSLSpecDesc specDesc = specBuilder.build(specContext);
-                specs.add(specDesc);
+                for (final DSLSpecDesc specDesc : specBuilder.build(specContext)) {
+                    specs.add(specDesc);
+                }
             }
 
             return new SpeckyModelGeneratingContext(specs);
