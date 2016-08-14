@@ -50,7 +50,7 @@ LetterOrDigit
 
 fragment
 MULTILINE_QUOTE
-    : '"""'
+    :   '"""'
     ;
 
 LICENCE
@@ -58,67 +58,67 @@ LICENCE
     ;
 
 VALUE
-    : 'value'
+    :   'value'
     ;
 
 BEAN
-    : 'bean'
+    :   'bean'
     ;
 
 TYPE
-    : 'type'
+    :   'type'
     ;
 
 CONSTRUCTOR
-    : 'constructor'
+    :   'constructor'
     ;
 
 MUTABLE_BUILDER
-    : 'builder'
+    :   'builder'
     ;
 
 IMMUTABLE_BUILDER
-    : 'immutable builder'
+    :   'immutable builder'
     ;
 
 OPTIONAL
-    : 'optional'
+    :   'optional'
     ;
 
 OPEN_TYPE_PARAMETERS
-    : '<'
+    :   '<'
     ;
 
 CLOSE_TYPE_PARAMETERS
-    : '>'
+    :   '>'
     ;
 
 PACKAGE
-    : 'package'
+    :   'package'
     ;
 
 PACKAGE_SEPARATOR
-    : '.'
+    :   '.'
     ;
 
 DEFAULT
-    : 'default' -> pushMode(LITERAL)
+    :   'default' -> pushMode(LITERAL)
     ;
 
 OPTIONS
-    : 'options'
+    :   'options'
     ;
 
 EXTENDS
-    : ':'
+    :   ':'
     ;
 
 IMPORT
-    : 'imports'
+    :   'imports'
     ;
 
 PROPERTIES
-    : 'properties'
+    :   'properties'
     ;
 
 AUTHOR
@@ -126,11 +126,11 @@ AUTHOR
     ;
 
 INLINE_WS
-    : [ ]+ -> channel(HIDDEN)
+    :   [ ]+ -> channel(HIDDEN)
     ;
 
 LINE_BREAK
-    : ('\n' | '\r\n') -> channel(HIDDEN)
+    :   ('\n' | '\r\n') -> channel(HIDDEN)
     ;
 
 LINE_COMMENT
@@ -156,49 +156,49 @@ MULTILINE_STRING_LITERAL
 mode LITERAL;
 
 LITERAL_INLINE_WS
-    : [ ]+ -> channel(HIDDEN)
+    :   [ ]+ -> channel(HIDDEN)
     ;
 
 ANYTHING
-    : ~[ \t\r\n\u000C]+ -> popMode
+    :   ~[ \t\r\n\u000C]+ -> popMode
     ;
 
 mode CONSTRAINT_MODE;
 
 CONSTRAINT_INLINE_WS
-    : [ ]+ -> channel(HIDDEN)
+    :   [ ]+ -> channel(HIDDEN)
     ;
 
 GREATER_THAN_OR_EQUAL
-    : '>='
+    :   '>='
     ;
 
 LESS_THAN_OR_EQUAL
-    : '<='
+    :   '<='
     ;
 
 GREATER_THAN
-    : '>'
+    :   '>'
     ;
 
 LESS_THAN
-    : '<'
+    :   '<'
     ;
 
 CONJUNCTION
-    : '&'
+    :   '&'
     ;
 
 DISJUNCTION
-    : '|'
+    :   '|'
     ;
 
 SIZE_OF
-    : '#'
+    :   '#'
     ;
 
 HAS_SOME
-    : 'e'
+    :   'e'
     ;
 
 REAL_LITERAL
@@ -230,5 +230,5 @@ EQUAL_TO
     ;
 
 CONSTRAINT_END
-    : ']' -> popMode
+    :   ']' -> popMode
     ;
