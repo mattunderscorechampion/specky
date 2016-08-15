@@ -162,5 +162,5 @@ sectionContent
     ;
 
 spec
-    :   LINE_BREAK* sectionContent? (SECTION LINE_BREAK* sectionContent)*
+    :   LINE_BREAK* sectionContent? (SECTION string_value? LINE_BREAK* sectionContent)*
     ;

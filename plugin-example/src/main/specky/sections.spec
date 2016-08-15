@@ -41,7 +41,7 @@ value PersonValue : Person "Value implementation of {@link Person}."
         immutable builder
 
 
-section
+section "Section B"
 
 licence """Copyright © 2016 Matthew Champion
 All rights reserved.
