@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
+import com.mattunderscore.specky.constraint.model.NFDisjointPredicates;
 import com.mattunderscore.specky.dsl.model.DSLImplementationDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
@@ -206,7 +208,30 @@ public final class TypeDeriver {
 
     private PropertyDesc mergeDeclaredProperty(PropertyDesc currentProperty, PropertyDesc declaredProperty) {
         checkMergableProperties(currentProperty, declaredProperty);
-        return declaredProperty;
+
+        final List<NFDisjointPredicates> constraints = new ArrayList<>();
+
+        if (currentProperty.getConstraint() != null) {
+            constraints.addAll(currentProperty.getConstraint().getPredicates());
+        }
+        if (declaredProperty.getConstraint() != null) {
+            constraints.addAll(declaredProperty.getConstraint().getPredicates());
+        }
+
+        return PropertyDesc
+            .builder()
+            .name(declaredProperty.getName())
+            .description(declaredProperty.getDescription())
+            .type(declaredProperty.getType())
+            .typeParameters(declaredProperty.getTypeParameters())
+            .optional(declaredProperty.isOptional())
+            .defaultValue(declaredProperty.getDefaultValue())
+            .override(declaredProperty.isOverride())
+            .constraint(NFConjoinedDisjointPredicates
+                .builder()
+                .predicates(constraints)
+                .build())
+            .build();
     }
 
     private PropertyDesc get(DSLPropertyDesc dslPropertyDesc) {

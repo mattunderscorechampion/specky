@@ -107,3 +107,13 @@ value OptionalIntImpl : OptionalInt
 value DefaultTestValue : DefaultTest
     options
         builder
+
+type BaseWithConstraint
+    properties
+        int num [constraint > 20]
+
+value AdditionalConstraint : BaseWithConstraint
+    properties
+        int num [constraint < 50]
+    options
+        builder
