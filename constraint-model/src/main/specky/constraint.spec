@@ -33,27 +33,11 @@ imports
     com.mattunderscore.specky.constraint.model.ConstraintOperator
     com.mattunderscore.specky.constraint.model.SubjectModifier default SubjectModifier.IDENTITY
 
-value PredicateDesc "Description of a constraint."
+value PredicateDesc "Description of a property predicate."
     properties
         SubjectModifier subject "The subject of the constraint."
         ConstraintOperator operator "An operator."
         String literal "A literal value."
-    options
-        immutable builder
-
-value CompoundConstraintDesc "Description of a constraint."
-    properties
-        ConstraintDesc constraint0
-        BinaryConstraintOperator operator "An operator."
-        ConstraintDesc constraint1
-    options
-        immutable builder
-
-value ConstraintDesc "Description of a constraint."
-    properties
-        optional CompoundConstraintDesc binaryConstraint
-        optional PredicateDesc unaryConstraint
-        optional ConstraintDesc negatedConstraint
     options
         immutable builder
 
