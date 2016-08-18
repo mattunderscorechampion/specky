@@ -54,6 +54,7 @@ public final class TypeDeriverTest {
                         .builder()
                         .predicates(singletonList(PredicateDesc
                             .builder()
+                            .subject("num")
                             .operator(ConstraintOperator.LESS_THAN)
                             .literal("50")
                             .build()))
@@ -79,6 +80,7 @@ public final class TypeDeriverTest {
                         .builder()
                         .predicates(singletonList(PredicateDesc
                             .builder()
+                            .subject("num")
                             .operator(ConstraintOperator.GREATER_THAN)
                             .literal("20")
                             .build()))
@@ -120,6 +122,7 @@ public final class TypeDeriverTest {
                             .builder()
                             .predicates(singletonList(PredicateDesc
                                 .builder()
+                                .subject("num")
                                 .operator(ConstraintOperator.LESS_THAN)
                                 .literal("50")
                                 .build()))

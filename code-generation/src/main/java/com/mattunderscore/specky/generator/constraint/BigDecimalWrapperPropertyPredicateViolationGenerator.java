@@ -48,6 +48,8 @@ import com.mattunderscore.specky.model.PropertyDesc;
             propertyDesc,
             PredicateDesc
                 .builder()
+                .subject(predicateDesc.getSubject())
+                .subjectModifier(predicateDesc.getSubjectModifier())
                 .operator(predicateDesc.getOperator())
                 .literal("new BigDecimal(\"" + predicateDesc.getLiteral() + "\")")
                 .build());

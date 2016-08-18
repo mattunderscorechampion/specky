@@ -75,7 +75,8 @@ public final class SpeckyWritingContext {
     public void write() throws IOException, FormatterException {
         if (consumed.compareAndSet(false, true)) {
             for (final JavaFile file : javaFiles) {
-                final String formattedSource = codeFormatter.formatSource(file.toString());
+                final String code = file.toString();
+                final String formattedSource = codeFormatter.formatSource(code);
                 Path outputPath = targetPath;
                 final String[] packageNameParts = file.packageName.split("\\.");
                 for (final String packageNamePart : packageNameParts) {

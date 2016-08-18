@@ -218,41 +218,51 @@ public final class SpecBuilder {
             .typeParameters(typeParameters)
             .optional(context.OPTIONAL() != null)
             .defaultValue(defaultValue)
-            .constraint(createConstraint(context.constraint_statement()))
+            .constraint(createConstraint(context.propertyName().getText(), context.constraint_statement()))
             .description(context.StringLiteral() == null ?
                 null :
                 context.StringLiteral().getText().substring(1, context.StringLiteral().getText().length() - 1))
             .build();
     }
 
-    private NFConjoinedDisjointPredicates createConstraint(Specky.Constraint_statementContext statementContext) {
+    private NFConjoinedDisjointPredicates createConstraint(
+            String propertyName,
+            Specky.Constraint_statementContext statementContext) {
         if (statementContext == null) {
             return null;
         }
 
         final Specky.Constraint_conjunctions_expressionContext expression =
             statementContext.constraint_conjunctions_expression();
-        return createConstraint(expression);
+        return createConstraint(propertyName, expression);
     }
 
-    private NFConjoinedDisjointPredicates createConstraint(Specky.Constraint_conjunctions_expressionContext expression) {
+    private NFConjoinedDisjointPredicates createConstraint(
+            String propertyName,
+            Specky.Constraint_conjunctions_expressionContext expression) {
         final List<Specky.Constraint_disjunctions_expressionContext> subexpressions =
             expression.constraint_disjunctions_expression();
 
         return NFConjoinedDisjointPredicates
             .builder()
-            .predicates(subexpressions.stream().map(this::createConstraint).collect(toList()))
+            .predicates(subexpressions.stream().map(expr -> createConstraint(propertyName, expr)).collect(toList()))
             .build();
     }
 
-    private NFDisjointPredicates createConstraint(Specky.Constraint_disjunctions_expressionContext expression) {
+    private NFDisjointPredicates createConstraint(
+            String propertyName,
+            Specky.Constraint_disjunctions_expressionContext expression) {
         return NFDisjointPredicates
             .builder()
-            .predicates(expression.constraint_expression().stream().map(this::createConstraint).collect(toList()))
+            .predicates(expression
+                .constraint_expression()
+                .stream()
+                .map(expr -> createConstraint(propertyName, expr))
+                .collect(toList()))
             .build();
     }
 
-    private PredicateDesc createConstraint(Specky.Constraint_expressionContext expression) {
+    private PredicateDesc createConstraint(String propertyName, Specky.Constraint_expressionContext expression) {
         final Specky.Constraint_predicateContext predicate = expression.constraint_predicate();
         final Specky.Constraint_expressionContext subexpression = expression.constraint_expression();
 
@@ -261,23 +271,27 @@ public final class SpecBuilder {
         if (predicate != null) {
             return PredicateDesc
                 .builder()
+                .subject(propertyName)
                 .operator(toConstraintOperator(predicate.constraint_operator()))
                 .literal(predicate.constraint_literal().getText())
                 .build();
         }
         else if (expression.NEGATION() != null) {
-            final PredicateDesc predicateToNegate = createConstraint(subexpression);
+            final PredicateDesc predicateToNegate = createConstraint(propertyName, subexpression);
             return PredicateDesc
                 .builder()
+                .subject(predicateToNegate.getSubject())
+                .subjectModifier(predicateToNegate.getSubjectModifier())
                 .operator(negateOperator(predicateToNegate.getOperator()))
                 .literal(predicateToNegate.getLiteral())
                 .build();
         }
         else {
-            final PredicateDesc predicateOfSubject = createConstraint(subexpression);
+            final PredicateDesc predicateOfSubject = createConstraint(propertyName, subexpression);
             return PredicateDesc
                 .builder()
-                .subject(expression.HAS_SOME() != null ? SubjectModifier.HAS_SOME : SubjectModifier.SIZE_OF)
+                .subject(propertyName)
+                .subjectModifier(expression.HAS_SOME() != null ? SubjectModifier.HAS_SOME : SubjectModifier.SIZE_OF)
                 .operator(predicateOfSubject.getOperator())
                 .literal(predicateOfSubject.getLiteral())
                 .build();

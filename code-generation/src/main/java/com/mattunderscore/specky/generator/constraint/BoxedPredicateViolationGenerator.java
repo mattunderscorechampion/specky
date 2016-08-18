@@ -38,7 +38,7 @@ public final class BoxedPredicateViolationGenerator implements PropertyPredicate
     @Override
     public String generate(PropertyDesc propertyDesc, PredicateDesc predicateDesc) {
         final ConstraintOperator operator = predicateDesc.getOperator();
-        final String propertyName = propertyDesc.getName();
+        final String propertyName = predicateDesc.getSubject();
         switch (operator) {
             case GREATER_THAN:
                 return propertyName + ".compareTo(" + predicateDesc.getLiteral() + ") <= 0";

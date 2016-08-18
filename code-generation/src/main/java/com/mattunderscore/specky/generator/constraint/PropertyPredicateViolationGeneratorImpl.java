@@ -91,15 +91,16 @@ public final class PropertyPredicateViolationGeneratorImpl implements PropertyPr
     }
 
     private String generateCollectionConstraint(PropertyDesc propertyDesc, PredicateDesc predicateDesc) {
-        if (predicateDesc.getSubject() == SubjectModifier.SIZE_OF) {
+        if (predicateDesc.getSubjectModifier() == SubjectModifier.SIZE_OF) {
             final PropertyDesc modifiedSubject  = PropertyDesc
                 .builder()
-                .name(propertyDesc.getName() + ".size()")
+                .name(predicateDesc.getSubject() + ".size()")
                 .type("int")
                 .optional(propertyDesc.isOptional())
                 .build();
             final PredicateDesc modifiedPredicate = PredicateDesc
                 .builder()
+                .subject(modifiedSubject.getName())
                 .operator(predicateDesc.getOperator())
                 .literal(predicateDesc.getLiteral())
                 .build();
@@ -111,13 +112,14 @@ public final class PropertyPredicateViolationGeneratorImpl implements PropertyPr
     }
 
     private void validateSubjectModifier(PredicateDesc predicateDesc, String type) {
-        if (predicateDesc.getSubject() == SubjectModifier.IDENTITY && COLLECTION_TYPES.contains(type)) {
+        if (predicateDesc.getSubjectModifier() == SubjectModifier.IDENTITY && COLLECTION_TYPES.contains(type)) {
 
             throw new IllegalArgumentException("A subject modifier is required for working on collections");
         }
-        else if (predicateDesc.getSubject() != SubjectModifier.IDENTITY && !COLLECTION_TYPES.contains(type)) {
+        else if (predicateDesc.getSubjectModifier() != SubjectModifier.IDENTITY && !COLLECTION_TYPES.contains(type)) {
 
-            throw new IllegalArgumentException("A subject modifier is only allowed for working on collections, not " + type);
+            throw new IllegalArgumentException(
+                "A subject modifier is only allowed for working on collections, not " + type);
         }
     }
 }
