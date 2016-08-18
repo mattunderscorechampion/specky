@@ -48,7 +48,7 @@ value NFDisjointPredicates "Disjunction of predicates."
     options
         immutable builder
 
-value NFConjoinedDisjointPredicates "Conujunction of disjunctions of predicates."
+value NFConjoinedDisjointPredicates "Conjunction of disjunctions of predicates."
     properties
         List<NFDisjointPredicates> predicates "The disjunctions of predicates."
     options
