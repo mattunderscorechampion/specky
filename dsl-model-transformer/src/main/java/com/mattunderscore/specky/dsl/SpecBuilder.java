@@ -107,7 +107,7 @@ public final class SpecBuilder {
                         .ifThen(
                             licence.Identifier() != null,
                             licenceBuilder -> licenceBuilder.licence(licence.Identifier().getText()))
-                        .licence(licence.string_value().getText())
+                        .licence(toValue(licence.string_value()))
                         .build())
                     .collect(toList())))
             .packageName(context.package_name().qualifiedName().getText())
