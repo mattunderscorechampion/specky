@@ -7,6 +7,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.value.resolver.OptionalValueResolver;
 import org.junit.Test;
 
@@ -65,7 +66,8 @@ public final class ModelGeneratorTest {
             new PropertyTypeResolver(resolver),
             new CompositeValueResolver()
                 .with(new JavaStandardDefaultValueResolver())
-                .with(new NullValueResolver()));
+                .with(new NullValueResolver()),
+            new LicenceResolver());
 
         final SpecDesc specDesc = generator.get();
 
@@ -125,7 +127,8 @@ public final class ModelGeneratorTest {
             new CompositeValueResolver()
                 .with(new OptionalValueResolver())
                 .with(new JavaStandardDefaultValueResolver())
-                .with(new NullValueResolver()));
+                .with(new NullValueResolver()),
+            new LicenceResolver());
 
         final SpecDesc specDesc = generator.get();
 
@@ -180,7 +183,8 @@ public final class ModelGeneratorTest {
             new PropertyTypeResolver(resolver),
             new CompositeValueResolver()
                 .with(new JavaStandardDefaultValueResolver())
-                .with(new NullValueResolver()));
+                .with(new NullValueResolver()),
+            new LicenceResolver());
 
         final SpecDesc specDesc = generator.get();
 

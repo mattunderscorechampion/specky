@@ -25,6 +25,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.dsl;
 
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
+
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.mattunderscore.specky.constraint.model.ConstraintOperator;
 import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
 import com.mattunderscore.specky.constraint.model.NFDisjointPredicates;
@@ -34,6 +42,7 @@ import com.mattunderscore.specky.dsl.model.DSLAbstractTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
 import com.mattunderscore.specky.dsl.model.DSLImplementationDesc;
 import com.mattunderscore.specky.dsl.model.DSLImportDesc;
+import com.mattunderscore.specky.dsl.model.DSLLicence;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
@@ -45,13 +54,6 @@ import com.mattunderscore.specky.parser.Specky.PropertyContext;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.Specky.TypeParametersContext;
 import com.mattunderscore.specky.parser.Specky.TypeSpecContext;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
-import java.util.List;
-
-import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Processor for the ANTLR4 generated AST. Returns a better representation of the DSL.
@@ -96,7 +98,18 @@ public final class SpecBuilder {
         return DSLSpecDesc
             .builder()
             .ifThen(context.author() != null, builder -> builder.author(toValue(context.author().string_value())))
-            .ifThen(context.licence() != null, builder -> builder.licence(toValue(context.licence().string_value())))
+            .ifThen(
+                context.licenceDeclaration() != null,
+                builder -> builder.licences(context.licenceDeclaration()
+                    .stream()
+                    .map(licence -> DSLLicence
+                        .builder()
+                        .ifThen(
+                            licence.Identifier() != null,
+                            licenceBuilder -> licenceBuilder.licence(licence.Identifier().getText()))
+                        .licence(licence.string_value().getText())
+                        .build())
+                    .collect(toList())))
             .packageName(context.package_name().qualifiedName().getText())
             .importTypes(imports)
             .views(context

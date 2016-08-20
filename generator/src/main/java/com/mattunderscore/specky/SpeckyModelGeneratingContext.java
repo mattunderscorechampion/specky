@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
+import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.generator.ModelGenerator;
 import com.mattunderscore.specky.type.resolver.PropertyTypeResolver;
@@ -67,6 +68,16 @@ public final class SpeckyModelGeneratingContext {
             spec.getTypes().forEach(type -> typeResolver.registerTypeName(spec.getPackageName(), type.getName()));
         });
 
+        final LicenceResolver licenceResolver = new LicenceResolver();
+        specs.stream().map(DSLSpecDesc::getLicences).flatMap(List::stream).forEach(dslLicence -> {
+            if (dslLicence.getIdentifier() == null) {
+                licenceResolver.register(dslLicence.getLicence());
+            }
+            else {
+                licenceResolver.register(dslLicence.getIdentifier(), dslLicence.getLicence());
+            }
+        });
+
         final TypeResolver resolver = new TypeResolverBuilder().registerResolver(typeResolver).build();
         modelGenerator = new ModelGenerator(
             specs,
@@ -76,7 +87,8 @@ public final class SpeckyModelGeneratingContext {
                 .with(new OptionalValueResolver())
                 .with(new JavaStandardDefaultValueResolver())
                 .with(mutableValueResolver)
-                .with(new NullValueResolver()));
+                .with(new NullValueResolver()),
+            licenceResolver);
     }
 
     /**

@@ -41,6 +41,7 @@ import com.mattunderscore.specky.dsl.model.DSLImplementationDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
+import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
@@ -60,6 +61,7 @@ public final class TypeDeriver {
     private final PropertyTypeResolver propertyTypeResolver;
     private final DefaultValueResolver valueResolver;
     private final Map<String, AbstractTypeDesc> views;
+    private final LicenceResolver licenceResolver;
 
     /**
      * Constructor.
@@ -68,11 +70,13 @@ public final class TypeDeriver {
             TypeResolver typeResolver,
             PropertyTypeResolver propertyTypeResolver,
             DefaultValueResolver valueResolver,
-            Map<String, AbstractTypeDesc> views) {
+            Map<String, AbstractTypeDesc> views,
+            LicenceResolver licenceResolver) {
         this.typeResolver = typeResolver;
         this.propertyTypeResolver = propertyTypeResolver;
         this.valueResolver = valueResolver;
         this.views = views;
+        this.licenceResolver = licenceResolver;
     }
 
     /**
@@ -82,7 +86,7 @@ public final class TypeDeriver {
         if (dslImplementationDesc instanceof DSLValueDesc) {
             return ValueDesc
                 .builder()
-                .licence(specDesc.getLicence())
+                .licence(licenceResolver.resolve("").orElse(null))
                 .author(specDesc.getAuthor())
                 .packageName(specDesc.getPackageName())
                 .name(dslImplementationDesc.getName())

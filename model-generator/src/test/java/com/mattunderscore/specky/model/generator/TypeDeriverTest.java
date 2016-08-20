@@ -17,6 +17,7 @@ import com.mattunderscore.specky.dsl.model.DSLAbstractTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
+import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.ImplementationDesc;
@@ -131,7 +132,7 @@ public final class TypeDeriverTest {
                     .build()))
                 .build());
 
-        final TypeDeriver deriver = new TypeDeriver(typeResolver, propertyTypeResolver, valueResolver, types);
+        final TypeDeriver deriver = new TypeDeriver(typeResolver, propertyTypeResolver, valueResolver, types, new LicenceResolver());
 
         final ImplementationDesc implementationDesc = deriver.deriveType(spec, valueDesc);
 

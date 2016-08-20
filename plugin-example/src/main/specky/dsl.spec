@@ -67,10 +67,17 @@ value DSLBeanDesc : DSLImplementationDesc "Description of a bean type."
     options
         immutable builder
 
+value DSLLicence "Licence information."
+    properties
+        optional String identifier "Identifier for licence information."
+        optional String licence "Copyright and licence information."
+    options
+        immutable builder
+
 value DSLSpecDesc "Description of a specification."
     properties
         optional String author "Author of the specification."
-        optional String licence "Copyright and licence information."
+        List<DSLLicence> licences "Copyright and licence information."
         String packageName "Name of the package the specification describes."
         List<DSLImportDesc> importTypes "Types from outside the specification to import."
         List<DSLImplementationDesc> types "Types of the specification."

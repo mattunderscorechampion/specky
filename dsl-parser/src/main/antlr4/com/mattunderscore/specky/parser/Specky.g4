@@ -135,7 +135,7 @@ supertypes
     ;
 
 implementationSpec
-    :   (VALUE | BEAN ) INLINE_WS Identifier (INLINE_WS supertypes)? (INLINE_WS StringLiteral)? LINE_BREAK
+    :   (VALUE | BEAN) INLINE_WS Identifier (INLINE_WS supertypes)? (INLINE_WS StringLiteral)? LINE_BREAK
         (INLINE_WS? props)?
         (INLINE_WS? opts)?
     ;
@@ -149,12 +149,12 @@ author
     :   AUTHOR INLINE_WS string_value
     ;
 
-licence
-    :   LICENCE INLINE_WS string_value
+licenceDeclaration
+    :   LICENCE (INLINE_WS Identifier)? INLINE_WS string_value
     ;
 
 sectionContent
-    :   (licence LINE_BREAK+)?
+    :   (licenceDeclaration LINE_BREAK+)*
         (author LINE_BREAK+)?
         package_name LINE_BREAK+
         (imports LINE_BREAK*)?

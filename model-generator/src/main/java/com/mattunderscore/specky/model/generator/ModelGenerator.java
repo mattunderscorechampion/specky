@@ -36,6 +36,7 @@ import java.util.function.Supplier;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
+import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
@@ -53,6 +54,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
     private final TypeResolver typeResolver;
     private final PropertyTypeResolver propertyTypeResolver;
     private final DefaultValueResolver valueResolver;
+    private final LicenceResolver licenceResolver;
 
     /**
      * Constructor.
@@ -61,11 +63,13 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             List<DSLSpecDesc> dslSpecs,
             TypeResolver typeResolver,
             PropertyTypeResolver propertyTypeResolver,
-            DefaultValueResolver valueResolver) {
+            DefaultValueResolver valueResolver,
+            LicenceResolver licenceResolver) {
         this.dslSpecs = dslSpecs;
         this.typeResolver = typeResolver;
         this.propertyTypeResolver = propertyTypeResolver;
         this.valueResolver = valueResolver;
+        this.licenceResolver = licenceResolver;
     }
 
     @Override
@@ -80,7 +84,12 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
         final Map<String, AbstractTypeDesc> mappedViews = views
             .stream()
             .collect(toMap(viewDesc -> viewDesc.getPackageName() + "." + viewDesc.getName(), viewDesc -> viewDesc));
-        final TypeDeriver typeDeriver = new TypeDeriver(typeResolver, propertyTypeResolver, valueResolver, mappedViews);
+        final TypeDeriver typeDeriver = new TypeDeriver(
+            typeResolver,
+            propertyTypeResolver,
+            valueResolver,
+            mappedViews,
+            licenceResolver);
 
         return SpecDesc
             .builder()
@@ -119,7 +128,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
 
         return AbstractTypeDesc
             .builder()
-            .licence(dslSpecDesc.getLicence())
+            .licence(licenceResolver.resolve("").orElse(null))
             .author(dslSpecDesc.getAuthor())
             .packageName(dslSpecDesc.getPackageName())
             .name(dslTypeDesc.getName())
