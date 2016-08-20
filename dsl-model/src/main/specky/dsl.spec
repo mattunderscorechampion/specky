@@ -44,12 +44,20 @@ value DSLPropertyDesc "Description of a property."
     options
         immutable builder
 
+value DSLLicence "Licence information."
+    properties
+        optional String identifier "Identifier for licence information."
+        optional String licence "Copyright and licence information."
+    options
+        immutable builder
+
 type DSLTypeDesc "Description of a type."
     properties
         String name "Name of the type."
         List<DSLPropertyDesc> properties "Properties of the type."
         List<String> supertypes "Supertypes of the type."
         optional String description "Description of the type."
+        optional DSLLicence licence "Copyright and licence information."
 
 value DSLAbstractTypeDesc : DSLTypeDesc "Description of an abstract type."
     options
@@ -64,13 +72,6 @@ value DSLValueDesc : DSLImplementationDesc "Description of a value type."
         immutable builder
 
 value DSLBeanDesc : DSLImplementationDesc "Description of a bean type."
-    options
-        immutable builder
-
-value DSLLicence "Licence information."
-    properties
-        optional String identifier "Identifier for licence information."
-        optional String licence "Copyright and licence information."
     options
         immutable builder
 

@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.mattunderscore.specky.dsl.model.DSLLicence;
+
 /**
  * Licence resolver.
  *
@@ -60,7 +62,24 @@ public final class LicenceResolver {
     /**
      * @return the licence mapped to the name or the default licence
      */
-    public Optional<String> resolve(String name) {
-        return Optional.ofNullable(licences.getOrDefault(name, defaultLicence));
+    public Optional<String> resolve(DSLLicence dslLicence) {
+        if (dslLicence == null) {
+            return Optional.ofNullable(defaultLicence);
+        }
+
+        final String inlineLicence = dslLicence.getLicence();
+        if (inlineLicence != null) {
+            return Optional.of(inlineLicence);
+        }
+
+        final String resolvedLicence = licences.get(dslLicence.getIdentifier());
+        if (resolvedLicence != null) {
+            return Optional.of(resolvedLicence);
+        }
+
+        throw new IllegalStateException(
+            "An unknown name " +
+            dslLicence.getIdentifier() +
+            " was used to reference a licence");
     }
 }

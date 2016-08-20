@@ -93,7 +93,7 @@ public final class TypeDeriver {
         if (dslImplementationDesc instanceof DSLValueDesc) {
             return ValueDesc
                 .builder()
-                .licence(licenceResolver.resolve("").orElse(null))
+                .licence(licenceResolver.resolve(dslImplementationDesc.getLicence()).orElse(null))
                 .author(specDesc.getAuthor())
                 .packageName(specDesc.getPackageName())
                 .name(dslImplementationDesc.getName())

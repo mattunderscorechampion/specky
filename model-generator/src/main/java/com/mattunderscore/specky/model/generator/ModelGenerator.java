@@ -134,7 +134,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
 
         return AbstractTypeDesc
             .builder()
-            .licence(licenceResolver.resolve("").orElse(null))
+            .licence(licenceResolver.resolve(dslTypeDesc.getLicence()).orElse(null))
             .author(dslSpecDesc.getAuthor())
             .packageName(dslSpecDesc.getPackageName())
             .name(dslTypeDesc.getName())

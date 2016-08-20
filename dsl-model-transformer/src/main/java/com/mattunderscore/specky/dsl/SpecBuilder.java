@@ -106,7 +106,7 @@ public final class SpecBuilder {
                         .builder()
                         .ifThen(
                             licence.Identifier() != null,
-                            licenceBuilder -> licenceBuilder.licence(licence.Identifier().getText()))
+                            licenceBuilder -> licenceBuilder.identifier(licence.Identifier().getText()))
                         .licence(toValue(licence.string_value()))
                         .build())
                     .collect(toList())))
@@ -127,6 +127,19 @@ public final class SpecBuilder {
 
     private DSLImplementationDesc createType(ImplementationSpecContext context) {
         final String typeName = context.Identifier().getText();
+
+        final Specky.LicenceContext licence = context.licence();
+        DSLLicence dslLicence = null;
+        if (licence != null) {
+            dslLicence = DSLLicence
+                .builder()
+                .ifThen(
+                    licence.Identifier() != null,
+                    licenceBuilder -> licenceBuilder.identifier(licence.Identifier().getText()))
+                .licence(toValue(licence.string_value()))
+                .build();
+        }
+
         final List<DSLPropertyDesc> properties = context.props() == null ?
             emptyList() :
             context
@@ -152,6 +165,7 @@ public final class SpecBuilder {
             return DSLValueDesc
                 .builder()
                 .name(typeName)
+                .licence(dslLicence)
                 .properties(properties)
                 .constructionMethod(constructionMethod)
                 .supertypes(supertypes)
@@ -164,6 +178,7 @@ public final class SpecBuilder {
             return DSLBeanDesc
                 .builder()
                 .name(typeName)
+                .licence(dslLicence)
                 .properties(properties)
                 .constructionMethod(constructionMethod)
                 .supertypes(supertypes)
@@ -175,6 +190,17 @@ public final class SpecBuilder {
     }
 
     private DSLAbstractTypeDesc createView(TypeSpecContext context) {
+        final Specky.LicenceContext licence = context.licence();
+        DSLLicence dslLicence = null;
+        if (licence != null) {
+            dslLicence = DSLLicence
+                .builder()
+                .ifThen(
+                    licence.Identifier() != null,
+                    licenceBuilder -> licenceBuilder.identifier(licence.Identifier().getText()))
+                .licence(toValue(licence.string_value()))
+                .build();
+        }
         final String typeName = context.Identifier().getText();
         final List<String> supertypes;
         if (context.supertypes() != null) {
@@ -199,6 +225,7 @@ public final class SpecBuilder {
         return DSLAbstractTypeDesc
             .builder()
             .name(typeName)
+            .licence(dslLicence)
             .properties(properties)
             .supertypes(supertypes)
             .description(context.StringLiteral() == null ?
@@ -373,6 +400,10 @@ public final class SpecBuilder {
     }
 
     private String toValue(Specky.String_valueContext stringValue) {
+        if (stringValue == null) {
+            return null;
+        }
+
         final TerminalNode multiline = stringValue.MULTILINE_STRING_LITERAL();
         if (multiline != null) {
             final String literal = multiline.getText();
