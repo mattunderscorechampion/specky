@@ -66,8 +66,7 @@ public final class ModelGeneratorTest {
             new PropertyTypeResolver(resolver),
             new CompositeValueResolver()
                 .with(new JavaStandardDefaultValueResolver())
-                .with(new NullValueResolver()),
-            new LicenceResolver());
+                .with(new NullValueResolver()));
 
         final SpecDesc specDesc = generator.get();
 
@@ -127,8 +126,7 @@ public final class ModelGeneratorTest {
             new CompositeValueResolver()
                 .with(new OptionalValueResolver())
                 .with(new JavaStandardDefaultValueResolver())
-                .with(new NullValueResolver()),
-            new LicenceResolver());
+                .with(new NullValueResolver()));
 
         final SpecDesc specDesc = generator.get();
 
@@ -183,8 +181,7 @@ public final class ModelGeneratorTest {
             new PropertyTypeResolver(resolver),
             new CompositeValueResolver()
                 .with(new JavaStandardDefaultValueResolver())
-                .with(new NullValueResolver()),
-            new LicenceResolver());
+                .with(new NullValueResolver()));
 
         final SpecDesc specDesc = generator.get();
 

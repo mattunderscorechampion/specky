@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.generator.ModelGenerator;
 import com.mattunderscore.specky.type.resolver.PropertyTypeResolver;
@@ -49,46 +48,10 @@ import com.mattunderscore.specky.value.resolver.OptionalValueResolver;
  */
 public final class SpeckyModelGeneratingContext {
     private final AtomicBoolean consumed = new AtomicBoolean(false);
-    private final ModelGenerator modelGenerator;
+    private final List<DSLSpecDesc> specs;
 
     /*package*/ SpeckyModelGeneratingContext(List<DSLSpecDesc> specs) {
-        final SpecTypeResolver typeResolver = new SpecTypeResolver();
-        final MutableValueResolver mutableValueResolver = new MutableValueResolver();
-        specs.forEach(spec -> {
-            spec.getImportTypes().forEach(importDesc -> {
-                final int lastPart = importDesc.getTypeName().lastIndexOf('.');
-                final String packageName = importDesc.getTypeName().substring(0, lastPart);
-                final String typeName = importDesc.getTypeName().substring(lastPart + 1);
-                typeResolver.registerTypeName(packageName, typeName);
-                if (importDesc.getDefaultValue() != null) {
-                    mutableValueResolver.register(importDesc.getTypeName(), importDesc.getDefaultValue());
-                }
-            });
-            spec.getViews().forEach(view -> typeResolver.registerTypeName(spec.getPackageName(), view.getName()));
-            spec.getTypes().forEach(type -> typeResolver.registerTypeName(spec.getPackageName(), type.getName()));
-        });
-
-        final LicenceResolver licenceResolver = new LicenceResolver();
-        specs.stream().map(DSLSpecDesc::getLicences).flatMap(List::stream).forEach(dslLicence -> {
-            if (dslLicence.getIdentifier() == null) {
-                licenceResolver.register(dslLicence.getLicence());
-            }
-            else {
-                licenceResolver.register(dslLicence.getIdentifier(), dslLicence.getLicence());
-            }
-        });
-
-        final TypeResolver resolver = new TypeResolverBuilder().registerResolver(typeResolver).build();
-        modelGenerator = new ModelGenerator(
-            specs,
-            resolver,
-            new PropertyTypeResolver(resolver),
-            new CompositeValueResolver()
-                .with(new OptionalValueResolver())
-                .with(new JavaStandardDefaultValueResolver())
-                .with(mutableValueResolver)
-                .with(new NullValueResolver()),
-            licenceResolver);
+        this.specs = specs;
     }
 
     /**
@@ -97,6 +60,33 @@ public final class SpeckyModelGeneratingContext {
      */
     public SpeckyGeneratingContext generate() {
         if (consumed.compareAndSet(false, true)) {
+            final SpecTypeResolver typeResolver = new SpecTypeResolver();
+            final MutableValueResolver mutableValueResolver = new MutableValueResolver();
+            specs.forEach(spec -> {
+                spec.getImportTypes().forEach(importDesc -> {
+                    final int lastPart = importDesc.getTypeName().lastIndexOf('.');
+                    final String packageName = importDesc.getTypeName().substring(0, lastPart);
+                    final String typeName = importDesc.getTypeName().substring(lastPart + 1);
+                    typeResolver.registerTypeName(packageName, typeName);
+                    if (importDesc.getDefaultValue() != null) {
+                        mutableValueResolver.register(importDesc.getTypeName(), importDesc.getDefaultValue());
+                    }
+                });
+                spec.getViews().forEach(view -> typeResolver.registerTypeName(spec.getPackageName(), view.getName()));
+                spec.getTypes().forEach(type -> typeResolver.registerTypeName(spec.getPackageName(), type.getName()));
+            });
+
+            final TypeResolver resolver = new TypeResolverBuilder().registerResolver(typeResolver).build();
+            final ModelGenerator modelGenerator = new ModelGenerator(
+                specs,
+                resolver,
+                new PropertyTypeResolver(resolver),
+                new CompositeValueResolver()
+                    .with(new OptionalValueResolver())
+                    .with(new JavaStandardDefaultValueResolver())
+                    .with(mutableValueResolver)
+                    .with(new NullValueResolver()));
+
             final SpecDesc specDesc = modelGenerator.get();
             return new SpeckyGeneratingContext(specDesc);
         }

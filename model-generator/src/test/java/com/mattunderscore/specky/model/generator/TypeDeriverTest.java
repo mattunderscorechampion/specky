@@ -132,7 +132,7 @@ public final class TypeDeriverTest {
                     .build()))
                 .build());
 
-        final TypeDeriver deriver = new TypeDeriver(typeResolver, propertyTypeResolver, valueResolver, types, new LicenceResolver());
+        final TypeDeriver deriver = new TypeDeriver(typeResolver, propertyTypeResolver, valueResolver, types);
 
         final ImplementationDesc implementationDesc = deriver.deriveType(spec, valueDesc);
 

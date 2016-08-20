@@ -61,7 +61,6 @@ public final class TypeDeriver {
     private final PropertyTypeResolver propertyTypeResolver;
     private final DefaultValueResolver valueResolver;
     private final Map<String, AbstractTypeDesc> views;
-    private final LicenceResolver licenceResolver;
 
     /**
      * Constructor.
@@ -70,19 +69,27 @@ public final class TypeDeriver {
             TypeResolver typeResolver,
             PropertyTypeResolver propertyTypeResolver,
             DefaultValueResolver valueResolver,
-            Map<String, AbstractTypeDesc> views,
-            LicenceResolver licenceResolver) {
+            Map<String, AbstractTypeDesc> views) {
         this.typeResolver = typeResolver;
         this.propertyTypeResolver = propertyTypeResolver;
         this.valueResolver = valueResolver;
         this.views = views;
-        this.licenceResolver = licenceResolver;
     }
 
     /**
      * @return the fully derived type
      */
     public ImplementationDesc deriveType(DSLSpecDesc specDesc, DSLImplementationDesc dslImplementationDesc) {
+        final LicenceResolver licenceResolver = new LicenceResolver();
+        specDesc.getLicences().forEach(dslLicence -> {
+            if (dslLicence.getIdentifier() == null) {
+                licenceResolver.register(dslLicence.getLicence());
+            }
+            else {
+                licenceResolver.register(dslLicence.getIdentifier(), dslLicence.getLicence());
+            }
+        });
+
         if (dslImplementationDesc instanceof DSLValueDesc) {
             return ValueDesc
                 .builder()

@@ -54,7 +54,6 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
     private final TypeResolver typeResolver;
     private final PropertyTypeResolver propertyTypeResolver;
     private final DefaultValueResolver valueResolver;
-    private final LicenceResolver licenceResolver;
 
     /**
      * Constructor.
@@ -63,13 +62,11 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             List<DSLSpecDesc> dslSpecs,
             TypeResolver typeResolver,
             PropertyTypeResolver propertyTypeResolver,
-            DefaultValueResolver valueResolver,
-            LicenceResolver licenceResolver) {
+            DefaultValueResolver valueResolver) {
         this.dslSpecs = dslSpecs;
         this.typeResolver = typeResolver;
         this.propertyTypeResolver = propertyTypeResolver;
         this.valueResolver = valueResolver;
-        this.licenceResolver = licenceResolver;
     }
 
     @Override
@@ -88,8 +85,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             typeResolver,
             propertyTypeResolver,
             valueResolver,
-            mappedViews,
-            licenceResolver);
+            mappedViews);
 
         return SpecDesc
             .builder()
@@ -125,6 +121,16 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .stream()
             .map(this::getViewProperty)
             .collect(toList());
+
+        final LicenceResolver licenceResolver = new LicenceResolver();
+        dslSpecDesc.getLicences().forEach(dslLicence -> {
+            if (dslLicence.getIdentifier() == null) {
+                licenceResolver.register(dslLicence.getLicence());
+            }
+            else {
+                licenceResolver.register(dslLicence.getIdentifier(), dslLicence.getLicence());
+            }
+        });
 
         return AbstractTypeDesc
             .builder()
