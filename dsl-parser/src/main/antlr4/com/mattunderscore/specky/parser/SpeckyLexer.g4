@@ -141,6 +141,10 @@ LINE_COMMENT
     :   '//' ~[\r\n]* -> skip
     ;
 
+QUALIFIED_NAME
+    :   Letter LetterOrDigit* (PACKAGE_SEPARATOR LetterOrDigit+)+
+    ;
+
 Identifier
     :   Letter LetterOrDigit*
     ;

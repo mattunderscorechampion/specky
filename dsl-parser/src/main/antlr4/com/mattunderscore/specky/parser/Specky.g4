@@ -104,7 +104,7 @@ property
     ;
 
 qualifiedName
-    :   Identifier (PACKAGE_SEPARATOR Identifier)*
+    :   QUALIFIED_NAME
     ;
 
 package_name
