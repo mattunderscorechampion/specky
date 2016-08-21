@@ -17,19 +17,11 @@ import com.mattunderscore.specky.dsl.model.DSLAbstractTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
-import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
-import com.mattunderscore.specky.type.resolver.PropertyTypeResolver;
-import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
-import com.mattunderscore.specky.type.resolver.TypeResolver;
-import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
-import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
-import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
-import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver;
-import com.mattunderscore.specky.value.resolver.NullValueResolver;
+import com.mattunderscore.specky.model.generator.scope.ScopeResolver;
 
 /**
  * Unit tests for {@link TypeDeriver}.
@@ -98,14 +90,9 @@ public final class TypeDeriverTest {
             .types(singletonList(valueDesc))
             .build();
 
-        final SpecTypeResolver typeResolver = new SpecTypeResolver();
-        spec.getViews().forEach(view -> typeResolver.registerTypeName(spec.getPackageName(), view.getName()));
-        spec.getTypes().forEach(value -> typeResolver.registerTypeName(spec.getPackageName(), value.getName()));
-        final TypeResolver resolver = new TypeResolverBuilder().registerResolver(typeResolver).build();
-        final PropertyTypeResolver propertyTypeResolver = new PropertyTypeResolver(resolver);
-        final DefaultValueResolver valueResolver = new CompositeValueResolver()
-            .with(new JavaStandardDefaultValueResolver())
-            .with(new NullValueResolver());
+
+        final ScopeResolver scopeResolver = new ScopeResolver().createScopes(singletonList(spec));
+
         final Map<String, AbstractTypeDesc> types = new HashMap<>();
         types.put(
             spec.getPackageName() + "." + superType.getName(),
@@ -132,7 +119,7 @@ public final class TypeDeriverTest {
                     .build()))
                 .build());
 
-        final TypeDeriver deriver = new TypeDeriver(typeResolver, propertyTypeResolver, valueResolver, types);
+        final TypeDeriver deriver = new TypeDeriver(scopeResolver, types);
 
         final ImplementationDesc implementationDesc = deriver.deriveType(spec, valueDesc);
 

@@ -41,9 +41,8 @@ import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.type.resolver.PropertyTypeResolver;
-import com.mattunderscore.specky.type.resolver.TypeResolver;
-import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
+import com.mattunderscore.specky.model.generator.scope.Scope;
+import com.mattunderscore.specky.model.generator.scope.ScopeResolver;
 
 /**
  * Generator for the model from the DSL model.
@@ -51,22 +50,16 @@ import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
  */
 public final class ModelGenerator implements Supplier<SpecDesc> {
     private final List<DSLSpecDesc> dslSpecs;
-    private final TypeResolver typeResolver;
-    private final PropertyTypeResolver propertyTypeResolver;
-    private final DefaultValueResolver valueResolver;
+    private final ScopeResolver scopeResolver;
 
     /**
      * Constructor.
      */
     public ModelGenerator(
             List<DSLSpecDesc> dslSpecs,
-            TypeResolver typeResolver,
-            PropertyTypeResolver propertyTypeResolver,
-            DefaultValueResolver valueResolver) {
+            ScopeResolver scopeResolver) {
         this.dslSpecs = dslSpecs;
-        this.typeResolver = typeResolver;
-        this.propertyTypeResolver = propertyTypeResolver;
-        this.valueResolver = valueResolver;
+        this.scopeResolver = scopeResolver;
     }
 
     @Override
@@ -81,11 +74,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
         final Map<String, AbstractTypeDesc> mappedViews = views
             .stream()
             .collect(toMap(viewDesc -> viewDesc.getPackageName() + "." + viewDesc.getName(), viewDesc -> viewDesc));
-        final TypeDeriver typeDeriver = new TypeDeriver(
-            typeResolver,
-            propertyTypeResolver,
-            valueResolver,
-            mappedViews);
+        final TypeDeriver typeDeriver = new TypeDeriver(scopeResolver, mappedViews);
 
         return SpecDesc
             .builder()
@@ -119,18 +108,10 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
         final List<PropertyDesc> properties = dslTypeDesc
             .getProperties()
             .stream()
-            .map(this::getViewProperty)
+            .map(dslProperty -> getViewProperty(dslSpecDesc, dslProperty))
             .collect(toList());
 
-        final LicenceResolver licenceResolver = new LicenceResolver();
-        dslSpecDesc.getLicences().forEach(dslLicence -> {
-            if (dslLicence.getIdentifier() == null) {
-                licenceResolver.register(dslLicence.getLicence());
-            }
-            else {
-                licenceResolver.register(dslLicence.getIdentifier(), dslLicence.getLicence());
-            }
-        });
+        final LicenceResolver licenceResolver = scopeResolver.resolve(dslSpecDesc).getLicenceResolver();
 
         return AbstractTypeDesc
             .builder()
@@ -144,8 +125,9 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .build();
     }
 
-    private PropertyDesc getViewProperty(DSLPropertyDesc dslPropertyDesc) {
-        final String resolvedType = propertyTypeResolver.resolveOrThrow(dslPropertyDesc);
+    private PropertyDesc getViewProperty(DSLSpecDesc dslSpecDesc, DSLPropertyDesc dslPropertyDesc) {
+        final Scope scope = scopeResolver.resolve(dslSpecDesc);
+        final String resolvedType = scope.getPropertyTypeResolver().resolveOrThrow(dslPropertyDesc);
         return PropertyDesc
             .builder()
             .name(dslPropertyDesc.getName())
@@ -153,9 +135,9 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .typeParameters(dslPropertyDesc
                 .getTypeParameters()
                 .stream()
-                .map(typeResolver::resolveOrThrow)
+                .map(scope.getTypeResolver()::resolveOrThrow)
                 .collect(toList()))
-            .defaultValue(getDefaultValue(dslPropertyDesc, resolvedType))
+            .defaultValue(getDefaultValue(dslSpecDesc, dslPropertyDesc, resolvedType))
             .constraint(dslPropertyDesc.getConstraint())
             .optional(dslPropertyDesc.isOptional())
             .override(true)
@@ -163,14 +145,18 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .build();
     }
 
-    private String getDefaultValue(DSLPropertyDesc dslPropertyDesc, String resolvedType) {
+    private String getDefaultValue(DSLSpecDesc dslSpecDesc, DSLPropertyDesc dslPropertyDesc, String resolvedType) {
         final String defaultValue = dslPropertyDesc.getDefaultValue();
 
         if (defaultValue != null) {
             return defaultValue;
         }
 
-        final String typeDefaultValue = valueResolver.resolve(dslPropertyDesc, resolvedType).get();
+        final String typeDefaultValue = scopeResolver
+            .resolve(dslSpecDesc)
+            .getValueResolver()
+            .resolve(dslPropertyDesc, resolvedType)
+            .get();
         if (!dslPropertyDesc.isOptional() && "null".equals(typeDefaultValue)) {
             throw new IllegalStateException(
                 "The property " + dslPropertyDesc.getName() + " is not optional but has no default type");

@@ -23,46 +23,35 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky;
+package com.mattunderscore.specky.model.generator.scope;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.generator.ModelGenerator;
-import com.mattunderscore.specky.model.generator.scope.ScopeResolver;
+import com.mattunderscore.specky.licence.resolver.LicenceResolver;
+import com.mattunderscore.specky.type.resolver.PropertyTypeResolver;
+import com.mattunderscore.specky.type.resolver.TypeResolver;
+import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 
 /**
- * Generates a model from the DSL model.
- *
- * @author Matt Champion on 13/07/2016
+ * Scope to resolve names, symbols and values in.
+ * @author Matt Champion on 21/08/2016
  */
-public final class SpeckyModelGeneratingContext {
-    private final AtomicBoolean consumed = new AtomicBoolean(false);
-    private final List<DSLSpecDesc> specs;
-
-    /*package*/ SpeckyModelGeneratingContext(List<DSLSpecDesc> specs) {
-        this.specs = specs;
-    }
+public interface Scope {
+    /**
+     * @return the value resolver for the scope
+     */
+    DefaultValueResolver getValueResolver();
 
     /**
-     * Generate the Java code.
-     * @throws IllegalStateException if has been called before
+     * @return the type resolver for the scope
      */
-    public SpeckyGeneratingContext generate() {
-        if (consumed.compareAndSet(false, true)) {
-            final ScopeResolver scopeResolver = new ScopeResolver().createScopes(specs);
+    TypeResolver getTypeResolver();
 
-            final ModelGenerator modelGenerator = new ModelGenerator(
-                specs,
-                scopeResolver);
+    /**
+     * @return the property type resolver for the scope
+     */
+    PropertyTypeResolver getPropertyTypeResolver();
 
-            final SpecDesc specDesc = modelGenerator.get();
-            return new SpeckyGeneratingContext(specDesc);
-        }
-        else {
-            throw new IllegalStateException("Context has already been generated");
-        }
-    }
+    /**
+     * @return the licence resolver for the scope
+     */
+    LicenceResolver getLicenceResolver();
 }

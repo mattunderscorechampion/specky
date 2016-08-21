@@ -7,8 +7,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.mattunderscore.specky.licence.resolver.LicenceResolver;
-import com.mattunderscore.specky.value.resolver.OptionalValueResolver;
 import org.junit.Test;
 
 import com.mattunderscore.specky.dsl.model.DSLAbstractTypeDesc;
@@ -19,13 +17,7 @@ import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.type.resolver.PropertyTypeResolver;
-import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
-import com.mattunderscore.specky.type.resolver.TypeResolver;
-import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
-import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
-import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver;
-import com.mattunderscore.specky.value.resolver.NullValueResolver;
+import com.mattunderscore.specky.model.generator.scope.ScopeResolver;
 
 /**
  * Unit tests for {@link ModelGenerator}.
@@ -56,17 +48,10 @@ public final class ModelGeneratorTest {
                 .build()))
             .build();
 
-        final SpecTypeResolver typeResolver = new SpecTypeResolver();
-        spec.getViews().forEach(view -> typeResolver.registerTypeName(spec.getPackageName(), view.getName()));
-        spec.getTypes().forEach(value -> typeResolver.registerTypeName(spec.getPackageName(), value.getName()));
-        final TypeResolver resolver = new TypeResolverBuilder().registerResolver(typeResolver).build();
+        final ScopeResolver scopeResolver = new ScopeResolver().createScopes(singletonList(spec));
         final ModelGenerator generator = new ModelGenerator(
             singletonList(spec),
-            resolver,
-            new PropertyTypeResolver(resolver),
-            new CompositeValueResolver()
-                .with(new JavaStandardDefaultValueResolver())
-                .with(new NullValueResolver()));
+            scopeResolver);
 
         final SpecDesc specDesc = generator.get();
 
@@ -115,18 +100,10 @@ public final class ModelGeneratorTest {
                 .build()))
             .build();
 
-        final SpecTypeResolver typeResolver = new SpecTypeResolver();
-        spec.getViews().forEach(view -> typeResolver.registerTypeName(spec.getPackageName(), view.getName()));
-        spec.getTypes().forEach(value -> typeResolver.registerTypeName(spec.getPackageName(), value.getName()));
-        final TypeResolver resolver = new TypeResolverBuilder().registerResolver(typeResolver).build();
+        final ScopeResolver scopeResolver = new ScopeResolver().createScopes(singletonList(spec));
         final ModelGenerator generator = new ModelGenerator(
             singletonList(spec),
-            resolver,
-            new PropertyTypeResolver(resolver),
-            new CompositeValueResolver()
-                .with(new OptionalValueResolver())
-                .with(new JavaStandardDefaultValueResolver())
-                .with(new NullValueResolver()));
+            scopeResolver);
 
         final SpecDesc specDesc = generator.get();
 
@@ -171,17 +148,10 @@ public final class ModelGeneratorTest {
                 .build()))
             .build();
 
-        final SpecTypeResolver typeResolver = new SpecTypeResolver();
-        spec.getViews().forEach(view -> typeResolver.registerTypeName(spec.getPackageName(), view.getName()));
-        spec.getTypes().forEach(value -> typeResolver.registerTypeName(spec.getPackageName(), value.getName()));
-        final TypeResolver resolver = new TypeResolverBuilder().registerResolver(typeResolver).build();
+        final ScopeResolver scopeResolver = new ScopeResolver().createScopes(singletonList(spec));
         final ModelGenerator generator = new ModelGenerator(
             singletonList(spec),
-            resolver,
-            new PropertyTypeResolver(resolver),
-            new CompositeValueResolver()
-                .with(new JavaStandardDefaultValueResolver())
-                .with(new NullValueResolver()));
+            scopeResolver);
 
         final SpecDesc specDesc = generator.get();
 
