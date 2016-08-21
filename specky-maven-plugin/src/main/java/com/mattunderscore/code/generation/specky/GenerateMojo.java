@@ -25,16 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.code.generation.specky;
 
-import com.google.googlejavaformat.java.FormatterException;
-import com.mattunderscore.specky.SpeckyDSLFileStreamingContext;
-import com.mattunderscore.specky.SpeckyModelGeneratingContext;
-import com.mattunderscore.specky.SpeckyWritingContext;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.model.fileset.FileSet;
-import org.apache.maven.shared.model.fileset.util.FileSetManager;
+import static java.util.Collections.singletonList;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +33,19 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-import static java.util.Collections.singletonList;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.model.fileset.FileSet;
+import org.apache.maven.shared.model.fileset.util.FileSetManager;
+
+import com.google.googlejavaformat.java.FormatterException;
+import com.mattunderscore.specky.SemanticException;
+import com.mattunderscore.specky.SpeckyDSLFileStreamingContext;
+import com.mattunderscore.specky.SpeckyGeneratingContext;
+import com.mattunderscore.specky.SpeckyModelGeneratingContext;
+import com.mattunderscore.specky.SpeckyWritingContext;
 
 /**
  * @goal generate
@@ -105,8 +108,15 @@ public class GenerateMojo extends AbstractMojo {
             throw new MojoFailureException("Failed to process specification files", e);
         }
 
-        final SpeckyWritingContext speckyWritingContext = generatingContext
-            .generate()
+        final SpeckyGeneratingContext speckyGeneratingContext;
+        try {
+            speckyGeneratingContext = generatingContext.generate();
+        }
+        catch (SemanticException e) {
+            throw new MojoFailureException(e.getMessage());
+        }
+
+        final SpeckyWritingContext speckyWritingContext = speckyGeneratingContext
             .generate()
             .targetPath(targetPath);
 

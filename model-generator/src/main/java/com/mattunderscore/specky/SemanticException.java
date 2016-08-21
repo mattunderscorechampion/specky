@@ -23,31 +23,18 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.type.resolver;
-
-import java.util.Optional;
-
-import com.mattunderscore.specky.SemanticException;
+package com.mattunderscore.specky;
 
 /**
- * Resolve a type name to a fully qualified name.
+ * Exception for semantic processing failure.
  *
- * @author Matt Champion on 08/06/16
+ * @author Matt Champion on 21/08/2016
  */
-public interface TypeResolver {
+public final class SemanticException extends RuntimeException {
     /**
-     * @param name the type name
-     * @return optional fully qualified name
+     * Constructor.
      */
-    Optional<String> resolve(String name);
-
-    /**
-     *
-     * @param name the type name
-     * @return fully qualified name
-     * @throws SemanticException if the type name cannot be resolved
-     */
-    default String resolveOrThrow(String name) {
-        return resolve(name).orElseThrow(() -> new SemanticException("No resolvable type for " + name));
+    public SemanticException(String msg) {
+        super(msg);
     }
 }

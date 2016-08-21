@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
@@ -158,7 +159,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .resolve(dslPropertyDesc, resolvedType)
             .get();
         if (!dslPropertyDesc.isOptional() && "null".equals(typeDefaultValue)) {
-            throw new IllegalStateException(
+            throw new SemanticException(
                 "The property " + dslPropertyDesc.getName() + " is not optional but has no default type");
         }
 

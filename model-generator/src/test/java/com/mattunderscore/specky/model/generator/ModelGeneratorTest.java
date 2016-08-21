@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.dsl.model.DSLAbstractTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
@@ -27,7 +28,7 @@ import com.mattunderscore.specky.model.generator.scope.ScopeResolver;
 public final class ModelGeneratorTest {
 
     @Test
-    public void simple() {
+    public void simple() throws SemanticException {
         final DSLSpecDesc spec = DSLSpecDesc
             .builder()
             .author("")
@@ -68,7 +69,7 @@ public final class ModelGeneratorTest {
     }
 
     @Test
-    public void extending() {
+    public void extending() throws SemanticException {
         final DSLSpecDesc spec = DSLSpecDesc
             .builder()
             .author("")
@@ -127,7 +128,7 @@ public final class ModelGeneratorTest {
     }
 
     @Test
-    public void optionalPrimative() {
+    public void optionalPrimative() throws SemanticException {
         final DSLSpecDesc spec = DSLSpecDesc
             .builder()
             .author("")

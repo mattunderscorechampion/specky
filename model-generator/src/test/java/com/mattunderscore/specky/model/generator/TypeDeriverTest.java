@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.constraint.model.ConstraintOperator;
 import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
 import com.mattunderscore.specky.constraint.model.NFDisjointPredicates;
@@ -31,7 +32,7 @@ import com.mattunderscore.specky.model.generator.scope.ScopeResolver;
 public final class TypeDeriverTest {
 
     @Test
-    public void deriveType() {
+    public void deriveType() throws SemanticException {
         final DSLAbstractTypeDesc superType = DSLAbstractTypeDesc
             .builder()
             .name("SuperExample")

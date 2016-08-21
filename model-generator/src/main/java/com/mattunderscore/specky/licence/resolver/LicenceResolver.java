@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.dsl.model.DSLLicence;
 
 /**
@@ -43,9 +44,9 @@ public final class LicenceResolver {
     /**
      * Register a default licence.
      */
-    public LicenceResolver register(String licence) {
+    public LicenceResolver register(String licence) throws SemanticException {
         if (defaultLicence != null) {
-            throw new IllegalStateException("Multiple default licences are not allowed");
+            throw new SemanticException("Multiple default licences are not allowed");
         }
         defaultLicence = licence;
         return this;

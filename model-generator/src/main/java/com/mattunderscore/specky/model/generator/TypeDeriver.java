@@ -35,13 +35,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
 import com.mattunderscore.specky.constraint.model.NFDisjointPredicates;
 import com.mattunderscore.specky.dsl.model.DSLImplementationDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
-import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
@@ -73,20 +73,12 @@ public final class TypeDeriver {
      * @return the fully derived type
      */
     public ImplementationDesc deriveType(DSLSpecDesc specDesc, DSLImplementationDesc dslImplementationDesc) {
-        final LicenceResolver licenceResolver = new LicenceResolver();
-        specDesc.getLicences().forEach(dslLicence -> {
-            if (dslLicence.getIdentifier() == null) {
-                licenceResolver.register(dslLicence.getLicence());
-            }
-            else {
-                licenceResolver.register(dslLicence.getIdentifier(), dslLicence.getLicence());
-            }
-        });
+        final Scope scope = scopeResolver.resolve(specDesc);
 
         if (dslImplementationDesc instanceof DSLValueDesc) {
             return ValueDesc
                 .builder()
-                .licence(licenceResolver.resolve(dslImplementationDesc.getLicence()).orElse(null))
+                .licence(scope.getLicenceResolver().resolve(dslImplementationDesc.getLicence()).orElse(null))
                 .author(specDesc.getAuthor())
                 .packageName(specDesc.getPackageName())
                 .name(dslImplementationDesc.getName())
@@ -198,7 +190,7 @@ public final class TypeDeriver {
 
     private void checkMergableProperties(PropertyDesc currentProperty, PropertyDesc newProperty) {
         if (!newProperty.getType().equals(currentProperty.getType())) {
-            throw new IllegalArgumentException("Conflicting property declarations for " +
+            throw new SemanticException("Conflicting property declarations for " +
                 currentProperty.getName() +
                 ". Types " +
                 currentProperty.getType() +
@@ -206,7 +198,7 @@ public final class TypeDeriver {
                 newProperty.getType());
         }
         else if (newProperty.isOptional() != currentProperty.isOptional()) {
-            throw new IllegalArgumentException("Conflicting property declarations for " +
+            throw new SemanticException("Conflicting property declarations for " +
                 currentProperty.getName() +
                 ". Cannot be both optional and required.");
         }

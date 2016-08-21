@@ -49,8 +49,9 @@ public final class SpeckyModelGeneratingContext {
     /**
      * Generate the Java code.
      * @throws IllegalStateException if has been called before
+     * @throws SemanticException if there is a problem with the semantics of the model
      */
-    public SpeckyGeneratingContext generate() {
+    public SpeckyGeneratingContext generate() throws SemanticException {
         if (consumed.compareAndSet(false, true)) {
             final ScopeResolver scopeResolver = new ScopeResolver().createScopes(specs);
 

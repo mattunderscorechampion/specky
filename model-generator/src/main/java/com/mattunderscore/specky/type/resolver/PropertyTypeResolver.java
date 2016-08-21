@@ -27,6 +27,7 @@ package com.mattunderscore.specky.type.resolver;
 
 import java.util.Optional;
 
+import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 
 /**
@@ -75,9 +76,9 @@ public final class PropertyTypeResolver {
      *
      * @param name the type name
      * @return fully qualified name
-     * @throws IllegalArgumentException if the type name cannot be resolved
+     * @throws SemanticException if the type name cannot be resolved
      */
     public String resolveOrThrow(DSLPropertyDesc name) {
-        return resolve(name).orElseThrow(() -> new IllegalArgumentException("No resolvable type for " + name));
+        return resolve(name).orElseThrow(() -> new SemanticException("No resolvable type for " + name));
     }
 }

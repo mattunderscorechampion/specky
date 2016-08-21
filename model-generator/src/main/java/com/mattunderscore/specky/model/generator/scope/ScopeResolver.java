@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.dsl.model.DSLImportDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.licence.resolver.LicenceResolver;
@@ -50,7 +51,8 @@ public final class ScopeResolver {
     private final Map<DSLSpecDesc, Scope> scopes = new HashMap<>();
 
     /**
-     * Register a spec.
+     * Create the scopes.
+     * @throws SemanticException if there is a problem with the scopes
      */
     public ScopeResolver createScopes(List<DSLSpecDesc> specs) {
         final SpecTypeResolver typeResolver = new SpecTypeResolver();
