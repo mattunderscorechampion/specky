@@ -106,13 +106,15 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
     }
 
     private AbstractTypeDesc getView(DSLSpecDesc dslSpecDesc, DSLTypeDesc dslTypeDesc) {
+        final Scope scope = scopeResolver.resolve(dslSpecDesc);
+
         final List<PropertyDesc> properties = dslTypeDesc
             .getProperties()
             .stream()
-            .map(dslProperty -> getViewProperty(dslSpecDesc, dslProperty))
+            .map(dslProperty -> getViewProperty(scope, dslProperty))
             .collect(toList());
 
-        final LicenceResolver licenceResolver = scopeResolver.resolve(dslSpecDesc).getLicenceResolver();
+        final LicenceResolver licenceResolver = scope.getLicenceResolver();
 
         return AbstractTypeDesc
             .builder()
@@ -126,8 +128,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .build();
     }
 
-    private PropertyDesc getViewProperty(DSLSpecDesc dslSpecDesc, DSLPropertyDesc dslPropertyDesc) {
-        final Scope scope = scopeResolver.resolve(dslSpecDesc);
+    private PropertyDesc getViewProperty(Scope scope, DSLPropertyDesc dslPropertyDesc) {
         final String resolvedType = scope.getPropertyTypeResolver().resolveOrThrow(dslPropertyDesc);
         return PropertyDesc
             .builder()
@@ -138,7 +139,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                 .stream()
                 .map(scope.getTypeResolver()::resolveOrThrow)
                 .collect(toList()))
-            .defaultValue(getDefaultValue(dslSpecDesc, dslPropertyDesc, resolvedType))
+            .defaultValue(getDefaultValue(scope, dslPropertyDesc, resolvedType))
             .constraint(dslPropertyDesc.getConstraint())
             .optional(dslPropertyDesc.isOptional())
             .override(true)
@@ -146,15 +147,14 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .build();
     }
 
-    private String getDefaultValue(DSLSpecDesc dslSpecDesc, DSLPropertyDesc dslPropertyDesc, String resolvedType) {
+    private String getDefaultValue(Scope scope, DSLPropertyDesc dslPropertyDesc, String resolvedType) {
         final String defaultValue = dslPropertyDesc.getDefaultValue();
 
         if (defaultValue != null) {
             return defaultValue;
         }
 
-        final String typeDefaultValue = scopeResolver
-            .resolve(dslSpecDesc)
+        final String typeDefaultValue = scope
             .getValueResolver()
             .resolve(dslPropertyDesc, resolvedType)
             .get();
