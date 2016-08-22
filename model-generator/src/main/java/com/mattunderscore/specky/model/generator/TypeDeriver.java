@@ -47,10 +47,16 @@ import com.mattunderscore.specky.model.generator.scope.ScopeResolver;
 public final class TypeDeriver {
     private final ScopeResolver scopeResolver;
 
+    /**
+     * Constructor.
+     */
     public TypeDeriver(ScopeResolver scopeResolver) {
         this.scopeResolver = scopeResolver;
     }
 
+    /**
+     * @return the fully derived type
+     */
     public AbstractTypeDesc deriveType(DSLSpecDesc dslSpecDesc, DSLTypeDesc dslTypeDesc) {
         final Scope scope = scopeResolver.resolve(dslSpecDesc);
 
