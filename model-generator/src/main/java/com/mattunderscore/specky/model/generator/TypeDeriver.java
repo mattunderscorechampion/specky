@@ -83,7 +83,7 @@ public final class TypeDeriver {
                 .packageName(specDesc.getPackageName())
                 .name(dslImplementationDesc.getName())
                 .constructionMethod(dslImplementationDesc.getConstructionMethod())
-                .properties(deriveProperties(specDesc, dslImplementationDesc))
+                .properties(deriveProperties(scope, dslImplementationDesc))
                 .supertypes(dslImplementationDesc.getSupertypes())
                 .description(dslImplementationDesc.getDescription())
                 .build();
@@ -95,15 +95,15 @@ public final class TypeDeriver {
                 .packageName(specDesc.getPackageName())
                 .name(dslImplementationDesc.getName())
                 .constructionMethod(dslImplementationDesc.getConstructionMethod())
-                .properties(deriveProperties(specDesc, dslImplementationDesc))
+                .properties(deriveProperties(scope, dslImplementationDesc))
                 .supertypes(dslImplementationDesc.getSupertypes())
                 .description(dslImplementationDesc.getDescription())
                 .build();
         }
     }
 
-    private List<PropertyDesc> deriveProperties(DSLSpecDesc specDesc, DSLImplementationDesc dslImplementationDesc) {
-        final List<AbstractTypeDesc> resolveSupertypes = resolveSupertypes(specDesc, dslImplementationDesc);
+    private List<PropertyDesc> deriveProperties(Scope scope, DSLImplementationDesc dslImplementationDesc) {
+        final List<AbstractTypeDesc> resolveSupertypes = resolveSupertypes(scope, dslImplementationDesc);
 
         final List<PropertyDesc> inheritedProperties = resolveSupertypes
             .stream()
@@ -114,7 +114,7 @@ public final class TypeDeriver {
         final List<PropertyDesc> declaredProperties = dslImplementationDesc
             .getProperties()
             .stream()
-            .map(property -> get(specDesc, property))
+            .map(property -> get(scope, property))
             .collect(toList());
 
         final Map<String, PropertyDesc> knownProperties = new HashMap<>();
@@ -148,41 +148,41 @@ public final class TypeDeriver {
         return allProperties;
     }
 
-    private List<AbstractTypeDesc> resolveSupertypes(DSLSpecDesc specDesc, DSLImplementationDesc dslImplementationDesc) {
+    private List<AbstractTypeDesc> resolveSupertypes(Scope scope, DSLImplementationDesc dslImplementationDesc) {
         final List<AbstractTypeDesc> typeDescs = new ArrayList<>();
-        resolveSupertypes(specDesc, dslImplementationDesc, typeDescs, new HashSet<>());
+        resolveSupertypes(scope, dslImplementationDesc, typeDescs, new HashSet<>());
         return typeDescs;
     }
 
     private void resolveSupertypes(
-            DSLSpecDesc specDesc,
+            Scope scope,
             DSLImplementationDesc dslImplementationDesc,
             List<AbstractTypeDesc> typeDescs,
             Set<AbstractTypeDesc> setOfTypes) {
         dslImplementationDesc
             .getSupertypes()
             .stream()
-            .map(scopeResolver.resolve(specDesc).getTypeResolver()::resolveOrThrow)
+            .map(scope.getTypeResolver()::resolveOrThrow)
             .map(views::get).forEach(typeDesc -> {
                 if (setOfTypes.add(typeDesc)) {
-                    resolveSupertypes(specDesc, typeDesc, typeDescs, setOfTypes);
+                    resolveSupertypes(scope, typeDesc, typeDescs, setOfTypes);
                     typeDescs.add(typeDesc);
                 }
             });
     }
 
     private void resolveSupertypes(
-            DSLSpecDesc specDesc,
+            Scope scope,
             AbstractTypeDesc firstTypeDesc,
             List<AbstractTypeDesc> typeDescs,
             Set<AbstractTypeDesc> setOfTypes) {
         firstTypeDesc
             .getSupertypes()
             .stream()
-            .map(scopeResolver.resolve(specDesc).getTypeResolver()::resolveOrThrow)
+            .map(scope.getTypeResolver()::resolveOrThrow)
             .map(views::get).forEach(typeDesc -> {
                 if (setOfTypes.add(typeDesc)) {
-                    resolveSupertypes(specDesc, typeDesc, typeDescs, setOfTypes);
+                    resolveSupertypes(scope, typeDesc, typeDescs, setOfTypes);
                     typeDescs.add(typeDesc);
                 }
             });
@@ -232,9 +232,8 @@ public final class TypeDeriver {
             .build();
     }
 
-    private PropertyDesc get(DSLSpecDesc specDesc, DSLPropertyDesc dslPropertyDesc) {
+    private PropertyDesc get(Scope scope, DSLPropertyDesc dslPropertyDesc) {
         final String defaultValue = dslPropertyDesc.getDefaultValue();
-        final Scope scope = scopeResolver.resolve(specDesc);
         final String resolvedType = scope
             .getPropertyTypeResolver()
             .resolveOrThrow(dslPropertyDesc);
