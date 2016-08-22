@@ -75,25 +75,25 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
         final Map<String, AbstractTypeDesc> mappedViews = views
             .stream()
             .collect(toMap(viewDesc -> viewDesc.getPackageName() + "." + viewDesc.getName(), viewDesc -> viewDesc));
-        final TypeDeriver typeDeriver = new TypeDeriver(scopeResolver, mappedViews);
+        final ImplementationDeriver implementationDeriver = new ImplementationDeriver(scopeResolver, mappedViews);
 
         return SpecDesc
             .builder()
             .types(
                 dslSpecs
                     .stream()
-                    .map(dslSpecDesc -> getTypes(typeDeriver, dslSpecDesc))
+                    .map(dslSpecDesc -> getTypes(implementationDeriver, dslSpecDesc))
                     .flatMap(Collection::stream)
                     .collect(toList()))
             .views(views)
             .build();
     }
 
-    private List<ImplementationDesc> getTypes(TypeDeriver typeDeriver, DSLSpecDesc dslSpecDesc) {
+    private List<ImplementationDesc> getTypes(ImplementationDeriver implementationDeriver, DSLSpecDesc dslSpecDesc) {
         return dslSpecDesc
             .getTypes()
             .stream()
-            .map(dslTypeDesc -> typeDeriver.deriveType(dslSpecDesc, dslTypeDesc))
+            .map(dslTypeDesc -> implementationDeriver.deriveType(dslSpecDesc, dslTypeDesc))
             .collect(toList());
     }
 

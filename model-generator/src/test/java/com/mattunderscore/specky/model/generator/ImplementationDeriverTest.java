@@ -25,11 +25,11 @@ import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.generator.scope.ScopeResolver;
 
 /**
- * Unit tests for {@link TypeDeriver}.
+ * Unit tests for {@link ImplementationDeriver}.
  *
  * @author Matt Champion on 16/08/2016
  */
-public final class TypeDeriverTest {
+public final class ImplementationDeriverTest {
 
     @Test
     public void deriveType() throws SemanticException {
@@ -120,7 +120,7 @@ public final class TypeDeriverTest {
                     .build()))
                 .build());
 
-        final TypeDeriver deriver = new TypeDeriver(scopeResolver, types);
+        final ImplementationDeriver deriver = new ImplementationDeriver(scopeResolver, types);
 
         final ImplementationDesc implementationDesc = deriver.deriveType(spec, valueDesc);
 

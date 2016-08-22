@@ -51,18 +51,18 @@ import com.mattunderscore.specky.model.generator.scope.Scope;
 import com.mattunderscore.specky.model.generator.scope.ScopeResolver;
 
 /**
- * Fully derive a type from its superinterfaces.
+ * Fully derive an implementation from its superinterfaces.
  *
  * @author Matt Champion on 21/07/16
  */
-public final class TypeDeriver {
+public final class ImplementationDeriver {
     private final ScopeResolver scopeResolver;
     private final Map<String, AbstractTypeDesc> views;
 
     /**
      * Constructor.
      */
-    public TypeDeriver(
+    public ImplementationDeriver(
             ScopeResolver scopeResolver,
             Map<String, AbstractTypeDesc> views) {
         this.scopeResolver = scopeResolver;
