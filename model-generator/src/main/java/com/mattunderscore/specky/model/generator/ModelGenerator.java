@@ -33,16 +33,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import com.mattunderscore.specky.SemanticException;
-import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
-import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
-import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
-import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.generator.scope.Scope;
 import com.mattunderscore.specky.model.generator.scope.ScopeResolver;
 
 /**
@@ -98,71 +92,12 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
     }
 
     private List<AbstractTypeDesc> getViews(DSLSpecDesc dslSpecDesc) {
+        final TypeDeriver typeDeriver = new TypeDeriver(scopeResolver);
+
         return dslSpecDesc
             .getViews()
             .stream()
-            .map(dslTypeDesc -> getView(dslSpecDesc, dslTypeDesc))
+            .map(dslTypeDesc -> typeDeriver.deriveType(dslSpecDesc, dslTypeDesc))
             .collect(toList());
-    }
-
-    private AbstractTypeDesc getView(DSLSpecDesc dslSpecDesc, DSLTypeDesc dslTypeDesc) {
-        final Scope scope = scopeResolver.resolve(dslSpecDesc);
-
-        final List<PropertyDesc> properties = dslTypeDesc
-            .getProperties()
-            .stream()
-            .map(dslProperty -> getViewProperty(scope, dslProperty))
-            .collect(toList());
-
-        final LicenceResolver licenceResolver = scope.getLicenceResolver();
-
-        return AbstractTypeDesc
-            .builder()
-            .licence(licenceResolver.resolve(dslTypeDesc.getLicence()).orElse(null))
-            .author(dslSpecDesc.getAuthor())
-            .packageName(dslSpecDesc.getPackageName())
-            .name(dslTypeDesc.getName())
-            .properties(properties)
-            .supertypes(dslTypeDesc.getSupertypes())
-            .description(dslTypeDesc.getDescription())
-            .build();
-    }
-
-    private PropertyDesc getViewProperty(Scope scope, DSLPropertyDesc dslPropertyDesc) {
-        final String resolvedType = scope.getPropertyTypeResolver().resolveOrThrow(dslPropertyDesc);
-        return PropertyDesc
-            .builder()
-            .name(dslPropertyDesc.getName())
-            .type(resolvedType)
-            .typeParameters(dslPropertyDesc
-                .getTypeParameters()
-                .stream()
-                .map(scope.getTypeResolver()::resolveOrThrow)
-                .collect(toList()))
-            .defaultValue(getDefaultValue(scope, dslPropertyDesc, resolvedType))
-            .constraint(dslPropertyDesc.getConstraint())
-            .optional(dslPropertyDesc.isOptional())
-            .override(true)
-            .description(dslPropertyDesc.getDescription())
-            .build();
-    }
-
-    private String getDefaultValue(Scope scope, DSLPropertyDesc dslPropertyDesc, String resolvedType) {
-        final String defaultValue = dslPropertyDesc.getDefaultValue();
-
-        if (defaultValue != null) {
-            return defaultValue;
-        }
-
-        final String typeDefaultValue = scope
-            .getValueResolver()
-            .resolve(dslPropertyDesc, resolvedType)
-            .get();
-        if (!dslPropertyDesc.isOptional() && "null".equals(typeDefaultValue)) {
-            throw new SemanticException(
-                "The property " + dslPropertyDesc.getName() + " is not optional but has no default type");
-        }
-
-        return typeDefaultValue;
     }
 }
