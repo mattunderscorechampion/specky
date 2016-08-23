@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
@@ -65,8 +66,7 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
 
         final List<AbstractTypeDesc> views = dslSpecs
             .stream()
-            .map(this::getViews)
-            .flatMap(Collection::stream)
+            .flatMap(this::getViews)
             .collect(toList());
 
         final Map<String, AbstractTypeDesc> mappedViews = views
@@ -94,11 +94,10 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .collect(toList());
     }
 
-    private List<AbstractTypeDesc> getViews(DSLSpecDesc dslSpecDesc) {
+    private Stream<AbstractTypeDesc> getViews(DSLSpecDesc dslSpecDesc) {
         return dslSpecDesc
             .getViews()
             .stream()
-            .map(dslTypeDesc -> typeDeriver.deriveType(dslSpecDesc, dslTypeDesc))
-            .collect(toList());
+            .map(dslTypeDesc -> typeDeriver.deriveType(dslSpecDesc, dslTypeDesc));
     }
 }
