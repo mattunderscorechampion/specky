@@ -50,9 +50,11 @@ public final class ModelGeneratorTest {
             .build();
 
         final ScopeResolver scopeResolver = new ScopeResolver().createScopes(singletonList(spec));
+        final TypeDeriver typeDeriver = new TypeDeriver(scopeResolver);
         final ModelGenerator generator = new ModelGenerator(
             singletonList(spec),
-            scopeResolver);
+            scopeResolver,
+            typeDeriver);
 
         final SpecDesc specDesc = generator.get();
 
@@ -102,9 +104,11 @@ public final class ModelGeneratorTest {
             .build();
 
         final ScopeResolver scopeResolver = new ScopeResolver().createScopes(singletonList(spec));
+        final TypeDeriver typeDeriver = new TypeDeriver(scopeResolver);
         final ModelGenerator generator = new ModelGenerator(
             singletonList(spec),
-            scopeResolver);
+            scopeResolver,
+            typeDeriver);
 
         final SpecDesc specDesc = generator.get();
 
@@ -150,9 +154,11 @@ public final class ModelGeneratorTest {
             .build();
 
         final ScopeResolver scopeResolver = new ScopeResolver().createScopes(singletonList(spec));
+        final TypeDeriver typeDeriver = new TypeDeriver(scopeResolver);
         final ModelGenerator generator = new ModelGenerator(
             singletonList(spec),
-            scopeResolver);
+            scopeResolver,
+            typeDeriver);
 
         final SpecDesc specDesc = generator.get();
 

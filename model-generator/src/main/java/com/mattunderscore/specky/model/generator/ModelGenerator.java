@@ -46,15 +46,18 @@ import com.mattunderscore.specky.model.generator.scope.ScopeResolver;
 public final class ModelGenerator implements Supplier<SpecDesc> {
     private final List<DSLSpecDesc> dslSpecs;
     private final ScopeResolver scopeResolver;
+    private final TypeDeriver typeDeriver;
 
     /**
      * Constructor.
      */
     public ModelGenerator(
             List<DSLSpecDesc> dslSpecs,
-            ScopeResolver scopeResolver) {
+            ScopeResolver scopeResolver,
+            TypeDeriver typeDeriver) {
         this.dslSpecs = dslSpecs;
         this.scopeResolver = scopeResolver;
+        this.typeDeriver = typeDeriver;
     }
 
     @Override
@@ -92,8 +95,6 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
     }
 
     private List<AbstractTypeDesc> getViews(DSLSpecDesc dslSpecDesc) {
-        final TypeDeriver typeDeriver = new TypeDeriver(scopeResolver);
-
         return dslSpecDesc
             .getViews()
             .stream()

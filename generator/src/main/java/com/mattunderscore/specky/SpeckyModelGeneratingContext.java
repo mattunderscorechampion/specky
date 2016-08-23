@@ -31,6 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.generator.ModelGenerator;
+import com.mattunderscore.specky.model.generator.TypeDeriver;
 import com.mattunderscore.specky.model.generator.scope.ScopeResolver;
 
 /**
@@ -55,9 +56,12 @@ public final class SpeckyModelGeneratingContext {
         if (consumed.compareAndSet(false, true)) {
             final ScopeResolver scopeResolver = new ScopeResolver().createScopes(specs);
 
+            final TypeDeriver typeDeriver = new TypeDeriver(scopeResolver);
+
             final ModelGenerator modelGenerator = new ModelGenerator(
                 specs,
-                scopeResolver);
+                scopeResolver,
+                typeDeriver);
 
             final SpecDesc specDesc = modelGenerator.get();
             return new SpeckyGeneratingContext(specDesc);
