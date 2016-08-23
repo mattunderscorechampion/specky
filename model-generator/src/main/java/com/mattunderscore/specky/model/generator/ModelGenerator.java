@@ -63,35 +63,37 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
     @Override
     public SpecDesc get() {
 
-        final List<AbstractTypeDesc> views = dslSpecs
+        final List<AbstractTypeDesc> types = dslSpecs
             .stream()
-            .flatMap(this::getViews)
+            .flatMap(this::getTypes)
             .collect(toList());
 
-        final Map<String, AbstractTypeDesc> mappedViews = views
+        final Map<String, AbstractTypeDesc> mappedTypes = types
             .stream()
             .collect(toMap(viewDesc -> viewDesc.getPackageName() + "." + viewDesc.getName(), viewDesc -> viewDesc));
-        final ImplementationDeriver implementationDeriver = new ImplementationDeriver(scopeResolver, mappedViews);
+        final ImplementationDeriver implementationDeriver = new ImplementationDeriver(scopeResolver, mappedTypes);
 
         return SpecDesc
             .builder()
             .types(
                 dslSpecs
                     .stream()
-                    .flatMap(dslSpecDesc -> getTypes(implementationDeriver, dslSpecDesc))
+                    .flatMap(dslSpecDesc -> getImplementations(implementationDeriver, dslSpecDesc))
                     .collect(toList()))
-            .views(views)
+            .views(types)
             .build();
     }
 
-    private Stream<ImplementationDesc> getTypes(ImplementationDeriver implementationDeriver, DSLSpecDesc dslSpecDesc) {
+    private Stream<ImplementationDesc> getImplementations(
+            ImplementationDeriver implementationDeriver,
+            DSLSpecDesc dslSpecDesc) {
         return dslSpecDesc
             .getTypes()
             .stream()
             .map(dslTypeDesc -> implementationDeriver.deriveType(dslSpecDesc, dslTypeDesc));
     }
 
-    private Stream<AbstractTypeDesc> getViews(DSLSpecDesc dslSpecDesc) {
+    private Stream<AbstractTypeDesc> getTypes(DSLSpecDesc dslSpecDesc) {
         return dslSpecDesc
             .getViews()
             .stream()
