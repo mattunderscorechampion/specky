@@ -81,8 +81,8 @@ value DSLSpecDesc "Description of a specification."
         List<DSLLicence> licences "Copyright and licence information."
         String packageName "Name of the package the specification describes."
         List<DSLImportDesc> importTypes "Types from outside the specification to import."
-        List<DSLImplementationDesc> types "Types of the specification."
-        List<DSLAbstractTypeDesc> views "Views of the specification."
+        List<DSLImplementationDesc> implementations "Implementations of the specification."
+        List<DSLAbstractTypeDesc> types "Types of the specification."
     options
         immutable builder
 

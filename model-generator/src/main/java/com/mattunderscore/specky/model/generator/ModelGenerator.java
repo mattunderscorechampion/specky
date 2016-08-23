@@ -75,12 +75,12 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
 
         return SpecDesc
             .builder()
-            .types(
+            .implementations(
                 dslSpecs
                     .stream()
                     .flatMap(dslSpecDesc -> getImplementations(implementationDeriver, dslSpecDesc))
                     .collect(toList()))
-            .views(types)
+            .types(types)
             .build();
     }
 
@@ -88,14 +88,14 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             ImplementationDeriver implementationDeriver,
             DSLSpecDesc dslSpecDesc) {
         return dslSpecDesc
-            .getTypes()
+            .getImplementations()
             .stream()
             .map(dslTypeDesc -> implementationDeriver.deriveType(dslSpecDesc, dslTypeDesc));
     }
 
     private Stream<AbstractTypeDesc> getTypes(DSLSpecDesc dslSpecDesc) {
         return dslSpecDesc
-            .getViews()
+            .getTypes()
             .stream()
             .map(dslTypeDesc -> typeDeriver.deriveType(dslSpecDesc, dslTypeDesc));
     }

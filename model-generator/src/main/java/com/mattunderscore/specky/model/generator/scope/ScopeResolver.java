@@ -60,8 +60,9 @@ public final class ScopeResolver {
 
         specs.forEach(spec -> {
             spec.getImportTypes().forEach(importDesc -> processImport(importDesc, typeResolver, mutableValueResolver));
-            spec.getViews().forEach(view -> typeResolver.registerTypeName(spec.getPackageName(), view.getName()));
-            spec.getTypes().forEach(type -> typeResolver.registerTypeName(spec.getPackageName(), type.getName()));
+            spec.getTypes().forEach(view -> typeResolver.registerTypeName(spec.getPackageName(), view.getName()));
+            spec.getImplementations()
+                .forEach(type -> typeResolver.registerTypeName(spec.getPackageName(), type.getName()));
         });
 
         final TypeResolver resolver = new TypeResolverBuilder().registerResolver(typeResolver).build();

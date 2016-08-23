@@ -112,12 +112,12 @@ public final class SpecBuilder {
                     .collect(toList())))
             .packageName(context.package_name().qualifiedName().getText())
             .importTypes(imports)
-            .views(context
+            .types(context
                 .typeSpec()
                 .stream()
                 .map(this::createView)
                 .collect(toList()))
-            .types(context
+            .implementations(context
                 .implementationSpec()
                 .stream()
                 .map(this::createType)

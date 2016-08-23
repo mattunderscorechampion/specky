@@ -33,8 +33,8 @@ public final class ModelGeneratorTest {
             .builder()
             .author("")
             .packageName("com.example")
-            .views(emptyList())
-            .types(singletonList(DSLValueDesc
+            .types(emptyList())
+            .implementations(singletonList(DSLValueDesc
                 .builder()
                 .name("Example")
                 .supertypes(emptyList())
@@ -59,8 +59,8 @@ public final class ModelGeneratorTest {
         final SpecDesc specDesc = generator.get();
 
         assertNotNull(specDesc);
-        assertEquals(1, specDesc.getTypes().size());
-        final ImplementationDesc implementationDesc = specDesc.getTypes().get(0);
+        assertEquals(1, specDesc.getImplementations().size());
+        final ImplementationDesc implementationDesc = specDesc.getImplementations().get(0);
         assertEquals("com.example", implementationDesc.getPackageName());
         assertEquals("Example", implementationDesc.getName());
         assertEquals(ConstructionMethod.CONSTRUCTOR, implementationDesc.getConstructionMethod());
@@ -76,7 +76,7 @@ public final class ModelGeneratorTest {
             .builder()
             .author("")
             .packageName("com.example")
-            .views(singletonList(DSLAbstractTypeDesc
+            .types(singletonList(DSLAbstractTypeDesc
                 .builder()
                 .name("SuperType")
                 .properties(singletonList(DSLPropertyDesc
@@ -88,7 +88,7 @@ public final class ModelGeneratorTest {
                     .optional(false)
                     .build()))
                 .build()))
-            .types(singletonList(DSLValueDesc
+            .implementations(singletonList(DSLValueDesc
                 .builder()
                 .name("Example")
                 .supertypes(singletonList("com.example.SuperType"))
@@ -113,8 +113,8 @@ public final class ModelGeneratorTest {
         final SpecDesc specDesc = generator.get();
 
         assertNotNull(specDesc);
-        assertEquals(1, specDesc.getTypes().size());
-        final ImplementationDesc implementationDesc = specDesc.getTypes().get(0);
+        assertEquals(1, specDesc.getImplementations().size());
+        final ImplementationDesc implementationDesc = specDesc.getImplementations().get(0);
         assertEquals("com.example", implementationDesc.getPackageName());
         assertEquals("Example", implementationDesc.getName());
         assertEquals(ConstructionMethod.CONSTRUCTOR, implementationDesc.getConstructionMethod());
@@ -137,8 +137,8 @@ public final class ModelGeneratorTest {
             .builder()
             .author("")
             .packageName("com.example")
-            .views(emptyList())
-            .types(singletonList(DSLValueDesc
+            .types(emptyList())
+            .implementations(singletonList(DSLValueDesc
                 .builder()
                 .name("Example")
                 .supertypes(emptyList())
@@ -163,8 +163,8 @@ public final class ModelGeneratorTest {
         final SpecDesc specDesc = generator.get();
 
         assertNotNull(specDesc);
-        assertEquals(1, specDesc.getTypes().size());
-        final ImplementationDesc implementationDesc = specDesc.getTypes().get(0);
+        assertEquals(1, specDesc.getImplementations().size());
+        final ImplementationDesc implementationDesc = specDesc.getImplementations().get(0);
         assertEquals("com.example", implementationDesc.getPackageName());
         assertEquals("Example", implementationDesc.getName());
         assertEquals(ConstructionMethod.CONSTRUCTOR, implementationDesc.getConstructionMethod());

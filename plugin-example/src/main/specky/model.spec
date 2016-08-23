@@ -74,7 +74,7 @@ value BeanDesc : ImplementationDesc "Description of a bean type."
 value SpecDesc "Description of a specification."
     properties
         List<String> importTypes "Types from outside the specification to import."
-        List<ImplementationDesc> types "Types of the specification."
-        List<AbstractTypeDesc> views "Views of the specification."
+        List<ImplementationDesc> implementations "Implementations of the specification."
+        List<AbstractTypeDesc> types "Types of the specification."
     options
         immutable builder

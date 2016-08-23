@@ -25,6 +25,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
@@ -33,10 +37,6 @@ import com.mattunderscore.specky.model.ValueDesc;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.JavaFile.Builder;
 import com.squareup.javapoet.TypeSpec;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Code generator for specification.
@@ -66,21 +66,21 @@ public final class Generator {
     public List<JavaFile> generate(SpecDesc specDesc) {
         final List<JavaFile> result = new ArrayList<>();
         result.addAll(specDesc
-            .getTypes()
+            .getImplementations()
             .stream()
-            .map(valueSpec -> generateTypeFile(specDesc, valueSpec))
+            .map(valueSpec -> generateImplementationFile(specDesc, valueSpec))
             .collect(Collectors.toList()));
 
         result.addAll(specDesc
-            .getViews()
+            .getTypes()
             .stream()
-            .map(typeDesc -> generateViewFile(specDesc, typeDesc))
+            .map(typeDesc -> generateTypeFile(specDesc, typeDesc))
             .collect(Collectors.toList()));
 
         return result;
     }
 
-    private JavaFile generateTypeFile(SpecDesc specDesc, ImplementationDesc implementationDesc) {
+    private JavaFile generateImplementationFile(SpecDesc specDesc, ImplementationDesc implementationDesc) {
         final TypeSpec typeSpec = generateType(specDesc, implementationDesc);
         final Builder builder = JavaFile
             .builder(implementationDesc.getPackageName(), typeSpec);
@@ -94,7 +94,7 @@ public final class Generator {
             .build();
     }
 
-    private JavaFile generateViewFile(SpecDesc specDesc, TypeDesc typeDesc) {
+    private JavaFile generateTypeFile(SpecDesc specDesc, TypeDesc typeDesc) {
         final TypeSpec typeSpec = generateView(specDesc, typeDesc);
         final Builder builder = JavaFile
             .builder(typeDesc.getPackageName(), typeSpec);

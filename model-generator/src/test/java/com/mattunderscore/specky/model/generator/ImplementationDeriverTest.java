@@ -87,8 +87,8 @@ public final class ImplementationDeriverTest {
             .builder()
             .author("")
             .packageName("com.example")
-            .views(singletonList(superType))
-            .types(singletonList(valueDesc))
+            .types(singletonList(superType))
+            .implementations(singletonList(valueDesc))
             .build();
 
 
