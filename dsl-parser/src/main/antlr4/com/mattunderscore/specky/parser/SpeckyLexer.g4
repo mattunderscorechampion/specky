@@ -129,6 +129,10 @@ AUTHOR
     :   'author'
     ;
 
+NOTE
+    :   'note'
+    ;
+
 INLINE_WS
     :   [ ]+ -> channel(HIDDEN)
     ;

@@ -1,10 +1,10 @@
 
-section """Constraints
+section "Constraints"
 
-Constraints are used to apply runtime restrictions on the allowed values of properties. A property constraint can only
-be applied to a single property. It is intended that you will able to apply constraints to multiple properties but this
-is not yet implemented. A property constraint is checked when setting a mutable property, in the constructor of types
-built with the constructor or in the configurator method of the builder for methods built that way. A violated
+note """Constraints are used to apply runtime restrictions on the allowed values of properties. A property constraint
+can only be applied to a single property. It is intended that you will able to apply constraints to multiple properties
+but this is not yet implemented. A property constraint is checked when setting a mutable property, in the constructor
+of types built with the constructor or in the configurator method of the builder for methods built that way. A violated
 constraint will result in a IllegalArgumentException being thrown.
 
 A constraint is a propositional formula with & used to indicate a conjunction | used to indicate a disjunction and ! a

@@ -59,6 +59,7 @@ propertyName
     |   AUTHOR
     |   LICENCE
     |   SECTION
+    |   NOTE
     ;
 
 constraint_operator
@@ -159,12 +160,22 @@ licenceDeclaration
     :   LICENCE (INLINE_WS Identifier)? INLINE_WS string_value
     ;
 
+note
+    :   NOTE INLINE_WS string_value LINE_BREAK+
+    ;
+
 sectionContent
-    :   (licenceDeclaration LINE_BREAK+)*
+    :   note?
+        (licenceDeclaration LINE_BREAK+)*
+        note?
         (author LINE_BREAK+)?
+        note?
         package_name LINE_BREAK+
+        note?
         (imports LINE_BREAK*)?
-        ((typeSpec | implementationSpec) LINE_BREAK*)+
+        note?
+        ((typeSpec | implementationSpec) LINE_BREAK*
+            note?)+
     ;
 
 spec
