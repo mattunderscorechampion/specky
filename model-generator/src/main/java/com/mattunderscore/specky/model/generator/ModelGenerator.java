@@ -31,7 +31,6 @@ import static java.util.stream.Collectors.toMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
@@ -65,38 +64,27 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
 
         final List<AbstractTypeDesc> types = dslSpecs
             .stream()
-            .flatMap(this::getTypes)
+            .flatMap(dslSpec -> dslSpec.getTypes().stream().map(dslType -> typeDeriver.deriveType(dslSpec, dslType)))
             .collect(toList());
 
         final Map<String, AbstractTypeDesc> mappedTypes = types
             .stream()
             .collect(toMap(viewDesc -> viewDesc.getPackageName() + "." + viewDesc.getName(), viewDesc -> viewDesc));
+
         final ImplementationDeriver implementationDeriver = new ImplementationDeriver(scopeResolver, mappedTypes);
+
+        final List<ImplementationDesc> implementations = dslSpecs
+            .stream()
+            .flatMap(dslSpec -> dslSpec
+                .getImplementations()
+                .stream()
+                .map(dslImplementation -> implementationDeriver.deriveType(dslSpec, dslImplementation)))
+            .collect(toList());
 
         return SpecDesc
             .builder()
-            .implementations(
-                dslSpecs
-                    .stream()
-                    .flatMap(dslSpecDesc -> getImplementations(implementationDeriver, dslSpecDesc))
-                    .collect(toList()))
+            .implementations(implementations)
             .types(types)
             .build();
-    }
-
-    private Stream<ImplementationDesc> getImplementations(
-            ImplementationDeriver implementationDeriver,
-            DSLSpecDesc dslSpecDesc) {
-        return dslSpecDesc
-            .getImplementations()
-            .stream()
-            .map(dslTypeDesc -> implementationDeriver.deriveType(dslSpecDesc, dslTypeDesc));
-    }
-
-    private Stream<AbstractTypeDesc> getTypes(DSLSpecDesc dslSpecDesc) {
-        return dslSpecDesc
-            .getTypes()
-            .stream()
-            .map(dslTypeDesc -> typeDeriver.deriveType(dslSpecDesc, dslTypeDesc));
     }
 }
