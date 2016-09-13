@@ -1,4 +1,21 @@
 
+section "Constraints"
+
+note """Constraints are used to apply runtime restrictions on the allowed values of properties. A property constraint
+can only be applied to a single property. It is intended that you will able to apply constraints to multiple properties
+but this is not yet implemented. A property constraint is checked when setting a mutable property, in the constructor
+of types built with the constructor or in the configurator method of the builder for methods built that way. A violated
+constraint will result in a IllegalArgumentException being thrown.
+
+A constraint is a propositional formula with & used to indicate a conjunction | used to indicate a disjunction and ! a
+negation. The predicates are used to test a property. Each predicate is a boolean expression. Each predicate expression
+of a property constraint has an optional subject modifier, an operator and literal value. The subject of the predicate
+is implicitly the property. The subject modifier is currently only used by collection types to allow the predicate to
+be applied to its contents. The operator identifies the type of comparison to be applied. The modified subject is one
+operand of the operator. The literal value is the other operand.
+
+A constraint must currently be specified in conjunctive normal form and its satisfiability is not checked."""
+
 licence """Copyright © 2016 Matthew Champion
 All rights reserved.
 
