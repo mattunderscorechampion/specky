@@ -79,4 +79,13 @@ public final class PersonValueTest {
 
         assertFalse(person0.equals(new Object()));
     }
+
+    @Test
+    public void applyFunction() {
+        final PersonValue person = PersonValue.builder().id(5).apply(builder -> builder.name("M")).build();
+
+        assertEquals(5, (int) person.getId());
+        assertEquals("M", person.getName());
+        assertEquals("PersonValue[id=5, name=M]", person.toString());
+    }
 }

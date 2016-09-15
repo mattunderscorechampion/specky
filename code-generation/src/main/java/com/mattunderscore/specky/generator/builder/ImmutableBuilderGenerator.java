@@ -75,6 +75,13 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
             .addParameter("function", "the function to apply")
             .setReturnsDescription("a new builder if the condition is {@code true}, otherwise this builder")
             .toJavaDoc());
+    private final MethodGeneratorForType functionalConfiguratorGenerator =
+        new FunctionalConfiguratorGenerator(
+            docMethod()
+                .setMethodDescription("Applies the function to the builder.")
+                .addParameter("function", "the function to apply")
+                .setReturnsDescription("a new builder")
+                .toJavaDoc());
     private final BuildMethodGenerator buildMethodGenerator;
 
     /**
@@ -105,7 +112,8 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
             .addMethod(constructorGenerator.generate(specDesc, valueDesc))
             .addMethod(booleanConditional.generate(specDesc, valueDesc))
             .addMethod(conditionalGenerator.generate(specDesc, valueDesc))
-            .addMethod(buildMethodGenerator.generate(specDesc, valueDesc));
+            .addMethod(buildMethodGenerator.generate(specDesc, valueDesc))
+            .addMethod(functionalConfiguratorGenerator.generate(specDesc, valueDesc));
 
         typeSpecBuilder
             .addMethod(methodBuilder("builder")
