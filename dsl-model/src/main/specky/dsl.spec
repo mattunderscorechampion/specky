@@ -1,4 +1,9 @@
 
+section "DSL model"
+
+note """The DSL model is an in-memory representation of a specification in
+the DSL format."""
+
 licence """Copyright © 2016 Matthew Champion
 All rights reserved.
 

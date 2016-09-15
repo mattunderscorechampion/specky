@@ -1,4 +1,10 @@
 
+section "Specky model"
+
+note """The Specky model is an in-memory representation of a resolved
+specification. Types have been resolved to their fully qualified names, the
+default values have been selected, etc."""
+
 licence """Copyright © 2016 Matthew Champion
 All rights reserved.
 
