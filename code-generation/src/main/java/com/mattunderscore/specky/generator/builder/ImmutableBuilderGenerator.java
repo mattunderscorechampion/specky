@@ -28,14 +28,17 @@ package com.mattunderscore.specky.generator.builder;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
+import static java.util.Arrays.asList;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
 import com.mattunderscore.specky.generator.MethodGeneratorForType;
+import com.mattunderscore.specky.generator.NewModifiedCollection;
 import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.TypeInitialiser;
 import com.mattunderscore.specky.generator.constructor.ConstructorForBuiltTypeGenerator;
@@ -52,6 +55,7 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 15/06/2016
  */
 public final class ImmutableBuilderGenerator implements TypeAppender {
+    private static final List<String> COLLECTION_TYPES = asList("java.util.Set", "java.util.List");
     private final TypeInitialiser typeInitialiser;
     private final MethodGeneratorForType constructorGenerator = new ConstructorForBuiltTypeGenerator();
     private final MethodGeneratorForType conditionalGenerator = new SupplierConditionalConfiguratorGenerator(
@@ -68,6 +72,14 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
                 .setReturnsDescription("a new builder")
                 .toJavaDoc(),
             new InstantiateNewBuilder());
+    private final MethodGeneratorForProperty collectionAddConfiguratorGenerator =
+        new CollectionAddConfiguratorGenerator(
+            docMethod()
+                .setMethodDescription("Method to add an element to property $L on the builder.")
+                .setReturnsDescription("a new builder")
+                .toJavaDoc(),
+                new NewModifiedCollection(),
+                new InstantiateNewBuilder());
     private final MethodGeneratorForType booleanConditional = new BooleanConditionalConfiguratorGenerator(
         docMethod()
             .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
@@ -106,14 +118,18 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
                 builder
                     .addField(builderFieldSpec)
                     .addMethod(settingConfiguratorGenerator.generate(specDesc, valueDesc, propertyDesc));
+
+                if (COLLECTION_TYPES.contains(propertyDesc.getType())) {
+                    builder.addMethod(collectionAddConfiguratorGenerator.generate(specDesc, valueDesc, propertyDesc));
+                }
             });
 
         builder
-            .addMethod(constructorGenerator.generate(specDesc, valueDesc))
-            .addMethod(booleanConditional.generate(specDesc, valueDesc))
-            .addMethod(conditionalGenerator.generate(specDesc, valueDesc))
-            .addMethod(buildMethodGenerator.generate(specDesc, valueDesc))
-            .addMethod(functionalConfiguratorGenerator.generate(specDesc, valueDesc));
+                .addMethod(constructorGenerator.generate(specDesc, valueDesc))
+                .addMethod(booleanConditional.generate(specDesc, valueDesc))
+                .addMethod(conditionalGenerator.generate(specDesc, valueDesc))
+                .addMethod(functionalConfiguratorGenerator.generate(specDesc, valueDesc))
+                .addMethod(buildMethodGenerator.generate(specDesc, valueDesc));
 
         typeSpecBuilder
             .addMethod(methodBuilder("builder")
