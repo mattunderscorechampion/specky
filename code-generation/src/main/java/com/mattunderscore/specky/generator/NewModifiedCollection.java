@@ -28,8 +28,10 @@ package com.mattunderscore.specky.generator;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.TypeName;
+
+import java.util.Collections;
 
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 
@@ -38,49 +40,41 @@ import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
  *
  * @author Matt Champion on 16/09/16
  */
-public final class NewModifiedCollection implements StatementGeneratorForProperty {
+public final class NewModifiedCollection implements StatementAppenderForProperty {
     @Override
-    public String generate(SpecDesc specDesc, ImplementationDesc implementationDesc, PropertyDesc propertyDesc) {
+    public Builder generate(
+            Builder methodBuilder,
+            SpecDesc specDesc,
+            ImplementationDesc implementationDesc,
+            PropertyDesc propertyDesc) {
         if ("java.util.Set".equals(propertyDesc.getType())) {
-            return generateSet(propertyDesc);
+            return generateCollection(
+                    methodBuilder,
+                propertyDesc,
+                getType("java.util.HashSet", Collections.singletonList(propertyDesc.getTypeParameters().get(0))));
         }
         else if ("java.util.List".equals(propertyDesc.getType())) {
-            return generateList(propertyDesc);
+            return generateCollection(
+                methodBuilder,
+                propertyDesc,
+                getType("java.util.ArrayList", Collections.singletonList(propertyDesc.getTypeParameters().get(0))));
         }
         else {
             throw new IllegalArgumentException("Type " + propertyDesc.getType() + " not supported");
         }
     }
 
-    private String generateList(PropertyDesc propertyDesc) {
+    private Builder generateCollection(Builder methodBuilder, PropertyDesc propertyDesc, TypeName implementationType) {
         final String pluralPropertyName = propertyDesc.getName();
         final String propertyName = propertyDesc.getName().substring(0, pluralPropertyName.length() - 1);
         final TypeName elementType = getType(propertyDesc.getTypeParameters().get(0));
+        final TypeName type = getType(propertyDesc);
 
-        return CodeBlock
-            .builder()
-            .addStatement("final List<" + elementType + ">" + pluralPropertyName + " = new java.util.ArrayList<>()")
-            .beginControlFlow("for (" + elementType + " temp : this." + pluralPropertyName + ")")
-            .addStatement(pluralPropertyName + ".add(temp)")
+        return methodBuilder
+            .addStatement("final $T $L = new $T()", type, pluralPropertyName, implementationType)
+            .beginControlFlow("for ($T temp : this.$L)", elementType, pluralPropertyName)
+            .addStatement("$L.add(temp)", pluralPropertyName)
             .endControlFlow()
-            .addStatement(pluralPropertyName + ".add(" + propertyName + ")")
-            .build()
-            .toString();
-    }
-
-    private String generateSet(PropertyDesc propertyDesc) {
-        final String pluralPropertyName = propertyDesc.getName();
-        final String propertyName = propertyDesc.getName().substring(0, pluralPropertyName.length() - 1);
-        final TypeName elementType = getType(propertyDesc.getTypeParameters().get(0));
-
-        return CodeBlock
-            .builder()
-            .addStatement("final Set<" + elementType + ">" + pluralPropertyName + " = new java.util.HashSet<>()")
-            .beginControlFlow("for (" + elementType + " temp : this." + pluralPropertyName + ")")
-            .addStatement(pluralPropertyName + ".add(temp)")
-            .endControlFlow()
-            .addStatement(pluralPropertyName + ".add(" + propertyName + ")")
-            .build()
-            .toString();
+            .addStatement("$L.add($L)", pluralPropertyName, propertyName);
     }
 }

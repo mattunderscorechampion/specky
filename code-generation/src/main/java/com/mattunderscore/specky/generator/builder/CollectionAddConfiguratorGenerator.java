@@ -26,13 +26,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator.builder;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
-import com.mattunderscore.specky.generator.StatementGeneratorForProperty;
+import com.mattunderscore.specky.generator.StatementAppenderForProperty;
 import com.mattunderscore.specky.generator.StatementGeneratorForType;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 
@@ -53,7 +54,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 public final class CollectionAddConfiguratorGenerator implements MethodGeneratorForProperty {
     private static final List<String> COLLECTION_TYPES = asList("java.util.Set", "java.util.List");
     private final String javadoc;
-    private final StatementGeneratorForProperty updateStatementGenerator;
+    private final StatementAppenderForProperty updateStatementGenerator;
     private final StatementGeneratorForType returnStatementGenerator;
 
     /**
@@ -61,7 +62,7 @@ public final class CollectionAddConfiguratorGenerator implements MethodGenerator
      */
     public CollectionAddConfiguratorGenerator(
             String javadoc,
-            StatementGeneratorForProperty updateStatementGenerator,
+            StatementAppenderForProperty updateStatementGenerator,
             StatementGeneratorForType returnStatementGenerator) {
         this.javadoc = javadoc;
         this.updateStatementGenerator = updateStatementGenerator;
@@ -104,8 +105,10 @@ public final class CollectionAddConfiguratorGenerator implements MethodGenerator
                     methodParameter);
         }
 
-        return methodBuilder
-            .addStatement(updateStatementGenerator.generate(specDesc, implementationDesc, propertyDesc))
+        final Builder builder = updateStatementGenerator
+            .generate(methodBuilder, specDesc, implementationDesc, propertyDesc);
+
+        return builder
             .addStatement("return " + returnStatementGenerator.generate(implementationDesc))
             .build();
     }

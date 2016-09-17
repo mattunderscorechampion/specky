@@ -28,18 +28,23 @@ package com.mattunderscore.specky.generator;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
+import com.squareup.javapoet.MethodSpec.Builder;
 
 /**
  * Generate a statement to update a collection.
  *
  * @author Matt Champion on 16/09/16
  */
-public final class UpdateCollection implements StatementGeneratorForProperty {
+public final class UpdateCollection implements StatementAppenderForProperty {
     @Override
-    public String generate(SpecDesc specDesc, ImplementationDesc implementationDesc, PropertyDesc propertyDesc) {
+    public Builder generate(
+            Builder methodBuilder,
+            SpecDesc specDesc,
+            ImplementationDesc implementationDesc,
+            PropertyDesc propertyDesc) {
         final String pluralPropertyName = propertyDesc.getName();
         final String propertyName = propertyDesc.getName().substring(0, pluralPropertyName.length() - 1);
 
-        return String.format("this.%s.add(%s)", pluralPropertyName, propertyName);
+        return methodBuilder.addStatement("this.$L.add($L)", pluralPropertyName, propertyName);
     }
 }

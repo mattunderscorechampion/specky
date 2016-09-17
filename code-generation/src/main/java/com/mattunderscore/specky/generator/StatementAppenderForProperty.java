@@ -28,14 +28,15 @@ package com.mattunderscore.specky.generator;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
+import com.squareup.javapoet.MethodSpec.Builder;
 
 /**
  * Statement generator for a property.
  * @author Matt Champion on 16/09/2016
  */
-public interface StatementGeneratorForProperty {
+public interface StatementAppenderForProperty {
     /**
-     * @return the generated statement
+     * @return the builder
      */
-    String generate(SpecDesc specDesc, ImplementationDesc implementationDesc, PropertyDesc propertyDesc);
+    Builder generate(Builder methodBuilder, SpecDesc specDesc, ImplementationDesc implementationDesc, PropertyDesc propertyDesc);
 }
