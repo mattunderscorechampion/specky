@@ -44,6 +44,7 @@ import com.mattunderscore.specky.generator.constructor.ConstructorForBuiltTypeGe
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
@@ -115,7 +116,7 @@ public final class MutableBuilderGenerator implements TypeAppender {
                 final TypeName type = getType(propertyDesc);
                 final FieldSpec fieldSpec = FieldSpec
                     .builder(type, propertyDesc.getName(), PRIVATE)
-                    .initializer(propertyDesc.getDefaultValue() == null ? "null" : propertyDesc.getDefaultValue())
+                    .initializer(propertyDesc.getDefaultValue() == null ? CodeBlock.of("null") : propertyDesc.getDefaultValue())
                     .build();
 
                 builder

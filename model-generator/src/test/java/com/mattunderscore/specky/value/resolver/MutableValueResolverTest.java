@@ -32,6 +32,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Optional;
 
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
+import com.squareup.javapoet.CodeBlock;
 import org.junit.Test;
 
 /**
@@ -48,7 +49,7 @@ public final class MutableValueResolverTest {
     public void resolveNone() {
         final MutableValueResolver resolver = new MutableValueResolver();
 
-        final Optional<String> none = resolver.resolve(noneProperty, "none");
+        final Optional<CodeBlock> none = resolver.resolve(noneProperty, "none");
         assertFalse(none.isPresent());
     }
 
@@ -56,16 +57,16 @@ public final class MutableValueResolverTest {
     public void registerAndResolve() {
         final MutableValueResolver resolver = new MutableValueResolver();
 
-        final Optional<String> some = resolver.register("some", "other").resolve(someProperty, "some");
+        final Optional<CodeBlock> some = resolver.register("some", CodeBlock.of("other")).resolve(someProperty, "some");
         assertTrue(some.isPresent());
-        assertEquals("other", some.get());
+        assertEquals(CodeBlock.of("other"), some.get());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void registerTwice() {
         final MutableValueResolver resolver = new MutableValueResolver();
 
-        resolver.register("some", "other").register("some", "again");
+        resolver.register("some", CodeBlock.of("other")).register("some", CodeBlock.of("again"));
     }
 
     @Test(expected = NullPointerException.class)

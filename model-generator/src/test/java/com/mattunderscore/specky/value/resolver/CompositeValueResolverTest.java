@@ -29,6 +29,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
+import com.squareup.javapoet.CodeBlock;
 import org.junit.Test;
 
 /**
@@ -48,6 +49,6 @@ public final class CompositeValueResolverTest {
 
     @Test
     public void with() {
-        assertEquals("null", resolver.with(new NullValueResolver()).resolve(stringProperty, "java.lang.String").get());
+        assertEquals(CodeBlock.of("null"), resolver.with(new NullValueResolver()).resolve(stringProperty, "java.lang.String").get());
     }
 }

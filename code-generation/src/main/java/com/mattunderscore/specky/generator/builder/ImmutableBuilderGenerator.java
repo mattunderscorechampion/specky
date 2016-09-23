@@ -33,6 +33,7 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +47,8 @@ import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.CodeBlock.Builder;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
@@ -141,7 +144,7 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
                         .setReturnsDescription("a new builder for $L")
                         .toJavaDoc(),
                     valueDesc.getName())
-                .addStatement(defaultBuilder(valueDesc))
+                .addCode(defaultBuilder(valueDesc))
                 .build())
             .addMethod(constructorGenerator.generate(specDesc, valueDesc))
             .addType(builder.build());
@@ -157,13 +160,24 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
             ')';
     }
 
-    private String defaultBuilder(ImplementationDesc valueDesc) {
-        return "return new Builder(" +
-            valueDesc
-                .getProperties()
-                .stream()
-                .map(propertySpec -> propertySpec.getDefaultValue() == null ? "null" : propertySpec.getDefaultValue())
-                .collect(Collectors.joining(", ")) +
-            ')';
+    private CodeBlock defaultBuilder(ImplementationDesc valueDesc) {
+        final Builder builder = CodeBlock.builder().add("$[return new Builder(");
+        final List<CodeBlock> codeBlocks = valueDesc
+            .getProperties()
+            .stream()
+            .map(propertySpec ->
+                propertySpec.getDefaultValue() == null ?
+                    CodeBlock.of("null") :
+                    propertySpec.getDefaultValue())
+            .collect(Collectors.toList());
+        final Iterator<CodeBlock> iterator = codeBlocks.iterator();
+        while (iterator.hasNext()) {
+            builder.add(iterator.next());
+            if (iterator.hasNext()) {
+                builder.add(", ");
+            }
+        }
+
+        return builder.add(");$]").build();
     }
 }

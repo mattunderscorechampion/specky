@@ -26,6 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.value.resolver;
 
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
+import com.squareup.javapoet.CodeBlock;
 
 import java.util.Optional;
 
@@ -37,5 +38,5 @@ public interface DefaultValueResolver {
     /**
      * @return A default value or empty if it could not be resolved
      */
-    Optional<String> resolve(DSLPropertyDesc propertyDesc, String resolvedType);
+    Optional<CodeBlock> resolve(DSLPropertyDesc propertyDesc, String resolvedType);
 }

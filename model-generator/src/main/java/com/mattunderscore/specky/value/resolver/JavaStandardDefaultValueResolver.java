@@ -26,8 +26,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.value.resolver;
 
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
+import com.squareup.javapoet.CodeBlock;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 
@@ -36,39 +41,40 @@ import java.util.Optional;
  * @author Matt Champion on 23/06/2016
  */
 public final class JavaStandardDefaultValueResolver implements DefaultValueResolver {
-    private final Map<String, String> typeToDefault = new HashMap<>();
+    private final Map<String, CodeBlock> typeToDefault = new HashMap<>();
 
     /**
      * Constructor.
      */
+    @SuppressWarnings("PMD.LooseCoupling")
     public JavaStandardDefaultValueResolver() {
         // Primitives
-        typeToDefault.put("int", "0");
-        typeToDefault.put("double", "0.0");
-        typeToDefault.put("boolean", "false");
-        typeToDefault.put("long", "0L");
+        typeToDefault.put("int", CodeBlock.of("$L", 0));
+        typeToDefault.put("double", CodeBlock.of("$L", 0.0));
+        typeToDefault.put("boolean", CodeBlock.of("$L", false));
+        typeToDefault.put("long", CodeBlock.of("$LL", 0L));
 
         // Boxed primitives
-        typeToDefault.put("java.lang.Integer", "0");
-        typeToDefault.put("java.lang.Double", "0.0");
-        typeToDefault.put("java.lang.Boolean", "false");
-        typeToDefault.put("java.lang.Long", "0L");
+        typeToDefault.put("java.lang.Integer", CodeBlock.of("$L", 0));
+        typeToDefault.put("java.lang.Double", CodeBlock.of("$L", 0.0));
+        typeToDefault.put("java.lang.Boolean", CodeBlock.of("$L", false));
+        typeToDefault.put("java.lang.Long", CodeBlock.of("$LL", 0L));
 
         // Big numbers
-        typeToDefault.put("java.math.BigInteger", "BigInteger.ZERO");
-        typeToDefault.put("java.math.BigDecimal", "BigDecimal.ZERO");
+        typeToDefault.put("java.math.BigInteger", CodeBlock.of("$T.ZERO", BigInteger.class));
+        typeToDefault.put("java.math.BigDecimal", CodeBlock.of("$T.ZERO", BigDecimal.class));
 
         // Simple classes
-        typeToDefault.put("java.lang.Object", "new Object()");
-        typeToDefault.put("java.lang.String", "\"\"");
+        typeToDefault.put("java.lang.Object", CodeBlock.of("new $T()", Object.class));
+        typeToDefault.put("java.lang.String", CodeBlock.of("$S", ""));
 
         // Generic classes
-        typeToDefault.put("java.util.List", "new java.util.ArrayList<>()");
-        typeToDefault.put("java.util.Set", "new java.util.HashSet<>()");
+        typeToDefault.put("java.util.List", CodeBlock.of("new $T()", ArrayList.class));
+        typeToDefault.put("java.util.Set", CodeBlock.of("new $T()", HashSet.class));
     }
 
     @Override
-    public Optional<String> resolve(DSLPropertyDesc propertyDesc, String resolvedType) {
+    public Optional<CodeBlock> resolve(DSLPropertyDesc propertyDesc, String resolvedType) {
         return Optional.ofNullable(typeToDefault.get(resolvedType));
     }
 }

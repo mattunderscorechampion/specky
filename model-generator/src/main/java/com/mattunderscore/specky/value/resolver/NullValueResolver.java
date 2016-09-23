@@ -26,6 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.value.resolver;
 
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
+import com.squareup.javapoet.CodeBlock;
 
 import static java.util.Arrays.asList;
 
@@ -41,11 +42,11 @@ public final class NullValueResolver implements DefaultValueResolver {
     private static final Set<String> PRIMITIVE_TYPES = new HashSet<>(asList("int", "boolean", "double"));
 
     @Override
-    public Optional<String> resolve(DSLPropertyDesc propertyDesc, String resolvedType) {
+    public Optional<CodeBlock> resolve(DSLPropertyDesc propertyDesc, String resolvedType) {
         if (PRIMITIVE_TYPES.contains(resolvedType)) {
             return Optional.empty();
         }
 
-        return Optional.of("null");
+        return Optional.of(CodeBlock.of("null"));
     }
 }

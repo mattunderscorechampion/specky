@@ -29,6 +29,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
+import com.squareup.javapoet.CodeBlock;
 import org.junit.Test;
 
 /**
@@ -45,7 +46,7 @@ public final class NullValueResolverTest {
 
     @Test
     public void objectsAreNull() {
-        assertEquals("null", resolver.resolve(stringProperty, "java.lang.String").get());
+        assertEquals(CodeBlock.of("null"), resolver.resolve(stringProperty, "java.lang.String").get());
     }
 
     @Test

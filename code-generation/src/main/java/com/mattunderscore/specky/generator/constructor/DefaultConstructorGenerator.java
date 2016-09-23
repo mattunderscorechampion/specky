@@ -36,6 +36,7 @@ import com.mattunderscore.specky.generator.MethodGeneratorForType;
 import com.mattunderscore.specky.generator.constraint.PropertyConstraintGenerator;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
@@ -63,7 +64,7 @@ public final class DefaultConstructorGenerator implements MethodGeneratorForType
                 final TypeName type = getType(propertyDesc);
                 final FieldSpec fieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build();
 
-                final String defaultValue = propertyDesc.getDefaultValue();
+                final CodeBlock defaultValue = propertyDesc.getDefaultValue();
 
                 if (defaultValue == null) {
                     if (propertyDesc.getConstraint() != null) {

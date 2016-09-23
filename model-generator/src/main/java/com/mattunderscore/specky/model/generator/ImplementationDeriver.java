@@ -49,6 +49,7 @@ import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.ValueDesc;
 import com.mattunderscore.specky.model.generator.scope.Scope;
 import com.mattunderscore.specky.model.generator.scope.ScopeResolver;
+import com.squareup.javapoet.CodeBlock;
 
 /**
  * Fully derive an implementation from its superinterfaces.
@@ -233,7 +234,10 @@ public final class ImplementationDeriver {
     }
 
     private PropertyDesc get(Scope scope, DSLPropertyDesc dslPropertyDesc) {
-        final String defaultValue = dslPropertyDesc.getDefaultValue();
+        final String defaultValueExpression = dslPropertyDesc.getDefaultValue();
+        final CodeBlock defaultValue = defaultValueExpression == null ?
+                CodeBlock.of("null") :
+                CodeBlock.of(defaultValueExpression);
         final String resolvedType = scope
             .getPropertyTypeResolver()
             .resolveOrThrow(dslPropertyDesc);
@@ -248,7 +252,7 @@ public final class ImplementationDeriver {
                 .map(scope.getTypeResolver()::resolveOrThrow)
                 .collect(toList()))
             .defaultValue(
-                defaultValue == null && !dslPropertyDesc.isOptional() ?
+                defaultValue.equals(CodeBlock.of("null")) && !dslPropertyDesc.isOptional() ?
                     scope.getValueResolver().resolve(dslPropertyDesc, resolvedType).get() :
                     defaultValue)
             .constraint(dslPropertyDesc.getConstraint())

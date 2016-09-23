@@ -7,6 +7,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.squareup.javapoet.CodeBlock;
 import org.junit.Test;
 
 import com.mattunderscore.specky.SemanticException;
@@ -122,13 +123,13 @@ public final class ModelGeneratorTest {
         final PropertyDesc property0 = implementationDesc.getProperties().get(1);
         assertEquals("intProp", property0.getName());
         assertEquals("int", property0.getType());
-        assertEquals("0", property0.getDefaultValue());
+        assertEquals(CodeBlock.of("$L", 0), property0.getDefaultValue());
         assertFalse(property0.isOverride());
         final PropertyDesc property1 = implementationDesc.getProperties().get(0);
         assertEquals("objectProp", property1.getName());
         assertEquals("java.lang.Object", property1.getType());
         assertTrue(property1.isOverride());
-        assertEquals("Integer.ZERO", property1.getDefaultValue());
+        assertEquals(CodeBlock.of("Integer.ZERO"), property1.getDefaultValue());
     }
 
     @Test

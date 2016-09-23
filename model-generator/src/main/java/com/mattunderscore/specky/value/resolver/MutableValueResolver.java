@@ -26,6 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.value.resolver;
 
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
+import com.squareup.javapoet.CodeBlock;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -37,10 +38,10 @@ import java.util.concurrent.ConcurrentMap;
  * @author Matt Champion on 30/07/2016
  */
 public final class MutableValueResolver implements DefaultValueResolver {
-    private final ConcurrentMap<String, String> typeToValue = new ConcurrentHashMap<>(10, 0.5f, 2);
+    private final ConcurrentMap<String, CodeBlock> typeToValue = new ConcurrentHashMap<>(10, 0.5f, 2);
 
     @Override
-    public Optional<String> resolve(DSLPropertyDesc propertyDesc, String resolvedType) {
+    public Optional<CodeBlock> resolve(DSLPropertyDesc propertyDesc, String resolvedType) {
         return Optional.ofNullable(typeToValue.get(resolvedType));
     }
 
@@ -48,10 +49,10 @@ public final class MutableValueResolver implements DefaultValueResolver {
      * Register a default value for a type.
      * @throws IllegalArgumentException if a mapping already exists
      */
-    public MutableValueResolver register(String type, String defaultValue) {
+    public MutableValueResolver register(String type, CodeBlock defaultValue) {
         Objects.requireNonNull(type);
         Objects.requireNonNull(defaultValue);
-        final String currentValue = typeToValue.putIfAbsent(type, defaultValue);
+        final CodeBlock currentValue = typeToValue.putIfAbsent(type, defaultValue);
         if (currentValue != null && !currentValue.equals(defaultValue)) {
             throw new IllegalArgumentException("The type " + type + " is already registered to " + defaultValue);
         }

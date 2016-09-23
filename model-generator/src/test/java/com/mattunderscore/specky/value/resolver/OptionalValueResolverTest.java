@@ -1,6 +1,7 @@
 package com.mattunderscore.specky.value.resolver;
 
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
+import com.squareup.javapoet.CodeBlock;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -21,14 +22,14 @@ public class OptionalValueResolverTest {
 
     @Test
     public void optional() {
-        final Optional<String> value = resolver.resolve(optionalProperty, "none");
+        final Optional<CodeBlock> value = resolver.resolve(optionalProperty, "none");
         assertTrue(value.isPresent());
-        assertEquals("null", value.get());
+        assertEquals(CodeBlock.of("null"), value.get());
     }
 
     @Test
     public void required() {
-        final Optional<String> value = resolver.resolve(requiredProperty, "none");
+        final Optional<CodeBlock> value = resolver.resolve(requiredProperty, "none");
         assertFalse(value.isPresent());
     }
 }

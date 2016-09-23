@@ -76,15 +76,20 @@ public final class SpeckyWritingContext {
         if (consumed.compareAndSet(false, true)) {
             for (final JavaFile file : javaFiles) {
                 final String code = file.toString();
-                final String formattedSource = codeFormatter.formatSource(code);
-                Path outputPath = targetPath;
-                final String[] packageNameParts = file.packageName.split("\\.");
-                for (final String packageNamePart : packageNameParts) {
-                    outputPath = outputPath.resolve(packageNamePart);
+                try {
+                    final String formattedSource = codeFormatter.formatSource(code);
+                    Path outputPath = targetPath;
+                    final String[] packageNameParts = file.packageName.split("\\.");
+                    for (final String packageNamePart : packageNameParts) {
+                        outputPath = outputPath.resolve(packageNamePart);
+                    }
+                    Files.createDirectories(outputPath);
+                    outputPath = outputPath.resolve(file.typeSpec.name + ".java");
+                    Files.write(outputPath, formattedSource.getBytes(Charset.forName("UTF-8")), CREATE, WRITE, TRUNCATE_EXISTING);
                 }
-                Files.createDirectories(outputPath);
-                outputPath = outputPath.resolve(file.typeSpec.name + ".java");
-                Files.write(outputPath, formattedSource.getBytes(Charset.forName("UTF-8")), CREATE, WRITE, TRUNCATE_EXISTING);
+                catch (FormatterException e) {
+                    throw new IllegalStateException("Failed to write\n" + code, e);
+                }
             }
         }
         else {

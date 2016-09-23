@@ -42,6 +42,7 @@ import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver
 import com.mattunderscore.specky.value.resolver.MutableValueResolver;
 import com.mattunderscore.specky.value.resolver.NullValueResolver;
 import com.mattunderscore.specky.value.resolver.OptionalValueResolver;
+import com.squareup.javapoet.CodeBlock;
 
 /**
  * Resolver for the scope to use.
@@ -99,7 +100,7 @@ public final class ScopeResolver {
         final String typeName = importDesc.getTypeName().substring(lastPart + 1);
         typeResolver.registerTypeName(packageName, typeName);
         if (importDesc.getDefaultValue() != null) {
-            mutableValueResolver.register(importDesc.getTypeName(), importDesc.getDefaultValue());
+            mutableValueResolver.register(importDesc.getTypeName(), CodeBlock.of(importDesc.getDefaultValue()));
         }
     }
 
