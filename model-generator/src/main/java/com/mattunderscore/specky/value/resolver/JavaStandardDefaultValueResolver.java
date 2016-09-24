@@ -69,8 +69,8 @@ public final class JavaStandardDefaultValueResolver implements DefaultValueResol
         typeToDefault.put("java.lang.String", CodeBlock.of("$S", ""));
 
         // Generic classes
-        typeToDefault.put("java.util.List", CodeBlock.of("new $T()", ArrayList.class));
-        typeToDefault.put("java.util.Set", CodeBlock.of("new $T()", HashSet.class));
+        typeToDefault.put("java.util.List", CodeBlock.of("new $T<>()", ArrayList.class));
+        typeToDefault.put("java.util.Set", CodeBlock.of("new $T<>()", HashSet.class));
     }
 
     @Override
