@@ -67,14 +67,11 @@ public final class NewModifiedCollection implements StatementAppenderForProperty
     private Builder generateCollection(Builder methodBuilder, PropertyDesc propertyDesc, TypeName implementationType) {
         final String pluralPropertyName = propertyDesc.getName();
         final String propertyName = propertyDesc.getName().substring(0, pluralPropertyName.length() - 1);
-        final TypeName elementType = getType(propertyDesc.getTypeParameters().get(0));
         final TypeName type = getType(propertyDesc);
 
         return methodBuilder
             .addStatement("final $T $L = new $T()", type, pluralPropertyName, implementationType)
-            .beginControlFlow("for ($T temp : this.$L)", elementType, pluralPropertyName)
-            .addStatement("$L.add(temp)", pluralPropertyName)
-            .endControlFlow()
+            .addStatement("$L.addAll(this.$L)", pluralPropertyName, pluralPropertyName)
             .addStatement("$L.add($L)", pluralPropertyName, propertyName);
     }
 }
