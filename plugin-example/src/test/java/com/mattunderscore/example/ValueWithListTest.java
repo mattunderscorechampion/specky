@@ -3,11 +3,13 @@ package com.mattunderscore.example;
 import com.example.ValueWithList;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -20,6 +22,19 @@ public final class ValueWithListTest {
         final List<String> list = Arrays.asList("a", "b");
         final ValueWithList value = ValueWithList.builder().names(list).build();
         assertEquals(list, value.getNames());
+        assertEquals("ValueWithList[names=[a, b]]", value.toString());
+    }
+
+    @Test
+    public void testListCopied() {
+        final List<String> list = new ArrayList<>();
+        list.add("a");
+        list.add("b");
+        final ValueWithList value = ValueWithList.builder().names(list).build();
+        assertNotSame(list, value.getNames());
+        assertEquals(list, value.getNames());
+        list.add("c");
+        assertEquals(2, value.getNames().size());
         assertEquals("ValueWithList[names=[a, b]]", value.toString());
     }
 

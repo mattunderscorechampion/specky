@@ -25,12 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.builder;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
-import static com.squareup.javapoet.MethodSpec.methodBuilder;
-import static javax.lang.model.element.Modifier.PUBLIC;
-
-import java.util.Objects;
-
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
 import com.mattunderscore.specky.generator.StatementGeneratorForType;
 import com.mattunderscore.specky.generator.constraint.PropertyConstraintGenerator;
@@ -41,6 +35,14 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Objects;
+
+import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
+import static com.squareup.javapoet.MethodSpec.methodBuilder;
+import static javax.lang.model.element.Modifier.PUBLIC;
 
 /**
  * Generator for setting configurator.
@@ -81,8 +83,21 @@ public final class SettingConfiguratorGenerator implements MethodGeneratorForPro
             methodBuilder.addCode(propertyConstraintGenerator.generate(propertyDesc));
         }
 
+        if ("java.util.Set".equals(propertyDesc.getType())) {
+            methodBuilder
+                .addStatement("this.$L = new $T<>()", propertyDesc.getName(), HashSet.class)
+                .addStatement("this.$L.addAll($L)", propertyDesc.getName(), propertyDesc.getName());
+        }
+        else if ("java.util.List".equals(propertyDesc.getType())) {
+            methodBuilder
+                .addStatement("this.$L = new $T<>()", propertyDesc.getName(), ArrayList.class)
+                .addStatement("this.$L.addAll($L)", propertyDesc.getName(), propertyDesc.getName());
+        }
+        else {
+            methodBuilder.addStatement("this.$L = $N", propertyDesc.getName(), constructorParameter);
+        }
+
         return methodBuilder
-            .addStatement("this.$L = $N", propertyDesc.getName(), constructorParameter)
             .addStatement("return " + returnStatementGenerator.generate(implementationDesc))
             .build();
     }
