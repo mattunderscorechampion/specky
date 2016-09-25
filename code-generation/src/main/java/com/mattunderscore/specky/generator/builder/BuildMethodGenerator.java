@@ -25,21 +25,20 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.builder;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
-import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
-import static com.squareup.javapoet.MethodSpec.methodBuilder;
-import static javax.lang.model.element.Modifier.PUBLIC;
-
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 import com.mattunderscore.specky.generator.MethodGeneratorForType;
 import com.mattunderscore.specky.model.ImplementationDesc;
-import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
+
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
+import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
+import static com.squareup.javapoet.MethodSpec.methodBuilder;
+import static javax.lang.model.element.Modifier.PUBLIC;
 
 /**
  * Generator for build methods.
@@ -69,7 +68,21 @@ public final class BuildMethodGenerator implements MethodGeneratorForType {
             valueDesc
                 .getProperties()
                 .stream()
-                .map(PropertyDesc::getName)
+                .map(propertyDesc -> {
+                    if ("java.util.Set".equals(propertyDesc.getType())) {
+                        return propertyDesc.getName() + " != null ? java.util.Collections.unmodifiableSet(" +
+                            propertyDesc.getName() +
+                            ") : null";
+                    }
+                    else if ("java.util.List".equals(propertyDesc.getType())) {
+                        return propertyDesc.getName() + " != null ? java.util.Collections.unmodifiableList(" +
+                            propertyDesc.getName() +
+                            ") : null";
+                    }
+                    else {
+                        return propertyDesc.getName();
+                    }
+                })
                 .collect(Collectors.joining(", ")) +
             ')',
             ClassName.get(valueDesc.getPackageName(), valueDesc.getName()));
@@ -82,7 +95,8 @@ public final class BuildMethodGenerator implements MethodGeneratorForType {
             .forEach(propertySpec -> {
                 final TypeName typeName = getType(propertySpec);
                 if (!propertySpec.isOptional() && !typeName.isPrimitive()) {
-                    methodSpecBuilder.addStatement("$T.requireNonNull($N)", ClassName.get(Objects.class), propertySpec.getName());
+                    methodSpecBuilder
+                        .addStatement("$T.requireNonNull($N)", ClassName.get(Objects.class), propertySpec.getName());
                 }
             });
     }

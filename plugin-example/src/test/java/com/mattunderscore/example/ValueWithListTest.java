@@ -38,6 +38,13 @@ public final class ValueWithListTest {
         assertEquals("ValueWithList[names=[a, b]]", value.toString());
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void testValueListsImmutable() {
+        final List<String> list = Arrays.asList("a", "b");
+        final ValueWithList value = ValueWithList.builder().names(list).build();
+        value.getNames().add("c");
+    }
+
     @Test
     public void equality() {
         final List<String> list = Arrays.asList("a", "b");
