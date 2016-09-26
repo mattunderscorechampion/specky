@@ -29,9 +29,13 @@ import com.mattunderscore.specky.generator.MethodGeneratorForType;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -63,29 +67,42 @@ public final class BuildMethodGenerator implements MethodGeneratorForType {
     }
 
     private void addReturnStatement(MethodSpec.Builder buildMethod, ImplementationDesc valueDesc) {
-        buildMethod.addStatement(
-            "return new $T(" +
-            valueDesc
-                .getProperties()
-                .stream()
-                .map(propertyDesc -> {
-                    if ("java.util.Set".equals(propertyDesc.getType())) {
-                        return propertyDesc.getName() + " != null ? java.util.Collections.unmodifiableSet(" +
-                            propertyDesc.getName() +
-                            ") : null";
-                    }
-                    else if ("java.util.List".equals(propertyDesc.getType())) {
-                        return propertyDesc.getName() + " != null ? java.util.Collections.unmodifiableList(" +
-                            propertyDesc.getName() +
-                            ") : null";
-                    }
-                    else {
-                        return propertyDesc.getName();
-                    }
-                })
-                .collect(Collectors.joining(", ")) +
-            ')',
-            ClassName.get(valueDesc.getPackageName(), valueDesc.getName()));
+        final List<CodeBlock> codeBlocks = valueDesc
+            .getProperties()
+            .stream()
+            .map(propertyDesc -> {
+                if ("java.util.Set".equals(propertyDesc.getType())) {
+                    return CodeBlock.of(
+                        "$L != null ? $T.unmodifiableSet($L) : null",
+                        propertyDesc.getName(),
+                        Collections.class,
+                        propertyDesc.getName());
+                }
+                else if ("java.util.List".equals(propertyDesc.getType())) {
+                    return CodeBlock.of(
+                        "$L != null ? $T.unmodifiableList($L) : null",
+                        propertyDesc.getName(),
+                        Collections.class,
+                        propertyDesc.getName());
+                }
+                else {
+                    return CodeBlock.of(propertyDesc.getName());
+                }
+            })
+            .collect(Collectors.toList());
+
+        final CodeBlock.Builder statementBuilder = CodeBlock
+            .builder()
+            .add("$[return new $T(", ClassName.get(valueDesc.getPackageName(), valueDesc.getName()));
+        final Iterator<CodeBlock> iterator = codeBlocks.iterator();
+        while (iterator.hasNext()) {
+            statementBuilder.add(iterator.next());
+            if (iterator.hasNext()) {
+                statementBuilder.add(", ");
+            }
+        }
+
+        buildMethod.addCode(statementBuilder.add(");$]").build());
     }
 
     private void addValidationStatements(MethodSpec.Builder methodSpecBuilder, ImplementationDesc valueDesc) {
