@@ -27,6 +27,7 @@ package com.mattunderscore.specky.generator.builder;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForType;
 import com.mattunderscore.specky.model.ImplementationDesc;
+import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -70,25 +71,7 @@ public final class BuildMethodGenerator implements MethodGeneratorForType {
         final List<CodeBlock> codeBlocks = valueDesc
             .getProperties()
             .stream()
-            .map(propertyDesc -> {
-                if ("java.util.Set".equals(propertyDesc.getType())) {
-                    return CodeBlock.of(
-                        "$L != null ? $T.unmodifiableSet($L) : null",
-                        propertyDesc.getName(),
-                        Collections.class,
-                        propertyDesc.getName());
-                }
-                else if ("java.util.List".equals(propertyDesc.getType())) {
-                    return CodeBlock.of(
-                        "$L != null ? $T.unmodifiableList($L) : null",
-                        propertyDesc.getName(),
-                        Collections.class,
-                        propertyDesc.getName());
-                }
-                else {
-                    return CodeBlock.of(propertyDesc.getName());
-                }
-            })
+            .map(BuildMethodGenerator::get)
             .collect(Collectors.toList());
 
         final CodeBlock.Builder statementBuilder = CodeBlock
@@ -116,5 +99,35 @@ public final class BuildMethodGenerator implements MethodGeneratorForType {
                         .addStatement("$T.requireNonNull($N)", ClassName.get(Objects.class), propertySpec.getName());
                 }
             });
+    }
+
+    private static CodeBlock get(PropertyDesc propertyDesc) {
+        if ("java.util.Set".equals(propertyDesc.getType())) {
+            return getWrappedCollection(propertyDesc, "unmodifiableSet");
+        }
+        else if ("java.util.List".equals(propertyDesc.getType())) {
+            return getWrappedCollection(propertyDesc, "unmodifiableList");
+        }
+        else {
+            return CodeBlock.of(propertyDesc.getName());
+        }
+    }
+
+    private static CodeBlock getWrappedCollection(PropertyDesc propertyDesc, String wrapper) {
+        if (propertyDesc.isOptional()) {
+            return CodeBlock.of(
+                "$L != null ? $T.$L($L) : null",
+                propertyDesc.getName(),
+                Collections.class,
+                wrapper,
+                propertyDesc.getName());
+        }
+        else {
+            return CodeBlock.of(
+                "$T.$L($L)",
+                Collections.class,
+                wrapper,
+                propertyDesc.getName());
+        }
     }
 }
