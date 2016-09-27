@@ -150,16 +150,6 @@ public final class ImmutableBuilderGenerator implements TypeAppender {
             .addType(builder.build());
     }
 
-    private String newBuilder(ImplementationDesc valueDesc) {
-        return "return new Builder(" +
-            valueDesc
-                .getProperties()
-                .stream()
-                .map(PropertyDesc::getName)
-                .collect(Collectors.joining(", ")) +
-            ')';
-    }
-
     private CodeBlock defaultBuilder(ImplementationDesc valueDesc) {
         final Builder builder = CodeBlock.builder().add("$[return new Builder(");
         final List<CodeBlock> codeBlocks = valueDesc
