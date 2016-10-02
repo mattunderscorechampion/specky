@@ -45,6 +45,7 @@ import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.SpeckyDSLFileStreamingContext;
 import com.mattunderscore.specky.SpeckyGeneratingContext;
 import com.mattunderscore.specky.SpeckyModelGeneratingContext;
+import com.mattunderscore.specky.SpeckyParsingException;
 import com.mattunderscore.specky.SpeckyWritingContext;
 
 /**
@@ -52,7 +53,7 @@ import com.mattunderscore.specky.SpeckyWritingContext;
  * @phase generate-sources
  * @author Matt Champion on 23/06/2016
  */
-public class GenerateMojo extends AbstractMojo {
+public final class GenerateMojo extends AbstractMojo {
     /**
      * @component
      */
@@ -106,6 +107,9 @@ public class GenerateMojo extends AbstractMojo {
         }
         catch (IOException e) {
             throw new MojoFailureException("Failed to process specification files", e);
+        }
+        catch (SpeckyParsingException e) {
+            throw new MojoFailureException("Failed to parse specification files", e);
         }
 
         final SpeckyGeneratingContext speckyGeneratingContext;

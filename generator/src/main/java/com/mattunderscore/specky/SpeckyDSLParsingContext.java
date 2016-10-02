@@ -57,7 +57,7 @@ public final class SpeckyDSLParsingContext {
      * @throws IOException if there is a problem with the streams
      */
     @SuppressWarnings("PMD.PrematureDeclaration")
-    public SpeckyModelGeneratingContext parse() throws IOException {
+    public SpeckyModelGeneratingContext parse() throws IOException, SpeckyParsingException {
         if (consumed.compareAndSet(false, true)) {
             final List<Specky.SpecContext> specContexts = new ArrayList<>();
             for (final InputStream inputStream : streamsToParse) {
@@ -69,7 +69,7 @@ public final class SpeckyDSLParsingContext {
                     parser.addErrorListener(errorCountingListener);
                     final Specky.SpecContext specContext = parser.spec();
                     if (errorCountingListener.hasErrors()) {
-                        throw new IllegalStateException("Errors found");
+                        throw new SpeckyParsingException();
                     }
 
                     specContexts.add(specContext);
