@@ -42,8 +42,7 @@ import net.jcip.annotations.NotThreadSafe;
  */
 @NotThreadSafe
 /*package*/ final class ErrorCountingListener implements ANTLRErrorListener {
-    private int syntaxErrorCount;
-    private int ambiguityCount;
+    private int errorCount;
 
     @Override
     public void syntaxError(
@@ -53,7 +52,7 @@ import net.jcip.annotations.NotThreadSafe;
             int charPositionInLine,
             String msg,
             RecognitionException e) {
-        syntaxErrorCount += 1;
+        errorCount += 1;
     }
 
     @Override
@@ -65,7 +64,7 @@ import net.jcip.annotations.NotThreadSafe;
             boolean exact,
             BitSet ambigAlts,
             ATNConfigSet configs) {
-        ambiguityCount += 1;
+        errorCount += 1;
     }
 
     @Override
@@ -92,6 +91,6 @@ import net.jcip.annotations.NotThreadSafe;
      * @return if the listener was notified of any errors
      */
     public boolean hasErrors() {
-        return syntaxErrorCount > 0 || ambiguityCount > 0;
+        return errorCount > 0;
     }
 }
