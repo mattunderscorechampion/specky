@@ -93,4 +93,11 @@ import net.jcip.annotations.NotThreadSafe;
     public boolean hasErrors() {
         return errorCount > 0;
     }
+
+    /**
+     * @return the number of errors
+     */
+    public int getErrorCount() {
+        return errorCount;
+    }
 }
