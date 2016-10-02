@@ -75,8 +75,9 @@ public final class SpeckyDSLParsingContext {
                 }
             }
 
-            if (errorCountingListener.hasErrors()) {
-                throw new SpeckyParsingException();
+            final int errorCount = errorCountingListener.getErrorCount();
+            if (errorCount > 0) {
+                throw new SpeckyParsingException(errorCount);
             }
 
             final List<DSLSpecDesc> specs = new ArrayList<>();
