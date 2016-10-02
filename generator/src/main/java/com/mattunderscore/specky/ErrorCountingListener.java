@@ -41,7 +41,7 @@ import net.jcip.annotations.NotThreadSafe;
  * @author Matt Champion on 02/10/2016
  */
 @NotThreadSafe
-public final class ErrorCountingListener implements ANTLRErrorListener {
+/*package*/ final class ErrorCountingListener implements ANTLRErrorListener {
     private int syntaxErrorCount;
     private int ambiguityCount;
 
