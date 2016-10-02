@@ -56,27 +56,27 @@ public final class SpeckyDSLParsingContext {
      * Parse the input streams and return a model generating context.
      * @throws IOException if there is a problem with the streams
      */
-    @SuppressWarnings("PMD.PrematureDeclaration")
     public SpeckyModelGeneratingContext parse() throws IOException, SpeckyParsingException {
         if (consumed.compareAndSet(false, true)) {
             final List<Specky.SpecContext> specContexts = new ArrayList<>();
+            final ErrorCountingListener errorCountingListener = new ErrorCountingListener();
             for (final InputStream inputStream : streamsToParse) {
                 try {
                     final CharStream stream = new ANTLRInputStream(inputStream);
                     final SpeckyLexer lexer = new SpeckyLexer(stream);
                     final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
-                    final ErrorCountingListener errorCountingListener = new ErrorCountingListener();
                     parser.addErrorListener(errorCountingListener);
                     final Specky.SpecContext specContext = parser.spec();
-                    if (errorCountingListener.hasErrors()) {
-                        throw new SpeckyParsingException();
-                    }
 
                     specContexts.add(specContext);
                 }
                 finally {
                     inputStream.close();
                 }
+            }
+
+            if (errorCountingListener.hasErrors()) {
+                throw new SpeckyParsingException();
             }
 
             final List<DSLSpecDesc> specs = new ArrayList<>();
