@@ -72,6 +72,7 @@ public final class SpecBuilder {
      * @return the list of {@link DSLSpecDesc} from a {@link SpecContext}.
      */
     public List<DSLSpecDesc> build(SpecContext context) {
+
         return context
             .sectionContent()
             .stream()
