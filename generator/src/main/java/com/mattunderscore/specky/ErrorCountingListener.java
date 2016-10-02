@@ -88,13 +88,6 @@ import net.jcip.annotations.NotThreadSafe;
     }
 
     /**
-     * @return if the listener was notified of any errors
-     */
-    public boolean hasErrors() {
-        return errorCount > 0;
-    }
-
-    /**
      * @return the number of errors
      */
     public int getErrorCount() {

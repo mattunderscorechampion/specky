@@ -19,7 +19,6 @@ public final class ErrorCountingListenerTest {
 
         listener.syntaxError(null, null, 0, 0, null, null);
 
-        assertTrue(listener.hasErrors());
         assertEquals(1, listener.getErrorCount());
     }
 
@@ -29,7 +28,6 @@ public final class ErrorCountingListenerTest {
 
         listener.reportAmbiguity(null, null, 0, 0, false, null, null);
 
-        assertTrue(listener.hasErrors());
         assertEquals(1, listener.getErrorCount());
     }
 
@@ -39,7 +37,6 @@ public final class ErrorCountingListenerTest {
 
         listener.reportAttemptingFullContext(null, null, 0, 0, null, null);
 
-        assertFalse(listener.hasErrors());
         assertEquals(0, listener.getErrorCount());
     }
 
@@ -49,7 +46,6 @@ public final class ErrorCountingListenerTest {
 
         listener.reportContextSensitivity(null, null, 0, 0, 0, null);
 
-        assertFalse(listener.hasErrors());
         assertEquals(0, listener.getErrorCount());
     }
 }

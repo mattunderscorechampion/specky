@@ -35,13 +35,6 @@ public final class SpeckyParsingException extends Exception {
     /**
      * Constructor.
      */
-    public SpeckyParsingException() {
-        super("Errors found");
-    }
-
-    /**
-     * Constructor.
-     */
     public SpeckyParsingException(int errorCount) {
         super(errorCount + " errors found");
     }
