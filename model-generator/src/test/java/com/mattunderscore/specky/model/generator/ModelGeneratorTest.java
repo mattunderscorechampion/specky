@@ -7,6 +7,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.mattunderscore.specky.CountingSemanticErrorListener;
 import com.squareup.javapoet.CodeBlock;
 import org.junit.Test;
 
@@ -50,7 +51,8 @@ public final class ModelGeneratorTest {
                 .build()))
             .build();
 
-        final ScopeResolver scopeResolver = new ScopeResolver().createScopes(singletonList(spec));
+        final ScopeResolver scopeResolver = new ScopeResolver(new CountingSemanticErrorListener())
+            .createScopes(singletonList(spec));
         final TypeDeriver typeDeriver = new TypeDeriver(scopeResolver);
         final ModelGenerator generator = new ModelGenerator(
             singletonList(spec),
@@ -104,7 +106,8 @@ public final class ModelGeneratorTest {
                 .build()))
             .build();
 
-        final ScopeResolver scopeResolver = new ScopeResolver().createScopes(singletonList(spec));
+        final ScopeResolver scopeResolver = new ScopeResolver(new CountingSemanticErrorListener())
+            .createScopes(singletonList(spec));
         final TypeDeriver typeDeriver = new TypeDeriver(scopeResolver);
         final ModelGenerator generator = new ModelGenerator(
             singletonList(spec),
@@ -154,7 +157,8 @@ public final class ModelGeneratorTest {
                 .build()))
             .build();
 
-        final ScopeResolver scopeResolver = new ScopeResolver().createScopes(singletonList(spec));
+        final ScopeResolver scopeResolver = new ScopeResolver(new CountingSemanticErrorListener())
+            .createScopes(singletonList(spec));
         final TypeDeriver typeDeriver = new TypeDeriver(scopeResolver);
         final ModelGenerator generator = new ModelGenerator(
             singletonList(spec),

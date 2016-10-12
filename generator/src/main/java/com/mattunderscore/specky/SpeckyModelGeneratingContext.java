@@ -42,8 +42,10 @@ import com.mattunderscore.specky.model.generator.scope.ScopeResolver;
 public final class SpeckyModelGeneratingContext {
     private final AtomicBoolean consumed = new AtomicBoolean(false);
     private final List<DSLSpecDesc> specs;
+    private final CountingSemanticErrorListener semanticErrorListener;
 
     /*package*/ SpeckyModelGeneratingContext(List<DSLSpecDesc> specs) {
+        semanticErrorListener = new CountingSemanticErrorListener();
         this.specs = specs;
     }
 
@@ -52,9 +54,16 @@ public final class SpeckyModelGeneratingContext {
      * @throws IllegalStateException if has been called before
      * @throws SemanticException if there is a problem with the semantics of the model
      */
+    @SuppressWarnings("PMD.PrematureDeclaration")
     public SpeckyGeneratingContext generate() throws SemanticException {
         if (consumed.compareAndSet(false, true)) {
-            final ScopeResolver scopeResolver = new ScopeResolver().createScopes(specs);
+            final ScopeResolver scopeResolver = new ScopeResolver(semanticErrorListener)
+                .createScopes(specs);
+
+            final int errorCount = semanticErrorListener.getErrorCount();
+            if (errorCount > 0) {
+                throw new SemanticException(errorCount + " semantic errors reported");
+            }
 
             final TypeDeriver typeDeriver = new TypeDeriver(scopeResolver);
 

@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.mattunderscore.specky.SemanticErrorListener;
 import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.dsl.model.DSLLicence;
 
@@ -38,15 +39,23 @@ import com.mattunderscore.specky.dsl.model.DSLLicence;
  * @author Matt Champion on 20/08/2016
  */
 public final class LicenceResolver {
-    private String defaultLicence;
     private final Map<String, String> licences = new HashMap<>();
+    private final SemanticErrorListener semanticErrorListener;
+    private String defaultLicence;
+
+    /**
+     * Constructor.
+     */
+    public LicenceResolver(SemanticErrorListener semanticErrorListener) {
+        this.semanticErrorListener = semanticErrorListener;
+    }
 
     /**
      * Register a default licence.
      */
-    public LicenceResolver register(String licence) throws SemanticException {
+    public LicenceResolver register(String licence) {
         if (defaultLicence != null) {
-            throw new SemanticException("Multiple default licences are not allowed");
+            semanticErrorListener.onSemanticError(new SemanticException("Multiple default licences are not allowed"));
         }
         defaultLicence = licence;
         return this;
@@ -78,9 +87,11 @@ public final class LicenceResolver {
             return Optional.of(resolvedLicence);
         }
 
-        throw new IllegalStateException(
+        semanticErrorListener.onSemanticError(new SemanticException(
             "An unknown name " +
             dslLicence.getIdentifier() +
-            " was used to reference a licence");
+            " was used to reference a licence"));
+
+        return Optional.empty();
     }
 }

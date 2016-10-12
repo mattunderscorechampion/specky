@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mattunderscore.specky.SemanticErrorListener;
 import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.dsl.model.DSLImportDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
@@ -50,6 +51,14 @@ import com.squareup.javapoet.CodeBlock;
  */
 public final class ScopeResolver {
     private final Map<DSLSpecDesc, Scope> scopes = new HashMap<>();
+    private final SemanticErrorListener semanticErrorListener;
+
+    /**
+     * Constructor.
+     */
+    public ScopeResolver(SemanticErrorListener semanticErrorListener) {
+        this.semanticErrorListener = semanticErrorListener;
+    }
 
     /**
      * Create the scopes.
@@ -75,7 +84,7 @@ public final class ScopeResolver {
             .with(new NullValueResolver());
 
         specs.forEach(spec -> {
-            final LicenceResolver licenceResolver = new LicenceResolver();
+            final LicenceResolver licenceResolver = new LicenceResolver(semanticErrorListener);
             spec.getLicences().forEach(dslLicence -> {
                 if (dslLicence.getIdentifier() == null) {
                     licenceResolver.register(dslLicence.getLicence());

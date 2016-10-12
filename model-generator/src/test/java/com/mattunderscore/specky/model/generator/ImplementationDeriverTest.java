@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.mattunderscore.specky.CountingSemanticErrorListener;
 import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.constraint.model.ConstraintOperator;
 import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
@@ -92,7 +93,8 @@ public final class ImplementationDeriverTest {
             .build();
 
 
-        final ScopeResolver scopeResolver = new ScopeResolver().createScopes(singletonList(spec));
+        final ScopeResolver scopeResolver = new ScopeResolver(new CountingSemanticErrorListener())
+            .createScopes(singletonList(spec));
 
         final Map<String, AbstractTypeDesc> types = new HashMap<>();
         types.put(
