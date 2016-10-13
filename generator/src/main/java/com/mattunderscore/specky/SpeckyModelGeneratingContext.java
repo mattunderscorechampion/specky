@@ -60,9 +60,9 @@ public final class SpeckyModelGeneratingContext {
             final ScopeResolver scopeResolver = new ScopeResolver(semanticErrorListener)
                 .createScopes(specs);
 
-            final int errorCount = semanticErrorListener.getErrorCount();
-            if (errorCount > 0) {
-                throw new SemanticException(errorCount + " semantic errors reported");
+            final int errorCount0 = semanticErrorListener.getErrorCount();
+            if (errorCount0 > 0) {
+                throw new SemanticException(errorCount0 + " semantic errors reported");
             }
 
             final TypeDeriver typeDeriver = new TypeDeriver(scopeResolver);
@@ -71,6 +71,11 @@ public final class SpeckyModelGeneratingContext {
                 specs,
                 scopeResolver,
                 typeDeriver);
+
+            final int errorCount1 = semanticErrorListener.getErrorCount();
+            if (errorCount1 > 0) {
+                throw new SemanticException(errorCount1 + " semantic errors reported");
+            }
 
             final SpecDesc specDesc = modelGenerator.get();
             return new SpeckyGeneratingContext(specDesc);

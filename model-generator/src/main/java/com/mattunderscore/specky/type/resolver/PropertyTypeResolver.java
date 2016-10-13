@@ -27,6 +27,7 @@ package com.mattunderscore.specky.type.resolver;
 
 import java.util.Optional;
 
+import com.mattunderscore.specky.SemanticErrorListener;
 import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 
@@ -34,13 +35,15 @@ import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
  * @author Matt Champion on 12/08/2016
  */
 public final class PropertyTypeResolver {
+    private final SemanticErrorListener semanticErrorListener;
     private final TypeResolver typeResolver;
 
     /**
      * Constructor.
      */
-    public PropertyTypeResolver(TypeResolver typeResolver) {
+    public PropertyTypeResolver(TypeResolver typeResolver, SemanticErrorListener semanticErrorListener) {
         this.typeResolver = typeResolver;
+        this.semanticErrorListener = semanticErrorListener;
     }
 
     /**
@@ -79,6 +82,10 @@ public final class PropertyTypeResolver {
      * @throws SemanticException if the type name cannot be resolved
      */
     public String resolveOrThrow(DSLPropertyDesc name) {
-        return resolve(name).orElseThrow(() -> new SemanticException("No resolvable type for " + name));
+        return resolve(name).orElseThrow(() -> {
+            final SemanticException semanticException = new SemanticException("No resolvable type for " + name);
+            semanticErrorListener.onSemanticError(semanticException);
+            return semanticException;
+        });
     }
 }

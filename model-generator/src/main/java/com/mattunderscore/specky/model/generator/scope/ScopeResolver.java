@@ -76,7 +76,7 @@ public final class ScopeResolver {
         });
 
         final TypeResolver resolver = new TypeResolverBuilder().registerResolver(typeResolver).build();
-        final PropertyTypeResolver propertyTypeResolver = new PropertyTypeResolver(resolver);
+        final PropertyTypeResolver propertyTypeResolver = new PropertyTypeResolver(resolver, semanticErrorListener);
         final CompositeValueResolver compositeValueResolver = new CompositeValueResolver()
             .with(new OptionalValueResolver())
             .with(new JavaStandardDefaultValueResolver())
