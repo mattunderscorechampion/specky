@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import com.mattunderscore.specky.SemanticErrorListener;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
@@ -46,17 +47,20 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
     private final List<DSLSpecDesc> dslSpecs;
     private final ScopeResolver scopeResolver;
     private final TypeDeriver typeDeriver;
+    private final SemanticErrorListener semanticErrorListener;
 
     /**
      * Constructor.
      */
     public ModelGenerator(
-            List<DSLSpecDesc> dslSpecs,
-            ScopeResolver scopeResolver,
-            TypeDeriver typeDeriver) {
+        List<DSLSpecDesc> dslSpecs,
+        ScopeResolver scopeResolver,
+        TypeDeriver typeDeriver,
+        SemanticErrorListener semanticErrorListener) {
         this.dslSpecs = dslSpecs;
         this.scopeResolver = scopeResolver;
         this.typeDeriver = typeDeriver;
+        this.semanticErrorListener = semanticErrorListener;
     }
 
     @Override
@@ -71,7 +75,10 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
             .stream()
             .collect(toMap(viewDesc -> viewDesc.getPackageName() + "." + viewDesc.getName(), viewDesc -> viewDesc));
 
-        final ImplementationDeriver implementationDeriver = new ImplementationDeriver(scopeResolver, mappedTypes);
+        final ImplementationDeriver implementationDeriver = new ImplementationDeriver(
+            scopeResolver,
+            mappedTypes,
+            semanticErrorListener);
 
         final List<ImplementationDesc> implementations = dslSpecs
             .stream()

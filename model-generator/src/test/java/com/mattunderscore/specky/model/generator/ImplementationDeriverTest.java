@@ -3,13 +3,19 @@ package com.mattunderscore.specky.model.generator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import com.mattunderscore.specky.CountingSemanticErrorListener;
+import com.mattunderscore.specky.SemanticErrorListener;
 import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.constraint.model.ConstraintOperator;
 import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
@@ -31,6 +37,19 @@ import com.mattunderscore.specky.model.generator.scope.ScopeResolver;
  * @author Matt Champion on 16/08/2016
  */
 public final class ImplementationDeriverTest {
+
+    @Mock
+    private SemanticErrorListener semanticErrorListener;
+
+    @Before
+    public void setUp() {
+        initMocks(this);
+    }
+
+    @After
+    public void postConditions() {
+        verifyNoMoreInteractions(semanticErrorListener);
+    }
 
     @Test
     public void deriveType() throws SemanticException {
@@ -122,7 +141,7 @@ public final class ImplementationDeriverTest {
                     .build()))
                 .build());
 
-        final ImplementationDeriver deriver = new ImplementationDeriver(scopeResolver, types);
+        final ImplementationDeriver deriver = new ImplementationDeriver(scopeResolver, types, semanticErrorListener);
 
         final ImplementationDesc implementationDesc = deriver.deriveType(spec, valueDesc);
 

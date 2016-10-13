@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.mattunderscore.specky.SemanticErrorListener;
 import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
 import com.mattunderscore.specky.constraint.model.NFDisjointPredicates;
@@ -59,15 +60,18 @@ import com.squareup.javapoet.CodeBlock;
 public final class ImplementationDeriver {
     private final ScopeResolver scopeResolver;
     private final Map<String, AbstractTypeDesc> views;
+    private final SemanticErrorListener semanticErrorListener;
 
     /**
      * Constructor.
      */
     public ImplementationDeriver(
-            ScopeResolver scopeResolver,
-            Map<String, AbstractTypeDesc> views) {
+        ScopeResolver scopeResolver,
+        Map<String, AbstractTypeDesc> views,
+        SemanticErrorListener semanticErrorListener) {
         this.scopeResolver = scopeResolver;
         this.views = views;
+        this.semanticErrorListener = semanticErrorListener;
     }
 
     /**
@@ -191,17 +195,17 @@ public final class ImplementationDeriver {
 
     private void checkMergableProperties(PropertyDesc currentProperty, PropertyDesc newProperty) {
         if (!newProperty.getType().equals(currentProperty.getType())) {
-            throw new SemanticException("Conflicting property declarations for " +
+            semanticErrorListener.onSemanticError(new SemanticException("Conflicting property declarations for " +
                 currentProperty.getName() +
                 ". Types " +
                 currentProperty.getType() +
                 " and " +
-                newProperty.getType());
+                newProperty.getType()));
         }
         else if (newProperty.isOptional() != currentProperty.isOptional()) {
-            throw new SemanticException("Conflicting property declarations for " +
+            semanticErrorListener.onSemanticError(new SemanticException("Conflicting property declarations for " +
                 currentProperty.getName() +
-                ". Cannot be both optional and required.");
+                ". Cannot be both optional and required."));
         }
     }
 

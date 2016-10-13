@@ -25,6 +25,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator;
 
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
+
+import com.mattunderscore.specky.SemanticErrorListener;
 import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
@@ -36,23 +41,21 @@ import com.mattunderscore.specky.model.generator.scope.Scope;
 import com.mattunderscore.specky.model.generator.scope.ScopeResolver;
 import com.squareup.javapoet.CodeBlock;
 
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
-
 /**
  * Fully derive a type from its superinterfaces.
  *
  * @author Matt Champion on 22/08/2016
  */
 public final class TypeDeriver {
+    private final SemanticErrorListener semanticErrorListener;
     private final ScopeResolver scopeResolver;
 
     /**
      * Constructor.
      */
-    public TypeDeriver(ScopeResolver scopeResolver) {
+    public TypeDeriver(ScopeResolver scopeResolver, SemanticErrorListener semanticErrorListener) {
         this.scopeResolver = scopeResolver;
+        this.semanticErrorListener = semanticErrorListener;
     }
 
     /**
@@ -112,8 +115,8 @@ public final class TypeDeriver {
             .resolve(dslPropertyDesc, resolvedType)
             .get();
         if (!dslPropertyDesc.isOptional() && CodeBlock.of("null").equals(typeDefaultValue)) {
-            throw new SemanticException(
-                "The property " + dslPropertyDesc.getName() + " is not optional but has no default type");
+            semanticErrorListener.onSemanticError(new SemanticException(
+                "The property " + dslPropertyDesc.getName() + " is not optional but has no default type"));
         }
 
         return typeDefaultValue;

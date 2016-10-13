@@ -6,11 +6,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.MockitoAnnotations.initMocks;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
 
 import com.mattunderscore.specky.CountingSemanticErrorListener;
-import com.squareup.javapoet.CodeBlock;
-import org.junit.Test;
-
+import com.mattunderscore.specky.SemanticErrorListener;
 import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.dsl.model.DSLAbstractTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
@@ -21,6 +26,7 @@ import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.generator.scope.ScopeResolver;
+import com.squareup.javapoet.CodeBlock;
 
 /**
  * Unit tests for {@link ModelGenerator}.
@@ -28,6 +34,19 @@ import com.mattunderscore.specky.model.generator.scope.ScopeResolver;
  * @author Matt Champion on 12/07/2016
  */
 public final class ModelGeneratorTest {
+
+    @Mock
+    private SemanticErrorListener semanticErrorListener;
+
+    @Before
+    public void setUp() {
+        initMocks(this);
+    }
+
+    @After
+    public void postConditions() {
+        verifyNoMoreInteractions(semanticErrorListener);
+    }
 
     @Test
     public void simple() throws SemanticException {
@@ -53,11 +72,14 @@ public final class ModelGeneratorTest {
 
         final ScopeResolver scopeResolver = new ScopeResolver(new CountingSemanticErrorListener())
             .createScopes(singletonList(spec));
-        final TypeDeriver typeDeriver = new TypeDeriver(scopeResolver);
+        final TypeDeriver typeDeriver = new TypeDeriver(
+            scopeResolver,
+            semanticErrorListener);
         final ModelGenerator generator = new ModelGenerator(
             singletonList(spec),
             scopeResolver,
-            typeDeriver);
+            typeDeriver,
+            semanticErrorListener);
 
         final SpecDesc specDesc = generator.get();
 
@@ -108,11 +130,12 @@ public final class ModelGeneratorTest {
 
         final ScopeResolver scopeResolver = new ScopeResolver(new CountingSemanticErrorListener())
             .createScopes(singletonList(spec));
-        final TypeDeriver typeDeriver = new TypeDeriver(scopeResolver);
+        final TypeDeriver typeDeriver = new TypeDeriver(scopeResolver, semanticErrorListener);
         final ModelGenerator generator = new ModelGenerator(
             singletonList(spec),
             scopeResolver,
-            typeDeriver);
+            typeDeriver,
+            semanticErrorListener);
 
         final SpecDesc specDesc = generator.get();
 
@@ -159,11 +182,12 @@ public final class ModelGeneratorTest {
 
         final ScopeResolver scopeResolver = new ScopeResolver(new CountingSemanticErrorListener())
             .createScopes(singletonList(spec));
-        final TypeDeriver typeDeriver = new TypeDeriver(scopeResolver);
+        final TypeDeriver typeDeriver = new TypeDeriver(scopeResolver, semanticErrorListener);
         final ModelGenerator generator = new ModelGenerator(
             singletonList(spec),
             scopeResolver,
-            typeDeriver);
+            typeDeriver,
+            semanticErrorListener);
 
         final SpecDesc specDesc = generator.get();
 
