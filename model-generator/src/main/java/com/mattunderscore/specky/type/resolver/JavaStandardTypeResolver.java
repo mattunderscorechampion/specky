@@ -29,18 +29,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.mattunderscore.specky.SemanticErrorListener;
+
 /**
  * {@link TypeResolver} for types in the standard Java library.
  *
  * @author Matt Champion on 06/06/16
  */
-/*package*/ final class JavaStandardTypeResolver implements TypeResolver {
+public final class JavaStandardTypeResolver extends AbstractTypeResolver {
     private final Map<String, String> nameToType = new HashMap<>();
 
     /**
      * Constructor.
      */
-    JavaStandardTypeResolver() {
+    public JavaStandardTypeResolver(SemanticErrorListener semanticErrorListener) {
+        super(semanticErrorListener);
+
         // Primitives
         nameToType.put("int", "int");
         nameToType.put("double", "double");

@@ -31,18 +31,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.mattunderscore.specky.SemanticErrorListener;
+
 /**
  * {@link TypeResolver} for specified types.
  *
  * @author Matt Champion on 08/06/16
  */
-public final class SpecTypeResolver implements TypeResolver {
+public final class SpecTypeResolver extends AbstractTypeResolver {
     private final Map<String, String> specs = new HashMap<>();
 
     /**
      * Constructor.
      */
-    public SpecTypeResolver() {
+    public SpecTypeResolver(SemanticErrorListener semanticErrorListener) {
+        super(semanticErrorListener);
     }
 
     /**

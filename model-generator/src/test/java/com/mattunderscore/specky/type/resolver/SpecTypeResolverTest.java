@@ -27,32 +27,47 @@ package com.mattunderscore.specky.type.resolver;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.mockito.MockitoAnnotations.initMocks;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+
+import com.mattunderscore.specky.SemanticErrorListener;
 
 /**
  * Unit tests for {@link SpecTypeResolver}.
  * @author Matt Champion on 08/06/16
  */
 public class SpecTypeResolverTest {
+    @Mock
+    private SemanticErrorListener semanticErrorListener;
+
+    @Before
+    public void setUp() {
+        initMocks(this);
+    }
 
     @Test
     public void resolve() {
-        final TypeResolver resolver = new SpecTypeResolver().registerTypeName("com.example", "Test");
+        final TypeResolver resolver = new SpecTypeResolver(semanticErrorListener)
+            .registerTypeName("com.example", "Test");
 
         assertEquals("com.example.Test", resolver.resolve("Test").get());
     }
 
     @Test
     public void get() {
-        final TypeResolver resolver = new SpecTypeResolver().registerTypeName("com.example", "Test");
+        final TypeResolver resolver = new SpecTypeResolver(semanticErrorListener)
+            .registerTypeName("com.example", "Test");
 
         assertEquals("com.example.Test", resolver.resolve("com.example.Test").get());
     }
 
     @Test
     public void unknown() {
-        final TypeResolver resolver = new SpecTypeResolver().registerTypeName("com.example", "Test");
+        final TypeResolver resolver = new SpecTypeResolver(semanticErrorListener)
+            .registerTypeName("com.example", "Test");
 
         assertFalse(resolver.resolve("XTest").isPresent());
     }

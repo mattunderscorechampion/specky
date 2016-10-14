@@ -25,63 +25,29 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.type.resolver;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.mockito.MockitoAnnotations.initMocks;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-
 import com.mattunderscore.specky.SemanticErrorListener;
+import com.mattunderscore.specky.SemanticException;
 
 /**
- * Unit tests for {@link JavaStandardTypeResolver}.
- * @author Matt Champion on 08/06/16
+ * Abstract implementation of {@link TypeResolver} that notifies a {@link SemanticErrorListener}.
+ * @author Matt Champion on 14/10/2016
  */
-public class JavaStandardTypeResolverTest {
-    @Mock
-    private SemanticErrorListener semanticErrorListener;
+public abstract class AbstractTypeResolver implements TypeResolver {
+    private final SemanticErrorListener semanticErrorListener;
 
-    @Before
-    public void setUp() {
-        initMocks(this);
+    /**
+     * Constructor.
+     */
+    protected AbstractTypeResolver(SemanticErrorListener semanticErrorListener) {
+        this.semanticErrorListener = semanticErrorListener;
     }
 
-    private final JavaStandardTypeResolver resolver = new JavaStandardTypeResolver(semanticErrorListener);
-
-    @Test
-    public void resolveString() {
-        assertEquals("java.lang.String", resolver.resolve("String").get());
-    }
-
-    @Test
-    public void resolveInteger() {
-        assertEquals("java.lang.Integer", resolver.resolve("Integer").get());
-    }
-
-    @Test
-    public void resolveDouble() {
-        assertEquals("java.lang.Double", resolver.resolve("Double").get());
-    }
-
-    @Test
-    public void getString() {
-        assertEquals("java.lang.String", resolver.resolve("java.lang.String").get());
-    }
-
-    @Test
-    public void getInteger() {
-        assertEquals("java.lang.Integer", resolver.resolve("java.lang.Integer").get());
-    }
-
-    @Test
-    public void getDouble() {
-        assertEquals("java.lang.Double", resolver.resolve("java.lang.Double").get());
-    }
-
-    @Test
-    public void unknown() {
-        assertFalse(resolver.resolve("java.lang.BigInteger").isPresent());
+    @Override
+    public final String resolveOrThrow(String name) {
+        return resolve(name).orElseThrow(() -> {
+            final SemanticException semanticException = new SemanticException("No resolvable type for " + name);
+            semanticErrorListener.onSemanticError(semanticException);
+            return semanticException;
+        });
     }
 }

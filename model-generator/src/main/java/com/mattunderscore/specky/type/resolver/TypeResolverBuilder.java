@@ -30,9 +30,7 @@ package com.mattunderscore.specky.type.resolver;
  * @author Matt Champion on 08/06/16
  */
 public final class TypeResolverBuilder {
-    private final CompositeTypeResolver compositeTypeResolver =
-        new CompositeTypeResolver()
-            .registerResolver(new JavaStandardTypeResolver());
+    private final CompositeTypeResolver compositeTypeResolver = new CompositeTypeResolver();
 
     /**
      * Register a resolver.

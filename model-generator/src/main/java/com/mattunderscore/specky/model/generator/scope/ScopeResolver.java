@@ -34,6 +34,7 @@ import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.dsl.model.DSLImportDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.licence.resolver.LicenceResolver;
+import com.mattunderscore.specky.type.resolver.JavaStandardTypeResolver;
 import com.mattunderscore.specky.type.resolver.PropertyTypeResolver;
 import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
@@ -65,7 +66,7 @@ public final class ScopeResolver {
      * @throws SemanticException if there is a problem with the scopes
      */
     public ScopeResolver createScopes(List<DSLSpecDesc> specs) {
-        final SpecTypeResolver typeResolver = new SpecTypeResolver();
+        final SpecTypeResolver typeResolver = new SpecTypeResolver(semanticErrorListener);
         final MutableValueResolver mutableValueResolver = new MutableValueResolver();
 
         specs.forEach(spec -> {
@@ -75,7 +76,10 @@ public final class ScopeResolver {
                 .forEach(type -> typeResolver.registerTypeName(spec.getPackageName(), type.getName()));
         });
 
-        final TypeResolver resolver = new TypeResolverBuilder().registerResolver(typeResolver).build();
+        final TypeResolver resolver = new TypeResolverBuilder()
+            .registerResolver(new JavaStandardTypeResolver(semanticErrorListener))
+            .registerResolver(typeResolver)
+            .build();
         final PropertyTypeResolver propertyTypeResolver = new PropertyTypeResolver(resolver, semanticErrorListener);
         final CompositeValueResolver compositeValueResolver = new CompositeValueResolver()
             .with(new OptionalValueResolver())

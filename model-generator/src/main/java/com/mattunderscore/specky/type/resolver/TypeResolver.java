@@ -42,12 +42,9 @@ public interface TypeResolver {
     Optional<String> resolve(String name);
 
     /**
-     *
      * @param name the type name
      * @return fully qualified name
      * @throws SemanticException if the type name cannot be resolved
      */
-    default String resolveOrThrow(String name) {
-        return resolve(name).orElseThrow(() -> new SemanticException("No resolvable type for " + name));
-    }
+    String resolveOrThrow(String name);
 }
