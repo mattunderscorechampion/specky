@@ -86,7 +86,12 @@ public final class TypeDeriver {
     }
 
     private PropertyDesc getViewProperty(Scope scope, DSLPropertyDesc dslPropertyDesc) {
-        final String resolvedType = scope.getPropertyTypeResolver().resolveOrThrow(dslPropertyDesc);
+        final Optional<String> optionalPropertyType = scope.getPropertyTypeResolver().resolve(dslPropertyDesc);
+        if (!optionalPropertyType.isPresent()) {
+            semanticErrorListener.onSemanticError(new SemanticException("No resolvable type for " + dslPropertyDesc.getName()));
+        }
+        final String resolvedType = optionalPropertyType.orElse("unknown type");
+
         return PropertyDesc
             .builder()
             .name(dslPropertyDesc.getName())

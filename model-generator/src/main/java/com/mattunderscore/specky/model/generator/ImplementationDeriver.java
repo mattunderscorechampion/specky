@@ -255,9 +255,11 @@ public final class ImplementationDeriver {
         final CodeBlock defaultValue = defaultValueExpression == null ?
                 CodeBlock.of("null") :
                 CodeBlock.of(defaultValueExpression);
-        final String resolvedType = scope
-            .getPropertyTypeResolver()
-            .resolveOrThrow(dslPropertyDesc);
+        final Optional<String> optionalPropertyType = scope.getPropertyTypeResolver().resolve(dslPropertyDesc);
+        if (!optionalPropertyType.isPresent()) {
+            semanticErrorListener.onSemanticError(new SemanticException("No resolvable type for " + dslPropertyDesc.getName()));
+        }
+        final String resolvedType = optionalPropertyType.orElse("unknown type");
 
         return PropertyDesc
             .builder()
