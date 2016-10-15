@@ -33,5 +33,5 @@ public interface SemanticErrorListener {
     /**
      * Notified when a semantic error is encountered.
      */
-    void onSemanticError(SemanticException e);
+    void onSemanticError(String message);
 }

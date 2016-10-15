@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.mattunderscore.specky.SemanticErrorListener;
-import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.dsl.model.DSLLicence;
 
 /**
@@ -55,7 +54,7 @@ public final class LicenceResolver {
      */
     public LicenceResolver register(String licence) {
         if (defaultLicence != null) {
-            semanticErrorListener.onSemanticError(new SemanticException("Multiple default licences are not allowed"));
+            semanticErrorListener.onSemanticError("Multiple default licences are not allowed");
         }
         defaultLicence = licence;
         return this;
@@ -87,10 +86,10 @@ public final class LicenceResolver {
             return Optional.of(resolvedLicence);
         }
 
-        semanticErrorListener.onSemanticError(new SemanticException(
+        semanticErrorListener.onSemanticError(
             "An unknown name " +
             dslLicence.getIdentifier() +
-            " was used to reference a licence"));
+            " was used to reference a licence");
 
         return Optional.empty();
     }

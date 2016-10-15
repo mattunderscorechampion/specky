@@ -14,7 +14,7 @@ public final class CountingSemanticErrorListenerTest {
     @Test
     public void onSemanticError() {
         final CountingSemanticErrorListener listener = new CountingSemanticErrorListener();
-        listener.onSemanticError(new SemanticException("Test exception"));
+        listener.onSemanticError("Test error");
         assertEquals(1, listener.getErrorCount());
     }
 }

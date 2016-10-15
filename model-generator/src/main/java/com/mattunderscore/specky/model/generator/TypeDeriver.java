@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.mattunderscore.specky.SemanticErrorListener;
-import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.dsl.model.DSLTypeDesc;
@@ -88,7 +87,7 @@ public final class TypeDeriver {
     private PropertyDesc getViewProperty(Scope scope, DSLPropertyDesc dslPropertyDesc) {
         final Optional<String> optionalPropertyType = scope.getPropertyTypeResolver().resolve(dslPropertyDesc);
         if (!optionalPropertyType.isPresent()) {
-            semanticErrorListener.onSemanticError(new SemanticException("No resolvable type for " + dslPropertyDesc.getName()));
+            semanticErrorListener.onSemanticError("No resolvable type for " + dslPropertyDesc.getName());
         }
         final String resolvedType = optionalPropertyType.orElse("unknown type");
 
@@ -102,7 +101,7 @@ public final class TypeDeriver {
                 .map(typeName -> {
                     final Optional<String> optionalType = scope.getTypeResolver().resolve(typeName);
                     if (!optionalType.isPresent()) {
-                        semanticErrorListener.onSemanticError(new SemanticException("No resolvable type for " + typeName));
+                        semanticErrorListener.onSemanticError("No resolvable type for " + typeName);
                     }
                     return optionalType.orElse("unknown type");
                 })
@@ -127,8 +126,8 @@ public final class TypeDeriver {
             .resolve(dslPropertyDesc, resolvedType)
             .get();
         if (!dslPropertyDesc.isOptional() && CodeBlock.of("null").equals(typeDefaultValue)) {
-            semanticErrorListener.onSemanticError(new SemanticException(
-                "The property " + dslPropertyDesc.getName() + " is not optional but has no default type"));
+            semanticErrorListener.onSemanticError(
+                "The property " + dslPropertyDesc.getName() + " is not optional but has no default type");
         }
 
         return typeDefaultValue;

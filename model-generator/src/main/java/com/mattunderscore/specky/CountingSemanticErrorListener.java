@@ -33,7 +33,7 @@ public final class CountingSemanticErrorListener implements SemanticErrorListene
     private int errorCount;
 
     @Override
-    public void onSemanticError(SemanticException e) {
+    public void onSemanticError(String message) {
         errorCount += 1;
     }
 

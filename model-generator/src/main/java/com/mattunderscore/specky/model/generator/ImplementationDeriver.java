@@ -37,7 +37,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.mattunderscore.specky.SemanticErrorListener;
-import com.mattunderscore.specky.SemanticException;
 import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
 import com.mattunderscore.specky.constraint.model.NFDisjointPredicates;
 import com.mattunderscore.specky.dsl.model.DSLImplementationDesc;
@@ -171,7 +170,7 @@ public final class ImplementationDeriver {
             .map(typeName -> {
                 final Optional<String> optionalType = scope.getTypeResolver().resolve(typeName);
                 if (!optionalType.isPresent()) {
-                    semanticErrorListener.onSemanticError(new SemanticException("No resolvable type for " + typeName));
+                    semanticErrorListener.onSemanticError("No resolvable type for " + typeName);
                 }
                 return optionalType.orElse("unknown type");
             })
@@ -194,7 +193,7 @@ public final class ImplementationDeriver {
             .map(typeName -> {
                 final Optional<String> optionalType = scope.getTypeResolver().resolve(typeName);
                 if (!optionalType.isPresent()) {
-                    semanticErrorListener.onSemanticError(new SemanticException("No resolvable type for " + typeName));
+                    semanticErrorListener.onSemanticError("No resolvable type for " + typeName);
                 }
                 return optionalType.orElse("unknown type");
             })
@@ -208,17 +207,17 @@ public final class ImplementationDeriver {
 
     private void checkMergableProperties(PropertyDesc currentProperty, PropertyDesc newProperty) {
         if (!newProperty.getType().equals(currentProperty.getType())) {
-            semanticErrorListener.onSemanticError(new SemanticException("Conflicting property declarations for " +
+            semanticErrorListener.onSemanticError("Conflicting property declarations for " +
                 currentProperty.getName() +
                 ". Types " +
                 currentProperty.getType() +
                 " and " +
-                newProperty.getType()));
+                newProperty.getType());
         }
         else if (newProperty.isOptional() != currentProperty.isOptional()) {
-            semanticErrorListener.onSemanticError(new SemanticException("Conflicting property declarations for " +
+            semanticErrorListener.onSemanticError("Conflicting property declarations for " +
                 currentProperty.getName() +
-                ". Cannot be both optional and required."));
+                ". Cannot be both optional and required.");
         }
     }
 
@@ -257,7 +256,7 @@ public final class ImplementationDeriver {
                 CodeBlock.of(defaultValueExpression);
         final Optional<String> optionalPropertyType = scope.getPropertyTypeResolver().resolve(dslPropertyDesc);
         if (!optionalPropertyType.isPresent()) {
-            semanticErrorListener.onSemanticError(new SemanticException("No resolvable type for " + dslPropertyDesc.getName()));
+            semanticErrorListener.onSemanticError("No resolvable type for " + dslPropertyDesc.getName());
         }
         final String resolvedType = optionalPropertyType.orElse("unknown type");
 
@@ -271,7 +270,7 @@ public final class ImplementationDeriver {
                 .map(typeName -> {
                     final Optional<String> optionalType = scope.getTypeResolver().resolve(typeName);
                     if (!optionalType.isPresent()) {
-                        semanticErrorListener.onSemanticError(new SemanticException("No resolvable type for " + typeName));
+                        semanticErrorListener.onSemanticError("No resolvable type for " + typeName);
                     }
                     return optionalType.orElse("unknown type");
                 })
