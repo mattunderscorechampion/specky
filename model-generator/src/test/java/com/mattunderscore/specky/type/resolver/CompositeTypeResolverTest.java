@@ -27,13 +27,8 @@ package com.mattunderscore.specky.type.resolver;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-
-import com.mattunderscore.specky.SemanticErrorListener;
 
 /**
  * Unit tests for {@link CompositeTypeResolver}.
@@ -41,19 +36,11 @@ import com.mattunderscore.specky.SemanticErrorListener;
  */
 public final class CompositeTypeResolverTest {
 
-    @Mock
-    private SemanticErrorListener semanticErrorListener;
-
-    @Before
-    public void setUp() {
-        initMocks(this);
-    }
-
     @Test
     public void resolveJava() throws Exception {
         final TypeResolver resolver = new CompositeTypeResolver()
-                .registerResolver(new JavaStandardTypeResolver(semanticErrorListener))
-                .registerResolver(new SpecTypeResolver(semanticErrorListener).registerTypeName("com.example", "Test"));
+                .registerResolver(new JavaStandardTypeResolver())
+                .registerResolver(new SpecTypeResolver().registerTypeName("com.example", "Test"));
 
         assertEquals("java.lang.String", resolver.resolve("String").get());
     }
@@ -61,8 +48,8 @@ public final class CompositeTypeResolverTest {
     @Test
     public void resolveSpec() throws Exception {
         final TypeResolver resolver = new CompositeTypeResolver()
-                .registerResolver(new JavaStandardTypeResolver(semanticErrorListener))
-                .registerResolver(new SpecTypeResolver(semanticErrorListener).registerTypeName("com.example", "Test"));
+                .registerResolver(new JavaStandardTypeResolver())
+                .registerResolver(new SpecTypeResolver().registerTypeName("com.example", "Test"));
 
         assertEquals("com.example.Test", resolver.resolve("Test").get());
     }
@@ -70,8 +57,8 @@ public final class CompositeTypeResolverTest {
     @Test
     public void unknown() {
         final TypeResolver resolver = new CompositeTypeResolver()
-                .registerResolver(new JavaStandardTypeResolver(semanticErrorListener))
-                .registerResolver(new SpecTypeResolver(semanticErrorListener).registerTypeName("com.example", "Test"));
+                .registerResolver(new JavaStandardTypeResolver())
+                .registerResolver(new SpecTypeResolver().registerTypeName("com.example", "Test"));
 
         assertFalse(resolver.resolve("XTest").isPresent());
     }

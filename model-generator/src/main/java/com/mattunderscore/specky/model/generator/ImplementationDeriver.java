@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import com.mattunderscore.specky.SemanticErrorListener;
@@ -167,7 +168,13 @@ public final class ImplementationDeriver {
         dslImplementationDesc
             .getSupertypes()
             .stream()
-            .map(scope.getTypeResolver()::resolveOrThrow)
+            .map(typeName -> {
+                final Optional<String> optionalType = scope.getTypeResolver().resolve(typeName);
+                if (!optionalType.isPresent()) {
+                    semanticErrorListener.onSemanticError(new SemanticException("No resolvable type for " + typeName));
+                }
+                return optionalType.orElse("unknown type");
+            })
             .map(views::get).forEach(typeDesc -> {
                 if (setOfTypes.add(typeDesc)) {
                     resolveSupertypes(scope, typeDesc, typeDescs, setOfTypes);
@@ -184,7 +191,13 @@ public final class ImplementationDeriver {
         firstTypeDesc
             .getSupertypes()
             .stream()
-            .map(scope.getTypeResolver()::resolveOrThrow)
+            .map(typeName -> {
+                final Optional<String> optionalType = scope.getTypeResolver().resolve(typeName);
+                if (!optionalType.isPresent()) {
+                    semanticErrorListener.onSemanticError(new SemanticException("No resolvable type for " + typeName));
+                }
+                return optionalType.orElse("unknown type");
+            })
             .map(views::get).forEach(typeDesc -> {
                 if (setOfTypes.add(typeDesc)) {
                     resolveSupertypes(scope, typeDesc, typeDescs, setOfTypes);
@@ -253,7 +266,13 @@ public final class ImplementationDeriver {
             .typeParameters(dslPropertyDesc
                 .getTypeParameters()
                 .stream()
-                .map(scope.getTypeResolver()::resolveOrThrow)
+                .map(typeName -> {
+                    final Optional<String> optionalType = scope.getTypeResolver().resolve(typeName);
+                    if (!optionalType.isPresent()) {
+                        semanticErrorListener.onSemanticError(new SemanticException("No resolvable type for " + typeName));
+                    }
+                    return optionalType.orElse("unknown type");
+                })
                 .collect(toList()))
             .defaultValue(
                 defaultValue.equals(CodeBlock.of("null")) && !dslPropertyDesc.isOptional() ?

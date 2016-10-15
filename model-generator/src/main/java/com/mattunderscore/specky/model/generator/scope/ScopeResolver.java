@@ -66,7 +66,7 @@ public final class ScopeResolver {
      * @throws SemanticException if there is a problem with the scopes
      */
     public ScopeResolver createScopes(List<DSLSpecDesc> specs) {
-        final SpecTypeResolver typeResolver = new SpecTypeResolver(semanticErrorListener);
+        final SpecTypeResolver typeResolver = new SpecTypeResolver();
         final MutableValueResolver mutableValueResolver = new MutableValueResolver();
 
         specs.forEach(spec -> {
@@ -77,7 +77,7 @@ public final class ScopeResolver {
         });
 
         final TypeResolver resolver = new TypeResolverBuilder()
-            .registerResolver(new JavaStandardTypeResolver(semanticErrorListener))
+            .registerResolver(new JavaStandardTypeResolver())
             .registerResolver(typeResolver)
             .build();
         final PropertyTypeResolver propertyTypeResolver = new PropertyTypeResolver(resolver, semanticErrorListener);

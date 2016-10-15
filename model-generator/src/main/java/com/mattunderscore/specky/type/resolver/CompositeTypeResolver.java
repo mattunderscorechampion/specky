@@ -30,8 +30,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import com.mattunderscore.specky.SemanticException;
-
 /**
  * {@link TypeResolver} that delegates to many other resolvers.
  *
@@ -53,10 +51,5 @@ import com.mattunderscore.specky.SemanticException;
             .filter(Optional::isPresent)
             .flatMap(o -> o.isPresent() ? Stream.of(o.get()) : Stream.empty())
             .findFirst();
-    }
-
-    @Override
-    public String resolveOrThrow(String name) {
-        return resolve(name).orElseThrow(() -> new SemanticException("No resolvable type for " + name));
     }
 }

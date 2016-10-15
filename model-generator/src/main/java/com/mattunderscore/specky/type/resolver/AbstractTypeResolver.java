@@ -26,28 +26,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.type.resolver;
 
 import com.mattunderscore.specky.SemanticErrorListener;
-import com.mattunderscore.specky.SemanticException;
 
 /**
  * Abstract implementation of {@link TypeResolver} that notifies a {@link SemanticErrorListener}.
  * @author Matt Champion on 14/10/2016
  */
 public abstract class AbstractTypeResolver implements TypeResolver {
-    private final SemanticErrorListener semanticErrorListener;
-
-    /**
-     * Constructor.
-     */
-    protected AbstractTypeResolver(SemanticErrorListener semanticErrorListener) {
-        this.semanticErrorListener = semanticErrorListener;
-    }
-
-    @Override
-    public final String resolveOrThrow(String name) {
-        return resolve(name).orElseThrow(() -> {
-            final SemanticException semanticException = new SemanticException("No resolvable type for " + name);
-            semanticErrorListener.onSemanticError(semanticException);
-            return semanticException;
-        });
-    }
 }

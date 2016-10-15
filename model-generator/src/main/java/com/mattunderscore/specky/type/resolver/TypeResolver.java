@@ -27,8 +27,6 @@ package com.mattunderscore.specky.type.resolver;
 
 import java.util.Optional;
 
-import com.mattunderscore.specky.SemanticException;
-
 /**
  * Resolve a type name to a fully qualified name.
  *
@@ -40,11 +38,4 @@ public interface TypeResolver {
      * @return optional fully qualified name
      */
     Optional<String> resolve(String name);
-
-    /**
-     * @param name the type name
-     * @return fully qualified name
-     * @throws SemanticException if the type name cannot be resolved
-     */
-    String resolveOrThrow(String name);
 }

@@ -40,15 +40,8 @@ import com.mattunderscore.specky.SemanticErrorListener;
  * @author Matt Champion on 08/06/16
  */
 public class JavaStandardTypeResolverTest {
-    @Mock
-    private SemanticErrorListener semanticErrorListener;
 
-    @Before
-    public void setUp() {
-        initMocks(this);
-    }
-
-    private final JavaStandardTypeResolver resolver = new JavaStandardTypeResolver(semanticErrorListener);
+    private final JavaStandardTypeResolver resolver = new JavaStandardTypeResolver();
 
     @Test
     public void resolveString() {

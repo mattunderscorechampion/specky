@@ -28,6 +28,7 @@ package com.mattunderscore.specky.model.generator;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.mattunderscore.specky.SemanticErrorListener;
 import com.mattunderscore.specky.SemanticException;
@@ -93,7 +94,13 @@ public final class TypeDeriver {
             .typeParameters(dslPropertyDesc
                 .getTypeParameters()
                 .stream()
-                .map(scope.getTypeResolver()::resolveOrThrow)
+                .map(typeName -> {
+                    final Optional<String> optionalType = scope.getTypeResolver().resolve(typeName);
+                    if (!optionalType.isPresent()) {
+                        semanticErrorListener.onSemanticError(new SemanticException("No resolvable type for " + typeName));
+                    }
+                    return optionalType.orElse("unknown type");
+                })
                 .collect(toList()))
             .defaultValue(getDefaultValue(scope, dslPropertyDesc, resolvedType))
             .constraint(dslPropertyDesc.getConstraint())
