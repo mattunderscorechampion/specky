@@ -29,13 +29,13 @@ package com.mattunderscore.specky;
  * Exception thrown when parsing files fails.
  * @author Matt Champion on 02/10/2016
  */
-public final class SpeckyParsingException extends Exception {
+public final class ParsingError extends Exception {
     private static final long serialVersionUID = -3525701525868335683L;
 
     /**
      * Constructor.
      */
-    public SpeckyParsingException(int errorCount) {
+    public ParsingError(int errorCount) {
         super(errorCount + " errors found");
     }
 }

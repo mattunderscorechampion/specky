@@ -41,11 +41,11 @@ import org.apache.maven.shared.model.fileset.FileSet;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
 
 import com.google.googlejavaformat.java.FormatterException;
-import com.mattunderscore.specky.SemanticException;
+import com.mattunderscore.specky.SemanticError;
 import com.mattunderscore.specky.SpeckyDSLFileStreamingContext;
 import com.mattunderscore.specky.SpeckyGeneratingContext;
 import com.mattunderscore.specky.SpeckyModelGeneratingContext;
-import com.mattunderscore.specky.SpeckyParsingException;
+import com.mattunderscore.specky.ParsingError;
 import com.mattunderscore.specky.SpeckyWritingContext;
 
 /**
@@ -108,7 +108,7 @@ public final class GenerateMojo extends AbstractMojo {
         catch (IOException e) {
             throw new MojoFailureException("Failed to process specification files", e);
         }
-        catch (SpeckyParsingException e) {
+        catch (ParsingError e) {
             throw new MojoFailureException("Failed to parse specification files", e);
         }
 
@@ -116,7 +116,7 @@ public final class GenerateMojo extends AbstractMojo {
         try {
             speckyGeneratingContext = generatingContext.generate();
         }
-        catch (SemanticException e) {
+        catch (SemanticError e) {
             throw new MojoFailureException(e.getMessage());
         }
 

@@ -30,13 +30,13 @@ package com.mattunderscore.specky;
  *
  * @author Matt Champion on 21/08/2016
  */
-public final class SemanticException extends RuntimeException {
+public final class SemanticError extends RuntimeException {
     private static final long serialVersionUID = -8255708365504740005L;
 
     /**
      * Constructor.
      */
-    public SemanticException(String msg) {
+    public SemanticError(String msg) {
         super(msg);
     }
 }

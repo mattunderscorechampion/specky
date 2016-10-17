@@ -16,7 +16,7 @@ import org.mockito.Mock;
 
 import com.mattunderscore.specky.CountingSemanticErrorListener;
 import com.mattunderscore.specky.SemanticErrorListener;
-import com.mattunderscore.specky.SemanticException;
+import com.mattunderscore.specky.SemanticError;
 import com.mattunderscore.specky.dsl.model.DSLAbstractTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
@@ -49,7 +49,7 @@ public final class ModelGeneratorTest {
     }
 
     @Test
-    public void simple() throws SemanticException {
+    public void simple() throws SemanticError {
         final DSLSpecDesc spec = DSLSpecDesc
             .builder()
             .author("")
@@ -96,7 +96,7 @@ public final class ModelGeneratorTest {
     }
 
     @Test
-    public void extending() throws SemanticException {
+    public void extending() throws SemanticError {
         final DSLSpecDesc spec = DSLSpecDesc
             .builder()
             .author("")
@@ -159,7 +159,7 @@ public final class ModelGeneratorTest {
     }
 
     @Test
-    public void optionalPrimative() throws SemanticException {
+    public void optionalPrimative() throws SemanticError {
         final DSLSpecDesc spec = DSLSpecDesc
             .builder()
             .author("")

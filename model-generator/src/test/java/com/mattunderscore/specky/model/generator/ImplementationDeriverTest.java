@@ -16,7 +16,7 @@ import org.mockito.Mock;
 
 import com.mattunderscore.specky.CountingSemanticErrorListener;
 import com.mattunderscore.specky.SemanticErrorListener;
-import com.mattunderscore.specky.SemanticException;
+import com.mattunderscore.specky.SemanticError;
 import com.mattunderscore.specky.constraint.model.ConstraintOperator;
 import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
 import com.mattunderscore.specky.constraint.model.NFDisjointPredicates;
@@ -52,7 +52,7 @@ public final class ImplementationDeriverTest {
     }
 
     @Test
-    public void deriveType() throws SemanticException {
+    public void deriveType() throws SemanticError {
         final DSLAbstractTypeDesc superType = DSLAbstractTypeDesc
             .builder()
             .name("SuperExample")

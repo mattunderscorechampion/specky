@@ -52,17 +52,17 @@ public final class SpeckyModelGeneratingContext {
     /**
      * Generate the Java code.
      * @throws IllegalStateException if has been called before
-     * @throws SemanticException if there is a problem with the semantics of the model
+     * @throws SemanticError if there is a problem with the semantics of the model
      */
     @SuppressWarnings("PMD.PrematureDeclaration")
-    public SpeckyGeneratingContext generate() throws SemanticException {
+    public SpeckyGeneratingContext generate() throws SemanticError {
         if (consumed.compareAndSet(false, true)) {
             final ScopeResolver scopeResolver = new ScopeResolver(semanticErrorListener)
                 .createScopes(specs);
 
             final int errorCount0 = semanticErrorListener.getErrorCount();
             if (errorCount0 > 0) {
-                throw new SemanticException(errorCount0 + " semantic errors reported");
+                throw new SemanticError(errorCount0 + " semantic errors reported");
             }
 
             final TypeDeriver typeDeriver = new TypeDeriver(scopeResolver, semanticErrorListener);
@@ -75,7 +75,7 @@ public final class SpeckyModelGeneratingContext {
 
             final int errorCount1 = semanticErrorListener.getErrorCount();
             if (errorCount1 > 0) {
-                throw new SemanticException(errorCount1 + " semantic errors reported");
+                throw new SemanticError(errorCount1 + " semantic errors reported");
             }
 
             final SpecDesc specDesc = modelGenerator.get();

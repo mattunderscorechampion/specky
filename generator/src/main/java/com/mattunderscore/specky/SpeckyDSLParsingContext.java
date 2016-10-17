@@ -56,7 +56,7 @@ public final class SpeckyDSLParsingContext {
      * Parse the input streams and return a model generating context.
      * @throws IOException if there is a problem with the streams
      */
-    public SpeckyModelGeneratingContext parse() throws IOException, SpeckyParsingException {
+    public SpeckyModelGeneratingContext parse() throws IOException, ParsingError {
         if (consumed.compareAndSet(false, true)) {
             final List<Specky.SpecContext> specContexts = new ArrayList<>();
             final ErrorCountingListener errorCountingListener = new ErrorCountingListener();
@@ -77,7 +77,7 @@ public final class SpeckyDSLParsingContext {
 
             final int errorCount = errorCountingListener.getErrorCount();
             if (errorCount > 0) {
-                throw new SpeckyParsingException(errorCount);
+                throw new ParsingError(errorCount);
             }
 
             final List<DSLSpecDesc> specs = new ArrayList<>();
