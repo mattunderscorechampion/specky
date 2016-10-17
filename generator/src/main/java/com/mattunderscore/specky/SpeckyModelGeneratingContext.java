@@ -73,12 +73,13 @@ public final class SpeckyModelGeneratingContext {
                 typeDeriver,
                 semanticErrorListener);
 
+            final SpecDesc specDesc = modelGenerator.get();
+
             final int errorCount1 = semanticErrorListener.getErrorCount();
             if (errorCount1 > 0) {
                 throw new SemanticError(errorCount1 + " semantic errors reported");
             }
 
-            final SpecDesc specDesc = modelGenerator.get();
             return new SpeckyGeneratingContext(specDesc);
         }
         else {
