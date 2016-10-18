@@ -76,9 +76,13 @@ type PropositionalExpression
 value Proposition : PropositionalExpression
     properties
         PredicateDesc predicate
+    options
+        immutable builder
 
 value BinaryPropositionExpression : PropositionalExpression
     properties
         PropositionalExpression expression0
         BinaryConstraintOperator operation
         PropositionalExpression expression1
+    options
+        immutable builder
