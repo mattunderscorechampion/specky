@@ -70,3 +70,15 @@ value NFConjoinedDisjointPredicates "Conjunction of disjunctions of predicates."
         List<NFDisjointPredicates> predicates "The disjunctions of predicates."
     options
         immutable builder
+
+type PropositionalExpression
+
+value Proposition : PropositionalExpression
+    properties
+        PredicateDesc predicate
+
+value BinaryPropositionExpression : PropositionalExpression
+    properties
+        PropositionalExpression expression0
+        BinaryConstraintOperator operation
+        PropositionalExpression expression1
