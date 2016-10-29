@@ -89,7 +89,9 @@ public final class BeanGenerator {
                 builder.addField(fieldSpecBuilder.build());
 
                 forPropertyGenerators
-                    .forEach(generator -> builder.addMethod(generator.generate(specDesc, beanDesc, propertyDesc)));
+                    .stream().map(generator -> generator.generate(specDesc, beanDesc, propertyDesc))
+                    .filter(methodSpec -> methodSpec != null)
+                    .forEach(builder::addMethod);
             });
 
         constructionMethodAppender.append(builder, specDesc, beanDesc);

@@ -82,7 +82,9 @@ public final class ValueGenerator {
                 final TypeName type = getType(propertyDesc);
                 builder.addField(FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build());
                 forPropertyGenerators
-                    .forEach(generator -> builder.addMethod(generator.generate(specDesc, valueDesc, propertyDesc)));
+                    .stream().map(generator -> generator.generate(specDesc, valueDesc, propertyDesc))
+                    .filter(methodSpec -> methodSpec != null)
+                    .forEach(builder::addMethod);
             });
 
         forTypeGenerators.forEach(generator -> builder.addMethod(generator.generate(specDesc, valueDesc)));

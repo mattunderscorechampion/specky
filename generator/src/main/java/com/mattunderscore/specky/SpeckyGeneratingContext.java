@@ -29,6 +29,8 @@ import com.mattunderscore.specky.generator.BeanGenerator;
 import com.mattunderscore.specky.generator.BeanInitialiser;
 import com.mattunderscore.specky.generator.ConstructionMethodAppender;
 import com.mattunderscore.specky.generator.Generator;
+import com.mattunderscore.specky.generator.InstantiateNewType;
+import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
 import com.mattunderscore.specky.generator.SuperTypeAppender;
 import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.TypeInitialiser;
@@ -49,6 +51,7 @@ import com.mattunderscore.specky.generator.object.method.ToStringGenerator;
 import com.mattunderscore.specky.generator.property.AccessorGenerator;
 import com.mattunderscore.specky.generator.property.AccessorJavadocGenerator;
 import com.mattunderscore.specky.generator.property.MutatorGenerator;
+import com.mattunderscore.specky.generator.property.WithModifierGenerator;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.JavaFile;
 
@@ -75,8 +78,8 @@ public final class SpeckyGeneratingContext {
             SQUARE_BRACKETS,
             COMMA_AND_SPACE_SEPARATOR,
             SIMPLE_PROPERTY_FORMATTER);
-    private AccessorGenerator accessorGenerator = new AccessorGenerator();
-    private MutatorGenerator mutatorGenerator = new MutatorGenerator();
+    private MethodGeneratorForProperty accessorGenerator = new AccessorGenerator();
+    private MethodGeneratorForProperty mutatorGenerator = new MutatorGenerator();
 
     /*package*/ SpeckyGeneratingContext(SpecDesc spec) {
         this.spec = spec;
@@ -123,6 +126,7 @@ public final class SpeckyGeneratingContext {
             final HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
             final EqualsGenerator equalsGenerator = new EqualsGenerator();
             final TypeAppender superTypeAppender = new SuperTypeAppender();
+            final MethodGeneratorForProperty withGenerator = new WithModifierGenerator("", new InstantiateNewType());
             final Generator generator = new Generator(
                 new ValueGenerator(
                     new ValueInitialiser(),
@@ -131,7 +135,7 @@ public final class SpeckyGeneratingContext {
                         mutableBuilderGenerator,
                         immutableBuilderGenerator),
                     superTypeAppender,
-                    singletonList(accessorGenerator),
+                    asList(accessorGenerator, withGenerator),
                     asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
                 new BeanGenerator(
                     new BeanInitialiser(),
@@ -140,7 +144,7 @@ public final class SpeckyGeneratingContext {
                         mutableBuilderGenerator,
                         immutableBuilderGenerator),
                     superTypeAppender,
-                    asList(accessorGenerator, mutatorGenerator),
+                    asList(accessorGenerator, mutatorGenerator, withGenerator),
                     asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
                 new ViewGenerator(new ViewInitialiser(), new AccessorJavadocGenerator()));
 
