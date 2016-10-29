@@ -69,6 +69,7 @@ value AbstractTypeDesc : TypeDesc "Description of an abstract type."
 type ImplementationDesc : TypeDesc "Description of an implementation."
     properties
         ConstructionMethod constructionMethod "Construction method of the type."
+        boolean withModification "If it has methods that return a modified version."
 
 value ValueDesc : ImplementationDesc "Description of a value type."
     options

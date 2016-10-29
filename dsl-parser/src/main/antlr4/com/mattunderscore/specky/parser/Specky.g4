@@ -128,7 +128,8 @@ props
 
 opts
     :   OPTIONS LINE_BREAK
-        INLINE_WS? construction? LINE_BREAK
+        (INLINE_WS? construction LINE_BREAK)?
+        (INLINE_WS? WITH_MODIFICATION LINE_BREAK)?
     ;
 
 supertypes

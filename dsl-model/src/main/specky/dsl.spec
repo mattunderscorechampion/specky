@@ -71,6 +71,7 @@ value DSLAbstractTypeDesc : DSLTypeDesc "Description of an abstract type."
 type DSLImplementationDesc : DSLTypeDesc "Description of an implementation."
     properties
         ConstructionMethod constructionMethod "Construction method of the type."
+        boolean withModification "If it has methods that return a modified version."
 
 value DSLValueDesc : DSLImplementationDesc "Description of a value type."
     options

@@ -85,6 +85,10 @@ IMMUTABLE_BUILDER
     :   'immutable builder'
     ;
 
+WITH_MODIFICATION
+    :   'with modification'
+    ;
+
 OPTIONAL
     :   'optional'
     ;

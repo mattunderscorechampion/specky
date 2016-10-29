@@ -169,6 +169,7 @@ public final class SpecBuilder {
                 .licence(dslLicence)
                 .properties(properties)
                 .constructionMethod(constructionMethod)
+                .withModification(withModifications(context))
                 .supertypes(supertypes)
                 .description(context.StringLiteral() == null ?
                     "Value type $L.\n\nAuto-generated from specification." :
@@ -398,6 +399,12 @@ public final class SpecBuilder {
         else {
             throw new IllegalArgumentException("Unsupported type");
         }
+    }
+
+    private boolean withModifications(ImplementationSpecContext typeSpec) {
+        final Specky.OptsContext options = typeSpec.opts();
+
+        return !(options == null || options.WITH_MODIFICATION() == null);
     }
 
     private String toValue(Specky.String_valueContext stringValue) {
