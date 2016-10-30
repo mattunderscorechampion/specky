@@ -30,12 +30,13 @@ import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMetho
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
-import static javax.lang.model.element.Modifier.PUBLIC;
+
+import javax.lang.model.element.Modifier;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForType;
 import com.mattunderscore.specky.generator.constraint.PropertyConstraintGenerator;
-import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
+import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
@@ -49,12 +50,20 @@ import com.squareup.javapoet.TypeName;
  * @author Matt Champion on 13/06/2016
  */
 public final class AllPropertiesConstructorGenerator implements MethodGeneratorForType {
+    private final Modifier constructorAccessability;
     private final PropertyConstraintGenerator propertyConstraintGenerator = new PropertyConstraintGenerator();
+
+    /**
+     * Constructor.
+     */
+    public AllPropertiesConstructorGenerator(Modifier constructorAccessability) {
+        this.constructorAccessability = constructorAccessability;
+    }
 
     @Override
     public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
         final MethodSpec.Builder constructor = constructorBuilder()
-            .addModifiers(PUBLIC)
+            .addModifiers(constructorAccessability)
             .addJavadoc(docMethod()
                 .setMethodDescription("Constructor.")
                 .toJavaDoc());

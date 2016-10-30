@@ -40,6 +40,7 @@ public final class ConstructionMethodAppender implements TypeAppender {
     private final List<MethodGeneratorForType> constructorGenerators;
     private final TypeAppender mutableBuilderAppender;
     private final TypeAppender immutableBuilderAppender;
+    private final TypeAppender defaultsAppender;
 
     /**
      * Constructor.
@@ -47,10 +48,12 @@ public final class ConstructionMethodAppender implements TypeAppender {
     public ConstructionMethodAppender(
             List<MethodGeneratorForType> constructorGenerators,
             TypeAppender mutableBuilderAppender,
-            TypeAppender immutableBuilderAppender) {
+            TypeAppender immutableBuilderAppender,
+            TypeAppender defaultsAppender) {
         this.constructorGenerators = constructorGenerators;
         this.mutableBuilderAppender = mutableBuilderAppender;
         this.immutableBuilderAppender = immutableBuilderAppender;
+        this.defaultsAppender = defaultsAppender;
     }
 
     @Override
@@ -64,6 +67,9 @@ public final class ConstructionMethodAppender implements TypeAppender {
         }
         else if (valueDesc.getConstructionMethod() == ConstructionMethod.IMMUTABLE_BUILDER) {
             immutableBuilderAppender.append(typeSpecBuilder, specDesc, valueDesc);
+        }
+        else if (valueDesc.getConstructionMethod() == ConstructionMethod.FROM_DEFAULTS) {
+            defaultsAppender.append(typeSpecBuilder, specDesc, valueDesc);
         }
         else {
             throw new IllegalArgumentException("Unsupported construction type");

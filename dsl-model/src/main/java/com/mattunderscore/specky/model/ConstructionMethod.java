@@ -40,6 +40,10 @@ public enum ConstructionMethod {
      */
     MUTABLE_BUILDER,
     /**
+     * Construct with default values.
+     */
+    FROM_DEFAULTS,
+    /**
      * Construct with immutable builder.
      */
     IMMUTABLE_BUILDER;

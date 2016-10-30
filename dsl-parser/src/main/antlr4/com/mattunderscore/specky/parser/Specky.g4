@@ -35,6 +35,7 @@ construction
     :   CONSTRUCTOR
     |   MUTABLE_BUILDER
     |   IMMUTABLE_BUILDER
+    |   FROM_DEFAULTS
     ;
 
 default_value

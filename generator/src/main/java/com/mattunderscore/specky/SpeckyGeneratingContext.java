@@ -25,9 +25,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import static com.mattunderscore.specky.generator.object.method.ToStringGenerator.COMMA_AND_SPACE_SEPARATOR;
+import static com.mattunderscore.specky.generator.object.method.ToStringGenerator.SIMPLE_PROPERTY_FORMATTER;
+import static com.mattunderscore.specky.generator.object.method.ToStringGenerator.SQUARE_BRACKETS;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static javax.lang.model.element.Modifier.PUBLIC;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import com.mattunderscore.specky.generator.BeanGenerator;
 import com.mattunderscore.specky.generator.BeanInitialiser;
 import com.mattunderscore.specky.generator.ConstructionMethodAppender;
+import com.mattunderscore.specky.generator.DefaultsGenerator;
 import com.mattunderscore.specky.generator.Generator;
 import com.mattunderscore.specky.generator.InstantiateNewType;
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
@@ -54,16 +66,6 @@ import com.mattunderscore.specky.generator.property.MutatorGenerator;
 import com.mattunderscore.specky.generator.property.WithModifierGenerator;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.JavaFile;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import static com.mattunderscore.specky.generator.object.method.ToStringGenerator.COMMA_AND_SPACE_SEPARATOR;
-import static com.mattunderscore.specky.generator.object.method.ToStringGenerator.SIMPLE_PROPERTY_FORMATTER;
-import static com.mattunderscore.specky.generator.object.method.ToStringGenerator.SQUARE_BRACKETS;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 
 /**
  * Generates Java code.
@@ -123,6 +125,7 @@ public final class SpeckyGeneratingContext {
             final ImmutableBuilderGenerator immutableBuilderGenerator = new ImmutableBuilderGenerator(
                 builderInitialiser,
                 buildMethodGenerator);
+            final TypeAppender defaultsGenerator = new DefaultsGenerator();
             final HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
             final EqualsGenerator equalsGenerator = new EqualsGenerator();
             final TypeAppender superTypeAppender = new SuperTypeAppender();
@@ -131,9 +134,10 @@ public final class SpeckyGeneratingContext {
                 new ValueGenerator(
                     new ValueInitialiser(),
                     new ConstructionMethodAppender(
-                        asList(new AllPropertiesConstructorGenerator(), new DefaultConstructorGenerator()),
+                        asList(new AllPropertiesConstructorGenerator(PUBLIC), new DefaultConstructorGenerator(PUBLIC)),
                         mutableBuilderGenerator,
-                        immutableBuilderGenerator),
+                        immutableBuilderGenerator,
+                        defaultsGenerator),
                     superTypeAppender,
                     asList(accessorGenerator, withGenerator),
                     asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
@@ -142,7 +146,8 @@ public final class SpeckyGeneratingContext {
                     new ConstructionMethodAppender(
                         singletonList(new EmptyConstructorGenerator()),
                         mutableBuilderGenerator,
-                        immutableBuilderGenerator),
+                        immutableBuilderGenerator,
+                        defaultsGenerator),
                     superTypeAppender,
                     asList(accessorGenerator, mutatorGenerator, withGenerator),
                     asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),

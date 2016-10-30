@@ -29,8 +29,8 @@ package com.example
 
 value WithMod
     properties
-        int id
-        String name
+        int id default 5
+        String name default "Matt"
     options
-        immutable builder
+        from defaults
         with modification

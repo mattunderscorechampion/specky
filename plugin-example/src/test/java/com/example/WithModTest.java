@@ -14,11 +14,7 @@ public final class WithModTest {
 
     @Test
     public void createFrom() {
-        final WithMod value = WithMod
-            .builder()
-            .id(5)
-            .name("Matt")
-            .build();
+        final WithMod value = WithMod.defaults();
 
         assertEquals(5, value.getId());
         assertEquals("Matt", value.getName());

@@ -396,6 +396,9 @@ public final class SpecBuilder {
         else if ("immutable builder".equals(token)) {
             return ConstructionMethod.IMMUTABLE_BUILDER;
         }
+        else if ("from defaults".equals(token)) {
+            return ConstructionMethod.FROM_DEFAULTS;
+        }
         else {
             throw new IllegalArgumentException("Unsupported type");
         }
