@@ -25,14 +25,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.dsl;
 
+import static com.mattunderscore.specky.constraint.model.BinaryConstraintOperator.CONJUNCTION;
+import static com.mattunderscore.specky.constraint.model.BinaryConstraintOperator.DISJUNCTION;
 import static java.util.stream.Collectors.toList;
 
+import java.util.Iterator;
 import java.util.List;
 
+import com.mattunderscore.specky.constraint.model.BinaryPropositionExpression;
 import com.mattunderscore.specky.constraint.model.ConstraintOperator;
-import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
-import com.mattunderscore.specky.constraint.model.NFDisjointPredicates;
 import com.mattunderscore.specky.constraint.model.PredicateDesc;
+import com.mattunderscore.specky.constraint.model.Proposition;
+import com.mattunderscore.specky.constraint.model.PropositionalExpression;
 import com.mattunderscore.specky.constraint.model.SubjectModifier;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.Constraint_statementContext;
@@ -46,73 +50,114 @@ public final class ConstraintFactory {
     /**
      * @return a constraint
      */
-    public NFConjoinedDisjointPredicates create(String propertyName, Constraint_statementContext statementContext) {
+    public PropositionalExpression create(String propertyName, Constraint_statementContext statementContext) {
         if (statementContext == null) {
             return null;
         }
 
-        final Specky.Constraint_conjunctions_expressionContext expression =
-            statementContext.constraint_conjunctions_expression();
+        final Specky.Constraint_expressionContext expression =
+            statementContext.constraint_expression();
         return createConstraint(propertyName, expression);
     }
 
-    private NFConjoinedDisjointPredicates createConstraint(
-        String propertyName,
-        Specky.Constraint_conjunctions_expressionContext expression) {
-        final List<Specky.Constraint_disjunctions_expressionContext> subexpressions =
-            expression.constraint_disjunctions_expression();
-
-        return NFConjoinedDisjointPredicates
-            .builder()
-            .predicates(subexpressions.stream().map(expr -> createConstraint(propertyName, expr)).collect(toList()))
-            .build();
-    }
-
-    private NFDisjointPredicates createConstraint(
-        String propertyName,
-        Specky.Constraint_disjunctions_expressionContext expression) {
-        return NFDisjointPredicates
-            .builder()
-            .predicates(expression
-                .constraint_expression()
+    private PropositionalExpression createConstraint(String propertyName, Specky.Constraint_expressionContext expression) {
+        final List<Specky.Constraint_propositionContext> propositionContexts = expression.constraint_proposition();
+        if (propositionContexts.size() == 1) {
+            return createConstraint(propertyName, propositionContexts.get(0));
+        }
+        else if (!expression.CONJUNCTION().isEmpty()) {
+            final Iterator<Proposition> expressionIterator = propositionContexts
                 .stream()
                 .map(expr -> createConstraint(propertyName, expr))
-                .collect(toList()))
-            .build();
+                .collect(toList())
+                .iterator();
+
+            PropositionalExpression prop = expressionIterator.next();
+
+            do {
+                prop = BinaryPropositionExpression
+                    .builder()
+                    .operation(CONJUNCTION)
+                    .expression0(prop)
+                    .expression1(expressionIterator.next())
+                    .build();
+            }
+            while (expressionIterator.hasNext());
+
+            return prop;
+        }
+        else if (!expression.DISJUNCTION().isEmpty()) {
+            final Iterator<Proposition> expressionIterator = propositionContexts
+                .stream()
+                .map(expr -> createConstraint(propertyName, expr))
+                .collect(toList())
+                .iterator();
+
+            PropositionalExpression prop = expressionIterator.next();
+
+            do {
+                prop = BinaryPropositionExpression
+                    .builder()
+                    .operation(DISJUNCTION)
+                    .expression0(prop)
+                    .expression1(expressionIterator.next())
+                    .build();
+            }
+            while (expressionIterator.hasNext());
+
+            return prop;
+        }
+        else {
+            return createConstraint(propertyName, expression.constraint_expression());
+        }
     }
 
-    private PredicateDesc createConstraint(String propertyName, Specky.Constraint_expressionContext expression) {
+    private Proposition createConstraint(String propertyName, Specky.Constraint_propositionContext expression) {
         final Specky.Constraint_predicateContext predicate = expression.constraint_predicate();
-        final Specky.Constraint_expressionContext subexpression = expression.constraint_expression();
+        final Specky.Constraint_propositionContext subexpression = expression.constraint_proposition();
 
         assert predicate != null || subexpression != null : "Should either be predicate or another expression";
 
         if (predicate != null) {
-            return PredicateDesc
+            return Proposition
                 .builder()
-                .subject(propertyName)
-                .operator(toConstraintOperator(predicate.constraint_operator()))
-                .literal(predicate.constraint_literal().getText())
+                .predicate(
+                    PredicateDesc
+                        .builder()
+                        .subject(propertyName)
+                        .operator(toConstraintOperator(predicate.constraint_operator()))
+                        .literal(predicate.constraint_literal().getText())
+                        .build())
                 .build();
         }
         else if (expression.NEGATION() != null) {
-            final PredicateDesc predicateToNegate = createConstraint(propertyName, subexpression);
-            return PredicateDesc
+            final Proposition propositionToNegate = createConstraint(propertyName, subexpression);
+            final PredicateDesc predicateToNegate = propositionToNegate.getPredicate();
+            return Proposition
                 .builder()
-                .subject(predicateToNegate.getSubject())
-                .subjectModifier(predicateToNegate.getSubjectModifier())
-                .operator(negateOperator(predicateToNegate.getOperator()))
-                .literal(predicateToNegate.getLiteral())
+                .predicate(
+                    PredicateDesc
+                        .builder()
+                        .subject(predicateToNegate.getSubject())
+                        .subjectModifier(predicateToNegate.getSubjectModifier())
+                        .operator(negateOperator(predicateToNegate.getOperator()))
+                        .literal(predicateToNegate.getLiteral())
+                        .build())
                 .build();
         }
         else {
-            final PredicateDesc predicateOfSubject = createConstraint(propertyName, subexpression);
-            return PredicateDesc
+            final Proposition propositionOfSubject = createConstraint(propertyName, subexpression);
+            final PredicateDesc predicateOfSubject = propositionOfSubject.getPredicate();
+            return Proposition
                 .builder()
-                .subject(propertyName)
-                .subjectModifier(expression.HAS_SOME() != null ? SubjectModifier.HAS_SOME : SubjectModifier.SIZE_OF)
-                .operator(predicateOfSubject.getOperator())
-                .literal(predicateOfSubject.getLiteral())
+                .predicate(
+                    PredicateDesc
+                        .builder()
+                        .subject(propertyName)
+                        .subjectModifier(expression.HAS_SOME() != null ? SubjectModifier.HAS_SOME : SubjectModifier.SIZE_OF)
+                        .operator(predicateOfSubject.getOperator())
+                        .literal(predicateOfSubject.getLiteral())
+                        .build())
                 .build();
         }
     }

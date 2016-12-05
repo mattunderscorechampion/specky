@@ -52,6 +52,10 @@ public final class Normaliser {
      * Normalise a Propositional expression to conjunctive normal form.
      */
     public NFConjoinedDisjointPredicates normalise(PropositionalExpression expression) {
+        if (expression == null) {
+            return null;
+        }
+
         final Expression<PredicateDesc> convertedExpression = convertExpression(expression);
         final Expression<PredicateDesc> cnf = RuleSet.toCNF(convertedExpression);
         return convertExpression(cnf);

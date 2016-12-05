@@ -18,6 +18,10 @@
             <groupId>com.mattunderscore.code.generation.specky</groupId>
             <artifactId>dsl-parser</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.mattunderscore.code.generation.specky</groupId>
+            <artifactId>proposition-processing</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>

@@ -49,6 +49,7 @@ import com.mattunderscore.specky.parser.Specky.PropertyContext;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.Specky.TypeParametersContext;
 import com.mattunderscore.specky.parser.Specky.TypeSpecContext;
+import com.mattunderscore.specky.proposition.Normaliser;
 
 /**
  * Processor for the ANTLR4 generated AST. Returns a better representation of the DSL.
@@ -57,6 +58,7 @@ import com.mattunderscore.specky.parser.Specky.TypeSpecContext;
  */
 public final class SpecBuilder {
 
+    private final Normaliser normaliser = new Normaliser();
     private final ConstraintFactory constraintFactory = new ConstraintFactory();
 
     /**
@@ -258,7 +260,9 @@ public final class SpecBuilder {
             .typeParameters(typeParameters)
             .optional(context.OPTIONAL() != null)
             .defaultValue(defaultValue)
-            .constraint(constraintFactory.create(context.propertyName().getText(), context.constraint_statement()))
+            .constraint(normaliser
+                .normalise(constraintFactory
+                    .create(context.propertyName().getText(), context.constraint_statement())))
             .description(context.StringLiteral() == null ?
                 null :
                 context.StringLiteral().getText().substring(1, context.StringLiteral().getText().length() - 1))

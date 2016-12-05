@@ -81,24 +81,22 @@ constraint_predicate
     :   constraint_operator CONSTRAINT_INLINE_WS constraint_literal
     ;
 
-constraint_expression
+constraint_proposition
     :   constraint_predicate
-    |   NEGATION CONSTRAINT_INLINE_WS constraint_expression
-    |   SIZE_OF CONSTRAINT_INLINE_WS constraint_expression
-    |   HAS_SOME CONSTRAINT_INLINE_WS constraint_expression
+    |   NEGATION CONSTRAINT_INLINE_WS constraint_proposition
+    |   SIZE_OF CONSTRAINT_INLINE_WS constraint_proposition
+    |   HAS_SOME CONSTRAINT_INLINE_WS constraint_proposition
     ;
 
-constraint_disjunctions_expression
-    :   constraint_expression
-    |   OPEN_PARENTHESIS CONSTRAINT_INLINE_WS? constraint_expression (CONSTRAINT_INLINE_WS DISJUNCTION CONSTRAINT_INLINE_WS constraint_expression)* CONSTRAINT_INLINE_WS? CLOSE_PARENTHESIS
-    ;
-
-constraint_conjunctions_expression
-    :   constraint_disjunctions_expression (CONSTRAINT_INLINE_WS CONJUNCTION CONSTRAINT_INLINE_WS constraint_disjunctions_expression)*
+constraint_expression
+    : constraint_proposition
+    | constraint_proposition (CONSTRAINT_INLINE_WS DISJUNCTION CONSTRAINT_INLINE_WS constraint_proposition)+
+    | constraint_proposition (CONSTRAINT_INLINE_WS CONJUNCTION CONSTRAINT_INLINE_WS constraint_proposition)+
+    | OPEN_PARENTHESIS CONSTRAINT_INLINE_WS? constraint_expression CONSTRAINT_INLINE_WS? CLOSE_PARENTHESIS
     ;
 
 constraint_statement
-    :   CONSTRAINT_EXPRESSION CONSTRAINT_INLINE_WS constraint_conjunctions_expression CONSTRAINT_END
+    :   CONSTRAINT_EXPRESSION CONSTRAINT_INLINE_WS constraint_expression CONSTRAINT_END
     ;
 
 property
