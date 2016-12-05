@@ -183,6 +183,7 @@ public final class SpecBuilder {
                 .licence(dslLicence)
                 .properties(properties)
                 .constructionMethod(constructionMethod)
+                .withModification(withModifications(context))
                 .supertypes(supertypes)
                 .description(context.StringLiteral() == null ?
                     "Bean type $L.\n\nAuto-generated from specification." :

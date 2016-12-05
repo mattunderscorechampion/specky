@@ -34,3 +34,11 @@ value WithMod
     options
         from defaults
         with modification
+
+bean WithModBean
+    properties
+        int id default 5
+        String name default "Matt"
+    options
+        from defaults
+        with modification
