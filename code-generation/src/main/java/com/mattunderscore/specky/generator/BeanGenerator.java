@@ -29,6 +29,7 @@ import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static javax.lang.model.element.Modifier.PRIVATE;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;
@@ -76,7 +77,6 @@ public final class BeanGenerator {
 
         beanDesc
             .getProperties()
-            .stream()
             .forEach(propertyDesc -> {
                 final TypeName type = getType(propertyDesc);
                 final Builder fieldSpecBuilder = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE);
@@ -90,7 +90,7 @@ public final class BeanGenerator {
 
                 forPropertyGenerators
                     .stream().map(generator -> generator.generate(specDesc, beanDesc, propertyDesc))
-                    .filter(methodSpec -> methodSpec != null)
+                    .filter(Objects::nonNull)
                     .forEach(builder::addMethod);
             });
 
