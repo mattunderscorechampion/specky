@@ -36,19 +36,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.mattunderscore.specky.generator.BeanGenerator;
 import com.mattunderscore.specky.generator.BeanInitialiser;
 import com.mattunderscore.specky.generator.ConstructionMethodAppender;
 import com.mattunderscore.specky.generator.DefaultsGenerator;
 import com.mattunderscore.specky.generator.Generator;
 import com.mattunderscore.specky.generator.ImmutableFieldGenerator;
+import com.mattunderscore.specky.generator.ImplementationGenerator;
 import com.mattunderscore.specky.generator.InstantiateNewType;
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
 import com.mattunderscore.specky.generator.MutableFieldGenerator;
 import com.mattunderscore.specky.generator.SuperTypeAppender;
 import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.TypeInitialiser;
-import com.mattunderscore.specky.generator.ValueGenerator;
 import com.mattunderscore.specky.generator.ValueInitialiser;
 import com.mattunderscore.specky.generator.ViewGenerator;
 import com.mattunderscore.specky.generator.ViewInitialiser;
@@ -133,7 +132,7 @@ public final class SpeckyGeneratingContext {
             final TypeAppender superTypeAppender = new SuperTypeAppender();
             final MethodGeneratorForProperty withGenerator = new WithModifierGenerator("", new InstantiateNewType());
             final Generator generator = new Generator(
-                new ValueGenerator(
+                new ImplementationGenerator(
                     new ValueInitialiser(),
                     new ConstructionMethodAppender(
                         asList(new AllPropertiesConstructorGenerator(PUBLIC), new DefaultConstructorGenerator(PUBLIC)),
@@ -144,7 +143,7 @@ public final class SpeckyGeneratingContext {
                     new ImmutableFieldGenerator(),
                     asList(accessorGenerator, withGenerator),
                     asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
-                new BeanGenerator(
+                new ImplementationGenerator(
                     new BeanInitialiser(),
                     new ConstructionMethodAppender(
                         singletonList(new EmptyConstructorGenerator()),

@@ -25,18 +25,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.ValueDesc;
 import com.squareup.javapoet.TypeSpec;
 
 import java.util.List;
 import java.util.Objects;
 
 /**
- * Generator for value types.
- * @author Matt Champion on 11/06/2016
+ * Generator for implementations.
+ *
+ * @author Matt Champion on 07/12/2016
  */
-public final class ValueGenerator {
+public final class ImplementationGenerator {
     private final TypeInitialiser typeInitialiser;
     private final TypeAppender constructionMethodAppender;
     private final TypeAppender superTypeAppender;
@@ -47,7 +48,7 @@ public final class ValueGenerator {
     /**
      * Constructor.
      */
-    public ValueGenerator(
+    public ImplementationGenerator(
             TypeInitialiser typeInitialiser,
             TypeAppender constructionMethodAppender,
             TypeAppender superTypeAppender,
@@ -64,28 +65,28 @@ public final class ValueGenerator {
     }
 
     /**
-     * @return the value type
+     * @return the type
      */
-    public TypeSpec generateValue(SpecDesc specDesc, ValueDesc valueDesc) {
-        final TypeSpec.Builder builder = typeInitialiser.create(specDesc, valueDesc);
+    public TypeSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
+        final TypeSpec.Builder builder = typeInitialiser.create(specDesc, implementationDesc);
 
-        superTypeAppender.append(builder, specDesc, valueDesc);
+        superTypeAppender.append(builder, specDesc, implementationDesc);
 
-        constructionMethodAppender.append(builder, specDesc, valueDesc);
+        constructionMethodAppender.append(builder, specDesc, implementationDesc);
 
-        valueDesc
+        implementationDesc
             .getProperties()
             .forEach(propertyDesc -> {
 
-                builder.addField(fieldGeneratorForProperty.generate(specDesc, valueDesc, propertyDesc));
+                builder.addField(fieldGeneratorForProperty.generate(specDesc, implementationDesc, propertyDesc));
 
                 forPropertyGenerators
-                    .stream().map(generator -> generator.generate(specDesc, valueDesc, propertyDesc))
+                    .stream().map(generator -> generator.generate(specDesc, implementationDesc, propertyDesc))
                     .filter(Objects::nonNull)
                     .forEach(builder::addMethod);
             });
 
-        forTypeGenerators.forEach(generator -> builder.addMethod(generator.generate(specDesc, valueDesc)));
+        forTypeGenerators.forEach(generator -> builder.addMethod(generator.generate(specDesc, implementationDesc)));
 
         return builder.build();
     }

@@ -43,16 +43,16 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 05/06/16
  */
 public final class Generator {
-    private final ValueGenerator valueGenerator;
-    private final BeanGenerator beanGenerator;
+    private final ImplementationGenerator valueGenerator;
+    private final ImplementationGenerator beanGenerator;
     private final ViewGenerator viewGenerator;
 
     /**
      * Constructor.
      */
     public Generator(
-            ValueGenerator valueGenerator,
-            BeanGenerator beanGenerator,
+            ImplementationGenerator valueGenerator,
+            ImplementationGenerator beanGenerator,
             ViewGenerator viewGenerator) {
 
         this.valueGenerator = valueGenerator;
@@ -110,10 +110,10 @@ public final class Generator {
 
     private TypeSpec generateType(SpecDesc specDesc, ImplementationDesc implementationDesc) {
         if (implementationDesc instanceof ValueDesc) {
-            return valueGenerator.generateValue(specDesc, (ValueDesc) implementationDesc);
+            return valueGenerator.generate(specDesc, implementationDesc);
         }
         else if (implementationDesc instanceof BeanDesc) {
-            return beanGenerator.generateBean(specDesc, (BeanDesc) implementationDesc);
+            return beanGenerator.generate(specDesc, implementationDesc);
         }
         else {
             throw new IllegalArgumentException("Unknown type to generate");
