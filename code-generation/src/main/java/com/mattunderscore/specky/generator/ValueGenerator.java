@@ -30,6 +30,7 @@ import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.ValueDesc;
@@ -77,13 +78,12 @@ public final class ValueGenerator {
 
         valueDesc
             .getProperties()
-            .stream()
             .forEach(propertyDesc -> {
                 final TypeName type = getType(propertyDesc);
                 builder.addField(FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build());
                 forPropertyGenerators
                     .stream().map(generator -> generator.generate(specDesc, valueDesc, propertyDesc))
-                    .filter(methodSpec -> methodSpec != null)
+                    .filter(Objects::nonNull)
                     .forEach(builder::addMethod);
             });
 
