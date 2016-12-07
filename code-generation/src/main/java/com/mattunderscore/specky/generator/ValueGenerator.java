@@ -25,18 +25,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
-import static javax.lang.model.element.Modifier.FINAL;
-import static javax.lang.model.element.Modifier.PRIVATE;
+import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.ValueDesc;
+import com.squareup.javapoet.TypeSpec;
 
 import java.util.List;
 import java.util.Objects;
-
-import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.ValueDesc;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeSpec;
 
 /**
  * Generator for value types.
@@ -46,6 +40,7 @@ public final class ValueGenerator {
     private final TypeInitialiser typeInitialiser;
     private final TypeAppender constructionMethodAppender;
     private final TypeAppender superTypeAppender;
+    private final FieldGeneratorForProperty fieldGeneratorForProperty;
     private final List<MethodGeneratorForType> forTypeGenerators;
     private final List<MethodGeneratorForProperty> forPropertyGenerators;
 
@@ -56,12 +51,14 @@ public final class ValueGenerator {
             TypeInitialiser typeInitialiser,
             TypeAppender constructionMethodAppender,
             TypeAppender superTypeAppender,
+            FieldGeneratorForProperty fieldGeneratorForProperty,
             List<MethodGeneratorForProperty> methodGeneratorForProperties,
             List<MethodGeneratorForType> methodGeneratorForTypes) {
 
         this.typeInitialiser = typeInitialiser;
         this.constructionMethodAppender = constructionMethodAppender;
         this.superTypeAppender = superTypeAppender;
+        this.fieldGeneratorForProperty = fieldGeneratorForProperty;
         this.forPropertyGenerators = methodGeneratorForProperties;
         this.forTypeGenerators = methodGeneratorForTypes;
     }
@@ -79,8 +76,9 @@ public final class ValueGenerator {
         valueDesc
             .getProperties()
             .forEach(propertyDesc -> {
-                final TypeName type = getType(propertyDesc);
-                builder.addField(FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build());
+
+                builder.addField(fieldGeneratorForProperty.generate(specDesc, valueDesc, propertyDesc));
+
                 forPropertyGenerators
                     .stream().map(generator -> generator.generate(specDesc, valueDesc, propertyDesc))
                     .filter(Objects::nonNull)

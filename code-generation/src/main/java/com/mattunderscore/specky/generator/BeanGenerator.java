@@ -25,19 +25,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
-import static javax.lang.model.element.Modifier.PRIVATE;
+import com.mattunderscore.specky.model.BeanDesc;
+import com.mattunderscore.specky.model.SpecDesc;
+import com.squareup.javapoet.TypeSpec;
 
 import java.util.List;
 import java.util.Objects;
-
-import com.mattunderscore.specky.model.BeanDesc;
-import com.mattunderscore.specky.model.ConstructionMethod;
-import com.mattunderscore.specky.model.SpecDesc;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.FieldSpec.Builder;
-import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeSpec;
 
 /**
  * Generator for beans.
@@ -47,6 +40,7 @@ public final class BeanGenerator {
     private final TypeInitialiser typeInitialiser;
     private final TypeAppender constructionMethodAppender;
     private final TypeAppender superTypeAppender;
+    private final FieldGeneratorForProperty fieldGeneratorForProperty;
     private final List<MethodGeneratorForType> forTypeGenerators;
     private final List<MethodGeneratorForProperty> forPropertyGenerators;
 
@@ -57,12 +51,14 @@ public final class BeanGenerator {
             TypeInitialiser typeInitialiser,
             TypeAppender constructionMethodAppender,
             TypeAppender superTypeAppender,
+            FieldGeneratorForProperty fieldGeneratorForProperty,
             List<MethodGeneratorForProperty> methodGeneratorForProperties,
             List<MethodGeneratorForType> methodGeneratorForTypes) {
 
         this.typeInitialiser = typeInitialiser;
         this.constructionMethodAppender = constructionMethodAppender;
         this.superTypeAppender = superTypeAppender;
+        this.fieldGeneratorForProperty = fieldGeneratorForProperty;
         this.forTypeGenerators = methodGeneratorForTypes;
         this.forPropertyGenerators = methodGeneratorForProperties;
     }
@@ -78,15 +74,8 @@ public final class BeanGenerator {
         beanDesc
             .getProperties()
             .forEach(propertyDesc -> {
-                final TypeName type = getType(propertyDesc);
-                final Builder fieldSpecBuilder = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE);
 
-                if (beanDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR &&
-                    propertyDesc.getDefaultValue() != null) {
-                    fieldSpecBuilder.initializer(propertyDesc.getDefaultValue());
-                }
-
-                builder.addField(fieldSpecBuilder.build());
+                builder.addField(fieldGeneratorForProperty.generate(specDesc, beanDesc, propertyDesc));
 
                 forPropertyGenerators
                     .stream().map(generator -> generator.generate(specDesc, beanDesc, propertyDesc))
