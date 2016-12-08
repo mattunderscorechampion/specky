@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator;
 
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.ImplementationDesc;
+import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.TypeSpec;
 
 /**
@@ -34,9 +34,9 @@ import com.squareup.javapoet.TypeSpec;
  *
  * @author Matt Champion on 10/07/2016
  */
-public final class SuperTypeAppender implements TypeAppender {
+public final class SuperTypeAppender implements TypeAppender<TypeDesc> {
     @Override
-    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, ImplementationDesc implementationDesc) {
+    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, TypeDesc implementationDesc) {
         implementationDesc
             .getSupertypes()
             .stream()

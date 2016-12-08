@@ -25,17 +25,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.TypeSpec;
 
 /**
  * Appender to another type.
+ * @param <T> the type of the description of the type
  * @author Matt Champion on 10/07/2016
  */
-public interface TypeAppender {
+public interface TypeAppender<T extends TypeDesc> {
     /**
      * Append to type.
      */
-    void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, ImplementationDesc valueDesc);
+    void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, T valueDesc);
 }

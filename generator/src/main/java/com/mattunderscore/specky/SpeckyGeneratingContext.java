@@ -65,7 +65,9 @@ import com.mattunderscore.specky.generator.property.AccessorGenerator;
 import com.mattunderscore.specky.generator.property.AccessorJavadocGenerator;
 import com.mattunderscore.specky.generator.property.MutatorGenerator;
 import com.mattunderscore.specky.generator.property.WithModifierGenerator;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.JavaFile;
 
 /**
@@ -126,10 +128,10 @@ public final class SpeckyGeneratingContext {
             final ImmutableBuilderGenerator immutableBuilderGenerator = new ImmutableBuilderGenerator(
                 builderInitialiser,
                 buildMethodGenerator);
-            final TypeAppender defaultsGenerator = new DefaultsGenerator();
+            final TypeAppender<ImplementationDesc> defaultsGenerator = new DefaultsGenerator();
             final HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
             final EqualsGenerator equalsGenerator = new EqualsGenerator();
-            final TypeAppender superTypeAppender = new SuperTypeAppender();
+            final TypeAppender<TypeDesc> superTypeAppender = new SuperTypeAppender();
             final MethodGeneratorForProperty withGenerator = new WithModifierGenerator("", new InstantiateNewType());
             final Generator generator = new Generator(
                 new ImplementationGenerator(

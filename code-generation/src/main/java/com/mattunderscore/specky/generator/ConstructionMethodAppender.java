@@ -28,15 +28,15 @@ package com.mattunderscore.specky.generator;
 import java.util.List;
 
 import com.mattunderscore.specky.model.ConstructionMethod;
-import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
+import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.TypeSpec;
 
 /**
  * Appender for the construction method.
  * @author Matt Champion on 10/07/2016
  */
-public final class ConstructionMethodAppender implements TypeAppender {
+public final class ConstructionMethodAppender implements TypeAppender<ImplementationDesc> {
     private final List<MethodGeneratorForType> constructorGenerators;
     private final TypeAppender mutableBuilderAppender;
     private final TypeAppender immutableBuilderAppender;

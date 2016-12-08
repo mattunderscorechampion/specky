@@ -39,8 +39,8 @@ import java.util.Objects;
  */
 public final class ImplementationGenerator {
     private final TypeInitialiser typeInitialiser;
-    private final TypeAppender constructionMethodAppender;
-    private final TypeAppender superTypeAppender;
+    private final TypeAppender<? super ImplementationDesc> constructionMethodAppender;
+    private final TypeAppender<? super ImplementationDesc> superTypeAppender;
     private final FieldGeneratorForProperty fieldGeneratorForProperty;
     private final List<MethodGeneratorForType> forTypeGenerators;
     private final List<MethodGeneratorForProperty> forPropertyGenerators;
@@ -50,8 +50,8 @@ public final class ImplementationGenerator {
      */
     public ImplementationGenerator(
             TypeInitialiser typeInitialiser,
-            TypeAppender constructionMethodAppender,
-            TypeAppender superTypeAppender,
+            TypeAppender<? super ImplementationDesc> constructionMethodAppender,
+            TypeAppender<? super ImplementationDesc> superTypeAppender,
             FieldGeneratorForProperty fieldGeneratorForProperty,
             List<MethodGeneratorForProperty> methodGeneratorForProperties,
             List<MethodGeneratorForType> methodGeneratorForTypes) {

@@ -41,7 +41,7 @@ import com.squareup.javapoet.TypeSpec;
  * Appender for a defaults static method.
  * @author Matt Champion on 30/10/2016
  */
-public final class DefaultsGenerator implements TypeAppender {
+public final class DefaultsGenerator implements TypeAppender<ImplementationDesc> {
     private final MethodGeneratorForType defaultConstructorGenerator = new DefaultConstructorGenerator(PRIVATE);
     private final MethodGeneratorForType allConstructorGenerator = new AllPropertiesConstructorGenerator(PRIVATE);
 

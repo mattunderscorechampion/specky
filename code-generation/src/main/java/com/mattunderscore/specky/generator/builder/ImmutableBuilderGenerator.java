@@ -56,7 +56,7 @@ import static javax.lang.model.element.Modifier.STATIC;
  * Generator for immutable builders.
  * @author Matt Champion on 15/06/2016
  */
-public final class ImmutableBuilderGenerator implements TypeAppender {
+public final class ImmutableBuilderGenerator implements TypeAppender<ImplementationDesc> {
     private static final List<String> COLLECTION_TYPES = asList("java.util.Set", "java.util.List");
     private final TypeInitialiser typeInitialiser;
     private final MethodGeneratorForType constructorGenerator = new ConstructorForBuiltTypeGenerator();

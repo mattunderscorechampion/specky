@@ -3,6 +3,7 @@ package com.mattunderscore.specky.generator;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ValueDesc;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -25,9 +26,9 @@ public class ImplementationGeneratorTest {
     @Mock
     private TypeInitialiser typeInitialiser;
     @Mock
-    private TypeAppender constructionMethodAppender;
+    private TypeAppender<ImplementationDesc> constructionMethodAppender;
     @Mock
-    private TypeAppender superTypeAppender;
+    private TypeAppender<TypeDesc> superTypeAppender;
     @Mock
     private FieldGeneratorForProperty fieldGeneratorForProperty;
     @Mock

@@ -55,7 +55,7 @@ import java.util.List;
  * Generator for mutable builders.
  * @author Matt Champion on 13/06/2016
  */
-public final class MutableBuilderGenerator implements TypeAppender {
+public final class MutableBuilderGenerator implements TypeAppender<ImplementationDesc> {
     private static final List<String> COLLECTION_TYPES = asList("java.util.Set", "java.util.List");
     private final TypeInitialiser typeInitialiser;
     private final MethodGeneratorForType constructorGenerator = new ConstructorForBuiltTypeGenerator();
