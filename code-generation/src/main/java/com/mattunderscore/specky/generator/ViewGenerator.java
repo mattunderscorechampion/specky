@@ -25,17 +25,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import com.mattunderscore.specky.generator.property.AccessorJavadocGenerator;
-import com.mattunderscore.specky.model.PropertyDesc;
-import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
-import com.squareup.javapoet.TypeSpec;
-
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static java.lang.Character.toUpperCase;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.PUBLIC;
+
+import com.mattunderscore.specky.generator.property.AccessorJavadocGenerator;
+import com.mattunderscore.specky.model.PropertyDesc;
+import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.TypeDesc;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Generator for views.
@@ -43,6 +43,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
  */
 public final class ViewGenerator {
     private final TypeInitialiser viewInitialiser;
+    private final TypeAppender<? super TypeDesc> superTypeAppender;
     private final AccessorJavadocGenerator accessorJavadocGenerator;
 
     /**
@@ -50,8 +51,10 @@ public final class ViewGenerator {
      */
     public ViewGenerator(
             TypeInitialiser viewInitialiser,
+            TypeAppender<? super TypeDesc> superTypeAppender,
             AccessorJavadocGenerator accessorJavadocGenerator) {
         this.viewInitialiser = viewInitialiser;
+        this.superTypeAppender = superTypeAppender;
         this.accessorJavadocGenerator = accessorJavadocGenerator;
     }
 
@@ -61,21 +64,18 @@ public final class ViewGenerator {
     public TypeSpec generateView(SpecDesc specDesc, TypeDesc typeDesc) {
         final TypeSpec.Builder builder = viewInitialiser.create(specDesc, typeDesc);
 
-        for (final PropertyDesc propertyDesc : typeDesc.getProperties()) {
-
-            builder
-                .addMethod(methodBuilder(getAccessorName(propertyDesc))
-                    .addJavadoc(accessorJavadocGenerator.generateJavaDoc(propertyDesc))
-                    .addModifiers(ABSTRACT, PUBLIC)
-                    .returns(getType(propertyDesc))
-                    .build());
-        }
+        superTypeAppender.append(builder, specDesc, typeDesc);
 
         typeDesc
-            .getSupertypes()
-            .stream()
-            .map(GeneratorUtils::getType)
-            .forEach(builder::addSuperinterface);
+            .getProperties()
+            .forEach(propertyDesc -> {
+                builder
+                    .addMethod(methodBuilder(getAccessorName(propertyDesc))
+                        .addJavadoc(accessorJavadocGenerator.generateJavaDoc(propertyDesc))
+                        .addModifiers(ABSTRACT, PUBLIC)
+                        .returns(getType(propertyDesc))
+                        .build());
+            });
 
         return builder.build();
     }

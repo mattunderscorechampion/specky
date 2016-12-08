@@ -156,7 +156,10 @@ public final class SpeckyGeneratingContext {
                     new MutableFieldGenerator(),
                     asList(accessorGenerator, mutatorGenerator, withGenerator),
                     asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
-                new ViewGenerator(new ViewInitialiser(), new AccessorJavadocGenerator()));
+                new ViewGenerator(
+                    new ViewInitialiser(),
+                    superTypeAppender,
+                    new AccessorJavadocGenerator()));
 
             final List<JavaFile> javaFiles = new ArrayList<>();
             javaFiles.addAll(generator.generate(spec));
