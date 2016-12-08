@@ -25,13 +25,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
+import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.TypeDesc;
+import com.squareup.javapoet.TypeSpec;
+
 import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
-
-import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.ImplementationDesc;
-import com.squareup.javapoet.TypeSpec;
 
 /**
  * {@link TypeInitialiser} for beans.
@@ -39,18 +39,18 @@ import com.squareup.javapoet.TypeSpec;
  */
 public final class BeanInitialiser implements TypeInitialiser {
     @Override
-    public TypeSpec.Builder create(SpecDesc specDesc, ImplementationDesc implementationDesc) {
+    public TypeSpec.Builder create(SpecDesc specDesc, TypeDesc typeDesc) {
         return TypeSpec
-            .classBuilder(implementationDesc.getName())
+            .classBuilder(typeDesc.getName())
             .addModifiers(PUBLIC, FINAL)
             .addJavadoc(
                 docType()
                     .setDescription(
-                        implementationDesc.getDescription() == null ?
+                        typeDesc.getDescription() == null ?
                         "Bean type $L.\n\nAuto-generated from specification." :
-                        implementationDesc.getDescription())
-                    .setAuthor(implementationDesc.getAuthor())
+                        typeDesc.getDescription())
+                    .setAuthor(typeDesc.getAuthor())
                     .toJavaDoc(),
-                implementationDesc.getName());
+                typeDesc.getName());
     }
 }

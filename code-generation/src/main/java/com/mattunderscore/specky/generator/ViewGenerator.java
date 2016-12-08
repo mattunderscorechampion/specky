@@ -42,14 +42,14 @@ import static javax.lang.model.element.Modifier.PUBLIC;
  * @author Matt Champion on 25/06/2016
  */
 public final class ViewGenerator {
-    private final ViewInitialiser viewInitialiser;
+    private final TypeInitialiser viewInitialiser;
     private final AccessorJavadocGenerator accessorJavadocGenerator;
 
     /**
      * Constructor.
      */
     public ViewGenerator(
-            ViewInitialiser viewInitialiser,
+            TypeInitialiser viewInitialiser,
             AccessorJavadocGenerator accessorJavadocGenerator) {
         this.viewInitialiser = viewInitialiser;
         this.accessorJavadocGenerator = accessorJavadocGenerator;
@@ -59,7 +59,7 @@ public final class ViewGenerator {
      * @return the view type
      */
     public TypeSpec generateView(SpecDesc specDesc, TypeDesc typeDesc) {
-        final TypeSpec.Builder builder = viewInitialiser.create(typeDesc);
+        final TypeSpec.Builder builder = viewInitialiser.create(specDesc, typeDesc);
 
         for (final PropertyDesc propertyDesc : typeDesc.getProperties()) {
 

@@ -25,23 +25,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
+import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.TypeDesc;
+import com.squareup.javapoet.TypeSpec;
+
 import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
 import static com.squareup.javapoet.TypeSpec.interfaceBuilder;
 import static javax.lang.model.element.Modifier.PUBLIC;
-
-import com.mattunderscore.specky.model.TypeDesc;
-import com.squareup.javapoet.TypeSpec;
 
 /**
  * {@link TypeInitialiser} for views.
  * @author Matt Champion on 10/07/2016
  */
-public final class ViewInitialiser {
+public final class ViewInitialiser implements TypeInitialiser {
 
     /**
      * @return a type builder for views
      */
-    public TypeSpec.Builder create(TypeDesc typeDesc) {
+    public TypeSpec.Builder create(SpecDesc specDesc, TypeDesc typeDesc) {
         return interfaceBuilder(typeDesc.getName())
             .addModifiers(PUBLIC)
             .addJavadoc(
