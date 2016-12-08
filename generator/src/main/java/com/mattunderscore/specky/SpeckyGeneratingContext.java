@@ -83,8 +83,8 @@ public final class SpeckyGeneratingContext {
             SQUARE_BRACKETS,
             COMMA_AND_SPACE_SEPARATOR,
             SIMPLE_PROPERTY_FORMATTER);
-    private MethodGeneratorForProperty accessorGenerator = new AccessorGenerator();
-    private MethodGeneratorForProperty mutatorGenerator = new MutatorGenerator();
+    private MethodGeneratorForProperty<ImplementationDesc> accessorGenerator = new AccessorGenerator();
+    private MethodGeneratorForProperty<ImplementationDesc> mutatorGenerator = new MutatorGenerator();
 
     /*package*/ SpeckyGeneratingContext(SpecDesc spec) {
         this.spec = spec;
@@ -132,7 +132,8 @@ public final class SpeckyGeneratingContext {
             final HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
             final EqualsGenerator equalsGenerator = new EqualsGenerator();
             final TypeAppender<TypeDesc> superTypeAppender = new SuperTypeAppender();
-            final MethodGeneratorForProperty withGenerator = new WithModifierGenerator("", new InstantiateNewType());
+            final MethodGeneratorForProperty<ImplementationDesc> withGenerator =
+                new WithModifierGenerator("", new InstantiateNewType());
             final Generator generator = new Generator(
                 new ImplementationGenerator(
                     new ValueInitialiser(),

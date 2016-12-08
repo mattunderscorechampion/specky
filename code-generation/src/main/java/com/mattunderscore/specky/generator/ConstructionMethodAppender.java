@@ -38,18 +38,18 @@ import com.squareup.javapoet.TypeSpec;
  */
 public final class ConstructionMethodAppender implements TypeAppender<ImplementationDesc> {
     private final List<MethodGeneratorForType> constructorGenerators;
-    private final TypeAppender mutableBuilderAppender;
-    private final TypeAppender immutableBuilderAppender;
-    private final TypeAppender defaultsAppender;
+    private final TypeAppender<ImplementationDesc> mutableBuilderAppender;
+    private final TypeAppender<ImplementationDesc> immutableBuilderAppender;
+    private final TypeAppender<ImplementationDesc> defaultsAppender;
 
     /**
      * Constructor.
      */
     public ConstructionMethodAppender(
             List<MethodGeneratorForType> constructorGenerators,
-            TypeAppender mutableBuilderAppender,
-            TypeAppender immutableBuilderAppender,
-            TypeAppender defaultsAppender) {
+            TypeAppender<ImplementationDesc> mutableBuilderAppender,
+            TypeAppender<ImplementationDesc> immutableBuilderAppender,
+            TypeAppender<ImplementationDesc> defaultsAppender) {
         this.constructorGenerators = constructorGenerators;
         this.mutableBuilderAppender = mutableBuilderAppender;
         this.immutableBuilderAppender = immutableBuilderAppender;
