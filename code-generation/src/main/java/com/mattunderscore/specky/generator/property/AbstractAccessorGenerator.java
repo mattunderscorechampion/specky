@@ -28,45 +28,35 @@ package com.mattunderscore.specky.generator.property;
 import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static java.lang.Character.toUpperCase;
+import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.ImplementationDesc;
+import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.MethodSpec;
 
 /**
- * Generator for accessor method.
+ * Generator for abstract accessor method.
  * @author Matt Champion on 21/06/2016
  */
-public final class AccessorGenerator implements MethodGeneratorForProperty<ImplementationDesc> {
+public final class AbstractAccessorGenerator implements MethodGeneratorForProperty<TypeDesc> {
     private final AccessorJavadocGenerator accessorJavadocGenerator = new AccessorJavadocGenerator();
 
     /**
      * Constructor.
      */
-    public AccessorGenerator() {
+    public AbstractAccessorGenerator() {
     }
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc, PropertyDesc propertyDesc) {
-        if (propertyDesc.isOverride()) {
-            return methodBuilder(getAccessorName(propertyDesc))
-                .addModifiers(PUBLIC)
-                .addAnnotation(Override.class)
-                .returns(getType(propertyDesc))
-                .addStatement("return $N", propertyDesc.getName())
-                .build();
-        }
-        else {
-            return methodBuilder(getAccessorName(propertyDesc))
-                .addModifiers(PUBLIC)
-                .addJavadoc(accessorJavadocGenerator.generateJavaDoc(propertyDesc))
-                .returns(getType(propertyDesc))
-                .addStatement("return $N", propertyDesc.getName())
-                .build();
-        }
+    public MethodSpec generate(SpecDesc specDesc, TypeDesc implementationDesc, PropertyDesc propertyDesc) {
+        return methodBuilder(getAccessorName(propertyDesc))
+            .addModifiers(ABSTRACT, PUBLIC)
+            .addJavadoc(accessorJavadocGenerator.generateJavaDoc(propertyDesc))
+            .returns(getType(propertyDesc))
+            .build();
     }
 
     private static String getAccessorName(PropertyDesc property) {

@@ -47,7 +47,7 @@ import com.squareup.javapoet.TypeName;
  * Generator for with modifier method.
  * @author Matt Champion on 29/10/2016
  */
-public final class WithModifierGenerator implements MethodGeneratorForProperty {
+public final class WithModifierGenerator implements MethodGeneratorForProperty<ImplementationDesc> {
     private final String javadoc;
     private final StatementGeneratorForType returnStatementGenerator;
     private final PropertyConstraintGenerator propertyConstraintGenerator = new PropertyConstraintGenerator();

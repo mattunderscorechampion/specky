@@ -25,14 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
-import static com.squareup.javapoet.MethodSpec.methodBuilder;
-import static java.lang.Character.toUpperCase;
-import static javax.lang.model.element.Modifier.ABSTRACT;
-import static javax.lang.model.element.Modifier.PUBLIC;
-
-import com.mattunderscore.specky.generator.property.AccessorJavadocGenerator;
-import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.TypeSpec;
@@ -44,7 +36,7 @@ import com.squareup.javapoet.TypeSpec;
 public final class ViewGenerator {
     private final TypeInitialiser viewInitialiser;
     private final TypeAppender<? super TypeDesc> superTypeAppender;
-    private final AccessorJavadocGenerator accessorJavadocGenerator;
+    private final MethodGeneratorForProperty<TypeDesc> methodGeneratorForProperty;
 
     /**
      * Constructor.
@@ -52,10 +44,10 @@ public final class ViewGenerator {
     public ViewGenerator(
             TypeInitialiser viewInitialiser,
             TypeAppender<? super TypeDesc> superTypeAppender,
-            AccessorJavadocGenerator accessorJavadocGenerator) {
+            MethodGeneratorForProperty<TypeDesc> methodGeneratorForProperty) {
         this.viewInitialiser = viewInitialiser;
         this.superTypeAppender = superTypeAppender;
-        this.accessorJavadocGenerator = accessorJavadocGenerator;
+        this.methodGeneratorForProperty = methodGeneratorForProperty;
     }
 
     /**
@@ -69,24 +61,9 @@ public final class ViewGenerator {
         typeDesc
             .getProperties()
             .forEach(propertyDesc -> {
-                builder
-                    .addMethod(methodBuilder(getAccessorName(propertyDesc))
-                        .addJavadoc(accessorJavadocGenerator.generateJavaDoc(propertyDesc))
-                        .addModifiers(ABSTRACT, PUBLIC)
-                        .returns(getType(propertyDesc))
-                        .build());
+                builder.addMethod(methodGeneratorForProperty.generate(specDesc, typeDesc, propertyDesc));
             });
 
         return builder.build();
-    }
-
-    private static String getAccessorName(PropertyDesc property) {
-        final String propertyName = property.getName();
-        if (property.getType().equals("boolean")) {
-            return "is" + toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
-        }
-        else {
-            return "get" + toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
-        }
     }
 }

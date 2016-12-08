@@ -32,7 +32,7 @@ public class ImplementationGeneratorTest {
     @Mock
     private FieldGeneratorForProperty fieldGeneratorForProperty;
     @Mock
-    private MethodGeneratorForProperty methodGeneratorForProperty;
+    private MethodGeneratorForProperty<ImplementationDesc> methodGeneratorForProperty;
     @Mock
     private MethodGeneratorForType methodGeneratorForType;
 

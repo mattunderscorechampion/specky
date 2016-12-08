@@ -51,7 +51,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
  *
  * @author Matt Champion on 16/09/16
  */
-public final class CollectionAddConfiguratorGenerator implements MethodGeneratorForProperty {
+public final class CollectionAddConfiguratorGenerator implements MethodGeneratorForProperty<ImplementationDesc> {
     private static final List<String> COLLECTION_TYPES = asList("java.util.Set", "java.util.List");
     private final String javadoc;
     private final StatementAppenderForProperty updateStatementGenerator;

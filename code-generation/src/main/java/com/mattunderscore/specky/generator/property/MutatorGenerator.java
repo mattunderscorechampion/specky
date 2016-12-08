@@ -46,7 +46,7 @@ import com.squareup.javapoet.TypeName;
  * Generator for mutator method.
  * @author Matt Champion on 21/06/2016
  */
-public final class MutatorGenerator implements MethodGeneratorForProperty {
+public final class MutatorGenerator implements MethodGeneratorForProperty<ImplementationDesc> {
     private final MutatorJavadocGenerator mutatorJavadocGenerator = new MutatorJavadocGenerator();
     private final PropertyConstraintGenerator propertyConstraintGenerator = new PropertyConstraintGenerator();
 

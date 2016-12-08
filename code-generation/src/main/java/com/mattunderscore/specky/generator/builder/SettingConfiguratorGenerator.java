@@ -48,7 +48,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
  * Generator for setting configurator.
  * @author Matt Champion on 24/07/2016
  */
-public final class SettingConfiguratorGenerator implements MethodGeneratorForProperty {
+public final class SettingConfiguratorGenerator implements MethodGeneratorForProperty<ImplementationDesc> {
     private final String javadoc;
     private final StatementGeneratorForType returnStatementGenerator;
     private final PropertyConstraintGenerator propertyConstraintGenerator = new PropertyConstraintGenerator();

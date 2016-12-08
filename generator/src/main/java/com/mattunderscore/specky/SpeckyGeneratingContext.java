@@ -61,8 +61,8 @@ import com.mattunderscore.specky.generator.constructor.EmptyConstructorGenerator
 import com.mattunderscore.specky.generator.object.method.EqualsGenerator;
 import com.mattunderscore.specky.generator.object.method.HashCodeGenerator;
 import com.mattunderscore.specky.generator.object.method.ToStringGenerator;
+import com.mattunderscore.specky.generator.property.AbstractAccessorGenerator;
 import com.mattunderscore.specky.generator.property.AccessorGenerator;
-import com.mattunderscore.specky.generator.property.AccessorJavadocGenerator;
 import com.mattunderscore.specky.generator.property.MutatorGenerator;
 import com.mattunderscore.specky.generator.property.WithModifierGenerator;
 import com.mattunderscore.specky.model.ImplementationDesc;
@@ -159,7 +159,7 @@ public final class SpeckyGeneratingContext {
                 new ViewGenerator(
                     new ViewInitialiser(),
                     superTypeAppender,
-                    new AccessorJavadocGenerator()));
+                    new AbstractAccessorGenerator()));
 
             final List<JavaFile> javaFiles = new ArrayList<>();
             javaFiles.addAll(generator.generate(spec));
