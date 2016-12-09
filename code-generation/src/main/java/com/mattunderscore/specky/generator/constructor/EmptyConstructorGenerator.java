@@ -41,7 +41,7 @@ import com.squareup.javapoet.MethodSpec;
  *
  * @author Matt Champion on 10/07/2016
  */
-public final class EmptyConstructorGenerator implements MethodGeneratorForType {
+public final class EmptyConstructorGenerator implements MethodGeneratorForType<ImplementationDesc> {
     @Override
     public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
         return constructorBuilder()

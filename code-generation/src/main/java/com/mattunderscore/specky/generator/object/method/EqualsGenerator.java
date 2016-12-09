@@ -45,7 +45,7 @@ import com.squareup.javapoet.TypeName;
  * Equals method generator.
  * @author Matt Champion on 06/07/2016
  */
-public final class EqualsGenerator implements MethodGeneratorForType {
+public final class EqualsGenerator implements MethodGeneratorForType<ImplementationDesc> {
     private final ParameterSpec other = ParameterSpec.builder(OBJECT, "other").build();
 
     @Override

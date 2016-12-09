@@ -49,7 +49,7 @@ import com.squareup.javapoet.TypeName;
  *
  * @author Matt Champion on 13/06/2016
  */
-public final class AllPropertiesConstructorGenerator implements MethodGeneratorForType {
+public final class AllPropertiesConstructorGenerator implements MethodGeneratorForType<ImplementationDesc> {
     private final Modifier constructorAccessability;
     private final PropertyConstraintGenerator propertyConstraintGenerator = new PropertyConstraintGenerator();
 

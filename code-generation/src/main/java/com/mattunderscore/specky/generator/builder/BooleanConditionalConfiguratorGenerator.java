@@ -45,7 +45,7 @@ import com.squareup.javapoet.TypeName;
  *
  * @author Matt Champion on 12/07/16
  */
-public final class BooleanConditionalConfiguratorGenerator implements MethodGeneratorForType {
+public final class BooleanConditionalConfiguratorGenerator implements MethodGeneratorForType<ImplementationDesc> {
     private final String javaDoc;
 
     /**

@@ -44,7 +44,7 @@ import com.squareup.javapoet.ParameterSpec;
  *
  * @author Matt Champion on 15/09/2016
  */
-public final class FunctionalConfiguratorGenerator implements MethodGeneratorForType {
+public final class FunctionalConfiguratorGenerator implements MethodGeneratorForType<ImplementationDesc> {
     private final String javaDoc;
 
     /**

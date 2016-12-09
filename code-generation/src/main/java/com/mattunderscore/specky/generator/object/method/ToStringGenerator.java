@@ -43,7 +43,7 @@ import com.squareup.javapoet.MethodSpec;
  * Generator for toString implementation.
  * @author Matt Champion on 27/06/16
  */
-public final class ToStringGenerator implements MethodGeneratorForType {
+public final class ToStringGenerator implements MethodGeneratorForType<ImplementationDesc> {
     /**
      * Comma and space separator.
      */

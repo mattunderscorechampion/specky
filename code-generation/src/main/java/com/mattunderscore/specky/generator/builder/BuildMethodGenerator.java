@@ -49,7 +49,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
  * Generator for build methods.
  * @author Matt Champion on 16/06/2016
  */
-public final class BuildMethodGenerator implements MethodGeneratorForType {
+public final class BuildMethodGenerator implements MethodGeneratorForType<ImplementationDesc> {
 
     @Override
     public MethodSpec generate(SpecDesc specDesc, ImplementationDesc valueDesc) {

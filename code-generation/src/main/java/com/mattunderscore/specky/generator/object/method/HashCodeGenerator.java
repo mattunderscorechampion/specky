@@ -43,7 +43,7 @@ import com.squareup.javapoet.TypeName;
  * Hash code generator.
  * @author Matt Champion on 06/07/2016
  */
-public final class HashCodeGenerator implements MethodGeneratorForType {
+public final class HashCodeGenerator implements MethodGeneratorForType<ImplementationDesc> {
 
     @Override
     public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {

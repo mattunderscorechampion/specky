@@ -42,8 +42,8 @@ public final class ImplementationGenerator {
     private final TypeAppender<? super ImplementationDesc> constructionMethodAppender;
     private final TypeAppender<? super ImplementationDesc> superTypeAppender;
     private final FieldGeneratorForProperty fieldGeneratorForProperty;
-    private final List<MethodGeneratorForType> forTypeGenerators;
-    private final List<MethodGeneratorForProperty<ImplementationDesc>> forPropertyGenerators;
+    private final List<MethodGeneratorForType<? super ImplementationDesc>> forTypeGenerators;
+    private final List<MethodGeneratorForProperty<? super ImplementationDesc>> forPropertyGenerators;
 
     /**
      * Constructor.
@@ -53,8 +53,8 @@ public final class ImplementationGenerator {
             TypeAppender<? super ImplementationDesc> constructionMethodAppender,
             TypeAppender<? super ImplementationDesc> superTypeAppender,
             FieldGeneratorForProperty fieldGeneratorForProperty,
-            List<MethodGeneratorForProperty<ImplementationDesc>> methodGeneratorForProperties,
-            List<MethodGeneratorForType> methodGeneratorForTypes) {
+            List<MethodGeneratorForProperty<? super ImplementationDesc>> methodGeneratorForProperties,
+            List<MethodGeneratorForType<? super ImplementationDesc>> methodGeneratorForTypes) {
 
         this.typeInitialiser = typeInitialiser;
         this.constructionMethodAppender = constructionMethodAppender;

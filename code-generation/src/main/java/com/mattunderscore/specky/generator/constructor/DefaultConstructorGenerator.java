@@ -47,7 +47,7 @@ import com.squareup.javapoet.TypeName;
  * Default constructor generator.
  * @author Matt Champion on 13/06/2016
  */
-public final class DefaultConstructorGenerator implements MethodGeneratorForType {
+public final class DefaultConstructorGenerator implements MethodGeneratorForType<ImplementationDesc> {
     private final Modifier constructorAccessability;
     private final PropertyConstraintGenerator propertyConstraintGenerator = new PropertyConstraintGenerator();
 
