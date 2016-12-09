@@ -45,7 +45,7 @@ import com.squareup.javapoet.TypeSpec;
 public final class Generator {
     private final TypeGenerator<ImplementationDesc> valueGenerator;
     private final TypeGenerator<ImplementationDesc> beanGenerator;
-    private final ViewGenerator viewGenerator;
+    private final TypeGenerator<TypeDesc> viewGenerator;
 
     /**
      * Constructor.
@@ -53,7 +53,7 @@ public final class Generator {
     public Generator(
             TypeGenerator<ImplementationDesc> valueGenerator,
             TypeGenerator<ImplementationDesc> beanGenerator,
-            ViewGenerator viewGenerator) {
+            TypeGenerator<TypeDesc> viewGenerator) {
 
         this.valueGenerator = valueGenerator;
         this.beanGenerator = beanGenerator;
@@ -121,6 +121,6 @@ public final class Generator {
     }
 
     private TypeSpec generateView(SpecDesc specDesc, TypeDesc typeDesc) {
-        return viewGenerator.generateView(specDesc, typeDesc);
+        return viewGenerator.generate(specDesc, typeDesc);
     }
 }

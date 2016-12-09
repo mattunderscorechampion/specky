@@ -29,6 +29,7 @@ import static com.mattunderscore.specky.generator.object.method.ToStringGenerato
 import static com.mattunderscore.specky.generator.object.method.ToStringGenerator.SIMPLE_PROPERTY_FORMATTER;
 import static com.mattunderscore.specky.generator.object.method.ToStringGenerator.SQUARE_BRACKETS;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
@@ -50,7 +51,6 @@ import com.mattunderscore.specky.generator.SuperTypeAppender;
 import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.TypeInitialiser;
 import com.mattunderscore.specky.generator.ValueInitialiser;
-import com.mattunderscore.specky.generator.ViewGenerator;
 import com.mattunderscore.specky.generator.ViewInitialiser;
 import com.mattunderscore.specky.generator.builder.BuildMethodGenerator;
 import com.mattunderscore.specky.generator.builder.BuilderInitialiser;
@@ -160,10 +160,12 @@ public final class SpeckyGeneratingContext {
                     singletonList(new MutableFieldGenerator()),
                     asList(accessorGenerator, mutatorGenerator, withGenerator),
                     asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
-                new ViewGenerator(
+                new TypeGenerator<>(
                     new ViewInitialiser(),
-                    superTypeAppender,
-                    new AbstractAccessorGenerator()));
+                    singletonList(superTypeAppender),
+                    emptyList(),
+                    singletonList(new AbstractAccessorGenerator()),
+                    emptyList()));
 
             final List<JavaFile> javaFiles = new ArrayList<>();
             javaFiles.addAll(generator.generate(spec));
