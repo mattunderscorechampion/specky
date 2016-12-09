@@ -25,22 +25,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.FieldSpec;
 
 /**
  * Generate a field for a type.
+ *
+ * @param <T> the type of the description of the type
  * @author Matt Champion on 09/07/2016
  */
-public interface FieldGeneratorForProperty {
+public interface FieldGeneratorForProperty<T extends TypeDesc> {
     /**
      * Generate a new field.
      * @param specDesc the specification description
-     * @param implementationDesc the type description
+     * @param typeDesc the type description
      * @param propertyDesc the property description
      * @return the field
      */
-    FieldSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc, PropertyDesc propertyDesc);
+    FieldSpec generate(SpecDesc specDesc, T typeDesc, PropertyDesc propertyDesc);
 }

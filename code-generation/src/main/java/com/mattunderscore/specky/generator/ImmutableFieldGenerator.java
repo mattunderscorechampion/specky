@@ -39,7 +39,7 @@ import static javax.lang.model.element.Modifier.PRIVATE;
  * Generator for immutable fields.
  * @author Matt Champion on 07/12/2016
  */
-public final class ImmutableFieldGenerator implements FieldGeneratorForProperty {
+public final class ImmutableFieldGenerator implements FieldGeneratorForProperty<ImplementationDesc> {
     @Override
     public FieldSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc, PropertyDesc propertyDesc) {
         final TypeName type = getType(propertyDesc);

@@ -40,7 +40,7 @@ import java.util.Objects;
 public final class ImplementationGenerator {
     private final TypeInitialiser typeInitialiser;
     private final List<TypeAppender<? super ImplementationDesc>> typeAppenders;
-    private final List<FieldGeneratorForProperty> fieldGeneratorForProperties;
+    private final List<FieldGeneratorForProperty<? super ImplementationDesc>> fieldGeneratorForProperties;
     private final List<MethodGeneratorForType<? super ImplementationDesc>> forTypeGenerators;
     private final List<MethodGeneratorForProperty<? super ImplementationDesc>> forPropertyGenerators;
 
@@ -50,7 +50,7 @@ public final class ImplementationGenerator {
     public ImplementationGenerator(
             TypeInitialiser typeInitialiser,
             List<TypeAppender<? super ImplementationDesc>> typeAppenders,
-            List<FieldGeneratorForProperty> fieldGeneratorForProperties,
+            List<FieldGeneratorForProperty<? super ImplementationDesc>> fieldGeneratorForProperties,
             List<MethodGeneratorForProperty<? super ImplementationDesc>> methodGeneratorForProperties,
             List<MethodGeneratorForType<? super ImplementationDesc>> methodGeneratorForTypes) {
 
