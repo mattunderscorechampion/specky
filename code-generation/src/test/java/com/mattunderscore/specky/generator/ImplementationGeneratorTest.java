@@ -63,7 +63,7 @@ public class ImplementationGeneratorTest {
             Arrays.<TypeAppender<? super ImplementationDesc>>asList(
                 constructionMethodAppender,
                 superTypeAppender),
-            fieldGeneratorForProperty,
+            singletonList(fieldGeneratorForProperty),
             singletonList(methodGeneratorForProperty),
             singletonList(methodGeneratorForType));
 

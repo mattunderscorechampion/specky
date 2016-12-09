@@ -145,7 +145,7 @@ public final class SpeckyGeneratingContext {
                             immutableBuilderGenerator,
                             defaultsGenerator),
                         superTypeAppender),
-                    new ImmutableFieldGenerator(),
+                    singletonList(new ImmutableFieldGenerator()),
                     asList(accessorGenerator, withGenerator),
                     asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
                 new ImplementationGenerator(
@@ -157,7 +157,7 @@ public final class SpeckyGeneratingContext {
                             immutableBuilderGenerator,
                             defaultsGenerator),
                         superTypeAppender),
-                    new MutableFieldGenerator(),
+                    singletonList(new MutableFieldGenerator()),
                     asList(accessorGenerator, mutatorGenerator, withGenerator),
                     asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
                 new ViewGenerator(

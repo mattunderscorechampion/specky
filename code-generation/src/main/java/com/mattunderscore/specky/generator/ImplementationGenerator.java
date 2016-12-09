@@ -40,7 +40,7 @@ import java.util.Objects;
 public final class ImplementationGenerator {
     private final TypeInitialiser typeInitialiser;
     private final List<TypeAppender<? super ImplementationDesc>> typeAppenders;
-    private final FieldGeneratorForProperty fieldGeneratorForProperty;
+    private final List<FieldGeneratorForProperty> fieldGeneratorForProperties;
     private final List<MethodGeneratorForType<? super ImplementationDesc>> forTypeGenerators;
     private final List<MethodGeneratorForProperty<? super ImplementationDesc>> forPropertyGenerators;
 
@@ -50,13 +50,13 @@ public final class ImplementationGenerator {
     public ImplementationGenerator(
             TypeInitialiser typeInitialiser,
             List<TypeAppender<? super ImplementationDesc>> typeAppenders,
-            FieldGeneratorForProperty fieldGeneratorForProperty,
+            List<FieldGeneratorForProperty> fieldGeneratorForProperties,
             List<MethodGeneratorForProperty<? super ImplementationDesc>> methodGeneratorForProperties,
             List<MethodGeneratorForType<? super ImplementationDesc>> methodGeneratorForTypes) {
 
         this.typeInitialiser = typeInitialiser;
         this.typeAppenders = typeAppenders;
-        this.fieldGeneratorForProperty = fieldGeneratorForProperty;
+        this.fieldGeneratorForProperties = fieldGeneratorForProperties;
         this.forPropertyGenerators = methodGeneratorForProperties;
         this.forTypeGenerators = methodGeneratorForTypes;
     }
@@ -74,7 +74,11 @@ public final class ImplementationGenerator {
             .getProperties()
             .forEach(propertyDesc -> {
 
-                builder.addField(fieldGeneratorForProperty.generate(specDesc, implementationDesc, propertyDesc));
+                fieldGeneratorForProperties
+                    .stream()
+                    .map(generator -> generator.generate(specDesc, implementationDesc, propertyDesc))
+                    .filter(Objects::nonNull)
+                    .forEach(builder::addField);
 
                 forPropertyGenerators
                     .stream().map(generator -> generator.generate(specDesc, implementationDesc, propertyDesc))
