@@ -17,6 +17,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import java.util.Arrays;
+
 /**
  * Unit tests for {@link ImplementationGenerator}.
  *
@@ -34,7 +36,7 @@ public class ImplementationGeneratorTest {
     @Mock
     private MethodGeneratorForProperty<ImplementationDesc> methodGeneratorForProperty;
     @Mock
-    private MethodGeneratorForType methodGeneratorForType;
+    private MethodGeneratorForType<ImplementationDesc> methodGeneratorForType;
 
     private final SpecDesc specDesc = SpecDesc.builder().build();
     private final PropertyDesc propertyDesc = PropertyDesc.builder().build();
@@ -58,8 +60,9 @@ public class ImplementationGeneratorTest {
     public void generate() {
         final ImplementationGenerator generator = new ImplementationGenerator(
             typeInitialiser,
-            constructionMethodAppender,
-            superTypeAppender,
+            Arrays.<TypeAppender<? super ImplementationDesc>>asList(
+                constructionMethodAppender,
+                superTypeAppender),
             fieldGeneratorForProperty,
             singletonList(methodGeneratorForProperty),
             singletonList(methodGeneratorForType));

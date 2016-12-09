@@ -33,6 +33,7 @@ import static java.util.Collections.singletonList;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -137,23 +138,25 @@ public final class SpeckyGeneratingContext {
             final Generator generator = new Generator(
                 new ImplementationGenerator(
                     new ValueInitialiser(),
-                    new ConstructionMethodAppender(
-                        asList(new AllPropertiesConstructorGenerator(PUBLIC), new DefaultConstructorGenerator(PUBLIC)),
-                        mutableBuilderGenerator,
-                        immutableBuilderGenerator,
-                        defaultsGenerator),
-                    superTypeAppender,
+                    Arrays.<TypeAppender<? super ImplementationDesc>>asList(
+                        new ConstructionMethodAppender(
+                            asList(new AllPropertiesConstructorGenerator(PUBLIC), new DefaultConstructorGenerator(PUBLIC)),
+                            mutableBuilderGenerator,
+                            immutableBuilderGenerator,
+                            defaultsGenerator),
+                        superTypeAppender),
                     new ImmutableFieldGenerator(),
                     asList(accessorGenerator, withGenerator),
                     asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
                 new ImplementationGenerator(
                     new BeanInitialiser(),
-                    new ConstructionMethodAppender(
-                        singletonList(new EmptyConstructorGenerator()),
-                        mutableBuilderGenerator,
-                        immutableBuilderGenerator,
-                        defaultsGenerator),
-                    superTypeAppender,
+                    Arrays.<TypeAppender<? super ImplementationDesc>>asList(
+                        new ConstructionMethodAppender(
+                            singletonList(new EmptyConstructorGenerator()),
+                            mutableBuilderGenerator,
+                            immutableBuilderGenerator,
+                            defaultsGenerator),
+                        superTypeAppender),
                     new MutableFieldGenerator(),
                     asList(accessorGenerator, mutatorGenerator, withGenerator),
                     asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),

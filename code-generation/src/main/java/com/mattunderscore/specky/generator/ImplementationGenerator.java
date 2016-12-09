@@ -39,8 +39,7 @@ import java.util.Objects;
  */
 public final class ImplementationGenerator {
     private final TypeInitialiser typeInitialiser;
-    private final TypeAppender<? super ImplementationDesc> constructionMethodAppender;
-    private final TypeAppender<? super ImplementationDesc> superTypeAppender;
+    private final List<TypeAppender<? super ImplementationDesc>> typeAppenders;
     private final FieldGeneratorForProperty fieldGeneratorForProperty;
     private final List<MethodGeneratorForType<? super ImplementationDesc>> forTypeGenerators;
     private final List<MethodGeneratorForProperty<? super ImplementationDesc>> forPropertyGenerators;
@@ -50,15 +49,13 @@ public final class ImplementationGenerator {
      */
     public ImplementationGenerator(
             TypeInitialiser typeInitialiser,
-            TypeAppender<? super ImplementationDesc> constructionMethodAppender,
-            TypeAppender<? super ImplementationDesc> superTypeAppender,
+            List<TypeAppender<? super ImplementationDesc>> typeAppenders,
             FieldGeneratorForProperty fieldGeneratorForProperty,
             List<MethodGeneratorForProperty<? super ImplementationDesc>> methodGeneratorForProperties,
             List<MethodGeneratorForType<? super ImplementationDesc>> methodGeneratorForTypes) {
 
         this.typeInitialiser = typeInitialiser;
-        this.constructionMethodAppender = constructionMethodAppender;
-        this.superTypeAppender = superTypeAppender;
+        this.typeAppenders = typeAppenders;
         this.fieldGeneratorForProperty = fieldGeneratorForProperty;
         this.forPropertyGenerators = methodGeneratorForProperties;
         this.forTypeGenerators = methodGeneratorForTypes;
@@ -70,9 +67,8 @@ public final class ImplementationGenerator {
     public TypeSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
         final TypeSpec.Builder builder = typeInitialiser.create(specDesc, implementationDesc);
 
-        superTypeAppender.append(builder, specDesc, implementationDesc);
-
-        constructionMethodAppender.append(builder, specDesc, implementationDesc);
+        typeAppenders
+            .forEach(typeAppender -> typeAppender.append(builder, specDesc, implementationDesc));
 
         implementationDesc
             .getProperties()
