@@ -20,11 +20,11 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import java.util.Arrays;
 
 /**
- * Unit tests for {@link ImplementationGenerator}.
+ * Unit tests for {@link TypeGenerator}.
  *
  * @author Matt Champion on 07/12/2016
  */
-public class ImplementationGeneratorTest {
+public class TypeGeneratorTest {
     @Mock
     private TypeInitialiser typeInitialiser;
     @Mock
@@ -32,7 +32,7 @@ public class ImplementationGeneratorTest {
     @Mock
     private TypeAppender<TypeDesc> superTypeAppender;
     @Mock
-    private FieldGeneratorForProperty fieldGeneratorForProperty;
+    private FieldGeneratorForProperty<ImplementationDesc> fieldGeneratorForProperty;
     @Mock
     private MethodGeneratorForProperty<ImplementationDesc> methodGeneratorForProperty;
     @Mock
@@ -58,7 +58,7 @@ public class ImplementationGeneratorTest {
 
     @Test
     public void generate() {
-        final ImplementationGenerator generator = new ImplementationGenerator(
+        final TypeGenerator<ImplementationDesc> generator = new TypeGenerator<>(
             typeInitialiser,
             Arrays.<TypeAppender<? super ImplementationDesc>>asList(
                 constructionMethodAppender,

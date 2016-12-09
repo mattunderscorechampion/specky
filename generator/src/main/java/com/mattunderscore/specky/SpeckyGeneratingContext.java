@@ -42,7 +42,7 @@ import com.mattunderscore.specky.generator.ConstructionMethodAppender;
 import com.mattunderscore.specky.generator.DefaultsGenerator;
 import com.mattunderscore.specky.generator.Generator;
 import com.mattunderscore.specky.generator.ImmutableFieldGenerator;
-import com.mattunderscore.specky.generator.ImplementationGenerator;
+import com.mattunderscore.specky.generator.TypeGenerator;
 import com.mattunderscore.specky.generator.InstantiateNewType;
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
 import com.mattunderscore.specky.generator.MutableFieldGenerator;
@@ -136,7 +136,7 @@ public final class SpeckyGeneratingContext {
             final MethodGeneratorForProperty<ImplementationDesc> withGenerator =
                 new WithModifierGenerator("", new InstantiateNewType());
             final Generator generator = new Generator(
-                new ImplementationGenerator(
+                new TypeGenerator<>(
                     new ValueInitialiser(),
                     Arrays.<TypeAppender<? super ImplementationDesc>>asList(
                         new ConstructionMethodAppender(
@@ -148,7 +148,7 @@ public final class SpeckyGeneratingContext {
                     singletonList(new ImmutableFieldGenerator()),
                     asList(accessorGenerator, withGenerator),
                     asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
-                new ImplementationGenerator(
+                new TypeGenerator<>(
                     new BeanInitialiser(),
                     Arrays.<TypeAppender<? super ImplementationDesc>>asList(
                         new ConstructionMethodAppender(

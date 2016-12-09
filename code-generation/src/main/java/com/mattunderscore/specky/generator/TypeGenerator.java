@@ -25,34 +25,35 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import com.mattunderscore.specky.model.ImplementationDesc;
-import com.mattunderscore.specky.model.SpecDesc;
-import com.squareup.javapoet.TypeSpec;
-
 import java.util.List;
 import java.util.Objects;
+
+import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.TypeDesc;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Generator for implementations.
  *
+ * @param <T> the type of the description of the type
  * @author Matt Champion on 07/12/2016
  */
-public final class ImplementationGenerator {
+public final class TypeGenerator<T extends TypeDesc> {
     private final TypeInitialiser typeInitialiser;
-    private final List<TypeAppender<? super ImplementationDesc>> typeAppenders;
-    private final List<FieldGeneratorForProperty<? super ImplementationDesc>> fieldGeneratorForProperties;
-    private final List<MethodGeneratorForType<? super ImplementationDesc>> forTypeGenerators;
-    private final List<MethodGeneratorForProperty<? super ImplementationDesc>> forPropertyGenerators;
+    private final List<TypeAppender<? super T>> typeAppenders;
+    private final List<FieldGeneratorForProperty<? super T>> fieldGeneratorForProperties;
+    private final List<MethodGeneratorForType<? super T>> forTypeGenerators;
+    private final List<MethodGeneratorForProperty<? super T>> forPropertyGenerators;
 
     /**
      * Constructor.
      */
-    public ImplementationGenerator(
+    public TypeGenerator(
             TypeInitialiser typeInitialiser,
-            List<TypeAppender<? super ImplementationDesc>> typeAppenders,
-            List<FieldGeneratorForProperty<? super ImplementationDesc>> fieldGeneratorForProperties,
-            List<MethodGeneratorForProperty<? super ImplementationDesc>> methodGeneratorForProperties,
-            List<MethodGeneratorForType<? super ImplementationDesc>> methodGeneratorForTypes) {
+            List<TypeAppender<? super T>> typeAppenders,
+            List<FieldGeneratorForProperty<? super T>> fieldGeneratorForProperties,
+            List<MethodGeneratorForProperty<? super T>> methodGeneratorForProperties,
+            List<MethodGeneratorForType<? super T>> methodGeneratorForTypes) {
 
         this.typeInitialiser = typeInitialiser;
         this.typeAppenders = typeAppenders;
@@ -64,7 +65,7 @@ public final class ImplementationGenerator {
     /**
      * @return the type
      */
-    public TypeSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
+    public TypeSpec generate(SpecDesc specDesc, T implementationDesc) {
         final TypeSpec.Builder builder = typeInitialiser.create(specDesc, implementationDesc);
 
         typeAppenders
