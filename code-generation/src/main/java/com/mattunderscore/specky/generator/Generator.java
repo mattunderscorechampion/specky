@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
@@ -68,34 +69,20 @@ public final class Generator {
         result.addAll(specDesc
             .getImplementations()
             .stream()
-            .map(valueSpec -> generateImplementationFile(specDesc, valueSpec))
+            .map(typeDesc -> generateFile(specDesc, typeDesc))
             .collect(Collectors.toList()));
 
         result.addAll(specDesc
             .getTypes()
             .stream()
-            .map(typeDesc -> generateTypeFile(specDesc, typeDesc))
+            .map(typeDesc -> generateFile(specDesc, typeDesc))
             .collect(Collectors.toList()));
 
         return result;
     }
 
-    private JavaFile generateImplementationFile(SpecDesc specDesc, ImplementationDesc implementationDesc) {
-        final TypeSpec typeSpec = generateType(specDesc, implementationDesc);
-        final Builder builder = JavaFile
-            .builder(implementationDesc.getPackageName(), typeSpec);
-
-        if (implementationDesc.getLicence() != null) {
-            builder.addFileComment(implementationDesc.getLicence());
-        }
-
-        return builder
-            .skipJavaLangImports(true)
-            .build();
-    }
-
-    private JavaFile generateTypeFile(SpecDesc specDesc, TypeDesc typeDesc) {
-        final TypeSpec typeSpec = generateView(specDesc, typeDesc);
+    private JavaFile generateFile(SpecDesc specDesc, TypeDesc typeDesc) {
+        final TypeSpec typeSpec = generateType(specDesc, typeDesc);
         final Builder builder = JavaFile
             .builder(typeDesc.getPackageName(), typeSpec);
 
@@ -108,19 +95,18 @@ public final class Generator {
             .build();
     }
 
-    private TypeSpec generateType(SpecDesc specDesc, ImplementationDesc implementationDesc) {
+    private TypeSpec generateType(SpecDesc specDesc, TypeDesc implementationDesc) {
         if (implementationDesc instanceof ValueDesc) {
-            return valueGenerator.generate(specDesc, implementationDesc);
+            return valueGenerator.generate(specDesc, (ValueDesc) implementationDesc);
         }
         else if (implementationDesc instanceof BeanDesc) {
-            return beanGenerator.generate(specDesc, implementationDesc);
+            return beanGenerator.generate(specDesc, (BeanDesc) implementationDesc);
+        }
+        else if (implementationDesc instanceof AbstractTypeDesc) {
+            return viewGenerator.generate(specDesc, implementationDesc);
         }
         else {
             throw new IllegalArgumentException("Unknown type to generate");
         }
-    }
-
-    private TypeSpec generateView(SpecDesc specDesc, TypeDesc typeDesc) {
-        return viewGenerator.generate(specDesc, typeDesc);
     }
 }
