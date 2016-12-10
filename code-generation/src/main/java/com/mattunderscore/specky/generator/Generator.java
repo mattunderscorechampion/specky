@@ -25,9 +25,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import java.util.ArrayList;
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.BeanDesc;
@@ -65,24 +65,16 @@ public final class Generator {
      * @return the Java files implied by the spec.
      */
     public List<JavaFile> generate(SpecDesc specDesc) {
-        final List<JavaFile> result = new ArrayList<>();
-        result.addAll(specDesc
-            .getImplementations()
+        return specDesc
+            .getTypes()
             .stream()
             .map(typeDesc -> generateFile(specDesc, typeDesc))
-            .collect(Collectors.toList()));
-
-        result.addAll(specDesc
-            .getAbstractTypes()
-            .stream()
-            .map(typeDesc -> generateFile(specDesc, typeDesc))
-            .collect(Collectors.toList()));
-
-        return result;
+            .collect(toList());
     }
 
     private JavaFile generateFile(SpecDesc specDesc, TypeDesc typeDesc) {
         final TypeSpec typeSpec = generateType(specDesc, typeDesc);
+
         final Builder builder = JavaFile
             .builder(typeDesc.getPackageName(), typeSpec);
 
