@@ -73,7 +73,7 @@ public final class Generator {
             .collect(Collectors.toList()));
 
         result.addAll(specDesc
-            .getTypes()
+            .getAbstractTypes()
             .stream()
             .map(typeDesc -> generateFile(specDesc, typeDesc))
             .collect(Collectors.toList()));

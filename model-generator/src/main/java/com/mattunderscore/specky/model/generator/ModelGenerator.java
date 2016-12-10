@@ -31,12 +31,14 @@ import static java.util.stream.Collectors.toMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import com.mattunderscore.specky.SemanticErrorListener;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.generator.scope.ScopeResolver;
 
 /**
@@ -66,18 +68,18 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
     @Override
     public SpecDesc get() {
 
-        final List<AbstractTypeDesc> types = dslSpecs
+        final List<AbstractTypeDesc> abstractTypes = dslSpecs
             .stream()
             .flatMap(dslSpec -> dslSpec.getTypes().stream().map(dslType -> typeDeriver.deriveType(dslSpec, dslType)))
             .collect(toList());
 
-        final Map<String, AbstractTypeDesc> mappedTypes = types
+        final Map<String, AbstractTypeDesc> mappedAbstractTypes = abstractTypes
             .stream()
             .collect(toMap(viewDesc -> viewDesc.getPackageName() + "." + viewDesc.getName(), viewDesc -> viewDesc));
 
         final ImplementationDeriver implementationDeriver = new ImplementationDeriver(
             scopeResolver,
-            mappedTypes,
+            mappedAbstractTypes,
             semanticErrorListener);
 
         final List<ImplementationDesc> implementations = dslSpecs
@@ -88,9 +90,16 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
                 .map(dslImplementation -> implementationDeriver.deriveType(dslSpec, dslImplementation)))
             .collect(toList());
 
+        final List<TypeDesc> types = Stream
+            .concat(
+                abstractTypes.stream(),
+                implementations.stream())
+            .collect(toList());
+
         return SpecDesc
             .builder()
             .implementations(implementations)
+            .abstractTypes(abstractTypes)
             .types(types)
             .build();
     }

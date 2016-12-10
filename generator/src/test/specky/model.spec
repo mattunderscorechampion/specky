@@ -83,6 +83,7 @@ value SpecDesc "Description of a specification."
     properties
         List<String> importTypes "Types from outside the specification to import."
         List<ImplementationDesc> implementations "Implementations of the specification."
-        List<AbstractTypeDesc> types "Types of the specification."
+        List<AbstractTypeDesc> abstractTypes "Abstract types of the specification."
+        List<TypeDesc> types "Types of the specification."
     options
         immutable builder
