@@ -59,14 +59,17 @@ import static javax.lang.model.element.Modifier.STATIC;
 public final class ImmutableBuilderGenerator implements TypeAppender<ImplementationDesc> {
     private static final List<String> COLLECTION_TYPES = asList("java.util.Set", "java.util.List");
     private final TypeInitialiser typeInitialiser;
-    private final MethodGeneratorForType constructorGenerator = new ConstructorForBuiltTypeGenerator();
-    private final MethodGeneratorForType conditionalGenerator = new SupplierConditionalConfiguratorGenerator(
-        docMethod()
-            .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
-            .addParameter("condition", "the condition to evaluate")
-            .addParameter("function", "the function to apply")
-            .setReturnsDescription("a new builder if the condition is {@code true}, otherwise this builder")
-            .toJavaDoc());
+    private final MethodGeneratorForType<ImplementationDesc> constructorGenerator =
+        new ConstructorForBuiltTypeGenerator();
+    private final MethodGeneratorForType<ImplementationDesc> conditionalGenerator =
+        new SupplierConditionalConfiguratorGenerator(
+            docMethod()
+                .setMethodDescription(
+                    "Applies the function to the builder if and only if the condition is {@code true}.")
+                .addParameter("condition", "the condition to evaluate")
+                .addParameter("function", "the function to apply")
+                .setReturnsDescription("a new builder if the condition is {@code true}, otherwise this builder")
+                .toJavaDoc());
     private final MethodGeneratorForProperty settingConfiguratorGenerator =
         new SettingConfiguratorGenerator(
             docMethod()
