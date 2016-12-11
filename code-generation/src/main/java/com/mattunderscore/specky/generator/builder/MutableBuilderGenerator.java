@@ -58,15 +58,16 @@ import java.util.List;
 public final class MutableBuilderGenerator implements TypeAppender<ImplementationDesc> {
     private static final List<String> COLLECTION_TYPES = asList("java.util.Set", "java.util.List");
     private final TypeInitialiser typeInitialiser;
-    private final MethodGeneratorForType constructorGenerator = new ConstructorForBuiltTypeGenerator();
-    private final MethodGeneratorForProperty settingConfiguratorGenerator =
+    private final MethodGeneratorForType<ImplementationDesc> constructorGenerator =
+        new ConstructorForBuiltTypeGenerator();
+    private final MethodGeneratorForProperty<ImplementationDesc> settingConfiguratorGenerator =
         new SettingConfiguratorGenerator(
             docMethod()
                 .setMethodDescription("Method to configure property $L on the builder.")
                 .setReturnsDescription("this builder")
                 .toJavaDoc(),
             new This());
-    private final MethodGeneratorForProperty collectionAddConfiguratorGenerator =
+    private final MethodGeneratorForProperty<ImplementationDesc> collectionAddConfiguratorGenerator =
         new CollectionAddConfiguratorGenerator(
             docMethod()
                 .setMethodDescription("Method to add an element to property $L on the builder.")
@@ -74,20 +75,22 @@ public final class MutableBuilderGenerator implements TypeAppender<Implementatio
                 .toJavaDoc(),
                 new UpdateCollection(),
                 new This());
-    private final MethodGeneratorForType supplierConditional = new SupplierConditionalConfiguratorGenerator(
-        docMethod()
-            .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
-            .addParameter("condition", "the condition to evaluate")
-            .addParameter("function", "the function to apply")
-            .setReturnsDescription("this builder")
-            .toJavaDoc());
-    private final MethodGeneratorForType booleanConditional = new BooleanConditionalConfiguratorGenerator(
-        docMethod()
-            .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
-            .addParameter("condition", "the condition")
-            .addParameter("function", "the function to apply")
-            .setReturnsDescription("this builder")
-            .toJavaDoc());
+    private final MethodGeneratorForType<ImplementationDesc> supplierConditional =
+        new SupplierConditionalConfiguratorGenerator(
+            docMethod()
+                .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
+                .addParameter("condition", "the condition to evaluate")
+                .addParameter("function", "the function to apply")
+                .setReturnsDescription("this builder")
+                .toJavaDoc());
+    private final MethodGeneratorForType<ImplementationDesc> booleanConditional =
+        new BooleanConditionalConfiguratorGenerator(
+            docMethod()
+                .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
+                .addParameter("condition", "the condition")
+                .addParameter("function", "the function to apply")
+                .setReturnsDescription("this builder")
+                .toJavaDoc());
     private final MethodGeneratorForType<ImplementationDesc> consumerConfiguratorGenerator =
         new ConsumerConfiguratorGenerator(
             docMethod()
