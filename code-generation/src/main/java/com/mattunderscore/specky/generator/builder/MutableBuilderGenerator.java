@@ -88,11 +88,11 @@ public final class MutableBuilderGenerator implements TypeAppender<Implementatio
             .addParameter("function", "the function to apply")
             .setReturnsDescription("this builder")
             .toJavaDoc());
-    private final MethodGeneratorForType functionalConfiguratorGenerator =
-        new FunctionalConfiguratorGenerator(
+    private final MethodGeneratorForType<ImplementationDesc> consumerConfiguratorGenerator =
+        new ConsumerConfiguratorGenerator(
             docMethod()
-                .setMethodDescription("Applies the function to the builder.")
-                .addParameter("function", "the function to apply")
+                .setMethodDescription("Passes the builder to a consumer to allow it the opportunity of changing it.")
+                .addParameter("consumer", "the consumer")
                 .setReturnsDescription("this builder")
                 .toJavaDoc());
     private final BuildMethodGenerator buildMethodGenerator;
@@ -133,7 +133,7 @@ public final class MutableBuilderGenerator implements TypeAppender<Implementatio
             .addMethod(booleanConditional.generate(specDesc, valueDesc))
             .addMethod(supplierConditional.generate(specDesc, valueDesc))
             .addMethod(buildMethodGenerator.generate(specDesc, valueDesc))
-            .addMethod(functionalConfiguratorGenerator.generate(specDesc, valueDesc));
+            .addMethod(consumerConfiguratorGenerator.generate(specDesc, valueDesc));
 
         typeSpecBuilder
             .addMethod(methodBuilder("builder")
