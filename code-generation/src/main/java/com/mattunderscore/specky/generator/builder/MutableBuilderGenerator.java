@@ -76,12 +76,12 @@ public final class MutableBuilderGenerator implements TypeAppender<Implementatio
                 new UpdateCollection(),
                 new This());
     private final MethodGeneratorForType<ImplementationDesc> supplierConditional =
-        new SupplierConditionalConfiguratorGenerator(
+        new SupplierConditionalConsumerConfiguratorGenerator(
             docMethod()
-                .setMethodDescription("Applies the function to the builder if and only if the condition is" +
-                    " {@code true}.")
+                .setMethodDescription("Passes the builder to a consumer to allow it the opportunity of changing it " +
+                    "if and only if the condition is {@code true}.")
                 .addParameter("condition", "the condition to evaluate")
-                .addParameter("function", "the function to apply")
+                .addParameter("consumer", "the function to apply")
                 .setReturnsDescription("this builder")
                 .toJavaDoc());
     private final MethodGeneratorForType<ImplementationDesc> booleanConditional =

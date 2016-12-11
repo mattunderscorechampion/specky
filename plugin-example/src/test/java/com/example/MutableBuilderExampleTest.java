@@ -66,4 +66,26 @@ public final class MutableBuilderExampleTest {
         assertEquals(5, (long) example.getId());
         assertEquals("", example.getName());
     }
+
+    @Test
+    public void trueSupplierConditionalConsumerConfiguratorTest() {
+        final MutableBuilderExample example = MutableBuilderExample
+            .builder()
+            .ifThen(() -> true, builder -> builder.id(2))
+            .build();
+
+        assertEquals(2, (long) example.getId());
+        assertEquals("", example.getName());
+    }
+
+    @Test
+    public void falseSupplierConditionalConsumerConfiguratorTest() {
+        final MutableBuilderExample example = MutableBuilderExample
+            .builder()
+            .ifThen(() -> false, builder -> builder.id(2))
+            .build();
+
+        assertEquals(5, (long) example.getId());
+        assertEquals("", example.getName());
+    }
 }
