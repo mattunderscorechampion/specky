@@ -81,7 +81,7 @@ public final class MutableBuilderGenerator implements TypeAppender<Implementatio
                 .setMethodDescription("Passes the builder to a consumer to allow it the opportunity of changing it " +
                     "if and only if the condition is {@code true}.")
                 .addParameter("condition", "the condition to evaluate")
-                .addParameter("consumer", "the function to apply")
+                .addParameter("consumer", "the consumer")
                 .setReturnsDescription("this builder")
                 .toJavaDoc());
     private final MethodGeneratorForType<ImplementationDesc> booleanConditional =
@@ -90,7 +90,7 @@ public final class MutableBuilderGenerator implements TypeAppender<Implementatio
                 .setMethodDescription("Passes the builder to a consumer to allow it the opportunity of changing it" +
                     " if and only if the condition is {@code true}.")
                 .addParameter("condition", "the condition")
-                .addParameter("function", "the function to apply")
+                .addParameter("consumer", "the consumer")
                 .setReturnsDescription("this builder")
                 .toJavaDoc());
     private final MethodGeneratorForType<ImplementationDesc> consumerConfiguratorGenerator =
