@@ -23,13 +23,17 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.generator.builder;
+package com.mattunderscore.specky.generator.builder.immutable;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
 import com.mattunderscore.specky.generator.MethodGeneratorForType;
 import com.mattunderscore.specky.generator.NewModifiedCollection;
 import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.TypeInitialiser;
+import com.mattunderscore.specky.generator.builder.BuildMethodGenerator;
+import com.mattunderscore.specky.generator.builder.CollectionAddConfiguratorGenerator;
+import com.mattunderscore.specky.generator.builder.InstantiateNewBuilder;
+import com.mattunderscore.specky.generator.builder.SettingConfiguratorGenerator;
 import com.mattunderscore.specky.generator.constructor.ConstructorForBuiltTypeGenerator;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;

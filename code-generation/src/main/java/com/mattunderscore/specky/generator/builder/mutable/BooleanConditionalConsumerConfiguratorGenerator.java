@@ -23,12 +23,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.generator.builder;
+package com.mattunderscore.specky.generator.builder.mutable;
 
 import static com.squareup.javapoet.ParameterizedTypeName.get;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.Consumer;
 
 import javax.lang.model.element.Modifier;
 
@@ -39,19 +38,20 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.TypeName;
 
 /**
- * Generator for conditional configurators that take a supplier.
+ * Generator for conditional configurators that take a boolean and apply a consumer.
  *
  * @author Matt Champion on 12/07/16
  */
-public final class SupplierConditionalConfiguratorGenerator implements MethodGeneratorForType<ImplementationDesc> {
+public final class BooleanConditionalConsumerConfiguratorGenerator implements MethodGeneratorForType<ImplementationDesc> {
     private final String javaDoc;
 
     /**
      * Constructor.
      */
-    public SupplierConditionalConfiguratorGenerator(String javaDoc) {
+    public BooleanConditionalConsumerConfiguratorGenerator(String javaDoc) {
         this.javaDoc = javaDoc;
     }
 
@@ -59,10 +59,10 @@ public final class SupplierConditionalConfiguratorGenerator implements MethodGen
     public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
         final ClassName builderType = ClassName.get(implementationDesc.getPackageName(), implementationDesc.getName(), "Builder");
         final ParameterSpec conditionParameter = ParameterSpec
-                .builder(get(Supplier.class, Boolean.class), "condition")
+                .builder(TypeName.BOOLEAN, "condition")
                 .build();
         final ParameterSpec modifierParameter = ParameterSpec
-                .builder(get(ClassName.get(Function.class), builderType, builderType), "function")
+                .builder(get(ClassName.get(Consumer.class), builderType), "consumer")
                 .build();
         return MethodSpec
                 .methodBuilder("ifThen")
@@ -73,8 +73,9 @@ public final class SupplierConditionalConfiguratorGenerator implements MethodGen
                 .addParameter(modifierParameter)
                 .addCode(CodeBlock
                     .builder()
-                    .beginControlFlow("if ($N.get())", conditionParameter)
-                    .addStatement("return $N.apply(this)", modifierParameter)
+                    .beginControlFlow("if ($N)", conditionParameter)
+                    .addStatement("$N.accept(this)", modifierParameter)
+                    .addStatement("return this")
                     .endControlFlow()
                     .beginControlFlow("else")
                     .addStatement("return this")

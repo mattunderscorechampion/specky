@@ -23,11 +23,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.generator.builder;
+package com.mattunderscore.specky.generator.builder.mutable;
 
 import static com.squareup.javapoet.ParameterizedTypeName.get;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import javax.lang.model.element.Modifier;
 
@@ -40,37 +41,46 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 
 /**
- * Generator for consumer configurators.
+ * Generator for conditional configurators that take a supplier.
  *
- * @author Matt Champion on 11/12/2016
+ * @author Matt Champion on 12/07/16
  */
-public final class ConsumerConfiguratorGenerator implements MethodGeneratorForType<ImplementationDesc> {
+public final class SupplierConditionalConsumerConfiguratorGenerator implements MethodGeneratorForType<ImplementationDesc> {
     private final String javaDoc;
 
     /**
      * Constructor.
      */
-    public ConsumerConfiguratorGenerator(String javaDoc) {
+    public SupplierConditionalConsumerConfiguratorGenerator(String javaDoc) {
         this.javaDoc = javaDoc;
     }
 
     @Override
     public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
         final ClassName builderType = ClassName.get(implementationDesc.getPackageName(), implementationDesc.getName(), "Builder");
-        final ParameterSpec functionParameter = ParameterSpec
-            .builder(get(ClassName.get(Consumer.class), builderType), "consumer")
-            .build();
+        final ParameterSpec conditionParameter = ParameterSpec
+                .builder(get(Supplier.class, Boolean.class), "condition")
+                .build();
+        final ParameterSpec modifierParameter = ParameterSpec
+                .builder(get(ClassName.get(Consumer.class), builderType), "consumer")
+                .build();
         return MethodSpec
-            .methodBuilder("apply")
-            .addModifiers(Modifier.PUBLIC)
-            .addJavadoc(javaDoc)
-            .returns(builderType)
-            .addParameter(functionParameter)
-            .addCode(CodeBlock
-                .builder()
-                .addStatement("$N.accept(this)", functionParameter)
-                .addStatement("return this")
-                .build())
-            .build();
+                .methodBuilder("ifThen")
+                .addModifiers(Modifier.PUBLIC)
+                .addJavadoc(javaDoc)
+                .returns(builderType)
+                .addParameter(conditionParameter)
+                .addParameter(modifierParameter)
+                .addCode(CodeBlock
+                    .builder()
+                    .beginControlFlow("if ($N.get())", conditionParameter)
+                    .addStatement("$N.accept(this)", modifierParameter)
+                    .addStatement("return this")
+                    .endControlFlow()
+                    .beginControlFlow("else")
+                    .addStatement("return this")
+                    .endControlFlow()
+                    .build())
+                .build();
     }
 }

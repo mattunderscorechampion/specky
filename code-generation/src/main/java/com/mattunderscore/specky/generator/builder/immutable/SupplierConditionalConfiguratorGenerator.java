@@ -23,11 +23,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.generator.builder;
+package com.mattunderscore.specky.generator.builder.immutable;
 
 import static com.squareup.javapoet.ParameterizedTypeName.get;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import javax.lang.model.element.Modifier;
 
@@ -40,36 +41,45 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 
 /**
- * Generator for functional configurators.
+ * Generator for conditional configurators that take a supplier.
  *
- * @author Matt Champion on 15/09/2016
+ * @author Matt Champion on 12/07/16
  */
-public final class FunctionalConfiguratorGenerator implements MethodGeneratorForType<ImplementationDesc> {
+public final class SupplierConditionalConfiguratorGenerator implements MethodGeneratorForType<ImplementationDesc> {
     private final String javaDoc;
 
     /**
      * Constructor.
      */
-    public FunctionalConfiguratorGenerator(String javaDoc) {
+    public SupplierConditionalConfiguratorGenerator(String javaDoc) {
         this.javaDoc = javaDoc;
     }
 
     @Override
     public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
         final ClassName builderType = ClassName.get(implementationDesc.getPackageName(), implementationDesc.getName(), "Builder");
-        final ParameterSpec functionParameter = ParameterSpec
-            .builder(get(ClassName.get(Function.class), builderType, builderType), "function")
-            .build();
+        final ParameterSpec conditionParameter = ParameterSpec
+                .builder(get(Supplier.class, Boolean.class), "condition")
+                .build();
+        final ParameterSpec modifierParameter = ParameterSpec
+                .builder(get(ClassName.get(Function.class), builderType, builderType), "function")
+                .build();
         return MethodSpec
-            .methodBuilder("apply")
-            .addModifiers(Modifier.PUBLIC)
-            .addJavadoc(javaDoc)
-            .returns(builderType)
-            .addParameter(functionParameter)
-            .addCode(CodeBlock
-                .builder()
-                .addStatement("return $N.apply(this)", functionParameter)
-                .build())
-            .build();
+                .methodBuilder("ifThen")
+                .addModifiers(Modifier.PUBLIC)
+                .addJavadoc(javaDoc)
+                .returns(builderType)
+                .addParameter(conditionParameter)
+                .addParameter(modifierParameter)
+                .addCode(CodeBlock
+                    .builder()
+                    .beginControlFlow("if ($N.get())", conditionParameter)
+                    .addStatement("return $N.apply(this)", modifierParameter)
+                    .endControlFlow()
+                    .beginControlFlow("else")
+                    .addStatement("return this")
+                    .endControlFlow()
+                    .build())
+                .build();
     }
 }
