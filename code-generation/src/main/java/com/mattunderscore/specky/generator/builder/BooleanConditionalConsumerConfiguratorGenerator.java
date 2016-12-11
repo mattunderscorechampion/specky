@@ -27,7 +27,7 @@ package com.mattunderscore.specky.generator.builder;
 
 import static com.squareup.javapoet.ParameterizedTypeName.get;
 
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 import javax.lang.model.element.Modifier;
 
@@ -41,17 +41,17 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 
 /**
- * Generator for conditional configurators that take a boolean and apply a function.
+ * Generator for conditional configurators that take a boolean and apply a consumer.
  *
  * @author Matt Champion on 12/07/16
  */
-public final class BooleanConditionalConfiguratorGenerator implements MethodGeneratorForType<ImplementationDesc> {
+public final class BooleanConditionalConsumerConfiguratorGenerator implements MethodGeneratorForType<ImplementationDesc> {
     private final String javaDoc;
 
     /**
      * Constructor.
      */
-    public BooleanConditionalConfiguratorGenerator(String javaDoc) {
+    public BooleanConditionalConsumerConfiguratorGenerator(String javaDoc) {
         this.javaDoc = javaDoc;
     }
 
@@ -62,7 +62,7 @@ public final class BooleanConditionalConfiguratorGenerator implements MethodGene
                 .builder(TypeName.BOOLEAN, "condition")
                 .build();
         final ParameterSpec modifierParameter = ParameterSpec
-                .builder(get(ClassName.get(Function.class), builderType, builderType), "function")
+                .builder(get(ClassName.get(Consumer.class), builderType), "consumer")
                 .build();
         return MethodSpec
                 .methodBuilder("ifThen")
@@ -74,7 +74,8 @@ public final class BooleanConditionalConfiguratorGenerator implements MethodGene
                 .addCode(CodeBlock
                     .builder()
                     .beginControlFlow("if ($N)", conditionParameter)
-                    .addStatement("return $N.apply(this)", modifierParameter)
+                    .addStatement("$N.accept(this)", modifierParameter)
+                    .addStatement("return this")
                     .endControlFlow()
                     .beginControlFlow("else")
                     .addStatement("return this")
