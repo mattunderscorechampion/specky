@@ -1,5 +1,6 @@
 package com.mattunderscore.specky.generator;
 
+import com.mattunderscore.specky.generator.property.field.FieldGeneratorForProperty;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;

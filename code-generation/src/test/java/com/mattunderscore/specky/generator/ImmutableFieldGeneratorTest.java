@@ -1,5 +1,7 @@
 package com.mattunderscore.specky.generator;
 
+import com.mattunderscore.specky.generator.property.field.FieldGeneratorForProperty;
+import com.mattunderscore.specky.generator.property.field.ImmutableFieldGenerator;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;

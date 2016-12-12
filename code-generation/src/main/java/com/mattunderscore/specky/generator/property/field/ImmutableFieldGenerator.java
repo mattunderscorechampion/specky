@@ -23,26 +23,26 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.generator;
+package com.mattunderscore.specky.generator.property.field;
 
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.TypeName;
+
+import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
+import static javax.lang.model.element.Modifier.FINAL;
+import static javax.lang.model.element.Modifier.PRIVATE;
 
 /**
- * Generate a field for a type.
- *
- * @param <T> the type of the description of the type
- * @author Matt Champion on 09/07/2016
+ * Generator for immutable fields.
+ * @author Matt Champion on 07/12/2016
  */
-public interface FieldGeneratorForProperty<T extends TypeDesc> {
-    /**
-     * Generate a new field.
-     * @param specDesc the specification description
-     * @param typeDesc the type description
-     * @param propertyDesc the property description
-     * @return the field
-     */
-    FieldSpec generate(SpecDesc specDesc, T typeDesc, PropertyDesc propertyDesc);
+public final class ImmutableFieldGenerator implements FieldGeneratorForProperty<ImplementationDesc> {
+    @Override
+    public FieldSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc, PropertyDesc propertyDesc) {
+        final TypeName type = getType(propertyDesc);
+        return FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build();
+    }
 }

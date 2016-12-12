@@ -28,6 +28,7 @@ package com.mattunderscore.specky.generator;
 import java.util.List;
 import java.util.Objects;
 
+import com.mattunderscore.specky.generator.property.field.FieldGeneratorForProperty;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.TypeSpec;
