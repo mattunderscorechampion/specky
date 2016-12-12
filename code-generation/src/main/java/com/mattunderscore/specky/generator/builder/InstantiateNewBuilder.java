@@ -27,7 +27,7 @@ package com.mattunderscore.specky.generator.builder;
 
 import java.util.stream.Collectors;
 
-import com.mattunderscore.specky.generator.StatementGeneratorForType;
+import com.mattunderscore.specky.generator.statements.StatementGeneratorForType;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
 

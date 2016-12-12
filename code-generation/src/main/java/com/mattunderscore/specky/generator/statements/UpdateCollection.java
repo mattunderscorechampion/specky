@@ -23,55 +23,28 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.generator;
+package com.mattunderscore.specky.generator.statements;
 
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.MethodSpec.Builder;
-import com.squareup.javapoet.TypeName;
-
-import java.util.Collections;
-
-import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 
 /**
  * Generate a statement to update a collection.
  *
  * @author Matt Champion on 16/09/16
  */
-public final class NewModifiedCollection implements StatementAppenderForProperty {
+public final class UpdateCollection implements StatementAppenderForProperty {
     @Override
     public Builder generate(
             Builder methodBuilder,
             SpecDesc specDesc,
             ImplementationDesc implementationDesc,
             PropertyDesc propertyDesc) {
-        if ("java.util.Set".equals(propertyDesc.getType())) {
-            return generateCollection(
-                    methodBuilder,
-                propertyDesc,
-                getType("java.util.HashSet", Collections.singletonList(propertyDesc.getTypeParameters().get(0))));
-        }
-        else if ("java.util.List".equals(propertyDesc.getType())) {
-            return generateCollection(
-                methodBuilder,
-                propertyDesc,
-                getType("java.util.ArrayList", Collections.singletonList(propertyDesc.getTypeParameters().get(0))));
-        }
-        else {
-            throw new IllegalArgumentException("Type " + propertyDesc.getType() + " not supported");
-        }
-    }
-
-    private Builder generateCollection(Builder methodBuilder, PropertyDesc propertyDesc, TypeName implementationType) {
         final String pluralPropertyName = propertyDesc.getName();
         final String propertyName = propertyDesc.getName().substring(0, pluralPropertyName.length() - 1);
-        final TypeName type = getType(propertyDesc);
 
-        return methodBuilder
-            .addStatement("final $T $L = new $T()", type, pluralPropertyName, implementationType)
-            .addStatement("$L.addAll(this.$L)", pluralPropertyName, pluralPropertyName)
-            .addStatement("$L.add($L)", pluralPropertyName, propertyName);
+        return methodBuilder.addStatement("this.$L.add($L)", pluralPropertyName, propertyName);
     }
 }

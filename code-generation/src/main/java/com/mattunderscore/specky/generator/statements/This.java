@@ -23,26 +23,17 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.generator;
-
-import java.util.stream.Collectors;
+package com.mattunderscore.specky.generator.statements;
 
 import com.mattunderscore.specky.model.ImplementationDesc;
-import com.mattunderscore.specky.model.PropertyDesc;
 
 /**
- * Instantiate a new builder copying all properties.
+ * 'this' expression.
  * @author Matt Champion on 23/07/2016
  */
-public final class InstantiateNewType implements StatementGeneratorForType {
+public final class This implements StatementGeneratorForType {
     @Override
     public String generate(ImplementationDesc implementationDesc) {
-        return "new " + implementationDesc.getName() + "(" +
-            implementationDesc
-                .getProperties()
-                .stream()
-                .map(PropertyDesc::getName)
-                .collect(Collectors.joining(", ")) +
-            ')';
+        return "this";
     }
 }

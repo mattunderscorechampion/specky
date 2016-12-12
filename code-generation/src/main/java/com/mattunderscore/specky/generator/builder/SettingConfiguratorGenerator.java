@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator.builder;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
-import com.mattunderscore.specky.generator.StatementGeneratorForType;
+import com.mattunderscore.specky.generator.statements.StatementGeneratorForType;
 import com.mattunderscore.specky.generator.constraint.PropertyConstraintGenerator;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;

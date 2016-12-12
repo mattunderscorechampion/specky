@@ -27,7 +27,7 @@ package com.mattunderscore.specky.generator.builder.immutable;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
 import com.mattunderscore.specky.generator.MethodGeneratorForType;
-import com.mattunderscore.specky.generator.NewModifiedCollection;
+import com.mattunderscore.specky.generator.statements.NewModifiedCollection;
 import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.TypeInitialiser;
 import com.mattunderscore.specky.generator.builder.BuildMethodGenerator;

@@ -36,10 +36,10 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
 import com.mattunderscore.specky.generator.MethodGeneratorForType;
-import com.mattunderscore.specky.generator.This;
+import com.mattunderscore.specky.generator.statements.This;
 import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.TypeInitialiser;
-import com.mattunderscore.specky.generator.UpdateCollection;
+import com.mattunderscore.specky.generator.statements.UpdateCollection;
 import com.mattunderscore.specky.generator.builder.BuildMethodGenerator;
 import com.mattunderscore.specky.generator.builder.CollectionAddConfiguratorGenerator;
 import com.mattunderscore.specky.generator.builder.SettingConfiguratorGenerator;

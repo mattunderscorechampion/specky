@@ -23,20 +23,17 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.generator;
+package com.mattunderscore.specky.generator.statements;
 
 import com.mattunderscore.specky.model.ImplementationDesc;
-import com.mattunderscore.specky.model.PropertyDesc;
-import com.mattunderscore.specky.model.SpecDesc;
-import com.squareup.javapoet.MethodSpec.Builder;
 
 /**
- * Statement generator for a property.
- * @author Matt Champion on 16/09/2016
+ * Statement generator for types.
+ * @author Matt Champion on 23/07/2016
  */
-public interface StatementAppenderForProperty {
+public interface StatementGeneratorForType {
     /**
-     * @return the builder
+     * @return the generated statement
      */
-    Builder generate(Builder methodBuilder, SpecDesc specDesc, ImplementationDesc implementationDesc, PropertyDesc propertyDesc);
+    String generate(ImplementationDesc implementationDesc);
 }

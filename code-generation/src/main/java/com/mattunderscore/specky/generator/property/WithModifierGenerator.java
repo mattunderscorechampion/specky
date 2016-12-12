@@ -33,7 +33,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import java.util.Objects;
 
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
-import com.mattunderscore.specky.generator.StatementGeneratorForType;
+import com.mattunderscore.specky.generator.statements.StatementGeneratorForType;
 import com.mattunderscore.specky.generator.constraint.PropertyConstraintGenerator;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;

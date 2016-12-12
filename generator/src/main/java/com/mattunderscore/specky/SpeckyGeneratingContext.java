@@ -44,7 +44,7 @@ import com.mattunderscore.specky.generator.defaults.DefaultsGenerator;
 import com.mattunderscore.specky.generator.Generator;
 import com.mattunderscore.specky.generator.property.field.ImmutableFieldGenerator;
 import com.mattunderscore.specky.generator.TypeGenerator;
-import com.mattunderscore.specky.generator.InstantiateNewType;
+import com.mattunderscore.specky.generator.statements.InstantiateNewType;
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
 import com.mattunderscore.specky.generator.property.field.MutableFieldGenerator;
 import com.mattunderscore.specky.generator.SuperTypeAppender;
