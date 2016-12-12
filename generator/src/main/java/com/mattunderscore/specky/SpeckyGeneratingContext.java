@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.mattunderscore.specky.generator.BeanInitialiser;
 import com.mattunderscore.specky.generator.ConstructionMethodAppender;
-import com.mattunderscore.specky.generator.DefaultsGenerator;
+import com.mattunderscore.specky.generator.defaults.DefaultsGenerator;
 import com.mattunderscore.specky.generator.Generator;
 import com.mattunderscore.specky.generator.property.field.ImmutableFieldGenerator;
 import com.mattunderscore.specky.generator.TypeGenerator;

@@ -23,12 +23,14 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.generator;
+package com.mattunderscore.specky.generator.defaults;
 
 import static javax.lang.model.element.Modifier.PRIVATE;
 
 import javax.lang.model.element.Modifier;
 
+import com.mattunderscore.specky.generator.MethodGeneratorForType;
+import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.constructor.AllPropertiesConstructorGenerator;
 import com.mattunderscore.specky.generator.constructor.DefaultConstructorGenerator;
 import com.mattunderscore.specky.model.ImplementationDesc;
