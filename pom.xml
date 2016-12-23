@@ -22,6 +22,7 @@
         <module>dsl-model-transformer</module>
         <module>javapoet-utils</module>
         <module>code-generation</module>
+        <module>model-context</module>
         <module>specky-model</module>
         <module>model-generator</module>
         <module>constraint-model</module>
@@ -76,6 +77,11 @@
             <dependency>
                 <groupId>com.mattunderscore.code.generation.specky</groupId>
                 <artifactId>generator</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mattunderscore.code.generation.specky</groupId>
+                <artifactId>model-context</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

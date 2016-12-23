@@ -19,6 +19,10 @@
             <artifactId>dsl-model</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.mattunderscore.code.generation.specky</groupId>
+            <artifactId>model-context</artifactId>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>

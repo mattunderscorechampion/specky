@@ -27,11 +27,8 @@ package com.mattunderscore.specky.type.resolver;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 
 import com.mattunderscore.specky.SemanticErrorListener;
 
