@@ -1,6 +1,8 @@
 Specky
 ======
 
+[![Build Status](https://travis-ci.org/mattunderscorechampion/specky.svg?branch=master)](https://travis-ci.org/mattunderscorechampion/specky)
+
 A generator for value types from a DSL.
 
 ####Example Spec
