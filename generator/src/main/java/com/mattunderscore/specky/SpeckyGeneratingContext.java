@@ -51,7 +51,7 @@ import com.mattunderscore.specky.generator.SuperTypeAppender;
 import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.TypeInitialiser;
 import com.mattunderscore.specky.generator.ValueInitialiser;
-import com.mattunderscore.specky.generator.ViewInitialiser;
+import com.mattunderscore.specky.generator.AbstractTypeInitialiser;
 import com.mattunderscore.specky.generator.builder.BuildMethodGenerator;
 import com.mattunderscore.specky.generator.builder.BuilderInitialiser;
 import com.mattunderscore.specky.generator.builder.immutable.ImmutableBuilderGenerator;
@@ -161,7 +161,7 @@ public final class SpeckyGeneratingContext {
                     asList(accessorGenerator, mutatorGenerator, withGenerator),
                     asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
                 new TypeGenerator<>(
-                    new ViewInitialiser(),
+                    new AbstractTypeInitialiser(),
                     singletonList(superTypeAppender),
                     emptyList(),
                     singletonList(new AbstractAccessorGenerator()),

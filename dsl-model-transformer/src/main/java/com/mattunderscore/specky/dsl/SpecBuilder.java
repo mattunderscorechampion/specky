@@ -115,7 +115,7 @@ public final class SpecBuilder {
             .types(context
                 .typeSpec()
                 .stream()
-                .map(this::createView)
+                .map(this::createAbstractType)
                 .collect(toList()))
             .implementations(context
                 .implementationSpec()
@@ -191,7 +191,7 @@ public final class SpecBuilder {
         }
     }
 
-    private DSLAbstractTypeDesc createView(TypeSpecContext context) {
+    private DSLAbstractTypeDesc createAbstractType(TypeSpecContext context) {
         final Specky.LicenceContext licence = context.licence();
         DSLLicence dslLicence = null;
         if (licence != null) {
@@ -231,7 +231,7 @@ public final class SpecBuilder {
             .properties(properties)
             .supertypes(supertypes)
             .description(context.StringLiteral() == null ?
-                "View type $L.\n\nAuto-generated from specification." :
+                "Abstract type $L.\n\nAuto-generated from specification." :
                 context.StringLiteral().getText().substring(1, context.StringLiteral().getText().length() - 1))
             .build();
         }

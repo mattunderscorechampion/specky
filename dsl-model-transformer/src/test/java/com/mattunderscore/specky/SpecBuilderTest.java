@@ -67,12 +67,12 @@ public final class SpecBuilderTest {
         final DSLSpecDesc specDesc = specDescs.get(0);
 
         assertEquals("com.example", specDesc.getPackageName());
-        final List<DSLAbstractTypeDesc> views = specDesc.getTypes();
+        final List<DSLAbstractTypeDesc> abstractTypes = specDesc.getTypes();
         final List<DSLImplementationDesc> values = specDesc.getImplementations();
-        assertEquals(1, views.size());
+        assertEquals(1, abstractTypes.size());
         assertEquals(4, values.size());
 
-        final DSLAbstractTypeDesc typeDesc0 = views.get(0);
+        final DSLAbstractTypeDesc typeDesc0 = abstractTypes.get(0);
         assertEquals("TestType", typeDesc0.getName());
         final List<DSLPropertyDesc> properties0 = typeDesc0.getProperties();
         assertEquals(1, properties0.size());

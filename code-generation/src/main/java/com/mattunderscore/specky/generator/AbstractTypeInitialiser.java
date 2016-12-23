@@ -34,13 +34,13 @@ import static com.squareup.javapoet.TypeSpec.interfaceBuilder;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 /**
- * {@link TypeInitialiser} for views.
+ * {@link TypeInitialiser} for abstract types.
  * @author Matt Champion on 10/07/2016
  */
-public final class ViewInitialiser implements TypeInitialiser {
+public final class AbstractTypeInitialiser implements TypeInitialiser {
 
     /**
-     * @return a type builder for views
+     * @return a type builder for abstract types
      */
     public TypeSpec.Builder create(SpecDesc specDesc, TypeDesc typeDesc) {
         return interfaceBuilder(typeDesc.getName())

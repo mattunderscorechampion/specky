@@ -24,7 +24,7 @@ public final class SpeckyDSLFileStreamingContextTest {
         context.addFileToParse(Paths.get("src/test/specky/scope.spec"));
         context.addFileToParse(Paths.get("src/test/specky/sections.spec"));
         context.addFileToParse(Paths.get("src/test/specky/Value.spec"));
-        context.addFileToParse(Paths.get("src/test/specky/View.spec"));
+        context.addFileToParse(Paths.get("src/test/specky/AbstractType.spec"));
         context.addFileToParse(Paths.get("src/test/specky/withMod.spec"));
 
         final SpeckyDSLParsingContext dslParsingContext = context.open();

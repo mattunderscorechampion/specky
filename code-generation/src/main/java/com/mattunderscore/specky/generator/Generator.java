@@ -46,7 +46,7 @@ import com.squareup.javapoet.TypeSpec;
 public final class Generator {
     private final TypeGenerator<ImplementationDesc> valueGenerator;
     private final TypeGenerator<ImplementationDesc> beanGenerator;
-    private final TypeGenerator<TypeDesc> viewGenerator;
+    private final TypeGenerator<TypeDesc> abstractTypeGenerator;
 
     /**
      * Constructor.
@@ -54,11 +54,11 @@ public final class Generator {
     public Generator(
             TypeGenerator<ImplementationDesc> valueGenerator,
             TypeGenerator<ImplementationDesc> beanGenerator,
-            TypeGenerator<TypeDesc> viewGenerator) {
+            TypeGenerator<TypeDesc> abstractTypeGenerator) {
 
         this.valueGenerator = valueGenerator;
         this.beanGenerator = beanGenerator;
-        this.viewGenerator = viewGenerator;
+        this.abstractTypeGenerator = abstractTypeGenerator;
     }
 
     /**
@@ -87,15 +87,15 @@ public final class Generator {
             .build();
     }
 
-    private TypeSpec generateType(SpecDesc specDesc, TypeDesc implementationDesc) {
-        if (implementationDesc instanceof ValueDesc) {
-            return valueGenerator.generate(specDesc, (ValueDesc) implementationDesc);
+    private TypeSpec generateType(SpecDesc specDesc, TypeDesc typeDesc) {
+        if (typeDesc instanceof ValueDesc) {
+            return valueGenerator.generate(specDesc, (ValueDesc) typeDesc);
         }
-        else if (implementationDesc instanceof BeanDesc) {
-            return beanGenerator.generate(specDesc, (BeanDesc) implementationDesc);
+        else if (typeDesc instanceof BeanDesc) {
+            return beanGenerator.generate(specDesc, (BeanDesc) typeDesc);
         }
-        else if (implementationDesc instanceof AbstractTypeDesc) {
-            return viewGenerator.generate(specDesc, implementationDesc);
+        else if (typeDesc instanceof AbstractTypeDesc) {
+            return abstractTypeGenerator.generate(specDesc, typeDesc);
         }
         else {
             throw new IllegalArgumentException("Unknown type to generate");

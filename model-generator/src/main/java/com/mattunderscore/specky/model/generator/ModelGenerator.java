@@ -75,7 +75,9 @@ public final class ModelGenerator implements Supplier<SpecDesc> {
 
         final Map<String, AbstractTypeDesc> mappedAbstractTypes = abstractTypes
             .stream()
-            .collect(toMap(viewDesc -> viewDesc.getPackageName() + "." + viewDesc.getName(), viewDesc -> viewDesc));
+            .collect(toMap(
+                abstractType -> abstractType.getPackageName() + "." + abstractType.getName(),
+                abstractType -> abstractType));
 
         final ImplementationDeriver implementationDeriver = new ImplementationDeriver(
             scopeResolver,

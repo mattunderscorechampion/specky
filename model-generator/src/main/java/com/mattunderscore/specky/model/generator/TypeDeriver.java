@@ -67,7 +67,7 @@ public final class TypeDeriver {
         final List<PropertyDesc> properties = dslTypeDesc
             .getProperties()
             .stream()
-            .map(dslProperty -> getViewProperty(scope, dslProperty))
+            .map(dslProperty -> getAbstractTypeProperty(scope, dslProperty))
             .collect(toList());
 
         final LicenceResolver licenceResolver = scope.getLicenceResolver();
@@ -84,7 +84,7 @@ public final class TypeDeriver {
             .build();
     }
 
-    private PropertyDesc getViewProperty(Scope scope, DSLPropertyDesc dslPropertyDesc) {
+    private PropertyDesc getAbstractTypeProperty(Scope scope, DSLPropertyDesc dslPropertyDesc) {
         final Optional<String> optionalPropertyType = scope.getPropertyTypeResolver().resolve(dslPropertyDesc);
         if (!optionalPropertyType.isPresent()) {
             semanticErrorListener.onSemanticError("No resolvable type for " + dslPropertyDesc.getName());

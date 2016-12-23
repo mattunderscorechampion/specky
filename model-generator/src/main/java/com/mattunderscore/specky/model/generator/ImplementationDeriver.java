@@ -59,7 +59,7 @@ import com.squareup.javapoet.CodeBlock;
  */
 public final class ImplementationDeriver {
     private final ScopeResolver scopeResolver;
-    private final Map<String, AbstractTypeDesc> views;
+    private final Map<String, AbstractTypeDesc> abstractTypes;
     private final SemanticErrorListener semanticErrorListener;
 
     /**
@@ -67,10 +67,10 @@ public final class ImplementationDeriver {
      */
     public ImplementationDeriver(
         ScopeResolver scopeResolver,
-        Map<String, AbstractTypeDesc> views,
+        Map<String, AbstractTypeDesc> abstractTypes,
         SemanticErrorListener semanticErrorListener) {
         this.scopeResolver = scopeResolver;
-        this.views = views;
+        this.abstractTypes = abstractTypes;
         this.semanticErrorListener = semanticErrorListener;
     }
 
@@ -176,7 +176,7 @@ public final class ImplementationDeriver {
                 }
                 return optionalType.orElse("unknown type");
             })
-            .map(views::get).forEach(typeDesc -> {
+            .map(abstractTypes::get).forEach(typeDesc -> {
                 if (setOfTypes.add(typeDesc)) {
                     resolveSupertypes(scope, typeDesc, typeDescs, setOfTypes);
                     typeDescs.add(typeDesc);
@@ -199,7 +199,7 @@ public final class ImplementationDeriver {
                 }
                 return optionalType.orElse("unknown type");
             })
-            .map(views::get).forEach(typeDesc -> {
+            .map(abstractTypes::get).forEach(typeDesc -> {
                 if (setOfTypes.add(typeDesc)) {
                     resolveSupertypes(scope, typeDesc, typeDescs, setOfTypes);
                     typeDescs.add(typeDesc);
