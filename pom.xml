@@ -14,19 +14,20 @@
     <version>0.6.1-SNAPSHOT</version>
 
     <modules>
+        <module>javapoet-utils</module>
+        <module>constraint-model</module>
         <module>dsl-model</module>
+        <module>specky-model</module>
+        <module>proposition-processing</module>
+        <module>model-context</module>
         <module>dsl-parser</module>
+        <module>dsl-model-transformer</module>
+        <module>ast-transformer</module>
+        <module>code-generation</module>
+        <module>model-generator</module>
         <module>generator</module>
         <module>specky-maven-plugin</module>
         <module>plugin-example</module>
-        <module>dsl-model-transformer</module>
-        <module>javapoet-utils</module>
-        <module>code-generation</module>
-        <module>model-context</module>
-        <module>specky-model</module>
-        <module>model-generator</module>
-        <module>constraint-model</module>
-        <module>proposition-processing</module>
     </modules>
 
     <!-- Source control for common parent -->
