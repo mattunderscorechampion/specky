@@ -26,6 +26,10 @@
             <groupId>com.mattunderscore.code.generation.specky</groupId>
             <artifactId>model-context</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.jcip</groupId>
+            <artifactId>jcip-annotations</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
