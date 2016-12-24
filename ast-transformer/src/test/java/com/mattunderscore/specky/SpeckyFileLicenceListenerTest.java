@@ -27,11 +27,11 @@ import com.mattunderscore.specky.value.resolver.MutableValueResolver;
 import com.squareup.javapoet.CodeBlock;
 
 /**
- * Unit tests for {@link SpeckyFileScopeListener}.
+ * Unit tests for {@link SpeckyFileLicenceListener}.
  *
- * @author Matt Champion on 23/12/16
+ * @author Matt Champion on 24/12/16
  */
-public final class SpeckyFileScopeListenerTest {
+public final class SpeckyFileLicenceListenerTest {
     @Mock
     private SemanticErrorListener errorListener;
 
@@ -47,31 +47,18 @@ public final class SpeckyFileScopeListenerTest {
 
     @Test
     public void test() throws IOException {
-        final CharStream stream = new ANTLRInputStream(SpeckyFileScopeListenerTest
+        final CharStream stream = new ANTLRInputStream(SpeckyFileLicenceListenerTest
             .class
             .getClassLoader()
             .getResourceAsStream("Test.spec"));
         final SpeckyLexer lexer = new SpeckyLexer(stream);
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
-        final SpecTypeResolver typeResolver = new SpecTypeResolver();
-        final MutableValueResolver valueResolver = new MutableValueResolver();
         final LicenceResolver licenceResolver = new LicenceResolver(errorListener);
-        final SpeckyFileScopeListener listener = new SpeckyFileScopeListener(typeResolver, valueResolver, licenceResolver);
+        final SpeckyFileLicenceListener listener = new SpeckyFileLicenceListener(licenceResolver);
         parser.addParseListener(listener);
 
         parser.spec();
-
-        // Verify types
-        final Optional<String> i = typeResolver.resolve("Import");
-        assertEquals(i.get(), "com.example.Import");
-        final Optional<String> v = typeResolver.resolve("Value");
-        assertEquals(v.get(), "com.example.Value");
-
-        // Verify default licences
-        final Optional<CodeBlock> vdv = valueResolver.resolve(null, "com.example.Value");
-        assertEquals(vdv.get(), CodeBlock.of("\"x\""));
-        assertFalse(valueResolver.resolve(null, "com.example.Import").isPresent());
 
         // Verify licences
         final Optional<String> defaultLicence = licenceResolver.resolve(null);

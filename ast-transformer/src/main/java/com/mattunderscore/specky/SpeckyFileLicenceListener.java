@@ -5,45 +5,20 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyBaseListener;
-import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
-import com.mattunderscore.specky.value.resolver.MutableValueResolver;
-import com.squareup.javapoet.CodeBlock;
 
 /**
- * Processor for DSL AST listener.
+ * DSL AST listener for licences.
  *
- * @author Matt Champion on 23/12/16
+ * @author Matt Champion on 24/12/16
  */
-public final class SpeckyFileScopeListener extends SpeckyBaseListener {
-    private final SpecTypeResolver typeResolver;
-    private final MutableValueResolver valueResolver;
+public final class SpeckyFileLicenceListener extends SpeckyBaseListener {
     private final LicenceResolver licenceResolver;
 
     /**
      * Constructor.
      */
-    public SpeckyFileScopeListener(
-        SpecTypeResolver typeResolver,
-        MutableValueResolver valueResolver,
-        LicenceResolver licenceResolver) {
-
-        this.typeResolver = typeResolver;
-        this.valueResolver = valueResolver;
+    public SpeckyFileLicenceListener(LicenceResolver licenceResolver) {
         this.licenceResolver = licenceResolver;
-    }
-
-    @Override
-    public void exitSingleImport(Specky.SingleImportContext ctx) {
-        final String importTypeName = ctx.qualifiedName().getText();
-        final int lastPart = importTypeName.lastIndexOf('.');
-        final String packageName = importTypeName.substring(0, lastPart);
-        final String typeName = importTypeName.substring(lastPart + 1);
-
-        typeResolver.registerTypeName(packageName, typeName);
-
-        if (ctx.default_value() != null) {
-            valueResolver.register(importTypeName, CodeBlock.of(ctx.default_value().ANYTHING().getText()));
-        }
     }
 
     @Override
