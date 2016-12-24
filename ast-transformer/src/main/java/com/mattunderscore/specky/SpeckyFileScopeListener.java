@@ -1,12 +1,10 @@
 package com.mattunderscore.specky;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import com.mattunderscore.specky.dsl.model.DSLImportDesc;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyBaseListener;
+import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
+import com.mattunderscore.specky.value.resolver.MutableValueResolver;
+import com.squareup.javapoet.CodeBlock;
 
 /**
  * Processor for DSL AST listener.
@@ -14,30 +12,28 @@ import com.mattunderscore.specky.parser.SpeckyBaseListener;
  * @author Matt Champion on 23/12/16
  */
 public final class SpeckyFileScopeListener extends SpeckyBaseListener {
-    private final List<DSLImportDesc> imports = new ArrayList<>();
+    private final SpecTypeResolver typeResolver;
+    private final MutableValueResolver valueResolver;
 
     /**
      * Constructor.
      */
-    public SpeckyFileScopeListener() {
+    public SpeckyFileScopeListener(SpecTypeResolver typeResolver, MutableValueResolver valueResolver) {
+        this.typeResolver = typeResolver;
+        this.valueResolver = valueResolver;
     }
 
     @Override
     public void exitSingleImport(Specky.SingleImportContext ctx) {
-        imports.add(
-            DSLImportDesc
-                .builder()
-                .typeName(ctx.qualifiedName().getText())
-                .ifThen(
-                    ctx.default_value() != null,
-                    builder -> builder.defaultValue(ctx.default_value().ANYTHING().getText()))
-                .build());
-    }
+        final String importTypeName = ctx.qualifiedName().getText();
+        final int lastPart = importTypeName.lastIndexOf('.');
+        final String packageName = importTypeName.substring(0, lastPart);
+        final String typeName = importTypeName.substring(lastPart + 1);
 
-    /**
-     * @return The imports
-     */
-    public List<DSLImportDesc> getImports() {
-        return Collections.unmodifiableList(imports);
+        typeResolver.registerTypeName(packageName, typeName);
+
+        if (ctx.default_value() != null) {
+            valueResolver.register(importTypeName, CodeBlock.of(ctx.default_value().ANYTHING().getText()));
+        }
     }
 }

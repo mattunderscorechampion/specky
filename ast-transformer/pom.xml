@@ -22,6 +22,10 @@
             <groupId>com.mattunderscore.code.generation.specky</groupId>
             <artifactId>proposition-processing</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.mattunderscore.code.generation.specky</groupId>
+            <artifactId>model-context</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
