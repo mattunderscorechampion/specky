@@ -28,13 +28,17 @@ import com.mattunderscore.specky.model.generator.scope.SectionScopeResolver;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyBaseListener;
 
+import net.jcip.annotations.NotThreadSafe;
+
 /**
  * AST listener for section scopes.
  *
  * @author Matt Champion 25/12/2016
  */
+@NotThreadSafe
 public final class SectionScopeListener extends SpeckyBaseListener {
     private final SectionScopeResolver sectionScopeResolver;
+    private String sectionName;
 
     /**
      * Constructor.
@@ -45,8 +49,18 @@ public final class SectionScopeListener extends SpeckyBaseListener {
     }
 
     @Override
+    public void enterDefaultSectionDeclaration(Specky.DefaultSectionDeclarationContext ctx) {
+        sectionName = null;
+    }
+
+    @Override
+    public void enterSectionDeclaration(Specky.SectionDeclarationContext ctx) {
+        sectionName = ctx.string_value().getText();
+    }
+
+    @Override
     public void enterSectionContent(Specky.SectionContentContext ctx) {
-        sectionScopeResolver.beginNewScope(null);
+        sectionScopeResolver.beginNewScope(sectionName);
     }
 
     @Override

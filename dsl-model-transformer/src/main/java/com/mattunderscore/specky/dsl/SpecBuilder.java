@@ -29,6 +29,8 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -72,9 +74,19 @@ public final class SpecBuilder {
      */
     public List<DSLSpecDesc> build(SpecContext context) {
 
-        return context
-            .sectionContent()
+        final Stream<Specky.SectionContentContext> stream0 = Stream
+            .of(context.defaultSectionDeclaration())
+            .filter(Objects::nonNull)
+            .map(Specky.DefaultSectionDeclarationContext::sectionContent);
+
+        final Stream<Specky.SectionContentContext> stream1 = context
+            .sectionDeclaration()
             .stream()
+            .filter(Objects::nonNull)
+            .map(Specky.SectionDeclarationContext::sectionContent);
+
+        return Stream
+            .concat(stream0, stream1)
             .map(this::build)
             .collect(toList());
     }

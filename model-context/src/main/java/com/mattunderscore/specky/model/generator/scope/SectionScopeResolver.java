@@ -72,7 +72,14 @@ public final class SectionScopeResolver {
      * Complete the scope.
      */
     public void completeScope() {
-        pendingScope.toScope();
+        final Scope scope = pendingScope.toScope();
+        final String sectionName = pendingScope.getSectionName();
+        if (sectionName == null) {
+            defaultScope = scope;
+        }
+        else {
+            scopes.put(sectionName, scope);
+        }
     }
 
     /**

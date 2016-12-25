@@ -178,6 +178,14 @@ sectionContent
             note?)+
     ;
 
+sectionDeclaration
+    : SECTION (INLINE_WS string_value)? LINE_BREAK+ sectionContent
+    ;
+
+defaultSectionDeclaration
+    : sectionContent
+    ;
+
 spec
-    :   LINE_BREAK* sectionContent? (SECTION (INLINE_WS string_value)? LINE_BREAK+ sectionContent)*
+    :   LINE_BREAK* defaultSectionDeclaration? (sectionDeclaration)*
     ;
