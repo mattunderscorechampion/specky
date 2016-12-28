@@ -44,11 +44,9 @@ import org.mockito.Mock;
 
 import com.mattunderscore.specky.dsl.model.DSLLicence;
 import com.mattunderscore.specky.licence.resolver.LicenceResolver;
+import com.mattunderscore.specky.licence.resolver.LicenceResolverImpl;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyLexer;
-import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
-import com.mattunderscore.specky.value.resolver.MutableValueResolver;
-import com.squareup.javapoet.CodeBlock;
 
 /**
  * Unit tests for {@link SpeckyFileLicenceListener}.
@@ -78,7 +76,7 @@ public final class SpeckyFileLicenceListenerTest {
         final SpeckyLexer lexer = new SpeckyLexer(stream);
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
-        final LicenceResolver licenceResolver = new LicenceResolver(errorListener);
+        final LicenceResolver licenceResolver = new LicenceResolverImpl(errorListener);
         final SpeckyFileLicenceListener listener = new SpeckyFileLicenceListener(licenceResolver);
         parser.addParseListener(listener);
 

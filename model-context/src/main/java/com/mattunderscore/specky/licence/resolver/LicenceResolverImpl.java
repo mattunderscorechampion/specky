@@ -1,4 +1,5 @@
-/* Copyright © 2016 Matthew Champion All rights reserved.
+/* Copyright © 2016 Matthew Champion
+All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -22,78 +23,68 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.model.generator.scope;
+package com.mattunderscore.specky.licence.resolver;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import com.mattunderscore.specky.SemanticErrorListener;
-import com.mattunderscore.specky.licence.resolver.LicenceResolverImpl;
-import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
-import com.mattunderscore.specky.value.resolver.MutableValueResolver;
-
-import net.jcip.annotations.NotThreadSafe;
+import com.mattunderscore.specky.dsl.model.DSLLicence;
 
 /**
- * Resolver for the scope to use.
+ * Implementation of {@link LicenceResolver}.
  *
- * @author Matt Champion on 24/12/2016
+ * @author Matt Champion on 20/08/2016
  */
-@NotThreadSafe
-public final class SectionScopeResolver implements SectionScopeBuilder {
+public final class LicenceResolverImpl implements LicenceResolver {
+    private final Map<String, String> licences = new HashMap<>();
     private final SemanticErrorListener semanticErrorListener;
-    private final Map<String, Scope> scopes = new HashMap<>();
-    private Scope defaultScope;
-    private PendingScope pendingScope;
+    private String defaultLicence;
 
     /**
      * Constructor.
-     *
-     * @param semanticErrorListener listener
      */
-    public SectionScopeResolver(SemanticErrorListener semanticErrorListener) {
+    public LicenceResolverImpl(SemanticErrorListener semanticErrorListener) {
         this.semanticErrorListener = semanticErrorListener;
     }
 
     @Override
-    public PendingScope beginNewScope(String sectionName) {
-        final PendingScope scope = new PendingScopeImpl(
-            sectionName,
-            new MutableValueResolver(),
-            new SpecTypeResolver(),
-            new LicenceResolverImpl(semanticErrorListener));
-        pendingScope = scope;
-        return scope;
+    public LicenceResolver register(String licence) {
+        if (defaultLicence != null) {
+            semanticErrorListener.onSemanticError("Multiple default licences are not allowed");
+        }
+        defaultLicence = licence;
+        return this;
     }
 
     @Override
-    public void completeScope() {
-        final Scope scope = pendingScope.toScope();
-        final String sectionName = pendingScope.getSectionName();
-        if (sectionName == null) {
-            defaultScope = scope;
-        }
-        else {
-            scopes.put(sectionName, scope);
-        }
-    }
-
-    /**
-     * Resolve a scope.
-     */
-    public Scope resolve(String sectionName) {
-        return scopes.get(sectionName);
-    }
-
-    /**
-     * Resolve the default scope.
-     */
-    public Scope resolve() {
-        return defaultScope;
+    public LicenceResolver register(String name, String licence) {
+        licences.put(name, licence);
+        return this;
     }
 
     @Override
-    public PendingScope currentScope() {
-        return pendingScope;
+    public Optional<String> resolve(DSLLicence dslLicence) {
+        if (dslLicence == null) {
+            return Optional.ofNullable(defaultLicence);
+        }
+
+        final String inlineLicence = dslLicence.getLicence();
+        if (inlineLicence != null) {
+            return Optional.of(inlineLicence);
+        }
+
+        final String resolvedLicence = licences.get(dslLicence.getIdentifier());
+        if (resolvedLicence != null) {
+            return Optional.of(resolvedLicence);
+        }
+
+        semanticErrorListener.onSemanticError(
+            "An unknown name " +
+            dslLicence.getIdentifier() +
+            " was used to reference a licence");
+
+        return Optional.empty();
     }
 }

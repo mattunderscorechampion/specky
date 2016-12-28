@@ -28,67 +28,34 @@ import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
 import com.mattunderscore.specky.value.resolver.MutableValueResolver;
 
-import net.jcip.annotations.NotThreadSafe;
-
 /**
  * Pending scope.
  *
- * @author Matt Champion on 24/12/2016
+ * @author Matt Champion 28/12/2016
  */
-@NotThreadSafe
-public final class PendingScope {
-    private final String sectionName;
-    private final MutableValueResolver valueResolver;
-    private final SpecTypeResolver typeResolver;
-    private final LicenceResolver licenceResolver;
-
-    /**
-     * Constructor.
-     */
-    /*package*/ PendingScope(
-        String sectionName,
-        MutableValueResolver valueResolver,
-        SpecTypeResolver typeResolver,
-        LicenceResolver licenceResolver) {
-        this.sectionName = sectionName;
-
-        this.valueResolver = valueResolver;
-        this.typeResolver = typeResolver;
-        this.licenceResolver = licenceResolver;
-    }
-
+public interface PendingScope {
     /**
      * @return the section name
      */
-    public String getSectionName() {
-        return sectionName;
-    }
+    String getSectionName();
 
     /**
      * @return the value resolver for the scope
      */
-    public MutableValueResolver getValueResolver() {
-        return valueResolver;
-    }
+    MutableValueResolver getValueResolver();
 
     /**
      * @return the type resolver for types imported into the scope
      */
-    public SpecTypeResolver getImportTypeResolver() {
-        return typeResolver;
-    }
+    SpecTypeResolver getImportTypeResolver();
 
     /**
      * @return the licence resolver for the scope
      */
-    public LicenceResolver getLicenceResolver() {
-        return licenceResolver;
-    }
+    LicenceResolver getLicenceResolver();
 
     /**
      * @return a scope
      */
-    public Scope toScope() {
-        return null;
-    }
+    Scope toScope();
 }

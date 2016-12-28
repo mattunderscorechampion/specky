@@ -22,49 +22,63 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky;
+package com.mattunderscore.specky.model.generator.scope;
 
-import com.mattunderscore.specky.model.generator.scope.SectionScopeBuilder;
-import com.mattunderscore.specky.parser.Specky;
-import com.mattunderscore.specky.parser.SpeckyBaseListener;
+import com.mattunderscore.specky.licence.resolver.LicenceResolver;
+import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
+import com.mattunderscore.specky.value.resolver.MutableValueResolver;
 
 import net.jcip.annotations.NotThreadSafe;
 
 /**
- * AST listener for section scopes.
+ * Implementation of {@link PendingScope}.
  *
- * @author Matt Champion 25/12/2016
+ * @author Matt Champion on 24/12/2016
  */
 @NotThreadSafe
-public final class SectionScopeListener extends SpeckyBaseListener {
-    private final SectionScopeBuilder sectionScopeBuilder;
-    private String sectionName;
+public final class PendingScopeImpl implements PendingScope {
+    private final String sectionName;
+    private final MutableValueResolver valueResolver;
+    private final SpecTypeResolver typeResolver;
+    private final LicenceResolver licenceResolver;
 
     /**
      * Constructor.
      */
-    public SectionScopeListener(SectionScopeBuilder sectionScopeBuilder) {
+    /*package*/ PendingScopeImpl(
+        String sectionName,
+        MutableValueResolver valueResolver,
+        SpecTypeResolver typeResolver,
+        LicenceResolver licenceResolver) {
+        this.sectionName = sectionName;
 
-        this.sectionScopeBuilder = sectionScopeBuilder;
+        this.valueResolver = valueResolver;
+        this.typeResolver = typeResolver;
+        this.licenceResolver = licenceResolver;
     }
 
     @Override
-    public void enterDefaultSectionDeclaration(Specky.DefaultSectionDeclarationContext ctx) {
-        sectionName = null;
+    public String getSectionName() {
+        return sectionName;
     }
 
     @Override
-    public void enterSectionDeclaration(Specky.SectionDeclarationContext ctx) {
-        sectionName = ctx.string_value().getText();
+    public MutableValueResolver getValueResolver() {
+        return valueResolver;
     }
 
     @Override
-    public void enterSectionContent(Specky.SectionContentContext ctx) {
-        sectionScopeBuilder.beginNewScope(sectionName);
+    public SpecTypeResolver getImportTypeResolver() {
+        return typeResolver;
     }
 
     @Override
-    public void exitSectionContent(Specky.SectionContentContext ctx) {
-        sectionScopeBuilder.completeScope();
+    public LicenceResolver getLicenceResolver() {
+        return licenceResolver;
+    }
+
+    @Override
+    public Scope toScope() {
+        return null;
     }
 }

@@ -33,6 +33,7 @@ import com.mattunderscore.specky.SemanticErrorListener;
 import com.mattunderscore.specky.dsl.model.DSLImportDesc;
 import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.licence.resolver.LicenceResolver;
+import com.mattunderscore.specky.licence.resolver.LicenceResolverImpl;
 import com.mattunderscore.specky.type.resolver.JavaStandardTypeResolver;
 import com.mattunderscore.specky.type.resolver.PropertyTypeResolver;
 import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
@@ -86,7 +87,7 @@ public final class ScopeResolver {
             .with(new NullValueResolver());
 
         specs.forEach(spec -> {
-            final LicenceResolver licenceResolver = new LicenceResolver(semanticErrorListener);
+            final LicenceResolver licenceResolver = new LicenceResolverImpl(semanticErrorListener);
             spec.getLicences().forEach(dslLicence -> {
                 if (dslLicence.getIdentifier() == null) {
                     licenceResolver.register(dslLicence.getLicence());

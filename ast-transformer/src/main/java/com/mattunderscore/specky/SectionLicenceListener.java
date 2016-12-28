@@ -24,47 +24,67 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.mattunderscore.specky.model.generator.scope.SectionScopeBuilder;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyBaseListener;
 
-import net.jcip.annotations.NotThreadSafe;
-
 /**
- * AST listener for section scopes.
+ * DSL AST listener for licences.
  *
- * @author Matt Champion 25/12/2016
+ * @author Matt Champion on 24/12/16
  */
-@NotThreadSafe
-public final class SectionScopeListener extends SpeckyBaseListener {
-    private final SectionScopeBuilder sectionScopeBuilder;
-    private String sectionName;
+public final class SectionLicenceListener extends SpeckyBaseListener {
+
+    private SectionScopeBuilder scopeResolver;
 
     /**
      * Constructor.
      */
-    public SectionScopeListener(SectionScopeBuilder sectionScopeBuilder) {
-
-        this.sectionScopeBuilder = sectionScopeBuilder;
+    public SectionLicenceListener(SectionScopeBuilder scopeResolver) {
+        this.scopeResolver = scopeResolver;
     }
 
     @Override
-    public void enterDefaultSectionDeclaration(Specky.DefaultSectionDeclarationContext ctx) {
-        sectionName = null;
+    public void exitLicenceDeclaration(Specky.LicenceDeclarationContext ctx) {
+        final String licenceText = toValue(ctx.string_value());
+
+        if (ctx.Identifier() != null) {
+            // Register a named licence
+            final String licenceIdentifier = ctx.Identifier().getText();
+            scopeResolver
+                .currentScope()
+                .getLicenceResolver()
+                .register(licenceIdentifier, licenceText);
+        }
+        else {
+            // Register the default licence
+            scopeResolver
+                .currentScope()
+                .getLicenceResolver()
+                .register(licenceText);
+        }
     }
 
-    @Override
-    public void enterSectionDeclaration(Specky.SectionDeclarationContext ctx) {
-        sectionName = ctx.string_value().getText();
-    }
+    private String toValue(Specky.String_valueContext stringValue) {
+        if (stringValue == null) {
+            return null;
+        }
 
-    @Override
-    public void enterSectionContent(Specky.SectionContentContext ctx) {
-        sectionScopeBuilder.beginNewScope(sectionName);
-    }
+        final TerminalNode multiline = stringValue.MULTILINE_STRING_LITERAL();
+        final String literal;
+        final int trimLength;
 
-    @Override
-    public void exitSectionContent(Specky.SectionContentContext ctx) {
-        sectionScopeBuilder.completeScope();
+        if (multiline != null) {
+            literal = multiline.getText();
+            trimLength = 3;
+        }
+        else {
+            literal = stringValue.StringLiteral().getText();
+            trimLength = 1;
+        }
+
+        return literal.substring(trimLength, literal.length() - trimLength);
     }
 }

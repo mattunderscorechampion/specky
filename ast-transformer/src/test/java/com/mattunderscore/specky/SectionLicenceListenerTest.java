@@ -24,11 +24,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
@@ -39,46 +44,58 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.mattunderscore.specky.model.generator.scope.Scope;
-import com.mattunderscore.specky.model.generator.scope.SectionScopeResolver;
+import com.mattunderscore.specky.dsl.model.DSLLicence;
+import com.mattunderscore.specky.licence.resolver.LicenceResolver;
+import com.mattunderscore.specky.licence.resolver.LicenceResolverImpl;
+import com.mattunderscore.specky.model.generator.scope.PendingScope;
+import com.mattunderscore.specky.model.generator.scope.SectionScopeBuilder;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyLexer;
 
 /**
- * Unit tests for {@link SectionScopeListener}.
+ * Unit tests for {@link SectionLicenceListener}.
  *
- * @author Matt Champion 25/12/2016
+ * @author Matt Champion 28/12/2016
  */
-public final class SectionScopeListenerTest {
+public final class SectionLicenceListenerTest {
     @Mock
-    private SemanticErrorListener errorListener;
+    private SectionScopeBuilder sectionScopeBuilder;
+    @Mock
+    private PendingScope scope;
+    @Mock
+    private LicenceResolver licenceResolver;
 
     @Before
     public void setUp() {
         initMocks(this);
+
+        when(scope.getLicenceResolver()).thenReturn(licenceResolver);
+        when(sectionScopeBuilder.currentScope()).thenReturn(scope);
     }
 
     @After
     public void postConditions() {
-        verifyNoMoreInteractions(errorListener);
+        verifyNoMoreInteractions(licenceResolver, sectionScopeBuilder);
     }
 
     @Test
     public void test() throws IOException {
-        final CharStream stream = new ANTLRInputStream(SpeckyFileImportTypeListenerTest
+        final CharStream stream = new ANTLRInputStream(SpeckyFileLicenceListenerTest
             .class
             .getClassLoader()
-            .getResourceAsStream("Test.spec"));
+            .getResourceAsStream("SectionTest.spec"));
         final SpeckyLexer lexer = new SpeckyLexer(stream);
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
-        final SectionScopeResolver sectionScopeResolver = new SectionScopeResolver(errorListener);
-        final SectionScopeListener listener = new SectionScopeListener(sectionScopeResolver);
+        final SectionLicenceListener listener = new SectionLicenceListener(sectionScopeBuilder);
         parser.addParseListener(listener);
 
         parser.spec();
 
-        final Scope scope = sectionScopeResolver.resolve();
-        assertNull(scope);
+        verify(sectionScopeBuilder, times(3)).currentScope();
+
+        verify(licenceResolver).register("default licence");
+        verify(licenceResolver).register("n", "named licence");
+        verify(licenceResolver).register("default licence of named section");
     }
 }

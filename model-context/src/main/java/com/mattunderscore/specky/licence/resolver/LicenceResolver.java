@@ -1,5 +1,4 @@
-/* Copyright © 2016 Matthew Champion
-All rights reserved.
+/* Copyright © 2016 Matthew Champion All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -25,72 +24,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.licence.resolver;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
-import com.mattunderscore.specky.SemanticErrorListener;
 import com.mattunderscore.specky.dsl.model.DSLLicence;
 
 /**
  * Licence resolver.
  *
- * @author Matt Champion on 20/08/2016
+ * @author Matt Champion 28/12/2016
  */
-public final class LicenceResolver {
-    private final Map<String, String> licences = new HashMap<>();
-    private final SemanticErrorListener semanticErrorListener;
-    private String defaultLicence;
-
-    /**
-     * Constructor.
-     */
-    public LicenceResolver(SemanticErrorListener semanticErrorListener) {
-        this.semanticErrorListener = semanticErrorListener;
-    }
-
+public interface LicenceResolver {
     /**
      * Register a default licence.
      */
-    public LicenceResolver register(String licence) {
-        if (defaultLicence != null) {
-            semanticErrorListener.onSemanticError("Multiple default licences are not allowed");
-        }
-        defaultLicence = licence;
-        return this;
-    }
+    LicenceResolver register(String licence);
 
     /**
      * Register a named licence.
      */
-    public LicenceResolver register(String name, String licence) {
-        licences.put(name, licence);
-        return this;
-    }
+    LicenceResolver register(String name, String licence);
 
     /**
      * @return the licence mapped to the name or the default licence
      */
-    public Optional<String> resolve(DSLLicence dslLicence) {
-        if (dslLicence == null) {
-            return Optional.ofNullable(defaultLicence);
-        }
-
-        final String inlineLicence = dslLicence.getLicence();
-        if (inlineLicence != null) {
-            return Optional.of(inlineLicence);
-        }
-
-        final String resolvedLicence = licences.get(dslLicence.getIdentifier());
-        if (resolvedLicence != null) {
-            return Optional.of(resolvedLicence);
-        }
-
-        semanticErrorListener.onSemanticError(
-            "An unknown name " +
-            dslLicence.getIdentifier() +
-            " was used to reference a licence");
-
-        return Optional.empty();
-    }
+    Optional<String> resolve(DSLLicence dslLicence);
 }
