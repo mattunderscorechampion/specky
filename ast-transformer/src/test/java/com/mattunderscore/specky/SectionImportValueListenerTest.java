@@ -77,7 +77,7 @@ public final class SectionImportValueListenerTest {
 
     @Test
     public void test() throws IOException {
-        final CharStream stream = new ANTLRInputStream(SpeckyFileLicenceListenerTest
+        final CharStream stream = new ANTLRInputStream(SectionImportValueListenerTest
             .class
             .getClassLoader()
             .getResourceAsStream("SectionTest.spec"));

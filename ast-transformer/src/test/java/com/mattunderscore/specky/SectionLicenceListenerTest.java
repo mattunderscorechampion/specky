@@ -80,7 +80,7 @@ public final class SectionLicenceListenerTest {
 
     @Test
     public void test() throws IOException {
-        final CharStream stream = new ANTLRInputStream(SpeckyFileLicenceListenerTest
+        final CharStream stream = new ANTLRInputStream(SectionLicenceListenerTest
             .class
             .getClassLoader()
             .getResourceAsStream("SectionTest.spec"));

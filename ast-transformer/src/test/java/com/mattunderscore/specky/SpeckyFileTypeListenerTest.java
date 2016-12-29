@@ -49,7 +49,7 @@ import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
 public final class SpeckyFileTypeListenerTest {
     @Test
     public void test() throws IOException {
-        final CharStream stream = new ANTLRInputStream(SpeckyFileImportTypeListenerTest
+        final CharStream stream = new ANTLRInputStream(SpeckyFileTypeListenerTest
             .class
             .getClassLoader()
             .getResourceAsStream("Test.spec"));

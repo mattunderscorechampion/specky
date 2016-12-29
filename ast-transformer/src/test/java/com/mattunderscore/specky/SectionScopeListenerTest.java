@@ -65,7 +65,7 @@ public final class SectionScopeListenerTest {
 
     @Test
     public void test() throws IOException {
-        final CharStream stream = new ANTLRInputStream(SpeckyFileImportTypeListenerTest
+        final CharStream stream = new ANTLRInputStream(SectionScopeListenerTest
             .class
             .getClassLoader()
             .getResourceAsStream("Test.spec"));
