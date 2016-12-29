@@ -30,7 +30,7 @@ import java.util.Map;
 import com.mattunderscore.specky.SemanticErrorListener;
 import com.mattunderscore.specky.licence.resolver.LicenceResolverImpl;
 import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
-import com.mattunderscore.specky.value.resolver.MutableValueResolver;
+import com.mattunderscore.specky.value.resolver.MutableValueResolverImpl;
 
 import net.jcip.annotations.NotThreadSafe;
 
@@ -59,7 +59,7 @@ public final class SectionScopeResolver implements SectionScopeBuilder {
     public PendingScope beginNewScope(String sectionName) {
         final PendingScope scope = new PendingScopeImpl(
             sectionName,
-            new MutableValueResolver(),
+            new MutableValueResolverImpl(),
             new SpecTypeResolver(),
             new LicenceResolverImpl(semanticErrorListener));
         pendingScope = scope;

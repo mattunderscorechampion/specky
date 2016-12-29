@@ -35,6 +35,7 @@ import com.mattunderscore.specky.dsl.model.DSLSpecDesc;
 import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.licence.resolver.LicenceResolverImpl;
 import com.mattunderscore.specky.type.resolver.JavaStandardTypeResolver;
+import com.mattunderscore.specky.type.resolver.MutableTypeResolver;
 import com.mattunderscore.specky.type.resolver.PropertyTypeResolver;
 import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
@@ -42,6 +43,7 @@ import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
 import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
 import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver;
 import com.mattunderscore.specky.value.resolver.MutableValueResolver;
+import com.mattunderscore.specky.value.resolver.MutableValueResolverImpl;
 import com.mattunderscore.specky.value.resolver.NullValueResolver;
 import com.mattunderscore.specky.value.resolver.OptionalValueResolver;
 import com.squareup.javapoet.CodeBlock;
@@ -65,8 +67,8 @@ public final class ScopeResolver {
      * Create the scopes.
      */
     public ScopeResolver createScopes(List<DSLSpecDesc> specs) {
-        final SpecTypeResolver typeResolver = new SpecTypeResolver();
-        final MutableValueResolver mutableValueResolver = new MutableValueResolver();
+        final MutableTypeResolver typeResolver = new SpecTypeResolver();
+        final MutableValueResolver mutableValueResolver = new MutableValueResolverImpl();
 
         specs.forEach(spec -> {
             spec.getImportTypes().forEach(importDesc -> processImport(importDesc, typeResolver, mutableValueResolver));
@@ -105,7 +107,7 @@ public final class ScopeResolver {
 
     private void processImport(
             DSLImportDesc importDesc,
-            SpecTypeResolver typeResolver,
+            MutableTypeResolver typeResolver,
             MutableValueResolver mutableValueResolver) {
         final int lastPart = importDesc.getTypeName().lastIndexOf('.');
         final String packageName = importDesc.getTypeName().substring(0, lastPart);

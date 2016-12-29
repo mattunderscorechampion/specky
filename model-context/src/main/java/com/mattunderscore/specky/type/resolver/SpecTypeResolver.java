@@ -36,13 +36,11 @@ import java.util.Optional;
  *
  * @author Matt Champion on 08/06/16
  */
-public final class SpecTypeResolver implements TypeResolver {
+public final class SpecTypeResolver implements MutableTypeResolver {
     private final Map<String, String> specs = new HashMap<>();
 
-    /**
-     * Register a type with the resolver.
-     */
-    public SpecTypeResolver registerTypeName(String packageName, String typeName) {
+    @Override
+    public MutableTypeResolver registerTypeName(String packageName, String typeName) {
         final String fullyQualifiedTypeName = packageName + "." + typeName;
         specs.put(typeName, fullyQualifiedTypeName);
         specs.put(fullyQualifiedTypeName, fullyQualifiedTypeName);

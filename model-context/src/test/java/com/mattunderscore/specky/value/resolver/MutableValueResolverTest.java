@@ -36,7 +36,7 @@ import com.squareup.javapoet.CodeBlock;
 import org.junit.Test;
 
 /**
- * Unit tests for {@link MutableValueResolver}.
+ * Unit tests for {@link MutableValueResolverImpl}.
  *
  * @author Matt Champion on 30/07/2016
  */
@@ -47,7 +47,7 @@ public final class MutableValueResolverTest {
 
     @Test
     public void resolveNone() {
-        final MutableValueResolver resolver = new MutableValueResolver();
+        final MutableValueResolver resolver = new MutableValueResolverImpl();
 
         final Optional<CodeBlock> none = resolver.resolve(noneProperty, "none");
         assertFalse(none.isPresent());
@@ -55,7 +55,7 @@ public final class MutableValueResolverTest {
 
     @Test
     public void registerAndResolve() {
-        final MutableValueResolver resolver = new MutableValueResolver();
+        final MutableValueResolver resolver = new MutableValueResolverImpl();
 
         final Optional<CodeBlock> some = resolver.register("some", CodeBlock.of("other")).resolve(someProperty, "some");
         assertTrue(some.isPresent());
@@ -64,14 +64,14 @@ public final class MutableValueResolverTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void registerTwice() {
-        final MutableValueResolver resolver = new MutableValueResolver();
+        final MutableValueResolver resolver = new MutableValueResolverImpl();
 
         resolver.register("some", CodeBlock.of("other")).register("some", CodeBlock.of("again"));
     }
 
     @Test(expected = NullPointerException.class)
     public void registerNullValue() {
-        final MutableValueResolver resolver = new MutableValueResolver();
+        final MutableValueResolver resolver = new MutableValueResolverImpl();
 
         resolver.register("some", null);
     }

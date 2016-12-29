@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.model.generator.scope;
 
 import com.mattunderscore.specky.licence.resolver.LicenceResolver;
-import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
+import com.mattunderscore.specky.type.resolver.MutableTypeResolver;
 import com.mattunderscore.specky.value.resolver.MutableValueResolver;
 
 import net.jcip.annotations.NotThreadSafe;
@@ -39,7 +39,7 @@ import net.jcip.annotations.NotThreadSafe;
 public final class PendingScopeImpl implements PendingScope {
     private final String sectionName;
     private final MutableValueResolver valueResolver;
-    private final SpecTypeResolver typeResolver;
+    private final MutableTypeResolver typeResolver;
     private final LicenceResolver licenceResolver;
 
     /**
@@ -48,7 +48,7 @@ public final class PendingScopeImpl implements PendingScope {
     /*package*/ PendingScopeImpl(
         String sectionName,
         MutableValueResolver valueResolver,
-        SpecTypeResolver typeResolver,
+        MutableTypeResolver typeResolver,
         LicenceResolver licenceResolver) {
         this.sectionName = sectionName;
 
@@ -68,7 +68,7 @@ public final class PendingScopeImpl implements PendingScope {
     }
 
     @Override
-    public SpecTypeResolver getImportTypeResolver() {
+    public MutableTypeResolver getImportTypeResolver() {
         return typeResolver;
     }
 

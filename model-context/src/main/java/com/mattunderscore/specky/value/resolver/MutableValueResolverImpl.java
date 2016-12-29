@@ -1,4 +1,5 @@
-/* Copyright © 2016 Matthew Champion All rights reserved.
+/* Copyright © 2016 Matthew Champion
+All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -22,40 +23,36 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.model.generator.scope;
+package com.mattunderscore.specky.value.resolver;
 
-import com.mattunderscore.specky.licence.resolver.LicenceResolver;
-import com.mattunderscore.specky.type.resolver.MutableTypeResolver;
-import com.mattunderscore.specky.value.resolver.MutableValueResolver;
+import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
+import com.squareup.javapoet.CodeBlock;
+
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
- * Pending scope.
- *
- * @author Matt Champion 28/12/2016
+ * Implementation of {@link MutableValueResolver}.
+ * @author Matt Champion on 30/07/2016
  */
-public interface PendingScope {
-    /**
-     * @return the section name
-     */
-    String getSectionName();
+public final class MutableValueResolverImpl implements MutableValueResolver {
+    private final ConcurrentMap<String, CodeBlock> typeToValue = new ConcurrentHashMap<>(10, 0.5f, 2);
 
-    /**
-     * @return the value resolver for the scope
-     */
-    MutableValueResolver getValueResolver();
+    @Override
+    public Optional<CodeBlock> resolve(DSLPropertyDesc propertyDesc, String resolvedType) {
+        return Optional.ofNullable(typeToValue.get(resolvedType));
+    }
 
-    /**
-     * @return the type resolver for types imported into the scope
-     */
-    MutableTypeResolver getImportTypeResolver();
-
-    /**
-     * @return the licence resolver for the scope
-     */
-    LicenceResolver getLicenceResolver();
-
-    /**
-     * @return a scope
-     */
-    Scope toScope();
+    @Override
+    public MutableValueResolver register(String type, CodeBlock defaultValue) {
+        Objects.requireNonNull(type);
+        Objects.requireNonNull(defaultValue);
+        final CodeBlock currentValue = typeToValue.putIfAbsent(type, defaultValue);
+        if (currentValue != null && !currentValue.equals(defaultValue)) {
+            throw new IllegalArgumentException("The type " + type + " is already registered to " + defaultValue);
+        }
+        return this;
+    }
 }

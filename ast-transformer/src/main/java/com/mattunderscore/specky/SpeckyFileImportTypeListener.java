@@ -26,7 +26,7 @@ package com.mattunderscore.specky;
 
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyBaseListener;
-import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
+import com.mattunderscore.specky.type.resolver.MutableTypeResolver;
 
 /**
  * DSL AST listener for imported types.
@@ -34,12 +34,12 @@ import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
  * @author Matt Champion on 24/12/16
  */
 public final class SpeckyFileImportTypeListener extends SpeckyBaseListener {
-    private final SpecTypeResolver typeResolver;
+    private final MutableTypeResolver typeResolver;
 
     /**
      * Constructor.
      */
-    public SpeckyFileImportTypeListener(SpecTypeResolver typeResolver) {
+    public SpeckyFileImportTypeListener(MutableTypeResolver typeResolver) {
 
         this.typeResolver = typeResolver;
     }

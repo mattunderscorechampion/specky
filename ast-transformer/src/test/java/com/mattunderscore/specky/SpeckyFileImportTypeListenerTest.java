@@ -37,6 +37,7 @@ import org.junit.Test;
 
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyLexer;
+import com.mattunderscore.specky.type.resolver.MutableTypeResolver;
 import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
 
 /**
@@ -54,7 +55,7 @@ public final class SpeckyFileImportTypeListenerTest {
         final SpeckyLexer lexer = new SpeckyLexer(stream);
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
-        final SpecTypeResolver typeResolver = new SpecTypeResolver();
+        final MutableTypeResolver typeResolver = new SpecTypeResolver();
         final SpeckyFileImportTypeListener listener = new SpeckyFileImportTypeListener(typeResolver);
         parser.addParseListener(listener);
 

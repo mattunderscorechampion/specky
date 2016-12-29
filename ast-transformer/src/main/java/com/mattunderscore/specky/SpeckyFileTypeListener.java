@@ -27,7 +27,7 @@ package com.mattunderscore.specky;
 
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyBaseListener;
-import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
+import com.mattunderscore.specky.type.resolver.MutableTypeResolver;
 
 import net.jcip.annotations.NotThreadSafe;
 
@@ -38,13 +38,13 @@ import net.jcip.annotations.NotThreadSafe;
  */
 @NotThreadSafe
 public final class SpeckyFileTypeListener extends SpeckyBaseListener {
-    private final SpecTypeResolver typeResolver;
+    private final MutableTypeResolver typeResolver;
     private String packageName;
 
     /**
      * Constructor.
      */
-    public SpeckyFileTypeListener(SpecTypeResolver typeResolver) {
+    public SpeckyFileTypeListener(MutableTypeResolver typeResolver) {
         this.typeResolver = typeResolver;
     }
 
