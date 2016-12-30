@@ -24,7 +24,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -79,6 +79,6 @@ public final class SectionScopeListenerTest {
         parser.spec();
 
         final Scope scope = sectionScopeResolver.resolve();
-        assertNull(scope);
+        assertNotNull(scope);
     }
 }

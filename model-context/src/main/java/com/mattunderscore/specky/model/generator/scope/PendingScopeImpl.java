@@ -25,8 +25,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.model.generator.scope;
 
 import com.mattunderscore.specky.licence.resolver.LicenceResolver;
+import com.mattunderscore.specky.type.resolver.JavaStandardTypeResolver;
 import com.mattunderscore.specky.type.resolver.MutableTypeResolver;
+import com.mattunderscore.specky.type.resolver.PropertyTypeResolver;
+import com.mattunderscore.specky.type.resolver.TypeResolver;
+import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
+import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
+import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver;
 import com.mattunderscore.specky.value.resolver.MutableValueResolver;
+import com.mattunderscore.specky.value.resolver.NullValueResolver;
+import com.mattunderscore.specky.value.resolver.OptionalValueResolver;
 
 import net.jcip.annotations.NotThreadSafe;
 
@@ -79,6 +87,19 @@ public final class PendingScopeImpl implements PendingScope {
 
     @Override
     public Scope toScope() {
-        return null;
+        final CompositeValueResolver compositeValueResolver = new CompositeValueResolver()
+            .with(new OptionalValueResolver())
+            .with(new JavaStandardDefaultValueResolver())
+            .with(valueResolver)
+            .with(new NullValueResolver());
+
+        final TypeResolver resolver = new TypeResolverBuilder()
+            .registerResolver(new JavaStandardTypeResolver())
+            .registerResolver(typeResolver)
+            .build();
+
+        final PropertyTypeResolver propertyTypeResolver = new PropertyTypeResolver(resolver);
+
+        return new ScopeImpl(compositeValueResolver, resolver, propertyTypeResolver, licenceResolver);
     }
 }
