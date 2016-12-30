@@ -42,14 +42,14 @@ import com.mattunderscore.specky.type.resolver.MutableTypeResolver;
 import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
 
 /**
- * Unit tests for {@link SpeckyFileTypeListener}.
+ * Unit tests for {@link FileTypeListener}.
  *
  * @author Matt Champion on 24/12/16
  */
-public final class SpeckyFileTypeListenerTest {
+public final class FileTypeListenerTest {
     @Test
     public void test() throws IOException {
-        final CharStream stream = new ANTLRInputStream(SpeckyFileTypeListenerTest
+        final CharStream stream = new ANTLRInputStream(FileTypeListenerTest
             .class
             .getClassLoader()
             .getResourceAsStream("Test.spec"));
@@ -57,7 +57,7 @@ public final class SpeckyFileTypeListenerTest {
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
         final MutableTypeResolver typeResolver = new SpecTypeResolver();
-        final SpeckyFileTypeListener listener = new SpeckyFileTypeListener(typeResolver);
+        final FileTypeListener listener = new FileTypeListener(typeResolver);
         parser.addParseListener(listener);
 
         parser.spec();

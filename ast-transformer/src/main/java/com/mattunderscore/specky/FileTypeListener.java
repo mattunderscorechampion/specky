@@ -37,14 +37,14 @@ import net.jcip.annotations.NotThreadSafe;
  * @author Matt Champion on 24/12/16
  */
 @NotThreadSafe
-public final class SpeckyFileTypeListener extends SpeckyBaseListener {
+public final class FileTypeListener extends SpeckyBaseListener {
     private final MutableTypeResolver typeResolver;
     private String packageName;
 
     /**
      * Constructor.
      */
-    public SpeckyFileTypeListener(MutableTypeResolver typeResolver) {
+    public FileTypeListener(MutableTypeResolver typeResolver) {
         this.typeResolver = typeResolver;
     }
 
