@@ -47,7 +47,8 @@ import net.jcip.annotations.NotThreadSafe;
 public final class PendingScopeImpl implements PendingScope {
     private final String sectionName;
     private final MutableValueResolver valueResolver;
-    private final MutableTypeResolver typeResolver;
+    private final MutableTypeResolver mutableTypeResolver;
+    private final TypeResolver typeResolver;
     private final LicenceResolver licenceResolver;
 
     /**
@@ -56,11 +57,13 @@ public final class PendingScopeImpl implements PendingScope {
     /*package*/ PendingScopeImpl(
         String sectionName,
         MutableValueResolver valueResolver,
-        MutableTypeResolver typeResolver,
+        MutableTypeResolver mutableTypeResolver,
+        TypeResolver typeResolver,
         LicenceResolver licenceResolver) {
-        this.sectionName = sectionName;
 
+        this.sectionName = sectionName;
         this.valueResolver = valueResolver;
+        this.mutableTypeResolver = mutableTypeResolver;
         this.typeResolver = typeResolver;
         this.licenceResolver = licenceResolver;
     }
@@ -77,7 +80,7 @@ public final class PendingScopeImpl implements PendingScope {
 
     @Override
     public MutableTypeResolver getImportTypeResolver() {
-        return typeResolver;
+        return mutableTypeResolver;
     }
 
     @Override
@@ -95,6 +98,7 @@ public final class PendingScopeImpl implements PendingScope {
 
         final TypeResolver resolver = new TypeResolverBuilder()
             .registerResolver(new JavaStandardTypeResolver())
+            .registerResolver(mutableTypeResolver)
             .registerResolver(typeResolver)
             .build();
 

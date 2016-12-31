@@ -35,6 +35,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import com.mattunderscore.specky.SemanticErrorListener;
+import com.mattunderscore.specky.type.resolver.TypeResolver;
 
 /**
  * Unit tests for {@link SectionScopeResolver}.
@@ -44,6 +45,8 @@ import com.mattunderscore.specky.SemanticErrorListener;
 public class SectionScopeResolverTest {
     @Mock
     private SemanticErrorListener errorListener;
+    @Mock
+    private TypeResolver typeResolver;
 
     @Before
     public void setUp() {
@@ -57,14 +60,14 @@ public class SectionScopeResolverTest {
 
     @Test
     public void resolveNone() throws Exception {
-        final SectionScopeResolver resolver = new SectionScopeResolver(errorListener);
+        final SectionScopeResolver resolver = new SectionScopeResolver(errorListener, typeResolver);
 
         assertNull(resolver.resolve("none"));
     }
 
     @Test
     public void resolveNoDefault() throws Exception {
-        final SectionScopeResolver resolver = new SectionScopeResolver(errorListener);
+        final SectionScopeResolver resolver = new SectionScopeResolver(errorListener, typeResolver);
 
         assertNull(resolver.resolve());
     }

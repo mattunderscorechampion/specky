@@ -43,6 +43,7 @@ import com.mattunderscore.specky.model.generator.scope.Scope;
 import com.mattunderscore.specky.model.generator.scope.SectionScopeResolver;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyLexer;
+import com.mattunderscore.specky.type.resolver.TypeResolver;
 
 /**
  * Unit tests for {@link SectionScopeListener}.
@@ -52,6 +53,8 @@ import com.mattunderscore.specky.parser.SpeckyLexer;
 public final class SectionScopeListenerTest {
     @Mock
     private SemanticErrorListener errorListener;
+    @Mock
+    private TypeResolver typeResolver;
 
     @Before
     public void setUp() {
@@ -72,7 +75,7 @@ public final class SectionScopeListenerTest {
         final SpeckyLexer lexer = new SpeckyLexer(stream);
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
-        final SectionScopeResolver sectionScopeResolver = new SectionScopeResolver(errorListener);
+        final SectionScopeResolver sectionScopeResolver = new SectionScopeResolver(errorListener, typeResolver);
         final SectionScopeListener listener = new SectionScopeListener(sectionScopeResolver);
         parser.addParseListener(listener);
 
