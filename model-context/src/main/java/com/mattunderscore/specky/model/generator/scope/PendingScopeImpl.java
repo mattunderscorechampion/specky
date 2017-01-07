@@ -50,6 +50,7 @@ public final class PendingScopeImpl implements PendingScope {
     private final MutableTypeResolver mutableTypeResolver;
     private final TypeResolver typeResolver;
     private final LicenceResolver licenceResolver;
+    private String author;
 
     /**
      * Constructor.
@@ -104,6 +105,11 @@ public final class PendingScopeImpl implements PendingScope {
 
         final PropertyTypeResolver propertyTypeResolver = new PropertyTypeResolver(resolver);
 
-        return new ScopeImpl(compositeValueResolver, resolver, propertyTypeResolver, licenceResolver);
+        return new ScopeImpl(compositeValueResolver, resolver, propertyTypeResolver, licenceResolver, author);
+    }
+
+    @Override
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

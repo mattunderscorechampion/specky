@@ -54,4 +54,9 @@ public interface Scope {
      * @return the licence resolver for the scope
      */
     LicenceResolver getLicenceResolver();
+
+    /**
+     * @return the name of the author
+     */
+    String getAuthor();
 }

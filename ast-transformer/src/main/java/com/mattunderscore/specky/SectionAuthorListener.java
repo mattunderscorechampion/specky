@@ -1,4 +1,4 @@
-/* Copyright © 2016 Matthew Champion All rights reserved.
+/* Copyright © 2017 Matthew Champion All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -22,45 +22,54 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky.model.generator.scope;
+package com.mattunderscore.specky;
 
-import com.mattunderscore.specky.licence.resolver.LicenceResolver;
-import com.mattunderscore.specky.type.resolver.MutableTypeResolver;
-import com.mattunderscore.specky.value.resolver.MutableValueResolver;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
+import com.mattunderscore.specky.model.generator.scope.SectionScopeBuilder;
+import com.mattunderscore.specky.parser.Specky;
+import com.mattunderscore.specky.parser.SpeckyBaseListener;
 
 /**
- * Pending scope.
+ * DSL AST listener for section author.
  *
- * @author Matt Champion 28/12/2016
+ * @author Matt Champion 07/01/2017
  */
-public interface PendingScope {
-    /**
-     * @return the section name
-     */
-    String getSectionName();
+public final class SectionAuthorListener extends SpeckyBaseListener {
+    private final SectionScopeBuilder scopeResolver;
 
     /**
-     * @return the value resolver for the scope
+     * Constructor.
      */
-    MutableValueResolver getValueResolver();
+    public SectionAuthorListener(SectionScopeBuilder scopeResolver) {
+        this.scopeResolver = scopeResolver;
+    }
 
-    /**
-     * @return the type resolver for types imported into the scope
-     */
-    MutableTypeResolver getImportTypeResolver();
+    @Override
+    public void exitAuthor(Specky.AuthorContext ctx) {
+        scopeResolver
+            .currentScope()
+            .setAuthor(toValue(ctx.string_value()));
+    }
 
-    /**
-     * @return the licence resolver for the scope
-     */
-    LicenceResolver getLicenceResolver();
+    private String toValue(Specky.String_valueContext stringValue) {
+        if (stringValue == null) {
+            return null;
+        }
 
-    /**
-     * @return a scope
-     */
-    Scope toScope();
+        final TerminalNode multiline = stringValue.MULTILINE_STRING_LITERAL();
+        final String literal;
+        final int trimLength;
 
-    /**
-     * @param author the name of the author
-     */
-    void setAuthor(String author);
+        if (multiline != null) {
+            literal = multiline.getText();
+            trimLength = 3;
+        }
+        else {
+            literal = stringValue.StringLiteral().getText();
+            trimLength = 1;
+        }
+
+        return literal.substring(trimLength, literal.length() - trimLength);
+    }
 }

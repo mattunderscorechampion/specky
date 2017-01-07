@@ -99,7 +99,14 @@ public final class ScopeResolver {
                 }
             });
 
-            scopes.put(spec, new ScopeImpl(compositeValueResolver, resolver, propertyTypeResolver, licenceResolver));
+            scopes.put(
+                spec,
+                new ScopeImpl(
+                    compositeValueResolver,
+                    resolver,
+                    propertyTypeResolver,
+                    licenceResolver,
+                    spec.getAuthor()));
         });
 
         return this;

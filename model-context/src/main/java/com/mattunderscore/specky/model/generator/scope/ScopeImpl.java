@@ -39,6 +39,7 @@ public final class ScopeImpl implements Scope {
     private final TypeResolver typeResolver;
     private final PropertyTypeResolver propertyTypeResolver;
     private final LicenceResolver licenceResolver;
+    private final String author;
 
     /**
      * Constructor.
@@ -46,11 +47,12 @@ public final class ScopeImpl implements Scope {
     /*package*/ ScopeImpl(
         DefaultValueResolver valueResolver,
         TypeResolver typeResolver,
-        PropertyTypeResolver propertyTypeResolver, LicenceResolver licenceResolver) {
+        PropertyTypeResolver propertyTypeResolver, LicenceResolver licenceResolver, String author) {
         this.valueResolver = valueResolver;
         this.typeResolver = typeResolver;
         this.propertyTypeResolver = propertyTypeResolver;
         this.licenceResolver = licenceResolver;
+        this.author = author;
     }
 
     @Override
@@ -71,5 +73,10 @@ public final class ScopeImpl implements Scope {
     @Override
     public LicenceResolver getLicenceResolver() {
         return licenceResolver;
+    }
+
+    @Override
+    public String getAuthor() {
+        return author;
     }
 }

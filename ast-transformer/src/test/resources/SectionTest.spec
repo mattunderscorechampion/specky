@@ -27,6 +27,8 @@
 licence n """named licence"""
 licence """default licence"""
 
+author "Matt Champion"
+
 package com.example
 
 imports
