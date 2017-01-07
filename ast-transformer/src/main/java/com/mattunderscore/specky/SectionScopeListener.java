@@ -24,6 +24,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+
 import com.mattunderscore.specky.model.generator.scope.SectionScopeBuilder;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyBaseListener;
@@ -38,7 +40,6 @@ import net.jcip.annotations.NotThreadSafe;
 @NotThreadSafe
 public final class SectionScopeListener extends SpeckyBaseListener {
     private final SectionScopeBuilder sectionScopeBuilder;
-    private String sectionName;
 
     /**
      * Constructor.
@@ -49,18 +50,15 @@ public final class SectionScopeListener extends SpeckyBaseListener {
     }
 
     @Override
-    public void enterDefaultSectionDeclaration(Specky.DefaultSectionDeclarationContext ctx) {
-        sectionName = null;
-    }
-
-    @Override
-    public void enterSectionDeclaration(Specky.SectionDeclarationContext ctx) {
-        sectionName = ctx.string_value().getText();
-    }
-
-    @Override
     public void enterSectionContent(Specky.SectionContentContext ctx) {
-        sectionScopeBuilder.beginNewScope(sectionName);
+        final ParserRuleContext parent = ctx.getParent();
+
+        if (parent instanceof Specky.DefaultSectionDeclarationContext) {
+            sectionScopeBuilder.beginNewScope(null);
+        }
+        else if (parent instanceof Specky.SectionDeclarationContext) {
+            sectionScopeBuilder.beginNewScope(((Specky.SectionDeclarationContext) parent).string_value().getText());
+        }
     }
 
     @Override
