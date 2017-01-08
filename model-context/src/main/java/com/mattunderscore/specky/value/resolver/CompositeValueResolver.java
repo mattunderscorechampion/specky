@@ -61,6 +61,16 @@ public final class CompositeValueResolver implements DefaultValueResolver {
             .findFirst();
     }
 
+    @Override
+    public Optional<CodeBlock> resolve(String resolvedType, boolean optional) {
+        return Stream
+            .of(resolvers)
+            .map(resolver -> resolver.resolve(resolvedType, optional))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .findFirst();
+    }
+
     /**
      * @return a new composite resolver with the provided one
      */

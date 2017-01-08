@@ -44,4 +44,14 @@ public final class OptionalValueResolver implements DefaultValueResolver {
             return Optional.empty();
         }
     }
+
+    @Override
+    public Optional<CodeBlock> resolve(String resolvedType, boolean optional) {
+        if (optional) {
+            return Optional.of(CodeBlock.of("null"));
+        }
+        else {
+            return Optional.empty();
+        }
+    }
 }

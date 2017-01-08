@@ -54,6 +54,14 @@ public final class MutableValueResolverTest {
     }
 
     @Test
+    public void resolveNoneDirect() {
+        final MutableValueResolver resolver = new MutableValueResolverImpl();
+
+        final Optional<CodeBlock> none = resolver.resolve("none", false);
+        assertFalse(none.isPresent());
+    }
+
+    @Test
     public void registerAndResolve() {
         final MutableValueResolver resolver = new MutableValueResolverImpl();
 

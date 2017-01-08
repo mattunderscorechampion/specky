@@ -77,4 +77,9 @@ public final class JavaStandardDefaultValueResolver implements DefaultValueResol
     public Optional<CodeBlock> resolve(DSLPropertyDesc propertyDesc, String resolvedType) {
         return Optional.ofNullable(typeToDefault.get(resolvedType));
     }
+
+    @Override
+    public Optional<CodeBlock> resolve(String resolvedType, boolean optional) {
+        return Optional.ofNullable(typeToDefault.get(resolvedType));
+    }
 }

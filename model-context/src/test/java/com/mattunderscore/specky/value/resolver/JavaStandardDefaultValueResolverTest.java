@@ -82,4 +82,9 @@ public final class JavaStandardDefaultValueResolverTest {
     public void getDouble() {
         assertEquals(CodeBlock.of("$L", 0.0), resolver.resolve(boxedDoubleProperty, "java.lang.Double").get());
     }
+
+    @Test
+    public void resolveBoolDirect() {
+        assertEquals(CodeBlock.of("$L", false), resolver.resolve("boolean", false).get());
+    }
 }

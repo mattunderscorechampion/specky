@@ -49,4 +49,13 @@ public final class NullValueResolver implements DefaultValueResolver {
 
         return Optional.of(CodeBlock.of("null"));
     }
+
+    @Override
+    public Optional<CodeBlock> resolve(String resolvedType, boolean optional) {
+        if (PRIMITIVE_TYPES.contains(resolvedType)) {
+            return Optional.empty();
+        }
+
+        return Optional.of(CodeBlock.of("null"));
+    }
 }

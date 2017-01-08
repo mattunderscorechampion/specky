@@ -53,4 +53,14 @@ public final class NullValueResolverTest {
     public void primitivesUnresolved() {
         assertFalse(resolver.resolve(intProperty, "int").isPresent());
     }
+
+    @Test
+    public void objectsAreNullDirect() {
+        assertEquals(CodeBlock.of("null"), resolver.resolve("java.lang.String", false).get());
+    }
+
+    @Test
+    public void primitivesUnresolvedDirect() {
+        assertFalse(resolver.resolve("int", false).isPresent());
+    }
 }

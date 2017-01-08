@@ -39,4 +39,9 @@ public interface DefaultValueResolver {
      * @return A default value or empty if it could not be resolved
      */
     Optional<CodeBlock> resolve(DSLPropertyDesc propertyDesc, String resolvedType);
+
+    /**
+     * @return A default value or empty if it could not be resolved
+     */
+    Optional<CodeBlock> resolve(String resolvedType, boolean optional);
 }

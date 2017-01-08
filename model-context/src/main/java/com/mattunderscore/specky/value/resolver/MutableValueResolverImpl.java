@@ -46,6 +46,11 @@ public final class MutableValueResolverImpl implements MutableValueResolver {
     }
 
     @Override
+    public Optional<CodeBlock> resolve(String resolvedType, boolean optional) {
+        return Optional.ofNullable(typeToValue.get(resolvedType));
+    }
+
+    @Override
     public MutableValueResolver register(String type, CodeBlock defaultValue) {
         Objects.requireNonNull(type);
         Objects.requireNonNull(defaultValue);

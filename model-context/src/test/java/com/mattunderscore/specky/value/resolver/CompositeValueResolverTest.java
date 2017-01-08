@@ -48,6 +48,11 @@ public final class CompositeValueResolverTest {
     }
 
     @Test
+    public void resolveDirect() {
+        assertFalse(resolver.resolve("java.lang.String", false).isPresent());
+    }
+
+    @Test
     public void with() {
         assertEquals(CodeBlock.of("null"), resolver.with(new NullValueResolver()).resolve(stringProperty, "java.lang.String").get());
     }

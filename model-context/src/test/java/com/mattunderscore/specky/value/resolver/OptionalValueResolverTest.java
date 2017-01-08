@@ -32,4 +32,17 @@ public class OptionalValueResolverTest {
         final Optional<CodeBlock> value = resolver.resolve(requiredProperty, "none");
         assertFalse(value.isPresent());
     }
+
+    @Test
+    public void optionalDirect() {
+        final Optional<CodeBlock> value = resolver.resolve("none", true);
+        assertTrue(value.isPresent());
+        assertEquals(CodeBlock.of("null"), value.get());
+    }
+
+    @Test
+    public void requiredDirect() {
+        final Optional<CodeBlock> value = resolver.resolve("none", false);
+        assertFalse(value.isPresent());
+    }
 }
