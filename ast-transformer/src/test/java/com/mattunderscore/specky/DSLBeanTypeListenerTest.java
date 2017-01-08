@@ -26,7 +26,6 @@ package com.mattunderscore.specky;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,17 +36,18 @@ import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.UnbufferedTokenStream;
 import org.junit.Test;
 
-import com.mattunderscore.specky.dsl.model.DSLAbstractTypeDesc;
+import com.mattunderscore.specky.dsl.model.DSLBeanDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
+import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyLexer;
 
 /**
- * Unit tests for {@link AbstractTypeListener}.
+ * Unit tests for {@link DSLBeanTypeListener}.
  *
  * @author Matt Champion 05/01/2017
  */
-public final class AbstractTypeListenerTest {
+public final class DSLBeanTypeListenerTest {
 
     @Test
     public void test() throws IOException {
@@ -58,26 +58,33 @@ public final class AbstractTypeListenerTest {
         final SpeckyLexer lexer = new SpeckyLexer(stream);
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
-        final AbstractTypeListener listener = new AbstractTypeListener();
+        final DSLBeanTypeListener listener = new DSLBeanTypeListener();
         parser.addParseListener(listener);
 
         parser.spec();
 
-        final List<DSLAbstractTypeDesc> abstractTypeDescs = listener.getAbstractTypeDescs();
+        final List<DSLBeanDesc> types = listener.getBeanTypes();
 
-        assertEquals(1, abstractTypeDescs.size());
+        assertEquals(1, types.size());
         assertEquals(
-            DSLAbstractTypeDesc
+            DSLBeanDesc
                 .builder()
-                .name("TestType")
-                .description("Abstract type $L.\n\nAuto-generated from specification.")
+                .name("FirstBean")
+                .description("Bean type $L.\n\nAuto-generated from specification.")
+                .constructionMethod(ConstructionMethod.CONSTRUCTOR)
                 .properties(asList(
                     DSLPropertyDesc
                         .builder()
                         .name("num")
                         .type("Integer")
+                        .defaultValue("5")
+                        .build(),
+                    DSLPropertyDesc
+                        .builder()
+                        .name("str")
+                        .type("String")
                         .build()))
                 .build(),
-            abstractTypeDescs.get(0));
+            types.get(0));
     }
 }

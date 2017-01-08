@@ -49,7 +49,7 @@ import net.jcip.annotations.NotThreadSafe;
  * @author Matt Champion 05/01/2017
  */
 @NotThreadSafe
-public final class AbstractTypeListener extends SpeckyBaseListener {
+public final class DSLAbstractTypeListener extends SpeckyBaseListener {
     private final Normaliser normaliser = new Normaliser();
     private final ConstraintFactory constraintFactory = new ConstraintFactory();
 

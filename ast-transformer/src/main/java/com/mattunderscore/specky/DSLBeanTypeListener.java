@@ -48,7 +48,7 @@ import com.mattunderscore.specky.proposition.Normaliser;
  *
  * @author Matt Champion 06/01/2017
  */
-public final class BeanTypeListener extends SpeckyBaseListener {
+public final class DSLBeanTypeListener extends SpeckyBaseListener {
     private final Normaliser normaliser = new Normaliser();
     private final ConstraintFactory constraintFactory = new ConstraintFactory();
 

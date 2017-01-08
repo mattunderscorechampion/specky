@@ -36,7 +36,6 @@ import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.UnbufferedTokenStream;
 import org.junit.Test;
 
-import com.mattunderscore.specky.dsl.model.DSLAbstractTypeDesc;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;
@@ -44,11 +43,11 @@ import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyLexer;
 
 /**
- * Unit tests for {@link ValueTypeListener}.
+ * Unit tests for {@link DSLValueTypeListener}.
  *
  * @author Matt Champion 05/01/2017
  */
-public final class ValueTypeListenerTest {
+public final class DSLValueTypeListenerTest {
 
     @Test
     public void test() throws IOException {
@@ -59,7 +58,7 @@ public final class ValueTypeListenerTest {
         final SpeckyLexer lexer = new SpeckyLexer(stream);
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
-        final ValueTypeListener listener = new ValueTypeListener();
+        final DSLValueTypeListener listener = new DSLValueTypeListener();
         parser.addParseListener(listener);
 
         parser.spec();
