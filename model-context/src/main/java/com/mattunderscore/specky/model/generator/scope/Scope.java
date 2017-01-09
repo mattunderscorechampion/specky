@@ -59,4 +59,9 @@ public interface Scope {
      * @return the name of the author
      */
     String getAuthor();
+
+    /**
+     * @return the name of the package
+     */
+    String getPackage();
 }

@@ -63,4 +63,9 @@ public interface PendingScope {
      * @param author the name of the author
      */
     void setAuthor(String author);
+
+    /**
+     * @param packageName the package name
+     */
+    void setPackageName(String packageName);
 }

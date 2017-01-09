@@ -106,7 +106,8 @@ public final class ScopeResolver {
                     resolver,
                     propertyTypeResolver,
                     licenceResolver,
-                    spec.getAuthor()));
+                    spec.getAuthor(),
+                    spec.getPackageName()));
         });
 
         return this;
