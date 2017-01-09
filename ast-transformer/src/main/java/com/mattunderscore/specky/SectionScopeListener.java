@@ -25,6 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.mattunderscore.specky.model.generator.scope.SectionScopeBuilder;
 import com.mattunderscore.specky.parser.Specky;
@@ -57,12 +58,33 @@ public final class SectionScopeListener extends SpeckyBaseListener {
             sectionScopeBuilder.beginNewScope(null);
         }
         else if (parent instanceof Specky.SectionDeclarationContext) {
-            sectionScopeBuilder.beginNewScope(((Specky.SectionDeclarationContext) parent).string_value().getText());
+            sectionScopeBuilder.beginNewScope(toValue(((Specky.SectionDeclarationContext) parent).string_value()));
         }
     }
 
     @Override
     public void exitSectionContent(Specky.SectionContentContext ctx) {
         sectionScopeBuilder.completeScope();
+    }
+
+    private String toValue(Specky.String_valueContext stringValue) {
+        if (stringValue == null) {
+            return null;
+        }
+
+        final TerminalNode multiline = stringValue.MULTILINE_STRING_LITERAL();
+        final String literal;
+        final int trimLength;
+
+        if (multiline != null) {
+            literal = multiline.getText();
+            trimLength = 3;
+        }
+        else {
+            literal = stringValue.StringLiteral().getText();
+            trimLength = 1;
+        }
+
+        return literal.substring(trimLength, literal.length() - trimLength);
     }
 }
