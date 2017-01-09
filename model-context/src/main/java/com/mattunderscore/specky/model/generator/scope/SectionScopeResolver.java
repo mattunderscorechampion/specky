@@ -84,6 +84,10 @@ public final class SectionScopeResolver implements SectionScopeBuilder {
      * Resolve a scope.
      */
     public Scope resolve(String sectionName) {
+        if (sectionName == null) {
+            return defaultScope;
+        }
+
         return scopes.get(sectionName);
     }
 
