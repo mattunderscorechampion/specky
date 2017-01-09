@@ -48,4 +48,9 @@ public interface LicenceResolver {
      * @return the licence mapped to the name or the default licence
      */
     Optional<String> resolve(DSLLicence dslLicence);
+
+    /**
+     * @return the licence mapped to the name or the default licence
+     */
+    Optional<String> resolve(String name);
 }

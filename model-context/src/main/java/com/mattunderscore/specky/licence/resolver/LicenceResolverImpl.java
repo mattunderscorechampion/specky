@@ -87,4 +87,23 @@ public final class LicenceResolverImpl implements LicenceResolver {
 
         return Optional.empty();
     }
+
+    @Override
+    public Optional<String> resolve(String name) {
+        if (name == null) {
+            return Optional.ofNullable(defaultLicence);
+        }
+
+        final String resolvedLicence = licences.get(name);
+        if (resolvedLicence != null) {
+            return Optional.of(resolvedLicence);
+        }
+
+        semanticErrorListener.onSemanticError(
+            "An unknown name " +
+                name +
+                " was used to reference a licence");
+
+        return Optional.empty();
+    }
 }

@@ -62,7 +62,7 @@ public final class ScopeResolverTest {
 
         final Scope scope = scopeResolver.resolve(spec);
 
-        assertFalse(scope.getLicenceResolver().resolve(null).isPresent());
+        assertFalse(scope.getLicenceResolver().resolve((DSLLicence)null).isPresent());
         assertTrue(scope.getTypeResolver().resolve("com.example.SuperType").isPresent());
         assertFalse(scope.getLicenceResolver().resolve(DSLLicence.builder().identifier("no-licence").build()).isPresent());
         assertEquals(1, semanticErrorListener.getErrorCount());
