@@ -16,6 +16,10 @@
         </dependency>
         <dependency>
             <groupId>com.mattunderscore.code.generation.specky</groupId>
+            <artifactId>specky-model</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mattunderscore.code.generation.specky</groupId>
             <artifactId>dsl-model-transformer</artifactId>
         </dependency>
         <dependency>
@@ -29,6 +33,10 @@
         <dependency>
             <groupId>com.mattunderscore.code.generation.specky</groupId>
             <artifactId>model-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
         </dependency>
         <dependency>
             <groupId>net.jcip</groupId>
