@@ -25,6 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
@@ -36,6 +37,7 @@ import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.UnbufferedTokenStream;
 import org.junit.Test;
 
+import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
 import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
 import com.mattunderscore.specky.dsl.model.DSLValueDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;
@@ -77,11 +79,13 @@ public final class DSLValueTypeListenerTest {
                         .builder()
                         .name("num")
                         .type("Integer")
+                        .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
                         .build(),
                     DSLPropertyDesc
                         .builder()
                         .name("str")
                         .type("String")
+                        .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
                         .build()))
                 .build(),
             types.get(0));

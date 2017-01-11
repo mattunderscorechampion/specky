@@ -25,6 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.proposition;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
@@ -53,7 +54,7 @@ public final class Normaliser {
      */
     public NFConjoinedDisjointPredicates normalise(PropositionalExpression expression) {
         if (expression == null) {
-            return null;
+            return NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build();
         }
 
         final Expression<PredicateDesc> convertedExpression = convertExpression(expression);

@@ -20,6 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.generator.scope.SectionScopeResolver;
@@ -107,6 +108,7 @@ public final class AbstractTypeListenerTest {
                 .name("num")
                 .type("Integer")
                 .defaultValue(CodeBlock.of("null"))
+                .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
                 .build()));
     }
 }
