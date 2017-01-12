@@ -88,7 +88,7 @@ public final class ValueListener extends SpeckyBaseListener {
     }
 
     /**
-     * @return the abstract types
+     * @return the value types
      */
     public List<ValueDesc> getValueDescs() {
         return unmodifiableList(valueDescs);
