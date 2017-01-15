@@ -203,7 +203,7 @@ public final class BeanListener extends SpeckyBaseListener {
                         .resolve(currentSection)
                         .getLicenceResolver()
                         .resolve((String) null)
-                        .get()))
+                        .orElse(null)))
             .ifThen(
                 ctx.licence() != null && ctx.licence().string_value() != null,
                 builder -> builder.licence(toValue(ctx.licence().string_value())))
@@ -247,12 +247,18 @@ public final class BeanListener extends SpeckyBaseListener {
                     return "unknown type";
                 });
             })
-            .map(abstractTypes::get).forEach(typeDesc -> {
-            if (setOfTypes.add(typeDesc)) {
-                resolveSupertypes(typeDesc.getSupertypes(), scope, typeDescs, setOfTypes);
-                typeDescs.add(typeDesc);
-            }
-        });
+            .map(abstractTypes::get)
+            .forEach(typeDesc -> {
+                if (typeDesc == null) {
+                    semanticErrorListener.onSemanticError("Unknown is not an abstract type");
+                    return;
+                }
+
+                if (setOfTypes.add(typeDesc)) {
+                    resolveSupertypes(typeDesc.getSupertypes(), scope, typeDescs, setOfTypes);
+                    typeDescs.add(typeDesc);
+                }
+            });
     }
 
     private boolean isBean() {
