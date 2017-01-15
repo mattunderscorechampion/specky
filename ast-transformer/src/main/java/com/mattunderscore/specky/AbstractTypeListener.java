@@ -80,6 +80,10 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
 
     @Override
     public void enterSupertypes(Specky.SupertypesContext ctx) {
+        if (!isAbstractType()) {
+            return;
+        }
+
         currentTypeDesc = currentTypeDesc.supertypes(ctx
             .Identifier()
             .stream()
@@ -89,6 +93,10 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
 
     @Override
     public void exitProps(Specky.PropsContext ctx) {
+        if (!isAbstractType()) {
+            return;
+        }
+
         currentTypeDesc.properties(
             ctx
                 .property()
@@ -120,7 +128,7 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
                         .resolve(currentSection)
                         .getLicenceResolver()
                         .resolve((String) null)
-                        .get()))
+                        .orElse(null)))
             .ifThen(
                 ctx.licence() != null && ctx.licence().string_value() != null,
                 builder -> builder.licence(toValue(ctx.licence().string_value())))
@@ -141,6 +149,11 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
                     ctx.StringLiteral().getText().substring(1, ctx.StringLiteral().getText().length() - 1)));
 
         abstractTypeDescs.add(currentTypeDesc.build());
+        currentTypeDesc = null;
+    }
+
+    private boolean isAbstractType() {
+        return currentTypeDesc != null;
     }
 
     private PropertyDesc createProperty(Specky.PropertyContext context) {
