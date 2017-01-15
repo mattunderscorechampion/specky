@@ -59,36 +59,23 @@ public final class ModelGenerator {
      */
     public SpecDesc build(CharStream input, SemanticErrorListener errorListener) {
         final SpeckyLexer lexer = new SpeckyLexer(input);
-        final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
         final SpecTypeResolver typeResolver =
             new SpecTypeResolver();
         final SectionScopeResolver sectionScopeResolver =
             new SectionScopeResolver(errorListener, typeResolver);
-        final FileTypeListener fileTypeListener =
-            new FileTypeListener(typeResolver);
-        final SectionLicenceListener sectionLicenceListener =
-            new SectionLicenceListener(sectionScopeResolver);
-        final SectionImportTypeListener sectionImportTypeListener =
-            new SectionImportTypeListener(sectionScopeResolver);
-        final SectionImportValueListener sectionImportValueListener =
-            new SectionImportValueListener(sectionScopeResolver);
-        final SectionScopeListener sectionScopeListener =
-            new SectionScopeListener(sectionScopeResolver);
-        final SectionAuthorListener sectionAuthorListener =
-            new SectionAuthorListener(sectionScopeResolver);
-        final SectionPackageListener sectionPackageListener =
-            new SectionPackageListener(sectionScopeResolver);
 
-        parser.addParseListener(fileTypeListener);
-        parser.addParseListener(sectionLicenceListener);
-        parser.addParseListener(sectionImportTypeListener);
-        parser.addParseListener(sectionImportValueListener);
-        parser.addParseListener(sectionScopeListener);
-        parser.addParseListener(sectionAuthorListener);
-        parser.addParseListener(sectionPackageListener);
+        final Specky parser = createParser(lexer, typeResolver, sectionScopeResolver);
 
         final Specky.SpecContext spec = parser.spec();
+
+        return processAST(errorListener, sectionScopeResolver, spec);
+    }
+
+    private SpecDesc processAST(
+            SemanticErrorListener errorListener,
+            SectionScopeResolver sectionScopeResolver,
+            Specky.SpecContext spec) {
 
         final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(sectionScopeResolver);
         ParseTreeWalker.DEFAULT.walk(abstractTypeListener, spec);
@@ -96,7 +83,9 @@ public final class ModelGenerator {
             .getAbstractTypeDescs();
         final Map<String, AbstractTypeDesc> nameToAbstractType = abstractTypes
             .stream()
-            .collect(toMap(abstractTypeDesc -> abstractTypeDesc.getPackageName() + "." + abstractTypeDesc.getName(), abstractTypeDesc -> abstractTypeDesc));
+            .collect(toMap(
+                abstractTypeDesc -> abstractTypeDesc.getPackageName() + "." + abstractTypeDesc.getName(),
+                abstractTypeDesc -> abstractTypeDesc));
 
         final ValueListener valueListener = new ValueListener(sectionScopeResolver, nameToAbstractType, errorListener);
         ParseTreeWalker.DEFAULT.walk(valueListener, spec);
@@ -125,5 +114,34 @@ public final class ModelGenerator {
             .implementations(implementations)
             .types(types)
             .build();
+    }
+
+    private Specky createParser(SpeckyLexer lexer, SpecTypeResolver typeResolver, SectionScopeResolver sectionScopeResolver) {
+        final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
+
+        final FileTypeListener fileTypeListener =
+            new FileTypeListener(typeResolver);
+        final SectionLicenceListener sectionLicenceListener =
+            new SectionLicenceListener(sectionScopeResolver);
+        final SectionImportTypeListener sectionImportTypeListener =
+            new SectionImportTypeListener(sectionScopeResolver);
+        final SectionImportValueListener sectionImportValueListener =
+            new SectionImportValueListener(sectionScopeResolver);
+        final SectionScopeListener sectionScopeListener =
+            new SectionScopeListener(sectionScopeResolver);
+        final SectionAuthorListener sectionAuthorListener =
+            new SectionAuthorListener(sectionScopeResolver);
+        final SectionPackageListener sectionPackageListener =
+            new SectionPackageListener(sectionScopeResolver);
+
+        parser.addParseListener(fileTypeListener);
+        parser.addParseListener(sectionLicenceListener);
+        parser.addParseListener(sectionImportTypeListener);
+        parser.addParseListener(sectionImportValueListener);
+        parser.addParseListener(sectionScopeListener);
+        parser.addParseListener(sectionAuthorListener);
+        parser.addParseListener(sectionPackageListener);
+
+        return parser;
     }
 }
