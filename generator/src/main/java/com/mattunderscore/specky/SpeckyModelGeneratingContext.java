@@ -25,6 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -80,7 +81,7 @@ public final class SpeckyModelGeneratingContext {
                 throw new SemanticError(errorCount1 + " semantic errors reported");
             }
 
-            return new SpeckyGeneratingContext(specDesc);
+            return new SpeckyGeneratingContext(Collections.singletonList(specDesc));
         }
         else {
             throw new IllegalStateException("Context has already been generated");

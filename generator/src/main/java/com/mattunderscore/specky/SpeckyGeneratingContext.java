@@ -31,27 +31,24 @@ import static com.mattunderscore.specky.generator.object.method.ToStringGenerato
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.mattunderscore.specky.generator.AbstractTypeInitialiser;
 import com.mattunderscore.specky.generator.BeanInitialiser;
 import com.mattunderscore.specky.generator.ConstructionMethodAppender;
-import com.mattunderscore.specky.generator.defaults.DefaultsGenerator;
 import com.mattunderscore.specky.generator.Generator;
-import com.mattunderscore.specky.generator.property.field.ImmutableFieldGenerator;
-import com.mattunderscore.specky.generator.TypeGenerator;
-import com.mattunderscore.specky.generator.statements.InstantiateNewType;
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
-import com.mattunderscore.specky.generator.property.field.MutableFieldGenerator;
 import com.mattunderscore.specky.generator.SuperTypeAppender;
 import com.mattunderscore.specky.generator.TypeAppender;
+import com.mattunderscore.specky.generator.TypeGenerator;
 import com.mattunderscore.specky.generator.TypeInitialiser;
 import com.mattunderscore.specky.generator.ValueInitialiser;
-import com.mattunderscore.specky.generator.AbstractTypeInitialiser;
 import com.mattunderscore.specky.generator.builder.BuildMethodGenerator;
 import com.mattunderscore.specky.generator.builder.BuilderInitialiser;
 import com.mattunderscore.specky.generator.builder.immutable.ImmutableBuilderGenerator;
@@ -59,6 +56,7 @@ import com.mattunderscore.specky.generator.builder.mutable.MutableBuilderGenerat
 import com.mattunderscore.specky.generator.constructor.AllPropertiesConstructorGenerator;
 import com.mattunderscore.specky.generator.constructor.DefaultConstructorGenerator;
 import com.mattunderscore.specky.generator.constructor.EmptyConstructorGenerator;
+import com.mattunderscore.specky.generator.defaults.DefaultsGenerator;
 import com.mattunderscore.specky.generator.object.method.EqualsGenerator;
 import com.mattunderscore.specky.generator.object.method.HashCodeGenerator;
 import com.mattunderscore.specky.generator.object.method.ToStringGenerator;
@@ -66,6 +64,9 @@ import com.mattunderscore.specky.generator.property.AbstractAccessorGenerator;
 import com.mattunderscore.specky.generator.property.AccessorGenerator;
 import com.mattunderscore.specky.generator.property.MutatorGenerator;
 import com.mattunderscore.specky.generator.property.WithModifierGenerator;
+import com.mattunderscore.specky.generator.property.field.ImmutableFieldGenerator;
+import com.mattunderscore.specky.generator.property.field.MutableFieldGenerator;
+import com.mattunderscore.specky.generator.statements.InstantiateNewType;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
@@ -77,7 +78,7 @@ import com.squareup.javapoet.JavaFile;
  * @author Matt Champion on 02/07/2016
  */
 public final class SpeckyGeneratingContext {
-    private final SpecDesc spec;
+    private final List<SpecDesc> specs;
     private final AtomicBoolean consumed = new AtomicBoolean(false);
     private volatile ToStringGenerator toStringGenerator =
         new ToStringGenerator(
@@ -87,8 +88,8 @@ public final class SpeckyGeneratingContext {
     private MethodGeneratorForProperty<ImplementationDesc> accessorGenerator = new AccessorGenerator();
     private MethodGeneratorForProperty<ImplementationDesc> mutatorGenerator = new MutatorGenerator();
 
-    /*package*/ SpeckyGeneratingContext(SpecDesc spec) {
-        this.spec = spec;
+    /*package*/ SpeckyGeneratingContext(List<SpecDesc> specs) {
+        this.specs = specs;
     }
 
     /**
@@ -167,8 +168,11 @@ public final class SpeckyGeneratingContext {
                     singletonList(new AbstractAccessorGenerator()),
                     emptyList()));
 
-            final List<JavaFile> javaFiles = new ArrayList<>();
-            javaFiles.addAll(generator.generate(spec));
+            final List<JavaFile> javaFiles = specs
+                .stream()
+                .map(generator::generate)
+                .flatMap(Collection::stream)
+                .collect(toList());
 
             return new SpeckyWritingContext(javaFiles);
         }
