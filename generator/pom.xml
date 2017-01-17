@@ -23,6 +23,10 @@
             <artifactId>google-java-format</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.mattunderscore.code.generation.specky</groupId>
+            <artifactId>ast-transformer</artifactId>
+        </dependency>
+        <dependency>
             <groupId>net.jcip</groupId>
             <artifactId>jcip-annotations</artifactId>
         </dependency>
