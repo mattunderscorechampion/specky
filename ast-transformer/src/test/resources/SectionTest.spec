@@ -41,7 +41,6 @@ type TestType
 
 value FirstValue : TestType
   properties
-    Integer num
     String str
 
 section "Named section"

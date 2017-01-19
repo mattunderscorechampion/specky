@@ -73,6 +73,7 @@ public final class BeanListener extends SpeckyBaseListener {
     private BeanDesc.Builder currentTypeDesc = BeanDesc.builder();
     private String currentSection;
     private List<String> currentSupertypes;
+    private List<PropertyDesc> declaredProperties;
 
     /**
      * Constructor.
@@ -98,6 +99,7 @@ public final class BeanListener extends SpeckyBaseListener {
     public void enterImplementationSpec(Specky.ImplementationSpecContext ctx) {
         currentTypeDesc = BeanDesc.builder();
         currentSupertypes = emptyList();
+        declaredProperties = emptyList();
         implementationSpecContext = ctx;
     }
 
@@ -118,50 +120,11 @@ public final class BeanListener extends SpeckyBaseListener {
             return;
         }
 
-        final List<AbstractTypeDesc> resolveSupertypes =
-            resolveSupertypes(currentSupertypes, sectionScopeResolver.resolve(currentSection));
-
-        final List<PropertyDesc> inheritedProperties = resolveSupertypes
-            .stream()
-            .map(AbstractTypeDesc::getProperties)
-            .flatMap(Collection::stream)
-            .collect(toList());
-
-        final List<PropertyDesc> declaredProperties = ctx
+        declaredProperties = ctx
             .property()
             .stream()
             .map(this::createProperty)
             .collect(toList());
-
-        final Map<String, PropertyDesc> knownProperties = new HashMap<>();
-        final List<PropertyDesc> allProperties = new ArrayList<>();
-        for (final PropertyDesc property : inheritedProperties) {
-            final String propertyName = property.getName();
-            final PropertyDesc currentProperty = knownProperties.get(propertyName);
-            if (currentProperty == null) {
-                allProperties.add(property);
-                knownProperties.put(propertyName, property);
-            }
-            else {
-                checkMergableProperties(currentProperty, property);
-            }
-        }
-        for (final PropertyDesc property : declaredProperties) {
-            final String propertyName = property.getName();
-            final PropertyDesc currentProperty = knownProperties.get(propertyName);
-            if (currentProperty == null) {
-                allProperties.add(property);
-                knownProperties.put(propertyName, property);
-            }
-            else {
-                final PropertyDesc mergedProperty = mergeDeclaredProperty(currentProperty, property);
-                allProperties.remove(currentProperty);
-                allProperties.add(mergedProperty);
-                knownProperties.put(propertyName, mergedProperty);
-            }
-        }
-
-        currentTypeDesc.properties(allProperties);
     }
 
     @Override
@@ -190,6 +153,54 @@ public final class BeanListener extends SpeckyBaseListener {
         if (!isBean()) {
             currentTypeDesc = BeanDesc.builder();
             return;
+        }
+
+        final List<AbstractTypeDesc> resolveSupertypes =
+            resolveSupertypes(currentSupertypes, sectionScopeResolver.resolve(currentSection));
+
+        final List<PropertyDesc> inheritedProperties = resolveSupertypes
+            .stream()
+            .map(AbstractTypeDesc::getProperties)
+            .flatMap(Collection::stream)
+            .collect(toList());
+
+        final Map<String, PropertyDesc> knownProperties = new HashMap<>();
+        final List<PropertyDesc> allProperties = new ArrayList<>();
+        for (final PropertyDesc property : inheritedProperties) {
+            final PropertyDesc inheritedProperty = PropertyDesc
+                .builder()
+                .name(property.getName())
+                .description(property.getDescription())
+                .type(property.getType())
+                .typeParameters(property.getTypeParameters())
+                .defaultValue(property.getDefaultValue())
+                .constraint(property.getConstraint())
+                .optional(property.isOptional())
+                .override(true)
+                .build();
+            final String propertyName = property.getName();
+            final PropertyDesc currentProperty = knownProperties.get(propertyName);
+            if (currentProperty == null) {
+                allProperties.add(inheritedProperty);
+                knownProperties.put(propertyName, inheritedProperty);
+            }
+            else {
+                checkMergableProperties(currentProperty, inheritedProperty);
+            }
+        }
+        for (final PropertyDesc property : declaredProperties) {
+            final String propertyName = property.getName();
+            final PropertyDesc currentProperty = knownProperties.get(propertyName);
+            if (currentProperty == null) {
+                allProperties.add(property);
+                knownProperties.put(propertyName, property);
+            }
+            else {
+                final PropertyDesc mergedProperty = mergeDeclaredProperty(currentProperty, property);
+                allProperties.remove(currentProperty);
+                allProperties.add(mergedProperty);
+                knownProperties.put(propertyName, mergedProperty);
+            }
         }
 
         currentTypeDesc = currentTypeDesc
@@ -221,7 +232,8 @@ public final class BeanListener extends SpeckyBaseListener {
             .ifThen(
                 ctx.StringLiteral() != null,
                 builder -> builder.description(
-                    ctx.StringLiteral().getText().substring(1, ctx.StringLiteral().getText().length() - 1)));
+                    ctx.StringLiteral().getText().substring(1, ctx.StringLiteral().getText().length() - 1)))
+            .properties(allProperties);
 
         valueDescs.add(currentTypeDesc.build());
     }

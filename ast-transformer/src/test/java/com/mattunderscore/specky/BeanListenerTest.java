@@ -142,4 +142,93 @@ public final class BeanListenerTest {
                 p0,
                 p1));
     }
+
+    @Test
+    public void readme() throws IOException {
+        final CharStream stream = new ANTLRInputStream(SectionScopeListenerTest
+            .class
+            .getClassLoader()
+            .getResourceAsStream("readme.spec"));
+        final SpeckyLexer lexer = new SpeckyLexer(stream);
+        final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
+
+        final SpecTypeResolver typeResolver =
+            new SpecTypeResolver();
+        final SectionScopeResolver sectionScopeResolver =
+            new SectionScopeResolver(errorListener, typeResolver);
+        final FileTypeListener fileTypeListener =
+            new FileTypeListener(typeResolver);
+        final SectionLicenceListener sectionLicenceListener =
+            new SectionLicenceListener(sectionScopeResolver);
+        final SectionImportTypeListener sectionImportTypeListener =
+            new SectionImportTypeListener(sectionScopeResolver);
+        final SectionImportValueListener sectionImportValueListener =
+            new SectionImportValueListener(sectionScopeResolver);
+        final SectionScopeListener sectionScopeListener =
+            new SectionScopeListener(sectionScopeResolver);
+        final SectionAuthorListener sectionAuthorListener =
+            new SectionAuthorListener(sectionScopeResolver);
+        final SectionPackageListener sectionPackageListener =
+            new SectionPackageListener(sectionScopeResolver);
+
+        parser.addParseListener(fileTypeListener);
+        parser.addParseListener(sectionLicenceListener);
+        parser.addParseListener(sectionImportTypeListener);
+        parser.addParseListener(sectionImportValueListener);
+        parser.addParseListener(sectionScopeListener);
+        parser.addParseListener(sectionAuthorListener);
+        parser.addParseListener(sectionPackageListener);
+
+        final Specky.SpecContext spec = parser.spec();
+
+        final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(sectionScopeResolver);
+        ParseTreeWalker.DEFAULT.walk(abstractTypeListener, spec);
+        final Map<String, AbstractTypeDesc> abstractTypes = abstractTypeListener
+            .getAbstractTypeDescs()
+            .stream()
+            .collect(toMap(abstractTypeDesc -> abstractTypeDesc.getPackageName() + "." + abstractTypeDesc.getName(), abstractTypeDesc -> abstractTypeDesc));
+
+        final BeanListener beanListener = new BeanListener(sectionScopeResolver, abstractTypes, errorListener);
+        ParseTreeWalker.DEFAULT.walk(beanListener, spec);
+
+        final List<BeanDesc> beanDescs = beanListener.getBeanDescs();
+
+        assertEquals(1, beanDescs.size());
+
+        final BeanDesc beanDesc = beanDescs.get(0);
+
+        assertEquals("PersonBean", beanDesc.getName());
+        assertEquals("Matt Champion", beanDesc.getAuthor());
+        assertEquals("Bean implementation of {@link Person}.", beanDesc.getDescription());
+        assertEquals("com.mattunderscore.readme", beanDesc.getPackageName());
+        assertEquals(singletonList("Person"), beanDesc.getSupertypes());
+        assertEquals(ConstructionMethod.CONSTRUCTOR, beanDesc.getConstructionMethod());
+        final PropertyDesc p0 = PropertyDesc
+            .builder()
+            .name("birthTimestamp")
+            .type("long")
+            .typeParameters(emptyList())
+            .description("Timestamp of persons birth.")
+            .override(true)
+            .optional(false)
+            .defaultValue(CodeBlock.of("0L"))
+            .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
+            .build();
+        final PropertyDesc p1 = PropertyDesc
+            .builder()
+            .name("name")
+            .type("java.lang.String")
+            .typeParameters(emptyList())
+            .description("Persons name.")
+            .override(true)
+            .optional(false)
+            .defaultValue(CodeBlock.of("null"))
+            .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
+            .build();
+        assertThat(
+            beanDesc.getProperties(),
+            containsInAnyOrder(
+                p0,
+                p1));
+    }
 }
