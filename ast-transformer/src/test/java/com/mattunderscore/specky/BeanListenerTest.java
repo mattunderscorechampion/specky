@@ -119,7 +119,7 @@ public final class BeanListenerTest {
         final PropertyDesc p0 = PropertyDesc
             .builder()
             .name("num")
-            .type("Integer")
+            .type("java.lang.Integer")
             .typeParameters(emptyList())
             .override(false)
             .optional(false)
@@ -129,7 +129,7 @@ public final class BeanListenerTest {
         final PropertyDesc p1 = PropertyDesc
             .builder()
             .name("str")
-            .type("String")
+            .type("java.lang.String")
             .typeParameters(emptyList())
             .override(false)
             .optional(false)

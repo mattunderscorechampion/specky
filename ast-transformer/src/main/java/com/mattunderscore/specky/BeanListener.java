@@ -284,14 +284,20 @@ public final class BeanListener extends SpeckyBaseListener {
             .getValueResolver()
             .resolve(context.Identifier().getText(), context.OPTIONAL() != null).get();
 
+        final String resolvedType = sectionScopeResolver
+            .resolve(currentSection)
+            .getTypeResolver()
+            .resolve(context
+                .Identifier()
+                .getText())
+            .get();
+
         return PropertyDesc
             .builder()
             .name(context
                 .propertyName()
                 .getText())
-            .type(context
-                .Identifier()
-                .getText())
+            .type(resolvedType)
             .typeParameters(typeParameters)
             .optional(context.OPTIONAL() != null)
             .defaultValue(defaultCode)

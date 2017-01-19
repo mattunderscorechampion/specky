@@ -72,7 +72,7 @@ public final class ModelGeneratorTest {
             contains(PropertyDesc
                 .builder()
                 .name("num")
-                .type("Integer")
+                .type("java.lang.Integer")
                 .defaultValue(CodeBlock.of("null"))
                 .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
                 .build()));
@@ -89,7 +89,7 @@ public final class ModelGeneratorTest {
         final PropertyDesc vp0 = PropertyDesc
             .builder()
             .name("num")
-            .type("Integer")
+            .type("java.lang.Integer")
             .typeParameters(emptyList())
             .override(true)
             .optional(false)
@@ -99,7 +99,7 @@ public final class ModelGeneratorTest {
         final PropertyDesc vp1 = PropertyDesc
             .builder()
             .name("str")
-            .type("String")
+            .type("java.lang.String")
             .typeParameters(emptyList())
             .override(false)
             .optional(false)
@@ -124,7 +124,7 @@ public final class ModelGeneratorTest {
         final PropertyDesc bp0 = PropertyDesc
             .builder()
             .name("num")
-            .type("Integer")
+            .type("java.lang.Integer")
             .typeParameters(emptyList())
             .override(false)
             .optional(false)
@@ -134,7 +134,7 @@ public final class ModelGeneratorTest {
         final PropertyDesc bp1 = PropertyDesc
             .builder()
             .name("str")
-            .type("String")
+            .type("java.lang.String")
             .typeParameters(emptyList())
             .override(false)
             .optional(false)

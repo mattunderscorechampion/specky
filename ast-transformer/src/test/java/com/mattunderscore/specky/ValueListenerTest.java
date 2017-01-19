@@ -120,7 +120,7 @@ public final class ValueListenerTest {
         final PropertyDesc p0 = PropertyDesc
             .builder()
             .name("num")
-            .type("Integer")
+            .type("java.lang.Integer")
             .typeParameters(emptyList())
             .override(true)
             .optional(false)
@@ -130,7 +130,7 @@ public final class ValueListenerTest {
         final PropertyDesc p1 = PropertyDesc
             .builder()
             .name("str")
-            .type("String")
+            .type("java.lang.String")
             .typeParameters(emptyList())
             .override(false)
             .optional(false)

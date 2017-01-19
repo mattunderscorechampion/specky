@@ -106,7 +106,7 @@ public final class AbstractTypeListenerTest {
             contains(PropertyDesc
                 .builder()
                 .name("num")
-                .type("Integer")
+                .type("java.lang.Integer")
                 .defaultValue(CodeBlock.of("null"))
                 .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
                 .build()));
