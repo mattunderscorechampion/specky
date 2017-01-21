@@ -52,12 +52,12 @@ public final class SpeckyParsingContext {
      */
     public SpeckyGeneratingContext parse() throws IOException, ParsingError {
         if (consumed.compareAndSet(false, true)) {
-            final ModelGenerator generator = new ModelGenerator();
+            final ModelGenerator generator = new ModelGenerator(new CountingSemanticErrorListener());
             final List<SpecDesc> specs = new ArrayList<>();
             for (final InputStream inputStream : streamsToParse) {
                 try {
                     final CharStream stream = new ANTLRInputStream(inputStream);
-                    specs.add(generator.build(stream, new CountingSemanticErrorListener()));
+                    specs.add(generator.build(stream));
                 }
                 finally {
                     inputStream.close();

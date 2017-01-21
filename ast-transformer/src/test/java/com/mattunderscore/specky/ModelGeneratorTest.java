@@ -47,9 +47,9 @@ public final class ModelGeneratorTest {
             .getClassLoader()
             .getResourceAsStream("SectionTest.spec"));
 
-        final ModelGenerator modelGenerator = new ModelGenerator();
+        final ModelGenerator modelGenerator = new ModelGenerator(errorListener);
 
-        final SpecDesc specDesc = modelGenerator.build(stream, errorListener);
+        final SpecDesc specDesc = modelGenerator.build(stream);
 
         final List<TypeDesc> types = specDesc.getTypes();
         final List<AbstractTypeDesc> abstractTypes = specDesc.getAbstractTypes();

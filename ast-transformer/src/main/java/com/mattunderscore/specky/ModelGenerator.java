@@ -54,10 +54,19 @@ import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
  */
 public final class ModelGenerator {
 
+    private final SemanticErrorListener errorListener;
+
+    /**
+     * Constructor.
+     */
+    public ModelGenerator(SemanticErrorListener errorListener) {
+        this.errorListener = errorListener;
+    }
+
     /**
      * @return the list of {@link SpecDesc} from a {@link CharStream}
      */
-    public SpecDesc build(CharStream input, SemanticErrorListener errorListener) {
+    public SpecDesc build(CharStream input) {
         final SpeckyLexer lexer = new SpeckyLexer(input);
 
         final SpecTypeResolver typeResolver =
@@ -69,11 +78,10 @@ public final class ModelGenerator {
 
         final Specky.SpecContext spec = parser.spec();
 
-        return processAST(errorListener, sectionScopeResolver, spec);
+        return processAST(sectionScopeResolver, spec);
     }
 
     private SpecDesc processAST(
-            SemanticErrorListener errorListener,
             SectionScopeResolver sectionScopeResolver,
             Specky.SpecContext spec) {
 
