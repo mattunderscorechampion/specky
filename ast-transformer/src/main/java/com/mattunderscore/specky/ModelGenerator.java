@@ -66,7 +66,14 @@ public final class ModelGenerator {
     /**
      * @return the list of {@link SpecDesc} from a {@link CharStream}
      */
-    public SpecDesc build(CharStream input) {
+    public List<SpecDesc> build(List<CharStream> input) {
+        return input
+            .stream()
+            .map(this::processFile)
+            .collect(toList());
+    }
+
+    private SpecDesc processFile(CharStream input) {
         final SpeckyLexer lexer = new SpeckyLexer(input);
 
         final SpecTypeResolver typeResolver =

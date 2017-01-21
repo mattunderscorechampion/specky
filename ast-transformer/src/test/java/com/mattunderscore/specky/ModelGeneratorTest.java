@@ -49,7 +49,10 @@ public final class ModelGeneratorTest {
 
         final ModelGenerator modelGenerator = new ModelGenerator(errorListener);
 
-        final SpecDesc specDesc = modelGenerator.build(stream);
+        final List<SpecDesc> specDescs = modelGenerator.build(singletonList(stream));
+        assertEquals(1, specDescs.size());
+
+        final SpecDesc specDesc = specDescs.get(0);
 
         final List<TypeDesc> types = specDesc.getTypes();
         final List<AbstractTypeDesc> abstractTypes = specDesc.getAbstractTypes();
