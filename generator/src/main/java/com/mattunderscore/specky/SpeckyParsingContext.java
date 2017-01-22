@@ -24,6 +24,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import static java.util.Collections.singletonList;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -32,8 +34,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
-
-import com.mattunderscore.specky.model.SpecDesc;
 
 /**
  * @author Matt Champion 15/01/2017
@@ -64,8 +64,7 @@ public final class SpeckyParsingContext {
                 }
             }
 
-            final List<SpecDesc> specs = generator.build(streams);
-            return new SpeckyGeneratingContext(specs);
+            return new SpeckyGeneratingContext(singletonList(generator.build(streams)));
         }
         else {
             throw new IllegalStateException("Context has already been parsed");

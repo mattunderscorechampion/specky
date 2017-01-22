@@ -27,6 +27,7 @@ package com.mattunderscore.specky;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -45,6 +46,7 @@ import com.mattunderscore.specky.model.ValueDesc;
 import com.mattunderscore.specky.model.generator.scope.SectionScopeResolver;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyLexer;
+import com.mattunderscore.specky.type.resolver.MutableTypeResolver;
 import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
 
 /**
@@ -66,50 +68,37 @@ public final class ModelGenerator {
     /**
      * @return the list of {@link SpecDesc} from a {@link CharStream}
      */
-    public List<SpecDesc> build(List<CharStream> input) {
-        return input
+    public SpecDesc build(List<CharStream> input) {
+        final SpecTypeResolver typeResolver = new SpecTypeResolver();
+
+        final List<FileContext> contexts = input
             .stream()
-            .map(this::processFile)
+            .map(stream -> firstPass(stream, typeResolver))
             .collect(toList());
-    }
 
-    private SpecDesc processFile(CharStream input) {
-        final SpeckyLexer lexer = new SpeckyLexer(input);
+        final List<AbstractTypeDesc> abstractTypes = contexts
+            .stream()
+            .map(context -> secondPass(context.specContext, context.sectionScopeResolver))
+            .flatMap(Collection::stream)
+            .collect(toList());
 
-        final SpecTypeResolver typeResolver =
-            new SpecTypeResolver();
-        final SectionScopeResolver sectionScopeResolver =
-            new SectionScopeResolver(errorListener, typeResolver);
-
-        final Specky parser = createParser(lexer, typeResolver, sectionScopeResolver);
-
-        final Specky.SpecContext spec = parser.spec();
-
-        return processAST(sectionScopeResolver, spec);
-    }
-
-    private SpecDesc processAST(
-            SectionScopeResolver sectionScopeResolver,
-            Specky.SpecContext spec) {
-
-        final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(sectionScopeResolver);
-        ParseTreeWalker.DEFAULT.walk(abstractTypeListener, spec);
-        final List<AbstractTypeDesc> abstractTypes = abstractTypeListener
-            .getAbstractTypeDescs();
         final Map<String, AbstractTypeDesc> nameToAbstractType = abstractTypes
             .stream()
             .collect(toMap(
                 abstractTypeDesc -> abstractTypeDesc.getPackageName() + "." + abstractTypeDesc.getName(),
                 abstractTypeDesc -> abstractTypeDesc));
 
-        final ValueListener valueListener = new ValueListener(sectionScopeResolver, nameToAbstractType, errorListener);
-        ParseTreeWalker.DEFAULT.walk(valueListener, spec);
+        final List<ValueDesc> valueDescs = contexts
+            .stream()
+            .map(context -> thirdPass(context.specContext, context.sectionScopeResolver, nameToAbstractType))
+            .flatMap(Collection::stream)
+            .collect(toList());
 
-        final BeanListener beanListener = new BeanListener(sectionScopeResolver, nameToAbstractType, errorListener);
-        ParseTreeWalker.DEFAULT.walk(beanListener, spec);
-
-        final List<BeanDesc> beanDescs = beanListener.getBeanDescs();
-        final List<ValueDesc> valueDescs = valueListener.getValueDescs();
+        final List<BeanDesc> beanDescs = contexts
+            .stream()
+            .map(context -> fourthPass(context.specContext, context.sectionScopeResolver, nameToAbstractType))
+            .flatMap(Collection::stream)
+            .collect(toList());
 
         final List<ImplementationDesc> implementations = Stream
             .concat(
@@ -131,7 +120,12 @@ public final class ModelGenerator {
             .build();
     }
 
-    private Specky createParser(SpeckyLexer lexer, SpecTypeResolver typeResolver, SectionScopeResolver sectionScopeResolver) {
+    private FileContext firstPass(CharStream input, MutableTypeResolver typeResolver) {
+        final SpeckyLexer lexer = new SpeckyLexer(input);
+
+        final SectionScopeResolver sectionScopeResolver =
+            new SectionScopeResolver(errorListener, typeResolver);
+
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
         final FileTypeListener fileTypeListener =
@@ -157,6 +151,40 @@ public final class ModelGenerator {
         parser.addParseListener(sectionAuthorListener);
         parser.addParseListener(sectionPackageListener);
 
-        return parser;
+        return new FileContext(parser.spec(), sectionScopeResolver);
+    }
+
+    private List<AbstractTypeDesc> secondPass(Specky.SpecContext spec, SectionScopeResolver sectionScopeResolver) {
+        final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(sectionScopeResolver);
+        ParseTreeWalker.DEFAULT.walk(abstractTypeListener, spec);
+        return abstractTypeListener.getAbstractTypeDescs();
+    }
+
+    private List<ValueDesc> thirdPass(
+            Specky.SpecContext spec,
+            SectionScopeResolver sectionScopeResolver,
+            Map<String, AbstractTypeDesc> nameToAbstractType) {
+        final ValueListener valueListener = new ValueListener(sectionScopeResolver, nameToAbstractType, errorListener);
+        ParseTreeWalker.DEFAULT.walk(valueListener, spec);
+        return valueListener.getValueDescs();
+    }
+
+    private List<BeanDesc> fourthPass(
+            Specky.SpecContext spec,
+            SectionScopeResolver sectionScopeResolver,
+            Map<String, AbstractTypeDesc> nameToAbstractType) {
+        final BeanListener beanListener = new BeanListener(sectionScopeResolver, nameToAbstractType, errorListener);
+        ParseTreeWalker.DEFAULT.walk(beanListener, spec);
+        return beanListener.getBeanDescs();
+    }
+
+    private static final class FileContext {
+        private final Specky.SpecContext specContext;
+        private final SectionScopeResolver sectionScopeResolver;
+
+        private FileContext(Specky.SpecContext specContext, SectionScopeResolver sectionScopeResolver) {
+            this.specContext = specContext;
+            this.sectionScopeResolver = sectionScopeResolver;
+        }
     }
 }

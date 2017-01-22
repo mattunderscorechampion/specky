@@ -1,5 +1,6 @@
 package com.mattunderscore.specky;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.contains;
@@ -49,10 +50,7 @@ public final class ModelGeneratorTest {
 
         final ModelGenerator modelGenerator = new ModelGenerator(errorListener);
 
-        final List<SpecDesc> specDescs = modelGenerator.build(singletonList(stream));
-        assertEquals(1, specDescs.size());
-
-        final SpecDesc specDesc = specDescs.get(0);
+        final SpecDesc specDesc = modelGenerator.build(singletonList(stream));
 
         final List<TypeDesc> types = specDesc.getTypes();
         final List<AbstractTypeDesc> abstractTypes = specDesc.getAbstractTypes();
@@ -149,5 +147,118 @@ public final class ModelGeneratorTest {
             containsInAnyOrder(
                 bp0,
                 bp1));
+    }
+
+    @Test
+    public void multipleFiles() throws Exception {
+        final CharStream stream0 = new ANTLRInputStream(SectionImportValueListenerTest
+            .class
+            .getClassLoader()
+            .getResourceAsStream("AbstractType.spec"));
+        final CharStream stream1 = new ANTLRInputStream(SectionImportValueListenerTest
+            .class
+            .getClassLoader()
+            .getResourceAsStream("Bean.spec"));
+
+        final ModelGenerator modelGenerator = new ModelGenerator(errorListener);
+
+        final SpecDesc specDesc = modelGenerator.build(asList(stream0, stream1));
+
+        final List<TypeDesc> types0 = specDesc.getTypes();
+        final List<AbstractTypeDesc> abstractTypes = specDesc.getAbstractTypes();
+        final List<ImplementationDesc> implementations = specDesc.getImplementations();
+
+        assertEquals(2, types0.size());
+        assertEquals(1, abstractTypes.size());
+        assertEquals(1, implementations.size());
+
+        final ImplementationDesc implementation = implementations.get(0);
+
+        assertEquals("PersonBean", implementation.getName());
+        assertEquals("Matt Champion", implementation.getAuthor());
+        assertEquals("com.example", implementation.getPackageName());
+        assertEquals(singletonList("PersonType"), implementation.getSupertypes());
+        assertEquals(ConstructionMethod.CONSTRUCTOR, implementation.getConstructionMethod());
+
+        assertEquals(3, implementation.getProperties().size());
+
+        final PropertyDesc p0 = PropertyDesc
+            .builder()
+            .name("name")
+            .type("java.lang.String")
+            .typeParameters(emptyList())
+            .description("Name of person.")
+            .override(true)
+            .optional(false)
+            .defaultValue(CodeBlock.of("null"))
+            .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
+            .build();
+        final PropertyDesc p1 = PropertyDesc
+            .builder()
+            .name("id")
+            .type("int")
+            .typeParameters(emptyList())
+            .override(true)
+            .optional(false)
+            .defaultValue(CodeBlock.of("0"))
+            .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
+            .build();
+        final PropertyDesc p2 = PropertyDesc
+            .builder()
+            .name("birthTimestamp")
+            .type("long")
+            .typeParameters(emptyList())
+            .description("Timestamp of birth.")
+            .override(false)
+            .optional(false)
+            .defaultValue(CodeBlock.of("0L"))
+            .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
+            .build();
+        assertThat(
+            implementation.getProperties(),
+            containsInAnyOrder(
+                p0,
+                p1,
+                p2));
+    }
+
+    @Test
+    public void optionalPrimitives() throws Exception {
+        final CharStream stream = new ANTLRInputStream(SectionImportValueListenerTest
+            .class
+            .getClassLoader()
+            .getResourceAsStream("optional.spec"));
+
+        final ModelGenerator modelGenerator = new ModelGenerator(errorListener);
+
+        final SpecDesc specDesc = modelGenerator.build(singletonList(stream));
+
+        final List<TypeDesc> types = specDesc.getTypes();
+        final List<AbstractTypeDesc> abstractTypes = specDesc.getAbstractTypes();
+        final List<ImplementationDesc> implementations = specDesc.getImplementations();
+
+        assertEquals(2, types.size());
+        assertEquals(1, abstractTypes.size());
+        assertEquals(1, implementations.size());
+
+        final ImplementationDesc valueDesc = implementations.get(0);
+        assertEquals("OptionalIntImpl", valueDesc.getName());
+        assertEquals("com.example", valueDesc.getPackageName());
+
+        final PropertyDesc p0 = PropertyDesc
+            .builder()
+            .name("opt")
+            .type("java.lang.Integer")
+            .typeParameters(emptyList())
+            .override(true)
+            .optional(true)
+            .defaultValue(CodeBlock.of("null"))
+            .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
+            .build();
+
+        assertThat(
+            valueDesc.getProperties(),
+            containsInAnyOrder(
+                p0));
     }
 }
