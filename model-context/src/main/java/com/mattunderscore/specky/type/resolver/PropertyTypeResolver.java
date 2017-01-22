@@ -50,6 +50,10 @@ public final class PropertyTypeResolver {
         return typeResolver.resolve(propertyDesc.getType()).flatMap(type -> resolveOptional(type, propertyDesc.isOptional()));
     }
 
+    /**
+     * @param typeName the name of the type
+     * @return optional if the property is optional
+     */
     public Optional<String> resolve(String typeName, boolean optional) {
         return typeResolver.resolve(typeName).flatMap(type -> resolveOptional(type, optional));
     }
