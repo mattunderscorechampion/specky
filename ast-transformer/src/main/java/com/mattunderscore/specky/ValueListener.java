@@ -298,10 +298,11 @@ public final class ValueListener extends SpeckyBaseListener {
 
         final String resolvedType = sectionScopeResolver
             .resolve(currentSection)
-            .getTypeResolver()
+            .getPropertyTypeResolver()
             .resolve(context
-                .Identifier()
-                .getText())
+                    .Identifier()
+                    .getText(),
+                context.OPTIONAL() != null)
             .get();
 
         return PropertyDesc

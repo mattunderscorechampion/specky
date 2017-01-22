@@ -177,10 +177,11 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
 
         final String resolvedType = sectionScopeResolver
             .resolve(currentSection)
-            .getTypeResolver()
+            .getPropertyTypeResolver()
             .resolve(context
-                .Identifier()
-                .getText())
+                    .Identifier()
+                    .getText(),
+                context.OPTIONAL() != null)
             .get();
 
         return PropertyDesc
