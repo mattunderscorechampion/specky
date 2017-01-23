@@ -42,7 +42,6 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
 import com.mattunderscore.specky.constraint.model.NFDisjointPredicates;
-import com.mattunderscore.specky.dsl.ConstraintFactory;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;

@@ -21,7 +21,6 @@
         <module>proposition-processing</module>
         <module>model-context</module>
         <module>dsl-parser</module>
-        <module>dsl-model-transformer</module>
         <module>ast-transformer</module>
         <module>code-generation</module>
         <module>generator</module>
@@ -57,11 +56,6 @@
             <dependency>
                 <groupId>com.mattunderscore.code.generation.specky</groupId>
                 <artifactId>specky-model</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.mattunderscore.code.generation.specky</groupId>
-                <artifactId>dsl-model-transformer</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
