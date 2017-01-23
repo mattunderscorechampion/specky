@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 import org.junit.Test;
 
 /**
- * Unit tests for {@link SpeckyDSLFileStreamingContext}.
+ * Unit tests for {@link SpeckyFileStreamingContext}.
  *
  * @author Matt Champion on 05/12/2016
  */
