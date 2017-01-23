@@ -17,7 +17,6 @@ public final class SpeckyFileStreamingContextTest {
 
         context.addFileToParse(Paths.get("src/test/specky/Bean.spec"));
         context.addFileToParse(Paths.get("src/test/specky/constraint.spec"));
-        context.addFileToParse(Paths.get("src/test/specky/dsl.spec"));
         context.addFileToParse(Paths.get("src/test/specky/licence.spec"));
         context.addFileToParse(Paths.get("src/test/specky/model.spec"));
         context.addFileToParse(Paths.get("src/test/specky/readme.spec"));
