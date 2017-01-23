@@ -25,13 +25,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
-import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
-import com.squareup.javapoet.CodeBlock;
-
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import com.squareup.javapoet.CodeBlock;
 
 /**
  * Implementation of {@link MutableValueResolver}.
@@ -39,11 +38,6 @@ import java.util.concurrent.ConcurrentMap;
  */
 public final class MutableValueResolverImpl implements MutableValueResolver {
     private final ConcurrentMap<String, CodeBlock> typeToValue = new ConcurrentHashMap<>(10, 0.5f, 2);
-
-    @Override
-    public Optional<CodeBlock> resolve(DSLPropertyDesc propertyDesc, String resolvedType) {
-        return Optional.ofNullable(typeToValue.get(resolvedType));
-    }
 
     @Override
     public Optional<CodeBlock> resolve(String resolvedType, boolean optional) {

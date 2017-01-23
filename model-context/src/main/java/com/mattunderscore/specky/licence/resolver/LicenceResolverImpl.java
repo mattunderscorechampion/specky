@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.mattunderscore.specky.SemanticErrorListener;
-import com.mattunderscore.specky.dsl.model.DSLLicence;
 
 /**
  * Implementation of {@link LicenceResolver}.
@@ -62,30 +61,6 @@ public final class LicenceResolverImpl implements LicenceResolver {
     public LicenceResolver register(String name, String licence) {
         licences.put(name, licence);
         return this;
-    }
-
-    @Override
-    public Optional<String> resolve(DSLLicence dslLicence) {
-        if (dslLicence == null) {
-            return Optional.ofNullable(defaultLicence);
-        }
-
-        final String inlineLicence = dslLicence.getLicence();
-        if (inlineLicence != null) {
-            return Optional.of(inlineLicence);
-        }
-
-        final String resolvedLicence = licences.get(dslLicence.getIdentifier());
-        if (resolvedLicence != null) {
-            return Optional.of(resolvedLicence);
-        }
-
-        semanticErrorListener.onSemanticError(
-            "An unknown name " +
-            dslLicence.getIdentifier() +
-            " was used to reference a licence");
-
-        return Optional.empty();
     }
 
     @Override

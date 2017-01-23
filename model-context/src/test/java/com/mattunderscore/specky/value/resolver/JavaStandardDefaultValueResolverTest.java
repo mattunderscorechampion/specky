@@ -27,9 +27,9 @@ package com.mattunderscore.specky.value.resolver;
 
 import static org.junit.Assert.assertEquals;
 
-import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
-import com.squareup.javapoet.CodeBlock;
 import org.junit.Test;
+
+import com.squareup.javapoet.CodeBlock;
 
 /**
  * Unit tests for {@link JavaStandardDefaultValueResolver}.
@@ -38,53 +38,40 @@ import org.junit.Test;
  */
 public final class JavaStandardDefaultValueResolverTest {
 
-    private final DSLPropertyDesc stringProperty = DSLPropertyDesc.builder().type("java.lang.String").build();
-    private final DSLPropertyDesc intProperty = DSLPropertyDesc.builder().type("int").build();
-    private final DSLPropertyDesc doubleProperty = DSLPropertyDesc.builder().type("double").build();
-    private final DSLPropertyDesc booleanProperty = DSLPropertyDesc.builder().type("boolean").build();
-    private final DSLPropertyDesc boxedIntProperty = DSLPropertyDesc.builder().type("java.lang.Integer").build();
-    private final DSLPropertyDesc boxedDoubleProperty = DSLPropertyDesc.builder().type("java.lang.Double").build();
-    private final DSLPropertyDesc boxedBooleanProperty = DSLPropertyDesc.builder().type("java.lang.Boolean").build();
-
     private final JavaStandardDefaultValueResolver resolver = new JavaStandardDefaultValueResolver();
 
     @Test
     public void resolveBool() {
-        assertEquals(CodeBlock.of("$L", false), resolver.resolve(booleanProperty, "boolean").get());
+        assertEquals(CodeBlock.of("$L", false), resolver.resolve("boolean", false).get());
     }
 
     @Test
     public void resolveBoolean() {
-        assertEquals(CodeBlock.of("$L", false), resolver.resolve(boxedBooleanProperty, "java.lang.Boolean").get());
+        assertEquals(CodeBlock.of("$L", false), resolver.resolve("java.lang.Boolean", false).get());
     }
 
     @Test
     public void resolveInt() {
-        assertEquals(CodeBlock.of("$L", 0), resolver.resolve(intProperty, "int").get());
+        assertEquals(CodeBlock.of("$L", 0), resolver.resolve("int", false).get());
     }
 
     @Test
     public void resolveDbl() {
-        assertEquals(CodeBlock.of("$L", 0.0), resolver.resolve(doubleProperty, "double").get());
+        assertEquals(CodeBlock.of("$L", 0.0), resolver.resolve("double", false).get());
     }
 
     @Test
     public void getString() {
-        assertEquals(CodeBlock.of("$S", ""), resolver.resolve(stringProperty, "java.lang.String").get());
+        assertEquals(CodeBlock.of("$S", ""), resolver.resolve("java.lang.String", false).get());
     }
 
     @Test
     public void getInteger() {
-        assertEquals(CodeBlock.of("$L", 0), resolver.resolve(boxedIntProperty, "java.lang.Integer").get());
+        assertEquals(CodeBlock.of("$L", 0), resolver.resolve("java.lang.Integer", false).get());
     }
 
     @Test
     public void getDouble() {
-        assertEquals(CodeBlock.of("$L", 0.0), resolver.resolve(boxedDoubleProperty, "java.lang.Double").get());
-    }
-
-    @Test
-    public void resolveBoolDirect() {
-        assertEquals(CodeBlock.of("$L", false), resolver.resolve("boolean", false).get());
+        assertEquals(CodeBlock.of("$L", 0.0), resolver.resolve("java.lang.Double", false).get());
     }
 }

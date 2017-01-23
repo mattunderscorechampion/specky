@@ -25,26 +25,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
-import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
-import com.squareup.javapoet.CodeBlock;
-
 import java.util.Optional;
+
+import com.squareup.javapoet.CodeBlock;
 
 /**
  * Resolve value for optional properties.
  * @author Matt Champion on 13/08/16
  */
 public final class OptionalValueResolver implements DefaultValueResolver {
-    @Override
-    public Optional<CodeBlock> resolve(DSLPropertyDesc propertyDesc, String resolvedType) {
-        if (propertyDesc.isOptional()) {
-            return Optional.of(CodeBlock.of("null"));
-        }
-        else {
-            return Optional.empty();
-        }
-    }
-
     @Override
     public Optional<CodeBlock> resolve(String resolvedType, boolean optional) {
         if (optional) {

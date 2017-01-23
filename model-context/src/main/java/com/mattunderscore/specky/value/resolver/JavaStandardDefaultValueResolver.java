@@ -25,9 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
-import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
-import com.squareup.javapoet.CodeBlock;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -35,6 +32,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+
+import com.squareup.javapoet.CodeBlock;
 
 /**
  * Resolve the default value for standard Java types.
@@ -71,11 +70,6 @@ public final class JavaStandardDefaultValueResolver implements DefaultValueResol
         // Generic classes
         typeToDefault.put("java.util.List", CodeBlock.of("new $T<>()", ArrayList.class));
         typeToDefault.put("java.util.Set", CodeBlock.of("new $T<>()", HashSet.class));
-    }
-
-    @Override
-    public Optional<CodeBlock> resolve(DSLPropertyDesc propertyDesc, String resolvedType) {
-        return Optional.ofNullable(typeToDefault.get(resolvedType));
     }
 
     @Override

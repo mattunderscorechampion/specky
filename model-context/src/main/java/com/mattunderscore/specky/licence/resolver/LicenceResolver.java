@@ -26,8 +26,6 @@ package com.mattunderscore.specky.licence.resolver;
 
 import java.util.Optional;
 
-import com.mattunderscore.specky.dsl.model.DSLLicence;
-
 /**
  * Licence resolver.
  *
@@ -43,11 +41,6 @@ public interface LicenceResolver {
      * Register a named licence.
      */
     LicenceResolver register(String name, String licence);
-
-    /**
-     * @return the licence mapped to the name or the default licence
-     */
-    Optional<String> resolve(DSLLicence dslLicence);
 
     /**
      * @return the licence mapped to the name or the default licence

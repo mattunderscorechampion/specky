@@ -31,9 +31,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 
-import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
-import com.squareup.javapoet.CodeBlock;
 import org.junit.Test;
+
+import com.squareup.javapoet.CodeBlock;
 
 /**
  * Unit tests for {@link MutableValueResolverImpl}.
@@ -41,20 +41,8 @@ import org.junit.Test;
  * @author Matt Champion on 30/07/2016
  */
 public final class MutableValueResolverTest {
-
-    private final DSLPropertyDesc noneProperty = DSLPropertyDesc.builder().type("none").build();
-    private final DSLPropertyDesc someProperty = DSLPropertyDesc.builder().type("some").build();
-
     @Test
     public void resolveNone() {
-        final MutableValueResolver resolver = new MutableValueResolverImpl();
-
-        final Optional<CodeBlock> none = resolver.resolve(noneProperty, "none");
-        assertFalse(none.isPresent());
-    }
-
-    @Test
-    public void resolveNoneDirect() {
         final MutableValueResolver resolver = new MutableValueResolverImpl();
 
         final Optional<CodeBlock> none = resolver.resolve("none", false);
@@ -65,7 +53,7 @@ public final class MutableValueResolverTest {
     public void registerAndResolve() {
         final MutableValueResolver resolver = new MutableValueResolverImpl();
 
-        final Optional<CodeBlock> some = resolver.register("some", CodeBlock.of("other")).resolve(someProperty, "some");
+        final Optional<CodeBlock> some = resolver.register("some", CodeBlock.of("other")).resolve("some", false);
         assertTrue(some.isPresent());
         assertEquals(CodeBlock.of("other"), some.get());
     }

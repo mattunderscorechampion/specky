@@ -13,10 +13,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.mattunderscore.code.generation.specky</groupId>
-            <artifactId>dsl-model</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.squareup</groupId>
             <artifactId>javapoet</artifactId>
         </dependency>

@@ -27,8 +27,6 @@ package com.mattunderscore.specky.type.resolver;
 
 import java.util.Optional;
 
-import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
-
 /**
  * @author Matt Champion on 12/08/2016
  */
@@ -40,14 +38,6 @@ public final class PropertyTypeResolver {
      */
     public PropertyTypeResolver(TypeResolver typeResolver) {
         this.typeResolver = typeResolver;
-    }
-
-    /**
-     * @param propertyDesc the type propertyDesc
-     * @return optional fully qualified propertyDesc
-     */
-    public Optional<String> resolve(DSLPropertyDesc propertyDesc) {
-        return typeResolver.resolve(propertyDesc.getType()).flatMap(type -> resolveOptional(type, propertyDesc.isOptional()));
     }
 
     /**

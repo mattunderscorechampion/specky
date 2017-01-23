@@ -25,13 +25,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
-import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
-import com.squareup.javapoet.CodeBlock;
-
 import static java.util.Arrays.copyOf;
 
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import com.squareup.javapoet.CodeBlock;
 
 /**
  * Composite value resolver.
@@ -49,16 +48,6 @@ public final class CompositeValueResolver implements DefaultValueResolver {
 
     private CompositeValueResolver(DefaultValueResolver[] resolvers) {
         this.resolvers = resolvers;
-    }
-
-    @Override
-    public Optional<CodeBlock> resolve(DSLPropertyDesc propertyDesc, String resolvedType) {
-        return Stream
-            .of(resolvers)
-            .map(resolver -> resolver.resolve(propertyDesc, resolvedType))
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .findFirst();
     }
 
     @Override

@@ -28,9 +28,9 @@ package com.mattunderscore.specky.value.resolver;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
-import com.squareup.javapoet.CodeBlock;
 import org.junit.Test;
+
+import com.squareup.javapoet.CodeBlock;
 
 /**
  * Unit tests for {@link CompositeValueResolver}.
@@ -38,14 +38,7 @@ import org.junit.Test;
  * @author Matt Champion on 25/06/2016
  */
 public final class CompositeValueResolverTest {
-    private final DSLPropertyDesc stringProperty = DSLPropertyDesc.builder().type("java.lang.String").build();
-
     final CompositeValueResolver resolver = new CompositeValueResolver();
-
-    @Test
-    public void resolve() {
-        assertFalse(resolver.resolve(stringProperty, "java.lang.String").isPresent());
-    }
 
     @Test
     public void resolveDirect() {
@@ -54,6 +47,6 @@ public final class CompositeValueResolverTest {
 
     @Test
     public void with() {
-        assertEquals(CodeBlock.of("null"), resolver.with(new NullValueResolver()).resolve(stringProperty, "java.lang.String").get());
+        assertEquals(CodeBlock.of("null"), resolver.with(new NullValueResolver()).resolve("java.lang.String", false).get());
     }
 }

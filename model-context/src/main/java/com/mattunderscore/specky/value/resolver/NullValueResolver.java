@@ -25,14 +25,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
-import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
-import com.squareup.javapoet.CodeBlock;
-
 import static java.util.Arrays.asList;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+
+import com.squareup.javapoet.CodeBlock;
 
 /**
  * A value resolver that returns null unless the value if a primitive.
@@ -40,15 +39,6 @@ import java.util.Set;
  */
 public final class NullValueResolver implements DefaultValueResolver {
     private static final Set<String> PRIMITIVE_TYPES = new HashSet<>(asList("int", "boolean", "double"));
-
-    @Override
-    public Optional<CodeBlock> resolve(DSLPropertyDesc propertyDesc, String resolvedType) {
-        if (PRIMITIVE_TYPES.contains(resolvedType)) {
-            return Optional.empty();
-        }
-
-        return Optional.of(CodeBlock.of("null"));
-    }
 
     @Override
     public Optional<CodeBlock> resolve(String resolvedType, boolean optional) {

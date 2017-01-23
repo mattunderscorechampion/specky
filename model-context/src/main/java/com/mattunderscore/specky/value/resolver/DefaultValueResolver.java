@@ -25,21 +25,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
-import com.mattunderscore.specky.dsl.model.DSLPropertyDesc;
-import com.squareup.javapoet.CodeBlock;
-
 import java.util.Optional;
+
+import com.squareup.javapoet.CodeBlock;
 
 /**
  * Resolve default value for a type.
  * @author Matt Champion on 23/06/2016
  */
 public interface DefaultValueResolver {
-    /**
-     * @return A default value or empty if it could not be resolved
-     */
-    Optional<CodeBlock> resolve(DSLPropertyDesc propertyDesc, String resolvedType);
-
     /**
      * @return A default value or empty if it could not be resolved
      */
