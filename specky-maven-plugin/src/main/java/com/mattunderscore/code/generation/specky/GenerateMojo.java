@@ -41,11 +41,9 @@ import org.apache.maven.shared.model.fileset.FileSet;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
 
 import com.google.googlejavaformat.java.FormatterException;
-import com.mattunderscore.specky.SemanticError;
-import com.mattunderscore.specky.SpeckyDSLFileStreamingContext;
-import com.mattunderscore.specky.SpeckyGeneratingContext;
-import com.mattunderscore.specky.SpeckyModelGeneratingContext;
 import com.mattunderscore.specky.ParsingError;
+import com.mattunderscore.specky.SpeckyFileStreamingContext;
+import com.mattunderscore.specky.SpeckyGeneratingContext;
 import com.mattunderscore.specky.SpeckyWritingContext;
 
 /**
@@ -94,12 +92,12 @@ public final class GenerateMojo extends AbstractMojo {
         }
 
         final Path basePath = Paths.get(currentFileset.getDirectory());
-        final SpeckyDSLFileStreamingContext streamingContext = new SpeckyDSLFileStreamingContext();
+        final SpeckyFileStreamingContext streamingContext = new SpeckyFileStreamingContext();
         Stream.of(files)
             .map(basePath::resolve)
             .forEach(streamingContext::addFileToParse);
 
-        final SpeckyModelGeneratingContext generatingContext;
+        final SpeckyGeneratingContext generatingContext;
         try {
             generatingContext = streamingContext
                 .open()
@@ -112,15 +110,7 @@ public final class GenerateMojo extends AbstractMojo {
             throw new MojoFailureException("Failed to parse specification files", e);
         }
 
-        final SpeckyGeneratingContext speckyGeneratingContext;
-        try {
-            speckyGeneratingContext = generatingContext.generate();
-        }
-        catch (SemanticError e) {
-            throw new MojoFailureException(e.getMessage());
-        }
-
-        final SpeckyWritingContext speckyWritingContext = speckyGeneratingContext
+        final SpeckyWritingContext speckyWritingContext = generatingContext
             .generate()
             .targetPath(targetPath);
 
