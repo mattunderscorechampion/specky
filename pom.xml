@@ -16,7 +16,6 @@
     <modules>
         <module>javapoet-utils</module>
         <module>constraint-model</module>
-        <module>dsl-model</module>
         <module>specky-model</module>
         <module>proposition-processing</module>
         <module>model-context</module>
@@ -46,11 +45,6 @@
             <dependency>
                 <groupId>com.mattunderscore.code.generation.specky</groupId>
                 <artifactId>constraint-model</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.mattunderscore.code.generation.specky</groupId>
-                <artifactId>dsl-model</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -24,8 +24,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -33,7 +31,6 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
@@ -44,9 +41,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.mattunderscore.specky.dsl.model.DSLLicence;
 import com.mattunderscore.specky.licence.resolver.LicenceResolver;
-import com.mattunderscore.specky.licence.resolver.LicenceResolverImpl;
 import com.mattunderscore.specky.model.generator.scope.PendingScope;
 import com.mattunderscore.specky.model.generator.scope.SectionScopeBuilder;
 import com.mattunderscore.specky.parser.Specky;

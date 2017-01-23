@@ -12,7 +12,7 @@
     <dependencies>
         <dependency>
             <groupId>com.mattunderscore.code.generation.specky</groupId>
-            <artifactId>dsl-model</artifactId>
+            <artifactId>constraint-model</artifactId>
         </dependency>
         <dependency>
             <groupId>com.squareup</groupId>
