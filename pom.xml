@@ -24,7 +24,6 @@
         <module>dsl-model-transformer</module>
         <module>ast-transformer</module>
         <module>code-generation</module>
-        <module>model-generator</module>
         <module>generator</module>
         <module>specky-maven-plugin</module>
         <module>plugin-example</module>
