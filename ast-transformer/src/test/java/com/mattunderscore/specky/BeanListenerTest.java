@@ -133,7 +133,7 @@ public final class BeanListenerTest {
             .typeParameters(emptyList())
             .override(false)
             .optional(false)
-            .defaultValue(CodeBlock.of("null"))
+            .defaultValue(CodeBlock.of("\"\""))
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
         assertThat(
@@ -222,7 +222,7 @@ public final class BeanListenerTest {
             .description("Persons name.")
             .override(true)
             .optional(false)
-            .defaultValue(CodeBlock.of("null"))
+            .defaultValue(CodeBlock.of("\"\""))
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
         assertThat(

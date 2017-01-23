@@ -124,7 +124,7 @@ public final class ValueListenerTest {
             .typeParameters(emptyList())
             .override(true)
             .optional(false)
-            .defaultValue(CodeBlock.of("null"))
+            .defaultValue(CodeBlock.of("0"))
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
         final PropertyDesc p1 = PropertyDesc
@@ -134,7 +134,7 @@ public final class ValueListenerTest {
             .typeParameters(emptyList())
             .override(false)
             .optional(false)
-            .defaultValue(CodeBlock.of("null"))
+            .defaultValue(CodeBlock.of("\"\""))
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
         assertThat(

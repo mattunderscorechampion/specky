@@ -74,7 +74,7 @@ public final class ModelGeneratorTest {
                 .builder()
                 .name("num")
                 .type("java.lang.Integer")
-                .defaultValue(CodeBlock.of("null"))
+                .defaultValue(CodeBlock.of("0"))
                 .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
                 .build()));
 
@@ -94,7 +94,7 @@ public final class ModelGeneratorTest {
             .typeParameters(emptyList())
             .override(true)
             .optional(false)
-            .defaultValue(CodeBlock.of("null"))
+            .defaultValue(CodeBlock.of("0"))
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
         final PropertyDesc vp1 = PropertyDesc
@@ -104,7 +104,7 @@ public final class ModelGeneratorTest {
             .typeParameters(emptyList())
             .override(false)
             .optional(false)
-            .defaultValue(CodeBlock.of("null"))
+            .defaultValue(CodeBlock.of("\"\""))
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
         assertThat(
@@ -139,7 +139,7 @@ public final class ModelGeneratorTest {
             .typeParameters(emptyList())
             .override(false)
             .optional(false)
-            .defaultValue(CodeBlock.of("null"))
+            .defaultValue(CodeBlock.of("\"\""))
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
         assertThat(
@@ -190,7 +190,7 @@ public final class ModelGeneratorTest {
             .description("Name of person.")
             .override(true)
             .optional(false)
-            .defaultValue(CodeBlock.of("null"))
+            .defaultValue(CodeBlock.of("\"\""))
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
         final PropertyDesc p1 = PropertyDesc

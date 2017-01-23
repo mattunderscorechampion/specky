@@ -41,6 +41,7 @@ import com.mattunderscore.specky.model.generator.scope.SectionScopeResolver;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyBaseListener;
 import com.mattunderscore.specky.proposition.Normaliser;
+import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.squareup.javapoet.CodeBlock;
 
 import net.jcip.annotations.NotThreadSafe;
@@ -157,6 +158,10 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
     }
 
     private PropertyDesc createProperty(Specky.PropertyContext context) {
+        final TypeResolver typeResolver = sectionScopeResolver
+            .resolve(currentSection)
+            .getTypeResolver();
+
         final String defaultValue = context.default_value() == null ?
             null :
             context.default_value().ANYTHING().getText();
@@ -173,7 +178,8 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
         final CodeBlock defaultCode = defaultValue != null ? CodeBlock.of(defaultValue) : sectionScopeResolver
             .resolve(currentSection)
             .getValueResolver()
-            .resolve(context.Identifier().getText(), context.OPTIONAL() != null).get();
+            .resolve(typeResolver.resolve(context.Identifier().getText()).get(), context.OPTIONAL() != null)
+            .get();
 
         final String resolvedType = sectionScopeResolver
             .resolve(currentSection)
