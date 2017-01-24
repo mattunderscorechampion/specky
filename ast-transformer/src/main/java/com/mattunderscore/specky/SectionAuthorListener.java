@@ -24,7 +24,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
-import org.antlr.v4.runtime.tree.TerminalNode;
+import static com.mattunderscore.specky.ParserUtils.toValue;
 
 import com.mattunderscore.specky.model.generator.scope.SectionScopeBuilder;
 import com.mattunderscore.specky.parser.Specky;
@@ -50,26 +50,5 @@ public final class SectionAuthorListener extends SpeckyBaseListener {
         scopeResolver
             .currentScope()
             .setAuthor(toValue(ctx.string_value()));
-    }
-
-    private String toValue(Specky.String_valueContext stringValue) {
-        if (stringValue == null) {
-            return null;
-        }
-
-        final TerminalNode multiline = stringValue.MULTILINE_STRING_LITERAL();
-        final String literal;
-        final int trimLength;
-
-        if (multiline != null) {
-            literal = multiline.getText();
-            trimLength = 3;
-        }
-        else {
-            literal = stringValue.StringLiteral().getText();
-            trimLength = 1;
-        }
-
-        return literal.substring(trimLength, literal.length() - trimLength);
     }
 }
