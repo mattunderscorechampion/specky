@@ -3,6 +3,7 @@ package com.mattunderscore.specky;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.mattunderscore.specky.model.ConstructionMethod;
+import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.OptsContext;
 import com.mattunderscore.specky.parser.Specky.String_valueContext;
 
@@ -58,5 +59,12 @@ import com.mattunderscore.specky.parser.Specky.String_valueContext;
         else {
             throw new IllegalArgumentException("Unsupported type");
         }
+    }
+
+    /**
+     * @return if with property methods should be generated
+     */
+    static boolean withModifications(Specky.OptsContext options) {
+        return !(options == null || options.WITH_MODIFICATION() == null);
     }
 }

@@ -26,6 +26,7 @@ package com.mattunderscore.specky;
 
 import static com.mattunderscore.specky.ParserUtils.toConstructionDesc;
 import static com.mattunderscore.specky.ParserUtils.toValue;
+import static com.mattunderscore.specky.ParserUtils.withModifications;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
@@ -382,9 +383,5 @@ public final class BeanListener extends SpeckyBaseListener {
                 ". Cannot be both optional and required.",
                 ctx);
         }
-    }
-
-    private static boolean withModifications(Specky.OptsContext options) {
-        return !(options == null || options.WITH_MODIFICATION() == null);
     }
 }
