@@ -26,12 +26,30 @@ import com.mattunderscore.specky.parser.Specky.String_valueContext;
 
         final TerminalNode multiline = stringValue.MULTILINE_STRING_LITERAL();
         if (multiline != null) {
-            final String literal = multiline.getText();
+            return toValue(multiline);
+        }
+        else {
+            return toValue(stringValue.StringLiteral());
+        }
+    }
+
+    /**
+     * @return the unpacked string
+     */
+    static String toValue(TerminalNode node) {
+        if (node == null) {
+            return null;
+        }
+        else if (node.getSymbol().getType() == Specky.StringLiteral) {
+            final String literal = node.getText();
+            return literal.substring(1, literal.length() - 1);
+        }
+        else if (node.getSymbol().getType() == Specky.MULTILINE_STRING_LITERAL) {
+            final String literal = node.getText();
             return literal.substring(3, literal.length() - 3);
         }
         else {
-            final String literal = stringValue.StringLiteral().getText();
-            return literal.substring(1, literal.length() - 1);
+            throw new IllegalArgumentException("Node cannot be made into a string." + node);
         }
     }
 

@@ -242,8 +242,7 @@ public final class ValueListener extends SpeckyBaseListener {
                 builder -> builder.description("Value type $L.\n\nAuto-generated from specification."))
             .ifThen(
                 ctx.StringLiteral() != null,
-                builder -> builder.description(
-                    ctx.StringLiteral().getText().substring(1, ctx.StringLiteral().getText().length() - 1)))
+                builder -> builder.description(toValue(ctx.StringLiteral())))
             .properties(allProperties);
 
         valueDescs.add(currentTypeDesc.build());
@@ -333,9 +332,7 @@ public final class ValueListener extends SpeckyBaseListener {
             .constraint(normaliser
                 .normalise(constraintFactory
                     .create(context.propertyName().getText(), context.constraint_statement())))
-            .description(context.StringLiteral() == null ?
-                null :
-                context.StringLiteral().getText().substring(1, context.StringLiteral().getText().length() - 1))
+            .description(toValue(context.StringLiteral()))
             .build();
     }
 

@@ -156,8 +156,7 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
                 builder -> builder.description("Abstract type $L.\n\nAuto-generated from specification."))
             .ifThen(
                 ctx.StringLiteral() != null,
-                builder -> builder.description(
-                    ctx.StringLiteral().getText().substring(1, ctx.StringLiteral().getText().length() - 1)));
+                builder -> builder.description(toValue(ctx.StringLiteral())));
 
         abstractTypeDescs.add(currentTypeDesc.build());
         currentTypeDesc = null;
@@ -212,9 +211,7 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
             .constraint(normaliser
                 .normalise(constraintFactory
                     .create(context.propertyName().getText(), context.constraint_statement())))
-            .description(context.StringLiteral() == null ?
-                null :
-                context.StringLiteral().getText().substring(1, context.StringLiteral().getText().length() - 1))
+            .description(toValue(context.StringLiteral()))
             .build();
     }
 }
