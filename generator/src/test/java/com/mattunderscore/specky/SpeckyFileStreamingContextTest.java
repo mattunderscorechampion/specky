@@ -30,4 +30,15 @@ public final class SpeckyFileStreamingContextTest {
 
         parsingContext.parse();
     }
+
+    @Test(expected = ParsingError.class)
+    public void badLicence() throws IOException, ParsingError {
+        final SpeckyFileStreamingContext context = new SpeckyFileStreamingContext();
+
+        context.addFileToParse(Paths.get("src/test/specky/bad-licence.spec"));
+
+        final SpeckyParsingContext parsingContext = context.open();
+
+        parsingContext.parse();
+    }
 }
