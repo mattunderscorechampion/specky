@@ -79,11 +79,6 @@
             </dependency>
             <dependency>
                 <groupId>com.mattunderscore.code.generation.specky</groupId>
-                <artifactId>model-generator</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.mattunderscore.code.generation.specky</groupId>
                 <artifactId>proposition-processing</artifactId>
                 <version>${project.version}</version>
             </dependency>

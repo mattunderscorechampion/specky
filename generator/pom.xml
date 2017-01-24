@@ -15,10 +15,6 @@
             <artifactId>code-generation</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.mattunderscore.code.generation.specky</groupId>
-            <artifactId>model-generator</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.google.googlejavaformat</groupId>
             <artifactId>google-java-format</artifactId>
         </dependency>
