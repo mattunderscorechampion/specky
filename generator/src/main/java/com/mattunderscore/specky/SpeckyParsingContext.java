@@ -24,6 +24,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import static com.mattunderscore.specky.CompositeSemanticErrorListener.composeListeners;
+import static com.mattunderscore.specky.ReportingSemanticErrorListener.reportTo;
 import static java.util.Collections.singletonList;
 
 import java.io.IOException;
@@ -52,8 +54,9 @@ public final class SpeckyParsingContext {
      */
     public SpeckyGeneratingContext parse() throws IOException, ParsingError {
         if (consumed.compareAndSet(false, true)) {
+            final CountingSemanticErrorListener errorCounter = new CountingSemanticErrorListener();
             final ModelGenerator generator =
-                new ModelGenerator(new CountingSemanticErrorListener());
+                new ModelGenerator(composeListeners(errorCounter, reportTo(System.err)));
             final List<CharStream> streams = new ArrayList<>();
             for (final InputStream inputStream : streamsToParse) {
                 try {
