@@ -43,17 +43,16 @@ import com.mattunderscore.specky.parser.Specky.String_valueContext;
             return ConstructionMethod.CONSTRUCTOR;
         }
 
-        final String token = options.construction().getText();
-        if ("constructor".equals(token)) {
+        if (options.construction().CONSTRUCTOR() != null) {
             return ConstructionMethod.CONSTRUCTOR;
         }
-        else if ("builder".equals(token)) {
+        else if (options.construction().MUTABLE_BUILDER() != null) {
             return ConstructionMethod.MUTABLE_BUILDER;
         }
-        else if ("immutable builder".equals(token)) {
+        else if (options.construction().IMMUTABLE_BUILDER() != null) {
             return ConstructionMethod.IMMUTABLE_BUILDER;
         }
-        else if ("from defaults".equals(token)) {
+        else if (options.construction().FROM_DEFAULTS() != null) {
             return ConstructionMethod.FROM_DEFAULTS;
         }
         else {
