@@ -60,14 +60,14 @@ public class SectionScopeResolverTest {
 
     @Test
     public void resolveNone() throws Exception {
-        final SectionScopeResolver resolver = new SectionScopeResolver(errorListener, typeResolver);
+        final SectionScopeResolver resolver = new SectionScopeResolver(typeResolver);
 
         assertNull(resolver.resolve("none"));
     }
 
     @Test
     public void resolveNoDefault() throws Exception {
-        final SectionScopeResolver resolver = new SectionScopeResolver(errorListener, typeResolver);
+        final SectionScopeResolver resolver = new SectionScopeResolver(typeResolver);
 
         assertNull(resolver.resolve());
     }

@@ -75,7 +75,7 @@ public final class SectionScopeListenerTest {
         final SpeckyLexer lexer = new SpeckyLexer(stream);
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
-        final SectionScopeResolver sectionScopeResolver = new SectionScopeResolver(errorListener, typeResolver);
+        final SectionScopeResolver sectionScopeResolver = new SectionScopeResolver(typeResolver);
         final SectionScopeListener listener = new SectionScopeListener(sectionScopeResolver);
         parser.addParseListener(listener);
 

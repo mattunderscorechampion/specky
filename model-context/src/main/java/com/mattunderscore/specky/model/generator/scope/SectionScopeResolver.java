@@ -27,7 +27,6 @@ package com.mattunderscore.specky.model.generator.scope;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.mattunderscore.specky.SemanticErrorListener;
 import com.mattunderscore.specky.licence.resolver.LicenceResolverImpl;
 import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
@@ -42,7 +41,6 @@ import net.jcip.annotations.NotThreadSafe;
  */
 @NotThreadSafe
 public final class SectionScopeResolver implements SectionScopeBuilder {
-    private final SemanticErrorListener semanticErrorListener;
     private final TypeResolver typeResolver;
     private final Map<String, Scope> scopes = new HashMap<>();
     private Scope defaultScope;
@@ -51,8 +49,7 @@ public final class SectionScopeResolver implements SectionScopeBuilder {
     /**
      * Constructor.
      */
-    public SectionScopeResolver(SemanticErrorListener semanticErrorListener, TypeResolver typeResolver) {
-        this.semanticErrorListener = semanticErrorListener;
+    public SectionScopeResolver(TypeResolver typeResolver) {
         this.typeResolver = typeResolver;
     }
 
@@ -63,7 +60,7 @@ public final class SectionScopeResolver implements SectionScopeBuilder {
             new MutableValueResolverImpl(),
             new SpecTypeResolver(),
             typeResolver,
-            new LicenceResolverImpl(semanticErrorListener));
+            new LicenceResolverImpl());
         pendingScope = scope;
         return scope;
     }

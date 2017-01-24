@@ -124,14 +124,14 @@ public final class ModelGenerator {
         final SpeckyLexer lexer = new SpeckyLexer(input);
 
         final SectionScopeResolver sectionScopeResolver =
-            new SectionScopeResolver(errorListener, typeResolver);
+            new SectionScopeResolver(typeResolver);
 
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
         final FileTypeListener fileTypeListener =
             new FileTypeListener(typeResolver);
         final SectionLicenceListener sectionLicenceListener =
-            new SectionLicenceListener(sectionScopeResolver);
+            new SectionLicenceListener(sectionScopeResolver, errorListener);
         final SectionImportTypeListener sectionImportTypeListener =
             new SectionImportTypeListener(sectionScopeResolver);
         final SectionImportValueListener sectionImportValueListener =

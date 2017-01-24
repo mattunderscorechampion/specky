@@ -25,6 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.licence.resolver;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Licence resolver.
@@ -35,12 +36,12 @@ public interface LicenceResolver {
     /**
      * Register a default licence.
      */
-    LicenceResolver register(String licence);
+    CompletableFuture<Void> register(String licence);
 
     /**
      * Register a named licence.
      */
-    LicenceResolver register(String name, String licence);
+    CompletableFuture<Void> register(String name, String licence);
 
     /**
      * @return the licence mapped to the name or the default licence

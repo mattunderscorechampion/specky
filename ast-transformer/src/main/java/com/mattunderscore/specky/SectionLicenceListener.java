@@ -37,13 +37,15 @@ import com.mattunderscore.specky.parser.SpeckyBaseListener;
  */
 public final class SectionLicenceListener extends SpeckyBaseListener {
 
-    private SectionScopeBuilder scopeResolver;
+    private final SemanticErrorListener errorListener;
+    private final SectionScopeBuilder scopeResolver;
 
     /**
      * Constructor.
      */
-    public SectionLicenceListener(SectionScopeBuilder scopeResolver) {
+    public SectionLicenceListener(SectionScopeBuilder scopeResolver, SemanticErrorListener errorListener) {
         this.scopeResolver = scopeResolver;
+        this.errorListener = errorListener;
     }
 
     @Override
@@ -56,14 +58,22 @@ public final class SectionLicenceListener extends SpeckyBaseListener {
             scopeResolver
                 .currentScope()
                 .getLicenceResolver()
-                .register(licenceIdentifier, licenceText);
+                .register(licenceIdentifier, licenceText)
+                .exceptionally(throwable -> {
+                    errorListener.onSemanticError(throwable.getMessage());
+                    return null;
+                });
         }
         else {
             // Register the default licence
             scopeResolver
                 .currentScope()
                 .getLicenceResolver()
-                .register(licenceText);
+                .register(licenceText)
+                .exceptionally(throwable -> {
+                    errorListener.onSemanticError(throwable.getMessage());
+                    return null;
+                });
         }
     }
 

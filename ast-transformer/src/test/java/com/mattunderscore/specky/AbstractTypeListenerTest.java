@@ -60,11 +60,11 @@ public final class AbstractTypeListenerTest {
         final SpecTypeResolver typeResolver =
             new SpecTypeResolver();
         final SectionScopeResolver sectionScopeResolver =
-            new SectionScopeResolver(errorListener, typeResolver);
+            new SectionScopeResolver(typeResolver);
         final FileTypeListener fileTypeListener =
             new FileTypeListener(typeResolver);
         final SectionLicenceListener sectionLicenceListener =
-            new SectionLicenceListener(sectionScopeResolver);
+            new SectionLicenceListener(sectionScopeResolver, errorListener);
         final SectionImportTypeListener sectionImportTypeListener =
             new SectionImportTypeListener(sectionScopeResolver);
         final SectionImportValueListener sectionImportValueListener =

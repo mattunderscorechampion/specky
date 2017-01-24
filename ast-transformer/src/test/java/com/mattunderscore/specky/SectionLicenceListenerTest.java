@@ -24,6 +24,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import static java.util.concurrent.CompletableFuture.completedFuture;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -31,6 +33,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
@@ -59,6 +62,8 @@ public final class SectionLicenceListenerTest {
     private PendingScope scope;
     @Mock
     private LicenceResolver licenceResolver;
+    @Mock
+    private SemanticErrorListener errorListener;
 
     @Before
     public void setUp() {
@@ -66,11 +71,14 @@ public final class SectionLicenceListenerTest {
 
         when(scope.getLicenceResolver()).thenReturn(licenceResolver);
         when(sectionScopeBuilder.currentScope()).thenReturn(scope);
+        when(licenceResolver.resolve(any())).thenReturn(Optional.of("licence"));
+        when(licenceResolver.register(any())).thenReturn(completedFuture(null));
+        when(licenceResolver.register(any(), any())).thenReturn(completedFuture(null));
     }
 
     @After
     public void postConditions() {
-        verifyNoMoreInteractions(licenceResolver, sectionScopeBuilder);
+        verifyNoMoreInteractions(licenceResolver, sectionScopeBuilder, errorListener);
     }
 
     @Test
@@ -82,7 +90,7 @@ public final class SectionLicenceListenerTest {
         final SpeckyLexer lexer = new SpeckyLexer(stream);
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
-        final SectionLicenceListener listener = new SectionLicenceListener(sectionScopeBuilder);
+        final SectionLicenceListener listener = new SectionLicenceListener(sectionScopeBuilder, errorListener);
         parser.addParseListener(listener);
 
         parser.spec();

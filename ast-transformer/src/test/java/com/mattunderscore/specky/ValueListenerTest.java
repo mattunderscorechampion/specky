@@ -3,7 +3,6 @@ package com.mattunderscore.specky;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toMap;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -13,8 +12,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
@@ -68,11 +65,11 @@ public final class ValueListenerTest {
         final SpecTypeResolver typeResolver =
             new SpecTypeResolver();
         final SectionScopeResolver sectionScopeResolver =
-            new SectionScopeResolver(errorListener, typeResolver);
+            new SectionScopeResolver(typeResolver);
         final FileTypeListener fileTypeListener =
             new FileTypeListener(typeResolver);
         final SectionLicenceListener sectionLicenceListener =
-            new SectionLicenceListener(sectionScopeResolver);
+            new SectionLicenceListener(sectionScopeResolver, errorListener);
         final SectionImportTypeListener sectionImportTypeListener =
             new SectionImportTypeListener(sectionScopeResolver);
         final SectionImportValueListener sectionImportValueListener =

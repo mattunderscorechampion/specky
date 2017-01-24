@@ -25,11 +25,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.licence.resolver;
 
+import static java.util.concurrent.CompletableFuture.completedFuture;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
-import com.mattunderscore.specky.SemanticErrorListener;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Implementation of {@link LicenceResolver}.
@@ -38,29 +39,38 @@ import com.mattunderscore.specky.SemanticErrorListener;
  */
 public final class LicenceResolverImpl implements LicenceResolver {
     private final Map<String, String> licences = new HashMap<>();
-    private final SemanticErrorListener semanticErrorListener;
     private String defaultLicence;
 
     /**
      * Constructor.
      */
-    public LicenceResolverImpl(SemanticErrorListener semanticErrorListener) {
-        this.semanticErrorListener = semanticErrorListener;
+    public LicenceResolverImpl() {
     }
 
     @Override
-    public LicenceResolver register(String licence) {
+    public CompletableFuture<Void> register(String licence) {
         if (defaultLicence != null) {
-            semanticErrorListener.onSemanticError("Multiple default licences are not allowed");
+            final CompletableFuture<Void> future = new CompletableFuture<>();
+            future.completeExceptionally(new IllegalStateException("Multiple default licences are not allowed"));
+            return future;
         }
-        defaultLicence = licence;
-        return this;
+        else {
+            defaultLicence = licence;
+            return completedFuture(null);
+        }
     }
 
     @Override
-    public LicenceResolver register(String name, String licence) {
-        licences.put(name, licence);
-        return this;
+    public CompletableFuture<Void> register(String name, String licence) {
+        if (licences.putIfAbsent(name, licence) == null) {
+            return completedFuture(null);
+        }
+        else {
+            final CompletableFuture<Void> future = new CompletableFuture<>();
+            future.completeExceptionally(
+                new IllegalStateException("Multiple licences with the same name are not allowed"));
+            return future;
+        }
     }
 
     @Override
@@ -73,11 +83,6 @@ public final class LicenceResolverImpl implements LicenceResolver {
         if (resolvedLicence != null) {
             return Optional.of(resolvedLicence);
         }
-
-        semanticErrorListener.onSemanticError(
-            "An unknown name " +
-                name +
-                " was used to reference a licence");
 
         return Optional.empty();
     }

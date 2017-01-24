@@ -29,7 +29,6 @@ import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.PropertyDesc;
-import com.mattunderscore.specky.model.ValueDesc;
 import com.mattunderscore.specky.model.generator.scope.SectionScopeResolver;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyLexer;
@@ -67,11 +66,11 @@ public final class BeanListenerTest {
         final SpecTypeResolver typeResolver =
             new SpecTypeResolver();
         final SectionScopeResolver sectionScopeResolver =
-            new SectionScopeResolver(errorListener, typeResolver);
+            new SectionScopeResolver(typeResolver);
         final FileTypeListener fileTypeListener =
             new FileTypeListener(typeResolver);
         final SectionLicenceListener sectionLicenceListener =
-            new SectionLicenceListener(sectionScopeResolver);
+            new SectionLicenceListener(sectionScopeResolver, errorListener);
         final SectionImportTypeListener sectionImportTypeListener =
             new SectionImportTypeListener(sectionScopeResolver);
         final SectionImportValueListener sectionImportValueListener =
@@ -155,11 +154,11 @@ public final class BeanListenerTest {
         final SpecTypeResolver typeResolver =
             new SpecTypeResolver();
         final SectionScopeResolver sectionScopeResolver =
-            new SectionScopeResolver(errorListener, typeResolver);
+            new SectionScopeResolver(typeResolver);
         final FileTypeListener fileTypeListener =
             new FileTypeListener(typeResolver);
         final SectionLicenceListener sectionLicenceListener =
-            new SectionLicenceListener(sectionScopeResolver);
+            new SectionLicenceListener(sectionScopeResolver, errorListener);
         final SectionImportTypeListener sectionImportTypeListener =
             new SectionImportTypeListener(sectionScopeResolver);
         final SectionImportValueListener sectionImportValueListener =
