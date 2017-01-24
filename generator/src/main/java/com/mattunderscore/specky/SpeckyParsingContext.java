@@ -37,6 +37,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 
+import com.mattunderscore.specky.model.SpecDesc;
+
 /**
  * @author Matt Champion 15/01/2017
  */
@@ -67,7 +69,15 @@ public final class SpeckyParsingContext {
                 }
             }
 
-            return new SpeckyGeneratingContext(singletonList(generator.build(streams)));
+            @SuppressWarnings("PMD.PrematureDeclaration")
+            final SpecDesc spec = generator.build(streams);
+
+            final int errorCount = errorCounter.getErrorCount();
+            if (errorCount > 0) {
+                throw new ParsingError(errorCount);
+            }
+
+            return new SpeckyGeneratingContext(singletonList(spec));
         }
         else {
             throw new IllegalStateException("Context has already been parsed");
