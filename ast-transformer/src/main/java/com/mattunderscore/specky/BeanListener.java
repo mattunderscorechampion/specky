@@ -24,6 +24,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import static com.mattunderscore.specky.ParserUtils.toValue;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
@@ -380,22 +381,6 @@ public final class BeanListener extends SpeckyBaseListener {
                 currentProperty.getName() +
                 ". Cannot be both optional and required.",
                 ctx);
-        }
-    }
-
-    private static String toValue(Specky.String_valueContext stringValue) {
-        if (stringValue == null) {
-            return null;
-        }
-
-        final TerminalNode multiline = stringValue.MULTILINE_STRING_LITERAL();
-        if (multiline != null) {
-            final String literal = multiline.getText();
-            return literal.substring(3, literal.length() - 3);
-        }
-        else {
-            final String literal = stringValue.StringLiteral().getText();
-            return literal.substring(1, literal.length() - 1);
         }
     }
 
