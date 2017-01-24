@@ -2,6 +2,8 @@ package com.mattunderscore.specky;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import com.mattunderscore.specky.model.ConstructionMethod;
+import com.mattunderscore.specky.parser.Specky.OptsContext;
 import com.mattunderscore.specky.parser.Specky.String_valueContext;
 
 /**
@@ -29,6 +31,32 @@ import com.mattunderscore.specky.parser.Specky.String_valueContext;
         else {
             final String literal = stringValue.StringLiteral().getText();
             return literal.substring(1, literal.length() - 1);
+        }
+    }
+
+    /**
+     * @return the construction method
+     */
+    static ConstructionMethod toConstructionDesc(OptsContext options) {
+        if (options == null || options.construction() == null) {
+            return ConstructionMethod.CONSTRUCTOR;
+        }
+
+        final String token = options.construction().getText();
+        if ("constructor".equals(token)) {
+            return ConstructionMethod.CONSTRUCTOR;
+        }
+        else if ("builder".equals(token)) {
+            return ConstructionMethod.MUTABLE_BUILDER;
+        }
+        else if ("immutable builder".equals(token)) {
+            return ConstructionMethod.IMMUTABLE_BUILDER;
+        }
+        else if ("from defaults".equals(token)) {
+            return ConstructionMethod.FROM_DEFAULTS;
+        }
+        else {
+            throw new IllegalArgumentException("Unsupported type");
         }
     }
 }

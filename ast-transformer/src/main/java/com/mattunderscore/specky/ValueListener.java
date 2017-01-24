@@ -24,6 +24,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import static com.mattunderscore.specky.ParserUtils.toConstructionDesc;
 import static com.mattunderscore.specky.ParserUtils.toValue;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
@@ -45,7 +46,6 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
 import com.mattunderscore.specky.constraint.model.NFDisjointPredicates;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
-import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.ValueDesc;
 import com.mattunderscore.specky.model.generator.scope.Scope;
@@ -381,29 +381,6 @@ public final class ValueListener extends SpeckyBaseListener {
                 currentProperty.getName() +
                 ". Cannot be both optional and required.",
                 ctx);
-        }
-    }
-
-    private static ConstructionMethod toConstructionDesc(Specky.OptsContext options) {
-        if (options == null || options.construction() == null) {
-            return ConstructionMethod.CONSTRUCTOR;
-        }
-
-        final String token = options.construction().getText();
-        if ("constructor".equals(token)) {
-            return ConstructionMethod.CONSTRUCTOR;
-        }
-        else if ("builder".equals(token)) {
-            return ConstructionMethod.MUTABLE_BUILDER;
-        }
-        else if ("immutable builder".equals(token)) {
-            return ConstructionMethod.IMMUTABLE_BUILDER;
-        }
-        else if ("from defaults".equals(token)) {
-            return ConstructionMethod.FROM_DEFAULTS;
-        }
-        else {
-            throw new IllegalArgumentException("Unsupported type");
         }
     }
 
