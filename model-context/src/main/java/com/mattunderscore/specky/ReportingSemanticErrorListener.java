@@ -46,6 +46,8 @@ public final class ReportingSemanticErrorListener implements SemanticErrorListen
     @Override
     public void onSemanticError(String message, ParserRuleContext ruleContext) {
         ps.println(message);
+        ps.println("See: " + ruleContext.getText().trim());
+        ps.println("On line: " + ruleContext.getStart().getLine());
     }
 
     /**
