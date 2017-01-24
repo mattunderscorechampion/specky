@@ -91,7 +91,7 @@ public final class ValueListenerTest {
 
         final Specky.SpecContext spec = parser.spec();
 
-        final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(sectionScopeResolver);
+        final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(sectionScopeResolver, errorListener);
         ParseTreeWalker.DEFAULT.walk(abstractTypeListener, spec);
         final Map<String, AbstractTypeDesc> abstractTypes = abstractTypeListener
             .getAbstractTypeDescs()

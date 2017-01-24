@@ -155,7 +155,7 @@ public final class ModelGenerator {
     }
 
     private List<AbstractTypeDesc> secondPass(Specky.SpecContext spec, SectionScopeResolver sectionScopeResolver) {
-        final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(sectionScopeResolver);
+        final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(sectionScopeResolver, errorListener);
         ParseTreeWalker.DEFAULT.walk(abstractTypeListener, spec);
         return abstractTypeListener.getAbstractTypeDescs();
     }

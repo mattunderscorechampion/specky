@@ -221,12 +221,22 @@ public final class BeanListener extends SpeckyBaseListener {
                 builder -> builder.licence(toValue(ctx.licence().string_value())))
             .ifThen(
                 ctx.licence() != null && ctx.licence().Identifier() != null,
-                builder -> builder
-                    .licence(sectionScopeResolver
-                        .resolve(currentSection)
-                        .getLicenceResolver()
-                        .resolve(ctx.licence().Identifier().getText())
-                        .get()))
+                builder -> {
+                    final String licenceName = ctx.licence().Identifier().getText();
+                    return builder
+                        .licence(sectionScopeResolver
+                            .resolve(currentSection)
+                            .getLicenceResolver()
+                            .resolve(licenceName)
+                            .orElseGet(() -> {
+                                semanticErrorListener.onSemanticError(
+                                    "An unknown name " +
+                                        licenceName +
+                                        " was used to reference a licence",
+                                    ctx);
+                                return null;
+                            }));
+                })
             .ifThen(
                 ctx.StringLiteral() == null,
                 builder -> builder.description("Bean type $L.\n\nAuto-generated from specification."))

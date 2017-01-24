@@ -54,6 +54,7 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
     private final Normaliser normaliser = new Normaliser();
     private final ConstraintFactory constraintFactory = new ConstraintFactory();
     private final SectionScopeResolver sectionScopeResolver;
+    private final SemanticErrorListener semanticErrorListener;
 
     private final List<AbstractTypeDesc> abstractTypeDescs = new ArrayList<>();
     private AbstractTypeDesc.Builder currentTypeDesc;
@@ -62,8 +63,9 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
     /**
      * Constructor.
      */
-    public AbstractTypeListener(SectionScopeResolver sectionScopeResolver) {
+    public AbstractTypeListener(SectionScopeResolver sectionScopeResolver, SemanticErrorListener semanticErrorListener) {
         this.sectionScopeResolver = sectionScopeResolver;
+        this.semanticErrorListener = semanticErrorListener;
     }
 
     /**
@@ -134,12 +136,22 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
                 builder -> builder.licence(toValue(ctx.licence().string_value())))
             .ifThen(
                 ctx.licence() != null && ctx.licence().Identifier() != null,
-                builder -> builder
-                    .licence(sectionScopeResolver
-                        .resolve(currentSection)
-                        .getLicenceResolver()
-                        .resolve(ctx.licence().Identifier().getText())
-                        .get()))
+                builder -> {
+                    final String licenceName = ctx.licence().Identifier().getText();
+                    return builder
+                        .licence(sectionScopeResolver
+                            .resolve(currentSection)
+                            .getLicenceResolver()
+                            .resolve(licenceName)
+                            .orElseGet(() -> {
+                                semanticErrorListener.onSemanticError(
+                                    "An unknown name " +
+                                        licenceName +
+                                        " was used to reference a licence",
+                                    ctx);
+                                return null;
+                            }));
+                })
             .ifThen(
                 ctx.StringLiteral() == null,
                 builder -> builder.description("Abstract type $L.\n\nAuto-generated from specification."))
