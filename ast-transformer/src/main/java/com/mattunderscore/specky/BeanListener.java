@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -156,7 +157,7 @@ public final class BeanListener extends SpeckyBaseListener {
         }
 
         final List<AbstractTypeDesc> resolveSupertypes =
-            resolveSupertypes(currentSupertypes, sectionScopeResolver.resolve(currentSection));
+            resolveSupertypes(currentSupertypes, sectionScopeResolver.resolve(currentSection), ctx);
 
         final List<PropertyDesc> inheritedProperties = resolveSupertypes
             .stream()
@@ -185,7 +186,7 @@ public final class BeanListener extends SpeckyBaseListener {
                 knownProperties.put(propertyName, inheritedProperty);
             }
             else {
-                checkMergableProperties(currentProperty, inheritedProperty);
+                checkMergableProperties(currentProperty, inheritedProperty, ctx);
             }
         }
         for (final PropertyDesc property : declaredProperties) {
@@ -196,7 +197,7 @@ public final class BeanListener extends SpeckyBaseListener {
                 knownProperties.put(propertyName, property);
             }
             else {
-                final PropertyDesc mergedProperty = mergeDeclaredProperty(currentProperty, property);
+                final PropertyDesc mergedProperty = mergeDeclaredProperty(currentProperty, property, ctx);
                 allProperties.remove(currentProperty);
                 allProperties.add(mergedProperty);
                 knownProperties.put(propertyName, mergedProperty);
@@ -238,15 +239,16 @@ public final class BeanListener extends SpeckyBaseListener {
         valueDescs.add(currentTypeDesc.build());
     }
 
-    private List<AbstractTypeDesc> resolveSupertypes(List<String> supertypes, Scope scope) {
+    private List<AbstractTypeDesc> resolveSupertypes(List<String> supertypes, Scope scope, ParserRuleContext ctx) {
         final List<AbstractTypeDesc> typeDescs = new ArrayList<>();
-        resolveSupertypes(supertypes, scope, typeDescs, new HashSet<>());
+        resolveSupertypes(supertypes, scope, ctx, typeDescs, new HashSet<>());
         return typeDescs;
     }
 
     private void resolveSupertypes(
         List<String> supertypes,
         Scope scope,
+        ParserRuleContext ctx,
         List<AbstractTypeDesc> typeDescs,
         Set<AbstractTypeDesc> setOfTypes) {
 
@@ -255,19 +257,19 @@ public final class BeanListener extends SpeckyBaseListener {
             .map(typeName -> {
                 final Optional<String> optionalType = scope.getTypeResolver().resolve(typeName);
                 return optionalType.orElseGet(() -> {
-                    semanticErrorListener.onSemanticError("No resolvable type for " + typeName);
+                    semanticErrorListener.onSemanticError("No resolvable type for " + typeName, ctx);
                     return "unknown type";
                 });
             })
             .map(abstractTypes::get)
             .forEach(typeDesc -> {
                 if (typeDesc == null) {
-                    semanticErrorListener.onSemanticError("Unknown is not an abstract type");
+                    semanticErrorListener.onSemanticError("Unknown is not an abstract type", ctx);
                     return;
                 }
 
                 if (setOfTypes.add(typeDesc)) {
-                    resolveSupertypes(typeDesc.getSupertypes(), scope, typeDescs, setOfTypes);
+                    resolveSupertypes(typeDesc.getSupertypes(), scope, ctx, typeDescs, setOfTypes);
                     typeDescs.add(typeDesc);
                 }
             });
@@ -327,8 +329,8 @@ public final class BeanListener extends SpeckyBaseListener {
             .build();
     }
 
-    private PropertyDesc mergeDeclaredProperty(PropertyDesc currentProperty, PropertyDesc declaredProperty) {
-        checkMergableProperties(currentProperty, declaredProperty);
+    private PropertyDesc mergeDeclaredProperty(PropertyDesc currentProperty, PropertyDesc declaredProperty, ParserRuleContext ctx) {
+        checkMergableProperties(currentProperty, declaredProperty, ctx);
 
         final List<NFDisjointPredicates> constraints = new ArrayList<>();
 
@@ -355,19 +357,21 @@ public final class BeanListener extends SpeckyBaseListener {
             .build();
     }
 
-    private void checkMergableProperties(PropertyDesc currentProperty, PropertyDesc newProperty) {
+    private void checkMergableProperties(PropertyDesc currentProperty, PropertyDesc newProperty, ParserRuleContext ctx) {
         if (!newProperty.getType().equals(currentProperty.getType())) {
             semanticErrorListener.onSemanticError("Conflicting property declarations for " +
                 currentProperty.getName() +
                 ". Types " +
                 currentProperty.getType() +
                 " and " +
-                newProperty.getType());
+                newProperty.getType(),
+                ctx);
         }
         else if (newProperty.isOptional() != currentProperty.isOptional()) {
             semanticErrorListener.onSemanticError("Conflicting property declarations for " +
                 currentProperty.getName() +
-                ". Cannot be both optional and required.");
+                ". Cannot be both optional and required.",
+                ctx);
         }
     }
 

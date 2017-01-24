@@ -25,6 +25,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+
 /**
  * A {@link SemanticErrorListener} that counts the errors.
  * @author Matt Champion on 12/10/2016
@@ -33,7 +35,7 @@ public final class CountingSemanticErrorListener implements SemanticErrorListene
     private int errorCount;
 
     @Override
-    public void onSemanticError(String message) {
+    public void onSemanticError(String message, ParserRuleContext ctx) {
         errorCount += 1;
     }
 

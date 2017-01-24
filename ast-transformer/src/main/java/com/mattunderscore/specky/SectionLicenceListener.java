@@ -60,7 +60,7 @@ public final class SectionLicenceListener extends SpeckyBaseListener {
                 .getLicenceResolver()
                 .register(licenceIdentifier, licenceText)
                 .exceptionally(throwable -> {
-                    errorListener.onSemanticError(throwable.getMessage());
+                    errorListener.onSemanticError(throwable.getMessage(), ctx);
                     return null;
                 });
         }
@@ -71,7 +71,7 @@ public final class SectionLicenceListener extends SpeckyBaseListener {
                 .getLicenceResolver()
                 .register(licenceText)
                 .exceptionally(throwable -> {
-                    errorListener.onSemanticError(throwable.getMessage());
+                    errorListener.onSemanticError(throwable.getMessage(), ctx);
                     return null;
                 });
         }

@@ -25,6 +25,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+
 /**
  * A listener for Semantic exceptions.
  * @author Matt Champion on 12/10/2016
@@ -33,5 +35,5 @@ public interface SemanticErrorListener {
     /**
      * Notified when a semantic error is encountered.
      */
-    void onSemanticError(String message);
+    void onSemanticError(String message, ParserRuleContext ruleContext);
 }
