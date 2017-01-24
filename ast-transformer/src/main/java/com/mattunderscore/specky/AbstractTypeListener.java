@@ -145,10 +145,8 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
                             .resolve(licenceName)
                             .orElseGet(() -> {
                                 semanticErrorListener.onSemanticError(
-                                    "An unknown name " +
-                                        licenceName +
-                                        " was used to reference a licence",
-                                    ctx);
+                                    "An unknown name was used to reference a licence",
+                                    ctx.licence());
                                 return null;
                             }));
                 })
