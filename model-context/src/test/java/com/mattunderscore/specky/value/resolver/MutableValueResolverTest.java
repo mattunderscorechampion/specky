@@ -53,16 +53,23 @@ public final class MutableValueResolverTest {
     public void registerAndResolve() {
         final MutableValueResolver resolver = new MutableValueResolverImpl();
 
-        final Optional<CodeBlock> some = resolver.register("some", CodeBlock.of("other")).resolve("some", false);
+        resolver.register("some", CodeBlock.of("other"));
+        final Optional<CodeBlock> some =  resolver.resolve("some", false);
         assertTrue(some.isPresent());
         assertEquals(CodeBlock.of("other"), some.get());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void registerTwice() {
         final MutableValueResolver resolver = new MutableValueResolverImpl();
 
-        resolver.register("some", CodeBlock.of("other")).register("some", CodeBlock.of("again"));
+        resolver.register("some", CodeBlock.of("other"));
+        resolver
+            .register("some", CodeBlock.of("again"))
+            .exceptionally(t -> {
+            assertTrue(t instanceof IllegalArgumentException);
+                return null;
+            });
     }
 
     @Test(expected = NullPointerException.class)

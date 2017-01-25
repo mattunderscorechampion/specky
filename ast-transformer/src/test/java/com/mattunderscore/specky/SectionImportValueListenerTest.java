@@ -24,6 +24,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import static java.util.concurrent.CompletableFuture.completedFuture;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -31,6 +33,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
@@ -41,7 +44,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.model.generator.scope.PendingScope;
 import com.mattunderscore.specky.model.generator.scope.SectionScopeBuilder;
 import com.mattunderscore.specky.parser.Specky;
@@ -61,6 +63,8 @@ public final class SectionImportValueListenerTest {
     private PendingScope scope;
     @Mock
     private MutableValueResolver valueResolver;
+    @Mock
+    private SemanticErrorListener errorListener;
 
     @Before
     public void setUp() {
@@ -68,11 +72,12 @@ public final class SectionImportValueListenerTest {
 
         when(scope.getValueResolver()).thenReturn(valueResolver);
         when(sectionScopeBuilder.currentScope()).thenReturn(scope);
+        when(valueResolver.register(isA(String.class), isA(CodeBlock.class))).thenReturn(completedFuture(null));
     }
 
     @After
     public void postConditions() {
-        verifyNoMoreInteractions(valueResolver, sectionScopeBuilder);
+        verifyNoMoreInteractions(valueResolver, sectionScopeBuilder, errorListener, valueResolver);
     }
 
     @Test
@@ -84,7 +89,7 @@ public final class SectionImportValueListenerTest {
         final SpeckyLexer lexer = new SpeckyLexer(stream);
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
-        final SectionImportValueListener listener = new SectionImportValueListener(sectionScopeBuilder);
+        final SectionImportValueListener listener = new SectionImportValueListener(errorListener, sectionScopeBuilder);
         parser.addParseListener(listener);
 
         parser.spec();

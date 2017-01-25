@@ -1,5 +1,7 @@
 package com.mattunderscore.specky.value.resolver;
 
+import java.util.concurrent.CompletableFuture;
+
 import com.squareup.javapoet.CodeBlock;
 
 /**
@@ -9,7 +11,6 @@ import com.squareup.javapoet.CodeBlock;
 public interface MutableValueResolver extends DefaultValueResolver {
     /**
      * Register a default value for a type.
-     * @throws IllegalArgumentException if a mapping already exists
      */
-    MutableValueResolver register(String type, CodeBlock defaultValue);
+    CompletableFuture<Void> register(String type, CodeBlock defaultValue);
 }

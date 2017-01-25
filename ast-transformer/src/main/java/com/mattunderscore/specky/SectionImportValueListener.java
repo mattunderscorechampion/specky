@@ -36,12 +36,14 @@ import com.squareup.javapoet.CodeBlock;
  */
 public final class SectionImportValueListener extends SpeckyBaseListener {
 
+    private final SemanticErrorListener errorListener;
     private SectionScopeBuilder scopeResolver;
 
     /**
      * Constructor.
      */
-    public SectionImportValueListener(SectionScopeBuilder scopeResolver) {
+    public SectionImportValueListener(SemanticErrorListener errorListener, SectionScopeBuilder scopeResolver) {
+        this.errorListener = errorListener;
         this.scopeResolver = scopeResolver;
     }
 
@@ -54,7 +56,11 @@ public final class SectionImportValueListener extends SpeckyBaseListener {
                 .getValueResolver()
                 .register(
                     ctx.qualifiedName().getText(),
-                    CodeBlock.of(ctx.default_value().ANYTHING().getText()));
+                    CodeBlock.of(ctx.default_value().ANYTHING().getText()))
+                .exceptionally(t -> {
+                    errorListener.onSemanticError(t.getMessage(), ctx);
+                    return null;
+                });
         }
     }
 }

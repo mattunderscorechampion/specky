@@ -135,7 +135,7 @@ public final class ModelGenerator {
         final SectionImportTypeListener sectionImportTypeListener =
             new SectionImportTypeListener(sectionScopeResolver);
         final SectionImportValueListener sectionImportValueListener =
-            new SectionImportValueListener(sectionScopeResolver);
+            new SectionImportValueListener(errorListener, sectionScopeResolver);
         final SectionScopeListener sectionScopeListener =
             new SectionScopeListener(sectionScopeResolver);
         final SectionAuthorListener sectionAuthorListener =

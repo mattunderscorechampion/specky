@@ -27,6 +27,7 @@ package com.mattunderscore.specky.value.resolver;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -45,13 +46,21 @@ public final class MutableValueResolverImpl implements MutableValueResolver {
     }
 
     @Override
-    public MutableValueResolver register(String type, CodeBlock defaultValue) {
+    public CompletableFuture<Void> register(String type, CodeBlock defaultValue) {
         Objects.requireNonNull(type);
         Objects.requireNonNull(defaultValue);
         final CodeBlock currentValue = typeToValue.putIfAbsent(type, defaultValue);
+
+        final CompletableFuture<Void> result = new CompletableFuture<>();
+
         if (currentValue != null && !currentValue.equals(defaultValue)) {
-            throw new IllegalArgumentException("The type " + type + " is already registered to " + defaultValue);
+            result.completeExceptionally(
+                new IllegalArgumentException("The type " + type + " is already registered to " + currentValue));
         }
-        return this;
+        else {
+            result.complete(null);
+        }
+
+        return result;
     }
 }
