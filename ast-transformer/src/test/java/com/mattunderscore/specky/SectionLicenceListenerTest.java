@@ -44,7 +44,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.mattunderscore.specky.licence.resolver.LicenceResolver;
+import com.mattunderscore.specky.licence.resolver.MutableLicenceResolver;
 import com.mattunderscore.specky.model.generator.scope.PendingScope;
 import com.mattunderscore.specky.model.generator.scope.SectionScopeBuilder;
 import com.mattunderscore.specky.parser.Specky;
@@ -61,7 +61,7 @@ public final class SectionLicenceListenerTest {
     @Mock
     private PendingScope scope;
     @Mock
-    private LicenceResolver licenceResolver;
+    private MutableLicenceResolver licenceResolver;
     @Mock
     private SemanticErrorListener errorListener;
 

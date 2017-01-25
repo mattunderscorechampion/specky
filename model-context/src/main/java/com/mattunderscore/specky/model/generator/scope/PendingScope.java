@@ -24,7 +24,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator.scope;
 
-import com.mattunderscore.specky.licence.resolver.LicenceResolver;
+import com.mattunderscore.specky.licence.resolver.MutableLicenceResolver;
 import com.mattunderscore.specky.type.resolver.MutableTypeResolver;
 import com.mattunderscore.specky.value.resolver.MutableValueResolver;
 
@@ -52,7 +52,7 @@ public interface PendingScope {
     /**
      * @return the licence resolver for the scope
      */
-    LicenceResolver getLicenceResolver();
+    MutableLicenceResolver getLicenceResolver();
 
     /**
      * @return a scope

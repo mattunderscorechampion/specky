@@ -17,7 +17,7 @@ import org.junit.Test;
 public final class LicenceResolverImplTest {
     @Test
     public void register() {
-        final LicenceResolver resolver = new LicenceResolverImpl();
+        final MutableLicenceResolver resolver = new LicenceResolverImpl();
 
         final CompletableFuture<Void> result = resolver.register("name", "licence");
 
@@ -27,7 +27,7 @@ public final class LicenceResolverImplTest {
 
     @Test
     public void registerDefault() {
-        final LicenceResolver resolver = new LicenceResolverImpl();
+        final MutableLicenceResolver resolver = new LicenceResolverImpl();
 
         final CompletableFuture<Void> result = resolver.register("licence");
 
@@ -37,7 +37,7 @@ public final class LicenceResolverImplTest {
 
     @Test
     public void resolveUnknown() {
-        final LicenceResolver resolver = new LicenceResolverImpl();
+        final MutableLicenceResolver resolver = new LicenceResolverImpl();
 
         final Optional<String> result = resolver.resolve("name");
 
@@ -46,7 +46,7 @@ public final class LicenceResolverImplTest {
 
     @Test
     public void registerResolve() {
-        final LicenceResolver resolver = new LicenceResolverImpl();
+        final MutableLicenceResolver resolver = new LicenceResolverImpl();
 
         resolver.register("name", "licence");
 
@@ -58,7 +58,7 @@ public final class LicenceResolverImplTest {
 
     @Test
     public void registerResolveDefault() {
-        final LicenceResolver resolver = new LicenceResolverImpl();
+        final MutableLicenceResolver resolver = new LicenceResolverImpl();
 
         resolver.register("licence");
 
@@ -70,7 +70,7 @@ public final class LicenceResolverImplTest {
 
     @Test
     public void registerDuplicate() {
-        final LicenceResolver resolver = new LicenceResolverImpl();
+        final MutableLicenceResolver resolver = new LicenceResolverImpl();
 
         resolver.register("name", "licence");
 
@@ -82,7 +82,7 @@ public final class LicenceResolverImplTest {
 
     @Test
     public void registerDefaultDuplicate() {
-        final LicenceResolver resolver = new LicenceResolverImpl();
+        final MutableLicenceResolver resolver = new LicenceResolverImpl();
 
         resolver.register("licence");
 

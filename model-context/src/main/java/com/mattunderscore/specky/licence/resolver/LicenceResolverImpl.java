@@ -37,7 +37,7 @@ import java.util.concurrent.CompletableFuture;
  *
  * @author Matt Champion on 20/08/2016
  */
-public final class LicenceResolverImpl implements LicenceResolver {
+public final class LicenceResolverImpl implements MutableLicenceResolver {
     private final Map<String, String> licences = new HashMap<>();
     private String defaultLicence;
 
