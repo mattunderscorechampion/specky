@@ -27,7 +27,6 @@ package com.mattunderscore.specky.model.generator.scope;
 import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.type.resolver.JavaStandardTypeResolver;
 import com.mattunderscore.specky.type.resolver.MutableTypeResolver;
-import com.mattunderscore.specky.type.resolver.PropertyTypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
 import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
@@ -104,12 +103,9 @@ public final class PendingScopeImpl implements PendingScope {
             .registerResolver(typeResolver)
             .build();
 
-        final PropertyTypeResolver propertyTypeResolver = new PropertyTypeResolver(resolver);
-
         return new ScopeImpl(
             compositeValueResolver,
             resolver,
-            propertyTypeResolver,
             licenceResolver,
             author,
             packageName);

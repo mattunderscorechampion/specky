@@ -74,4 +74,14 @@ public class JavaStandardTypeResolverTest {
     public void unknown() {
         assertFalse(resolver.resolve("java.lang.BigInteger").isPresent());
     }
+
+    @Test
+    public void resolveInt() {
+        assertEquals("int", resolver.resolve("int").get());
+    }
+
+    @Test
+    public void resolveOptionalInt() {
+        assertEquals("java.lang.Integer", resolver.resolve("int", true).get());
+    }
 }

@@ -26,7 +26,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.model.generator.scope;
 
 import com.mattunderscore.specky.licence.resolver.LicenceResolver;
-import com.mattunderscore.specky.type.resolver.PropertyTypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 
@@ -44,11 +43,6 @@ public interface Scope {
      * @return the type resolver for the scope
      */
     TypeResolver getTypeResolver();
-
-    /**
-     * @return the property type resolver for the scope
-     */
-    PropertyTypeResolver getPropertyTypeResolver();
 
     /**
      * @return the licence resolver for the scope

@@ -38,4 +38,34 @@ public interface TypeResolver {
      * @return optional fully qualified name
      */
     Optional<String> resolve(String name);
+
+    /**
+     * @param typeName the name of the type
+     * @return optional if the property is optional
+     */
+    default Optional<String> resolve(String typeName, boolean optional) {
+        return resolve(typeName)
+            .flatMap(type -> {
+                if (!optional) {
+                    return Optional.of(type);
+                }
+
+                // If the type is optional and a primitive
+                // replace it with its boxed equivalent
+                if ("int".equals(type)) {
+                    return Optional.of("java.lang.Integer");
+                }
+                else if ("long".equals(type)) {
+                    return Optional.of("java.lang.Long");
+                }
+                else if ("double".equals(type)) {
+                    return Optional.of("java.lang.Double");
+                }
+                else if ("boolean".equals(type)) {
+                    return Optional.of("java.lang.Boolean");
+                }
+
+                return Optional.of(type);
+            });
+    }
 }

@@ -26,7 +26,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.model.generator.scope;
 
 import com.mattunderscore.specky.licence.resolver.LicenceResolver;
-import com.mattunderscore.specky.type.resolver.PropertyTypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 
@@ -37,7 +36,6 @@ import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 public final class ScopeImpl implements Scope {
     private final DefaultValueResolver valueResolver;
     private final TypeResolver typeResolver;
-    private final PropertyTypeResolver propertyTypeResolver;
     private final LicenceResolver licenceResolver;
     private final String author;
     private final String packageName;
@@ -48,14 +46,12 @@ public final class ScopeImpl implements Scope {
     /*package*/ ScopeImpl(
         DefaultValueResolver valueResolver,
         TypeResolver typeResolver,
-        PropertyTypeResolver propertyTypeResolver,
         LicenceResolver licenceResolver,
         String author,
         String packageName) {
 
         this.valueResolver = valueResolver;
         this.typeResolver = typeResolver;
-        this.propertyTypeResolver = propertyTypeResolver;
         this.licenceResolver = licenceResolver;
         this.author = author;
         this.packageName = packageName;
@@ -69,11 +65,6 @@ public final class ScopeImpl implements Scope {
     @Override
     public TypeResolver getTypeResolver() {
         return typeResolver;
-    }
-
-    @Override
-    public PropertyTypeResolver getPropertyTypeResolver() {
-        return propertyTypeResolver;
     }
 
     @Override
