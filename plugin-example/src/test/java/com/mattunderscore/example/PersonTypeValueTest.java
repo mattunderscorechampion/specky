@@ -1,4 +1,4 @@
-/* Copyright © 2016 Matthew Champion
+/* Copyright © 2016-2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -31,26 +31,26 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.example.PersonValue;
+import com.example.PersonTypeValue;
 
 /**
- * Unit tests for {@link PersonValue}.
+ * Unit tests for {@link PersonTypeValue}.
  * @author Matt Champion on 25/06/2016
  */
-public final class PersonValueTest {
+public final class PersonTypeValueTest {
     @Test
     public void test() {
-        final PersonValue person = PersonValue.builder().id(5).name("Matt").build();
+        final PersonTypeValue person = PersonTypeValue.builder().id(5).name("Matt").build();
 
         assertEquals(5, (int) person.getId());
         assertEquals("Matt", person.getName());
-        assertEquals("PersonValue[id=5, name=Matt]", person.toString());
+        assertEquals("PersonTypeValue[id=5, name=Matt]", person.toString());
     }
 
     @Test
     public void equality() {
-        final PersonValue person0 = PersonValue.builder().id(5).name("Matt").build();
-        final PersonValue person1 = PersonValue.builder().id(5).name("Matt").build();
+        final PersonTypeValue person0 = PersonTypeValue.builder().id(5).name("Matt").build();
+        final PersonTypeValue person1 = PersonTypeValue.builder().id(5).name("Matt").build();
 
         assertTrue(person0.equals(person1));
         assertTrue(person1.equals(person0));
@@ -59,8 +59,8 @@ public final class PersonValueTest {
 
     @Test
     public void notEquals() {
-        final PersonValue person0 = PersonValue.builder().id(5).name("Matt").build();
-        final PersonValue person1 = PersonValue.builder().id(6).name("Matt").build();
+        final PersonTypeValue person0 = PersonTypeValue.builder().id(5).name("Matt").build();
+        final PersonTypeValue person1 = PersonTypeValue.builder().id(6).name("Matt").build();
 
         assertFalse(person0.equals(person1));
         assertFalse(person1.equals(person0));
@@ -68,24 +68,24 @@ public final class PersonValueTest {
 
     @Test
     public void notEqualsNull() {
-        final PersonValue person0 = PersonValue.builder().id(5).name("Matt").build();
+        final PersonTypeValue person0 = PersonTypeValue.builder().id(5).name("Matt").build();
 
         assertFalse(person0.equals(null));
     }
 
     @Test
     public void notEqualsObject() {
-        final PersonValue person0 = PersonValue.builder().id(5).name("Matt").build();
+        final PersonTypeValue person0 = PersonTypeValue.builder().id(5).name("Matt").build();
 
         assertFalse(person0.equals(new Object()));
     }
 
     @Test
     public void applyFunction() {
-        final PersonValue person = PersonValue.builder().id(5).apply(builder -> builder.name("M")).build();
+        final PersonTypeValue person = PersonTypeValue.builder().id(5).apply(builder -> builder.name("M")).build();
 
         assertEquals(5, (int) person.getId());
         assertEquals("M", person.getName());
-        assertEquals("PersonValue[id=5, name=M]", person.toString());
+        assertEquals("PersonTypeValue[id=5, name=M]", person.toString());
     }
 }

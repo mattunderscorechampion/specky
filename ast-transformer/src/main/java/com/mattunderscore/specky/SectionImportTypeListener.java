@@ -1,4 +1,4 @@
-/* Copyright © 2016 Matthew Champion All rights reserved.
+/* Copyright © 2016-2017 Matthew Champion All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -35,12 +35,14 @@ import com.mattunderscore.specky.parser.SpeckyBaseListener;
  */
 public final class SectionImportTypeListener extends SpeckyBaseListener {
 
-    private SectionScopeBuilder scopeResolver;
+    private final SemanticErrorListener errorListener;
+    private final SectionScopeBuilder scopeResolver;
 
     /**
      * Constructor.
      */
-    public SectionImportTypeListener(SectionScopeBuilder scopeResolver) {
+    public SectionImportTypeListener(SemanticErrorListener errorListener, SectionScopeBuilder scopeResolver) {
+        this.errorListener = errorListener;
         this.scopeResolver = scopeResolver;
     }
 
@@ -54,6 +56,10 @@ public final class SectionImportTypeListener extends SpeckyBaseListener {
         scopeResolver
             .currentScope()
             .getImportTypeResolver()
-            .registerTypeName(packageName, typeName);
+            .registerTypeName(packageName, typeName)
+            .exceptionally(t -> {
+                errorListener.onSemanticError(t.getMessage(), ctx);
+                return null;
+            });
     }
 }

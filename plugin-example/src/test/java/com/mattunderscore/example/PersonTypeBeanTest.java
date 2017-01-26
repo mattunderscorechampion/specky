@@ -1,4 +1,4 @@
-/* Copyright © 2016 Matthew Champion
+/* Copyright © 2016-2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -25,27 +25,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.example;
 
-import com.example.PersonBean;
-import com.example.PersonType;
-import org.junit.Test;
-
 import static com.mattunderscore.example.ReflectionAssertions.assertHasMethod;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Test;
+
+import com.example.PersonType;
+import com.example.PersonTypeBean;
+
 /**
- * Unit tests for {@link PersonBean}.
+ * Unit tests for {@link com.example.PersonTypeBean}.
  * @author Matt Champion on 25/06/2016
  */
-public final class PersonBeanTest {
+public final class PersonTypeBeanTest {
     @Test
     public void test() {
-        final PersonBean person = new PersonBean();
+        final PersonTypeBean person = new PersonTypeBean();
 
         assertEquals(0, person.getId());
         assertEquals("", person.getName());
-        assertEquals("PersonBean[id=0, name=, birthTimestamp=0]", person.toString());
+        assertEquals("PersonTypeBean[id=0, name=, birthTimestamp=0]", person.toString());
         assertTrue(person instanceof PersonType);
         person.setId(2);
         person.setName("someName");
@@ -53,23 +54,23 @@ public final class PersonBeanTest {
         assertEquals(2, person.getId());
         assertEquals("someName", person.getName());
         assertEquals(50L, person.getBirthTimestamp());
-        assertEquals("PersonBean[id=2, name=someName, birthTimestamp=50]", person.toString());
+        assertEquals("PersonTypeBean[id=2, name=someName, birthTimestamp=50]", person.toString());
     }
 
     @Test
     public void testStructure() throws NoSuchMethodException {
-        assertHasMethod(PersonBean.class, "getId", Integer.TYPE);
-        assertHasMethod(PersonBean.class, "getName", String.class);
-        assertHasMethod(PersonBean.class, "getBirthTimestamp", Long.TYPE);
-        assertHasMethod(PersonBean.class, "setId", Void.TYPE, Integer.TYPE);
-        assertHasMethod(PersonBean.class, "setName", Void.TYPE, String.class);
-        assertHasMethod(PersonBean.class, "setBirthTimestamp", Void.TYPE, Long.TYPE);
+        assertHasMethod(PersonTypeBean.class, "getId", Integer.TYPE);
+        assertHasMethod(PersonTypeBean.class, "getName", String.class);
+        assertHasMethod(PersonTypeBean.class, "getBirthTimestamp", Long.TYPE);
+        assertHasMethod(PersonTypeBean.class, "setId", Void.TYPE, Integer.TYPE);
+        assertHasMethod(PersonTypeBean.class, "setName", Void.TYPE, String.class);
+        assertHasMethod(PersonTypeBean.class, "setBirthTimestamp", Void.TYPE, Long.TYPE);
     }
 
     @Test
     public void equality() {
-        final PersonBean person0 = new PersonBean();
-        final PersonBean person1 = new PersonBean();
+        final PersonTypeBean person0 = new PersonTypeBean();
+        final PersonTypeBean person1 = new PersonTypeBean();
 
         assertTrue(person0.equals(person1));
         assertTrue(person1.equals(person0));
@@ -78,8 +79,8 @@ public final class PersonBeanTest {
 
     @Test
     public void notEquals() {
-        final PersonBean person0 = new PersonBean();
-        final PersonBean person1 = new PersonBean();
+        final PersonTypeBean person0 = new PersonTypeBean();
+        final PersonTypeBean person1 = new PersonTypeBean();
         person1.setId(4);
 
         assertFalse(person0.equals(person1));
@@ -88,14 +89,14 @@ public final class PersonBeanTest {
 
     @Test
     public void notEqualsNull() {
-        final PersonBean person0 = new PersonBean();
+        final PersonTypeBean person0 = new PersonTypeBean();
 
         assertFalse(person0.equals(null));
     }
 
     @Test
     public void notEqualsObject() {
-        final PersonBean person0 = new PersonBean();
+        final PersonTypeBean person0 = new PersonTypeBean();
 
         assertFalse(person0.equals(new Object()));
     }

@@ -1,6 +1,6 @@
 
 
-licence """Copyright © 2016 Matthew Champion
+licence """Copyright © 2016-2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -29,14 +29,14 @@ author "Matt Champion"
 
 package com.mattunderscore.sectionA
 
-type Person "Description of a person."
+type PersonInDefaultSection "Description of a person."
     properties
         String name "Persons name."
         long birthTimestamp "Timestamp of persons birth."
 
-bean PersonBean : Person "Bean implementation of {@link Person}."
+bean PersonBeanInDefaultSection : PersonInDefaultSection "Bean implementation of {@link Person}."
 
-value PersonValue : Person "Value implementation of {@link Person}."
+value PersonValueInDefaultSection : PersonInDefaultSection "Value implementation of {@link Person}."
     options
         immutable builder
 
@@ -47,14 +47,14 @@ author "Matt Champion"
 
 package com.mattunderscore.sectionB
 
-type Person "Description of a person."
+type PersonInSection "Description of a person."
     properties
         String name "Persons name."
         long birthTimestamp "Timestamp of persons birth."
 
-bean PersonBean : Person "Bean implementation of {@link Person}."
+bean PersonBeanInSection : PersonInSection "Bean implementation of {@link Person}."
 
-value PersonValue : Person "Value implementation of {@link Person}."
+value PersonValueInSection : PersonInSection "Value implementation of {@link Person}."
     options
         immutable builder
 

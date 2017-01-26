@@ -1,4 +1,4 @@
-/* Copyright © 2016 Matthew Champion
+/* Copyright © 2016-2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -26,6 +26,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -34,7 +36,10 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.UnbufferedTokenStream;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyLexer;
@@ -47,6 +52,20 @@ import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
  * @author Matt Champion on 24/12/16
  */
 public final class FileTypeListenerTest {
+    @Mock
+    private SemanticErrorListener errorListener;
+
+    @Before
+    public void setUp() {
+        initMocks(this);
+    }
+
+    @After
+    public void postConditions() {
+        verifyNoMoreInteractions(errorListener);
+    }
+
+
     @Test
     public void test() throws IOException {
         final CharStream stream = new ANTLRInputStream(FileTypeListenerTest
@@ -57,7 +76,7 @@ public final class FileTypeListenerTest {
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
         final MutableTypeResolver typeResolver = new SpecTypeResolver();
-        final FileTypeListener listener = new FileTypeListener(typeResolver);
+        final FileTypeListener listener = new FileTypeListener(errorListener, typeResolver);
         parser.addParseListener(listener);
 
         parser.spec();

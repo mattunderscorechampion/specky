@@ -1,4 +1,4 @@
-/* Copyright © 2016 Matthew Champion All rights reserved.
+/* Copyright © 2016-21017 Matthew Champion All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -24,6 +24,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import static java.util.concurrent.CompletableFuture.completedFuture;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -41,7 +43,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.model.generator.scope.PendingScope;
 import com.mattunderscore.specky.model.generator.scope.SectionScopeBuilder;
 import com.mattunderscore.specky.parser.Specky;
@@ -60,6 +61,8 @@ public final class SectionImportTypeListenerTest {
     private PendingScope scope;
     @Mock
     private MutableTypeResolver typeResolver;
+    @Mock
+    private SemanticErrorListener errorListener;
 
     @Before
     public void setUp() {
@@ -67,11 +70,12 @@ public final class SectionImportTypeListenerTest {
 
         when(scope.getImportTypeResolver()).thenReturn(typeResolver);
         when(sectionScopeBuilder.currentScope()).thenReturn(scope);
+        when(typeResolver.registerTypeName(isA(String.class), isA(String.class))).thenReturn(completedFuture(null));
     }
 
     @After
     public void postConditions() {
-        verifyNoMoreInteractions(typeResolver, sectionScopeBuilder);
+        verifyNoMoreInteractions(typeResolver, sectionScopeBuilder, errorListener);
     }
 
     @Test
@@ -83,7 +87,7 @@ public final class SectionImportTypeListenerTest {
         final SpeckyLexer lexer = new SpeckyLexer(stream);
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
-        final SectionImportTypeListener listener = new SectionImportTypeListener(sectionScopeBuilder);
+        final SectionImportTypeListener listener = new SectionImportTypeListener(errorListener, sectionScopeBuilder);
         parser.addParseListener(listener);
 
         parser.spec();

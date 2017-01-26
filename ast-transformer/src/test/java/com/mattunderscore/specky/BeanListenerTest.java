@@ -68,11 +68,11 @@ public final class BeanListenerTest {
         final SectionScopeResolver sectionScopeResolver =
             new SectionScopeResolver(typeResolver);
         final FileTypeListener fileTypeListener =
-            new FileTypeListener(typeResolver);
+            new FileTypeListener(errorListener, typeResolver);
         final SectionLicenceListener sectionLicenceListener =
             new SectionLicenceListener(sectionScopeResolver, errorListener);
         final SectionImportTypeListener sectionImportTypeListener =
-            new SectionImportTypeListener(sectionScopeResolver);
+            new SectionImportTypeListener(errorListener, sectionScopeResolver);
         final SectionImportValueListener sectionImportValueListener =
             new SectionImportValueListener(errorListener, sectionScopeResolver);
         final SectionScopeListener sectionScopeListener =
@@ -156,11 +156,11 @@ public final class BeanListenerTest {
         final SectionScopeResolver sectionScopeResolver =
             new SectionScopeResolver(typeResolver);
         final FileTypeListener fileTypeListener =
-            new FileTypeListener(typeResolver);
+            new FileTypeListener(errorListener, typeResolver);
         final SectionLicenceListener sectionLicenceListener =
             new SectionLicenceListener(sectionScopeResolver, errorListener);
         final SectionImportTypeListener sectionImportTypeListener =
-            new SectionImportTypeListener(sectionScopeResolver);
+            new SectionImportTypeListener(errorListener, sectionScopeResolver);
         final SectionImportValueListener sectionImportValueListener =
             new SectionImportValueListener(errorListener, sectionScopeResolver);
         final SectionScopeListener sectionScopeListener =

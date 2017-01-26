@@ -1,5 +1,5 @@
 
-licence """Copyright © 2016 Matthew Champion
+licence """Copyright © 2016-2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@ author "Matt Champion"
 package com.example
 
 
-bean PersonBean : PersonType
+bean PersonTypeBean : PersonType
     properties
         long birthTimestamp "Timestamp of birth."
     options

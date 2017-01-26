@@ -1,4 +1,4 @@
-/* Copyright © 2016 Matthew Champion
+/* Copyright © 2016-2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -38,13 +38,15 @@ import net.jcip.annotations.NotThreadSafe;
  */
 @NotThreadSafe
 public final class FileTypeListener extends SpeckyBaseListener {
+    private final SemanticErrorListener errorListener;
     private final MutableTypeResolver typeResolver;
     private String packageName;
 
     /**
      * Constructor.
      */
-    public FileTypeListener(MutableTypeResolver typeResolver) {
+    public FileTypeListener(SemanticErrorListener errorListener, MutableTypeResolver typeResolver) {
+        this.errorListener = errorListener;
         this.typeResolver = typeResolver;
     }
 
@@ -55,11 +57,21 @@ public final class FileTypeListener extends SpeckyBaseListener {
 
     @Override
     public void exitTypeSpec(Specky.TypeSpecContext ctx) {
-        typeResolver.registerTypeName(packageName, ctx.Identifier().getText());
+        typeResolver
+            .registerTypeName(packageName, ctx.Identifier().getText())
+            .exceptionally(t -> {
+                errorListener.onSemanticError(t.getMessage(), ctx);
+                return null;
+            });
     }
 
     @Override
     public void exitImplementationSpec(Specky.ImplementationSpecContext ctx) {
-        typeResolver.registerTypeName(packageName, ctx.Identifier().getText());
+        typeResolver
+            .registerTypeName(packageName, ctx.Identifier().getText())
+            .exceptionally(t -> {
+                errorListener.onSemanticError(t.getMessage(), ctx);
+                return null;
+            });
     }
 }

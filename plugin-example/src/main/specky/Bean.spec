@@ -29,7 +29,7 @@ author "Matt Champion"
 package com.example
 
 
-bean PersonBean : PersonType
+bean PersonTypeBean : PersonType
     properties
         long birthTimestamp "Timestamp of birth."
     options

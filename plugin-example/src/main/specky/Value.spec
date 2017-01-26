@@ -1,5 +1,5 @@
 
-licence """Copyright © 2016 Matthew Champion
+licence """Copyright © 2016-2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@ imports
     com.mattunderscore.example.ExtraType
 
 
-value PersonValue
+value PersonTypeValue
     properties
         Integer id default 5
         String name
