@@ -38,27 +38,33 @@ public final class CompositeTypeResolverTest {
 
     @Test
     public void resolveJava() throws Exception {
+        final MutableTypeResolver mutableResolver = new SpecTypeResolver();
+        mutableResolver.registerTypeName("com.example", "Test");
         final TypeResolver resolver = new CompositeTypeResolver()
                 .registerResolver(new JavaStandardTypeResolver())
-                .registerResolver(new SpecTypeResolver().registerTypeName("com.example", "Test"));
+                .registerResolver(mutableResolver);
 
         assertEquals("java.lang.String", resolver.resolve("String").get());
     }
 
     @Test
     public void resolveSpec() throws Exception {
+        final MutableTypeResolver mutableResolver = new SpecTypeResolver();
+        mutableResolver.registerTypeName("com.example", "Test");
         final TypeResolver resolver = new CompositeTypeResolver()
                 .registerResolver(new JavaStandardTypeResolver())
-                .registerResolver(new SpecTypeResolver().registerTypeName("com.example", "Test"));
+                .registerResolver(mutableResolver);
 
         assertEquals("com.example.Test", resolver.resolve("Test").get());
     }
 
     @Test
     public void unknown() {
+        final MutableTypeResolver mutableResolver = new SpecTypeResolver();
+        mutableResolver.registerTypeName("com.example", "Test");
         final TypeResolver resolver = new CompositeTypeResolver()
                 .registerResolver(new JavaStandardTypeResolver())
-                .registerResolver(new SpecTypeResolver().registerTypeName("com.example", "Test"));
+                .registerResolver(mutableResolver);
 
         assertFalse(resolver.resolve("XTest").isPresent());
     }

@@ -1,4 +1,4 @@
-/* Copyright © 2016 Matthew Champion
+/* Copyright © 2016-2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -30,6 +30,7 @@ import static java.util.Optional.ofNullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * {@link TypeResolver} for specified types.
@@ -40,11 +41,21 @@ public final class SpecTypeResolver implements MutableTypeResolver {
     private final Map<String, String> specs = new HashMap<>();
 
     @Override
-    public MutableTypeResolver registerTypeName(String packageName, String typeName) {
+    public CompletableFuture<Void> registerTypeName(String packageName, String typeName) {
         final String fullyQualifiedTypeName = packageName + "." + typeName;
-        specs.put(typeName, fullyQualifiedTypeName);
-        specs.put(fullyQualifiedTypeName, fullyQualifiedTypeName);
-        return this;
+        final String presentFully = specs.putIfAbsent(fullyQualifiedTypeName, fullyQualifiedTypeName);
+        final String presentShort = specs.putIfAbsent(typeName, fullyQualifiedTypeName);
+
+        final CompletableFuture<Void> result = new CompletableFuture<>();
+
+        if (presentFully != null || presentShort != null) {
+            result.completeExceptionally(new IllegalArgumentException("The type cannot be registered"));
+        }
+        else {
+            result.complete(null);
+        }
+
+        return result;
     }
 
     @Override

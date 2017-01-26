@@ -1,4 +1,4 @@
-/* Copyright © 2016 Matthew Champion
+/* Copyright © 2016-2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -27,6 +27,9 @@ package com.mattunderscore.specky.type.resolver;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.concurrent.CompletableFuture;
 
 import org.junit.Test;
 
@@ -38,25 +41,37 @@ public class SpecTypeResolverTest {
 
     @Test
     public void resolve() {
-        final TypeResolver resolver = new SpecTypeResolver()
-            .registerTypeName("com.example", "Test");
+        final MutableTypeResolver resolver = new SpecTypeResolver();
+        resolver.registerTypeName("com.example", "Test");
 
         assertEquals("com.example.Test", resolver.resolve("Test").get());
     }
 
     @Test
     public void get() {
-        final TypeResolver resolver = new SpecTypeResolver()
-            .registerTypeName("com.example", "Test");
+        final MutableTypeResolver resolver = new SpecTypeResolver();
+        resolver.registerTypeName("com.example", "Test");
 
         assertEquals("com.example.Test", resolver.resolve("com.example.Test").get());
     }
 
     @Test
     public void unknown() {
-        final TypeResolver resolver = new SpecTypeResolver()
-            .registerTypeName("com.example", "Test");
+        final MutableTypeResolver resolver = new SpecTypeResolver();
+        resolver.registerTypeName("com.example", "Test");
 
         assertFalse(resolver.resolve("XTest").isPresent());
+    }
+
+    @Test
+    public void registerDuplicate() {
+        final MutableTypeResolver resolver = new SpecTypeResolver();
+        final CompletableFuture<Void> res0 = resolver.registerTypeName("com.example", "Test");
+        final CompletableFuture<Void> res1 = resolver.registerTypeName("com.example", "Test");
+
+        assertTrue(res0.isDone());
+        assertFalse(res0.isCompletedExceptionally());
+        assertTrue(res1.isDone());
+        assertTrue(res1.isCompletedExceptionally());
     }
 }
