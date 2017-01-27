@@ -8,12 +8,15 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.util.List;
 
+import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -35,10 +38,17 @@ import com.squareup.javapoet.CodeBlock;
 public final class ModelGeneratorTest {
     @Mock
     private SemanticErrorListener errorListener;
+    @Mock
+    private ANTLRErrorListener syntaxErrorListener;
 
     @Before
     public void setUp() {
         initMocks(this);
+    }
+
+    @After
+    public void postConditions() {
+        verifyNoMoreInteractions(errorListener, syntaxErrorListener);
     }
 
     @Test
@@ -48,7 +58,7 @@ public final class ModelGeneratorTest {
             .getClassLoader()
             .getResourceAsStream("SectionTest.spec"));
 
-        final ModelGenerator modelGenerator = new ModelGenerator(errorListener);
+        final ModelGenerator modelGenerator = new ModelGenerator(errorListener, syntaxErrorListener);
 
         final SpecDesc specDesc = modelGenerator.build(singletonList(stream));
 
@@ -160,7 +170,7 @@ public final class ModelGeneratorTest {
             .getClassLoader()
             .getResourceAsStream("Bean.spec"));
 
-        final ModelGenerator modelGenerator = new ModelGenerator(errorListener);
+        final ModelGenerator modelGenerator = new ModelGenerator(errorListener, syntaxErrorListener);
 
         final SpecDesc specDesc = modelGenerator.build(asList(stream0, stream1));
 
@@ -229,7 +239,7 @@ public final class ModelGeneratorTest {
             .getClassLoader()
             .getResourceAsStream("optional.spec"));
 
-        final ModelGenerator modelGenerator = new ModelGenerator(errorListener);
+        final ModelGenerator modelGenerator = new ModelGenerator(errorListener, syntaxErrorListener);
 
         final SpecDesc specDesc = modelGenerator.build(singletonList(stream));
 

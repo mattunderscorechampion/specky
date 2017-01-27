@@ -41,4 +41,15 @@ public final class SpeckyFileStreamingContextTest {
 
         parsingContext.parse();
     }
+
+    @Test(expected = ParsingError.class)
+    public void badSyntax() throws IOException, ParsingError {
+        final SpeckyFileStreamingContext context = new SpeckyFileStreamingContext();
+
+        context.addFileToParse(Paths.get("src/test/specky/bad-syntax.spec"));
+
+        final SpeckyParsingContext parsingContext = context.open();
+
+        parsingContext.parse();
+    }
 }

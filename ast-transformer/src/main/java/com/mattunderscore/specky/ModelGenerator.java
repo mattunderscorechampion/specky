@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.UnbufferedTokenStream;
@@ -57,12 +58,14 @@ import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
 public final class ModelGenerator {
 
     private final SemanticErrorListener errorListener;
+    private final ANTLRErrorListener syntaxErrorListener;
 
     /**
      * Constructor.
      */
-    public ModelGenerator(SemanticErrorListener errorListener) {
+    public ModelGenerator(SemanticErrorListener errorListener, ANTLRErrorListener syntaxErrorListener) {
         this.errorListener = errorListener;
+        this.syntaxErrorListener = syntaxErrorListener;
     }
 
     /**
@@ -150,6 +153,7 @@ public final class ModelGenerator {
         parser.addParseListener(sectionScopeListener);
         parser.addParseListener(sectionAuthorListener);
         parser.addParseListener(sectionPackageListener);
+        parser.addErrorListener(syntaxErrorListener);
 
         return new FileContext(parser.spec(), sectionScopeResolver);
     }

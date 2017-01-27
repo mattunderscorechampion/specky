@@ -25,6 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky;
 
 import static com.mattunderscore.specky.CompositeSemanticErrorListener.composeListeners;
+import static com.mattunderscore.specky.CompositeSyntaxErrorListener.composeSyntaxListeners;
 import static com.mattunderscore.specky.ReportingSemanticErrorListener.reportTo;
 import static java.util.Collections.singletonList;
 
@@ -36,6 +37,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.ConsoleErrorListener;
 
 import com.mattunderscore.specky.model.SpecDesc;
 
@@ -56,9 +58,11 @@ public final class SpeckyParsingContext {
      */
     public SpeckyGeneratingContext parse() throws IOException, ParsingError {
         if (consumed.compareAndSet(false, true)) {
+            final CountingSyntaxErrorListener syntaxErrorCounter = new CountingSyntaxErrorListener();
             final CountingSemanticErrorListener errorCounter = new CountingSemanticErrorListener();
-            final ModelGenerator generator =
-                new ModelGenerator(composeListeners(errorCounter, reportTo(System.err)));
+            final ModelGenerator generator = new ModelGenerator(
+                composeListeners(errorCounter, reportTo(System.err)),
+                composeSyntaxListeners(syntaxErrorCounter, new ConsoleErrorListener()));
             final List<CharStream> streams = new ArrayList<>();
             for (final InputStream inputStream : streamsToParse) {
                 try {
@@ -72,7 +76,7 @@ public final class SpeckyParsingContext {
             @SuppressWarnings("PMD.PrematureDeclaration")
             final SpecDesc spec = generator.build(streams);
 
-            final int errorCount = errorCounter.getErrorCount();
+            final int errorCount = syntaxErrorCounter.getErrorCount() + errorCounter.getErrorCount();
             if (errorCount > 0) {
                 throw new ParsingError(errorCount);
             }
