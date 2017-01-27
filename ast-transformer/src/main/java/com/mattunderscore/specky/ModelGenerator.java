@@ -24,6 +24,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import static com.mattunderscore.specky.CompositeSyntaxErrorListener.composeSyntaxListeners;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -58,6 +59,7 @@ import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
 public final class ModelGenerator {
 
     private final SemanticErrorListener errorListener;
+    private final CountingSyntaxErrorListener errorCounter;
     private final ANTLRErrorListener syntaxErrorListener;
 
     /**
@@ -65,19 +67,25 @@ public final class ModelGenerator {
      */
     public ModelGenerator(SemanticErrorListener errorListener, ANTLRErrorListener syntaxErrorListener) {
         this.errorListener = errorListener;
-        this.syntaxErrorListener = syntaxErrorListener;
+        errorCounter = new CountingSyntaxErrorListener();
+        this.syntaxErrorListener = composeSyntaxListeners(errorCounter, syntaxErrorListener);
     }
 
     /**
-     * @return the list of {@link SpecDesc} from a {@link CharStream}
+     * @return the {@link SpecDesc} from a {@link CharStream} or null if there are syntax errors
      */
     public SpecDesc build(List<CharStream> input) {
         final SpecTypeResolver typeResolver = new SpecTypeResolver();
 
+        @SuppressWarnings("PMD.PrematureDeclaration")
         final List<FileContext> contexts = input
             .stream()
             .map(stream -> firstPass(stream, typeResolver))
             .collect(toList());
+
+        if (errorCounter.getErrorCount() > 0) {
+            return null;
+        }
 
         final List<AbstractTypeDesc> abstractTypes = contexts
             .stream()
