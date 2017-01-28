@@ -33,11 +33,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.mattunderscore.specky.constraint.model.BinaryPropositionExpression;
-import com.mattunderscore.specky.constraint.model.ConstraintOperator;
-import com.mattunderscore.specky.constraint.model.PredicateDesc;
 import com.mattunderscore.specky.constraint.model.Proposition;
 import com.mattunderscore.specky.constraint.model.PropositionalExpression;
-import com.mattunderscore.specky.constraint.model.SubjectModifier;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.Constraint_statementContext;
 
@@ -47,6 +44,8 @@ import com.mattunderscore.specky.parser.Specky.Constraint_statementContext;
  * @author Matt Champion on 05/12/2016
  */
 public final class ConstraintFactory {
+    private final PropositionFactory propositionFactory = new PropositionFactory();
+
     /**
      * @return a constraint
      */
@@ -63,12 +62,12 @@ public final class ConstraintFactory {
     private PropositionalExpression createConstraint(String propertyName, Specky.Constraint_expressionContext expression) {
         final List<Specky.Constraint_propositionContext> propositionContexts = expression.constraint_proposition();
         if (propositionContexts.size() == 1) {
-            return createConstraint(propertyName, propositionContexts.get(0));
+            return propositionFactory.createProposition(propertyName, propositionContexts.get(0));
         }
         else if (!expression.CONJUNCTION().isEmpty()) {
             final Iterator<Proposition> expressionIterator = propositionContexts
                 .stream()
-                .map(expr -> createConstraint(propertyName, expr))
+                .map(expr -> propositionFactory.createProposition(propertyName, expr))
                 .collect(toList())
                 .iterator();
 
@@ -89,7 +88,7 @@ public final class ConstraintFactory {
         else if (!expression.DISJUNCTION().isEmpty()) {
             final Iterator<Proposition> expressionIterator = propositionContexts
                 .stream()
-                .map(expr -> createConstraint(propertyName, expr))
+                .map(expr -> propositionFactory.createProposition(propertyName, expr))
                 .collect(toList())
                 .iterator();
 
@@ -109,95 +108,6 @@ public final class ConstraintFactory {
         }
         else {
             return createConstraint(propertyName, expression.constraint_expression());
-        }
-    }
-
-    private Proposition createConstraint(String propertyName, Specky.Constraint_propositionContext expression) {
-        final Specky.Constraint_predicateContext predicate = expression.constraint_predicate();
-        final Specky.Constraint_propositionContext subexpression = expression.constraint_proposition();
-
-        assert predicate != null || subexpression != null : "Should either be predicate or another expression";
-
-        if (predicate != null) {
-            return Proposition
-                .builder()
-                .predicate(
-                    PredicateDesc
-                        .builder()
-                        .subject(propertyName)
-                        .operator(toConstraintOperator(predicate.constraint_operator()))
-                        .literal(predicate.constraint_literal().getText())
-                        .build())
-                .build();
-        }
-        else if (expression.NEGATION() != null) {
-            final Proposition propositionToNegate = createConstraint(propertyName, subexpression);
-            final PredicateDesc predicateToNegate = propositionToNegate.getPredicate();
-            return Proposition
-                .builder()
-                .predicate(
-                    PredicateDesc
-                        .builder()
-                        .subject(predicateToNegate.getSubject())
-                        .subjectModifier(predicateToNegate.getSubjectModifier())
-                        .operator(negateOperator(predicateToNegate.getOperator()))
-                        .literal(predicateToNegate.getLiteral())
-                        .build())
-                .build();
-        }
-        else {
-            final Proposition propositionOfSubject = createConstraint(propertyName, subexpression);
-            final PredicateDesc predicateOfSubject = propositionOfSubject.getPredicate();
-            return Proposition
-                .builder()
-                .predicate(
-                    PredicateDesc
-                        .builder()
-                        .subject(propertyName)
-                        .subjectModifier(expression.HAS_SOME() != null ? SubjectModifier.HAS_SOME : SubjectModifier.SIZE_OF)
-                        .operator(predicateOfSubject.getOperator())
-                        .literal(predicateOfSubject.getLiteral())
-                        .build())
-                .build();
-        }
-    }
-
-    private ConstraintOperator negateOperator(ConstraintOperator operator) {
-        switch (operator) {
-            case LESS_THAN_OR_EQUAL:
-                return ConstraintOperator.GREATER_THAN;
-            case GREATER_THAN_OR_EQUAL:
-                return ConstraintOperator.LESS_THAN;
-            case LESS_THAN:
-                return ConstraintOperator.GREATER_THAN_OR_EQUAL;
-            case GREATER_THAN:
-                return ConstraintOperator.LESS_THAN_OR_EQUAL;
-            case EQUAL_TO:
-                return ConstraintOperator.NOT_EQUAL_TO;
-            default:
-                throw new IllegalArgumentException("Unsupported operator");
-        }
-    }
-
-    private ConstraintOperator toConstraintOperator(Specky.Constraint_operatorContext operatorContext) {
-        final String operatorContextText = operatorContext.getText();
-        if ("<=".equals(operatorContextText)) {
-            return ConstraintOperator.LESS_THAN_OR_EQUAL;
-        }
-        else if (">=".equals(operatorContextText)) {
-            return ConstraintOperator.GREATER_THAN_OR_EQUAL;
-        }
-        else if ("<".equals(operatorContextText)) {
-            return ConstraintOperator.LESS_THAN;
-        }
-        else if (">".equals(operatorContextText)) {
-            return ConstraintOperator.GREATER_THAN;
-        }
-        else if ("=".equals(operatorContextText)) {
-            return ConstraintOperator.EQUAL_TO;
-        }
-        else {
-            throw new IllegalArgumentException("Unsupported operator");
         }
     }
 }
