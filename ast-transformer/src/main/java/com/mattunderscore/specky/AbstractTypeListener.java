@@ -40,6 +40,7 @@ import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.generator.scope.SectionScopeResolver;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyBaseListener;
+import com.mattunderscore.specky.proposition.ConstraintFactory;
 import com.mattunderscore.specky.proposition.Normaliser;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.squareup.javapoet.CodeBlock;

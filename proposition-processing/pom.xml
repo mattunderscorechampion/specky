@@ -18,6 +18,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.mattunderscore.code.generation.specky</groupId>
+            <artifactId>dsl-parser</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.bpodgursky</groupId>
             <artifactId>jbool_expressions</artifactId>
         </dependency>
