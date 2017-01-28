@@ -27,7 +27,6 @@ package com.mattunderscore.specky;
 import static com.mattunderscore.specky.CompositeSemanticErrorListener.composeListeners;
 import static com.mattunderscore.specky.CompositeSyntaxErrorListener.composeSyntaxListeners;
 import static com.mattunderscore.specky.ReportingSemanticErrorListener.reportTo;
-import static java.util.Collections.singletonList;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -81,7 +80,7 @@ public final class SpeckyParsingContext {
                 throw new ParsingError(errorCount);
             }
 
-            return new SpeckyGeneratingContext(singletonList(spec));
+            return new SpeckyGeneratingContext(spec);
         }
         else {
             throw new IllegalStateException("Context has already been parsed");

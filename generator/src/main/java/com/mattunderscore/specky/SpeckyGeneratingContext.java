@@ -31,11 +31,9 @@ import static com.mattunderscore.specky.generator.object.method.ToStringGenerato
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -78,7 +76,7 @@ import com.squareup.javapoet.JavaFile;
  * @author Matt Champion on 02/07/2016
  */
 public final class SpeckyGeneratingContext {
-    private final List<SpecDesc> specs;
+    private final SpecDesc spec;
     private final AtomicBoolean consumed = new AtomicBoolean(false);
     private volatile ToStringGenerator toStringGenerator =
         new ToStringGenerator(
@@ -88,8 +86,8 @@ public final class SpeckyGeneratingContext {
     private MethodGeneratorForProperty<ImplementationDesc> accessorGenerator = new AccessorGenerator();
     private MethodGeneratorForProperty<ImplementationDesc> mutatorGenerator = new MutatorGenerator();
 
-    /*package*/ SpeckyGeneratingContext(List<SpecDesc> specs) {
-        this.specs = specs;
+    /*package*/ SpeckyGeneratingContext(SpecDesc spec) {
+        this.spec = spec;
     }
 
     /**
@@ -168,12 +166,7 @@ public final class SpeckyGeneratingContext {
                     singletonList(new AbstractAccessorGenerator()),
                     emptyList()));
 
-            final List<JavaFile> javaFiles = specs
-                .stream()
-                .map(generator::generate)
-                .flatMap(Collection::stream)
-                .collect(toList());
-
+            final List<JavaFile> javaFiles = generator.generate(spec);
             return new SpeckyWritingContext(javaFiles);
         }
         else {
