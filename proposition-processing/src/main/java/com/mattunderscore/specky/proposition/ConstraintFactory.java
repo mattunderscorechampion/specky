@@ -1,5 +1,4 @@
-/* Copyright © 2016 Matthew Champion
-All rights reserved.
+/* Copyright © 2016-2017 Matthew Champion All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -32,6 +31,7 @@ import static java.util.stream.Collectors.toList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.mattunderscore.specky.constraint.model.BinaryConstraintOperator;
 import com.mattunderscore.specky.constraint.model.BinaryPropositionExpression;
 import com.mattunderscore.specky.constraint.model.Proposition;
 import com.mattunderscore.specky.constraint.model.PropositionalExpression;
@@ -54,9 +54,7 @@ public final class ConstraintFactory {
             return null;
         }
 
-        final Specky.Constraint_expressionContext expression =
-            statementContext.constraint_expression();
-        return createConstraint(propertyName, expression);
+        return createConstraint(propertyName, statementContext.constraint_expression());
     }
 
     private PropositionalExpression createConstraint(String propertyName, Specky.Constraint_expressionContext expression) {
@@ -65,49 +63,40 @@ public final class ConstraintFactory {
             return propositionFactory.createProposition(propertyName, propositionContexts.get(0));
         }
         else if (!expression.CONJUNCTION().isEmpty()) {
-            final Iterator<Proposition> expressionIterator = propositionContexts
+            final List<Proposition> propositions = propositionContexts
                 .stream()
                 .map(expr -> propositionFactory.createProposition(propertyName, expr))
-                .collect(toList())
-                .iterator();
+                .collect(toList());
 
-            PropositionalExpression prop = expressionIterator.next();
-
-            do {
-                prop = BinaryPropositionExpression
-                    .builder()
-                    .operation(CONJUNCTION)
-                    .expression0(prop)
-                    .expression1(expressionIterator.next())
-                    .build();
-            }
-            while (expressionIterator.hasNext());
-
-            return prop;
+            return joinPropositions(CONJUNCTION, propositions);
         }
         else if (!expression.DISJUNCTION().isEmpty()) {
-            final Iterator<Proposition> expressionIterator = propositionContexts
+            final List<Proposition> propositions = propositionContexts
                 .stream()
                 .map(expr -> propositionFactory.createProposition(propertyName, expr))
-                .collect(toList())
-                .iterator();
+                .collect(toList());
 
-            PropositionalExpression prop = expressionIterator.next();
-
-            do {
-                prop = BinaryPropositionExpression
-                    .builder()
-                    .operation(DISJUNCTION)
-                    .expression0(prop)
-                    .expression1(expressionIterator.next())
-                    .build();
-            }
-            while (expressionIterator.hasNext());
-
-            return prop;
+            return joinPropositions(DISJUNCTION, propositions);
         }
         else {
             return createConstraint(propertyName, expression.constraint_expression());
         }
+    }
+
+    private PropositionalExpression joinPropositions(BinaryConstraintOperator operation, Iterable<Proposition> propositions) {
+        final Iterator<Proposition> expressionIterator = propositions.iterator();
+
+        PropositionalExpression prop = expressionIterator.next();
+        do {
+            prop = BinaryPropositionExpression
+                .builder()
+                .operation(operation)
+                .expression0(prop)
+                .expression1(expressionIterator.next())
+                .build();
+        }
+        while (expressionIterator.hasNext());
+
+        return prop;
     }
 }
