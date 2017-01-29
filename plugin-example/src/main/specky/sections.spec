@@ -34,9 +34,9 @@ type PersonInDefaultSection "Description of a person."
         String name "Persons name."
         long birthTimestamp "Timestamp of persons birth."
 
-bean PersonBeanInDefaultSection : PersonInDefaultSection "Bean implementation of {@link Person}."
+bean PersonBeanInDefaultSection : PersonInDefaultSection "Bean implementation of {@link PersonInDefaultSection}."
 
-value PersonValueInDefaultSection : PersonInDefaultSection "Value implementation of {@link Person}."
+value PersonValueInDefaultSection : PersonInDefaultSection "Value implementation of {@link PersonInDefaultSection}."
     options
         immutable builder
 
@@ -52,9 +52,9 @@ type PersonInSection "Description of a person."
         String name "Persons name."
         long birthTimestamp "Timestamp of persons birth."
 
-bean PersonBeanInSection : PersonInSection "Bean implementation of {@link Person}."
+bean PersonBeanInSection : PersonInSection "Bean implementation of {@link PersonInSection}."
 
-value PersonValueInSection : PersonInSection "Value implementation of {@link Person}."
+value PersonValueInSection : PersonInSection "Value implementation of {@link PersonInSection}."
     options
         immutable builder
 
