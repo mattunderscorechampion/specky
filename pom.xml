@@ -11,7 +11,7 @@
     <groupId>com.mattunderscore.code.generation.specky</groupId>
     <artifactId>specky-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.6.1-SNAPSHOT</version>
+    <version>0.7.0</version>
 
     <modules>
         <module>javapoet-utils</module>
@@ -32,7 +32,7 @@
         <connection>scm:git:https://github.com/mattunderscorechampion/specky.git</connection>
         <developerConnection>scm:git:git@github.com:mattunderscorechampion/specky.git</developerConnection>
         <url>https://github.com/mattunderscorechampion/specky</url>
-        <tag>HEAD</tag>
+        <tag>specky-parent-0.7.0</tag>
     </scm>
 
     <dependencyManagement>
