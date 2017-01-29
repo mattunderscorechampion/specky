@@ -14,7 +14,7 @@
             <plugin>
                 <groupId>com.mattunderscore.code.generation.specky</groupId>
                 <artifactId>specky-maven-plugin</artifactId>
-                <version>0.6.0</version>
+                <version>0.7.0</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
