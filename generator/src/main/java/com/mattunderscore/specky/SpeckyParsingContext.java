@@ -27,6 +27,7 @@ package com.mattunderscore.specky;
 import static com.mattunderscore.specky.CompositeSemanticErrorListener.composeListeners;
 import static com.mattunderscore.specky.CompositeSyntaxErrorListener.composeSyntaxListeners;
 import static com.mattunderscore.specky.ReportingSemanticErrorListener.reportTo;
+import static com.mattunderscore.specky.ReportingSyntaxErrorListener.reportSyntaxErrorsTo;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +37,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.ConsoleErrorListener;
 
 import com.mattunderscore.specky.model.SpecDesc;
 
@@ -61,7 +61,7 @@ public final class SpeckyParsingContext {
             final CountingSemanticErrorListener errorCounter = new CountingSemanticErrorListener();
             final ModelGenerator generator = new ModelGenerator(
                 composeListeners(errorCounter, reportTo(System.err)),
-                composeSyntaxListeners(syntaxErrorCounter, new ConsoleErrorListener()));
+                composeSyntaxListeners(syntaxErrorCounter, reportSyntaxErrorsTo(System.err)));
             final List<CharStream> streams = new ArrayList<>();
             for (final InputStream inputStream : streamsToParse) {
                 try {
