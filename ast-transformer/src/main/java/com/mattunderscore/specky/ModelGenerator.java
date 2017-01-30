@@ -133,6 +133,8 @@ public final class ModelGenerator {
 
     private FileContext firstPass(CharStream input, MutableTypeResolver typeResolver) {
         final SpeckyLexer lexer = new SpeckyLexer(input);
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(syntaxErrorListener);
 
         final SectionScopeResolver sectionScopeResolver =
             new SectionScopeResolver(typeResolver);
@@ -161,6 +163,7 @@ public final class ModelGenerator {
         parser.addParseListener(sectionScopeListener);
         parser.addParseListener(sectionAuthorListener);
         parser.addParseListener(sectionPackageListener);
+        parser.removeErrorListeners();
         parser.addErrorListener(syntaxErrorListener);
 
         return new FileContext(parser.spec(), sectionScopeResolver);
