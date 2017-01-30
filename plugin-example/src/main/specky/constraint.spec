@@ -14,9 +14,9 @@ is implicitly the property. The subject modifier is currently only used by colle
 be applied to its contents. The operator identifies the type of comparison to be applied. The modified subject is one
 operand of the operator. The literal value is the other operand.
 
-A constraint must currently be specified in conjunctive normal form and its satisfiability is not checked."""
+A constraint's satisfiability is not checked."""
 
-licence """Copyright © 2016 Matthew Champion
+licence """Copyright © 2016-2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

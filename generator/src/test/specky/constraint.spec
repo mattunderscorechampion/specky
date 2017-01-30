@@ -14,9 +14,9 @@ is implicitly the property. The subject modifier is currently only used by colle
 be applied to its contents. The operator identifies the type of comparison to be applied. The modified subject is one
 operand of the operator. The literal value is the other operand.
 
-A constraint must currently be specified in conjunctive normal form and its satisfiability is not checked."""
+A constraint's satisfiability is not checked."""
 
-licence """Copyright © 2016 Matthew Champion
+licence """Copyright © 2016-2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -43,12 +43,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."""
 
 author "Matt Champion"
 
-package com.mattunderscore.specky.constraint.model.test
+package com.mattunderscore.specky.constraint.model
 
 imports
-    com.mattunderscore.specky.constraint.model.test.BinaryConstraintOperator
-    com.mattunderscore.specky.constraint.model.test.ConstraintOperator
-    com.mattunderscore.specky.constraint.model.test.SubjectModifier default SubjectModifier.IDENTITY
+    com.mattunderscore.specky.constraint.model.BinaryConstraintOperator
+    com.mattunderscore.specky.constraint.model.ConstraintOperator
+    com.mattunderscore.specky.constraint.model.SubjectModifier default SubjectModifier.IDENTITY
 
 value PredicateDesc "Description of a predicate."
     properties
@@ -68,5 +68,21 @@ value NFDisjointPredicates "Disjunction of predicates."
 value NFConjoinedDisjointPredicates "Conjunction of disjunctions of predicates."
     properties
         List<NFDisjointPredicates> predicates "The disjunctions of predicates."
+    options
+        immutable builder
+
+type PropositionalExpression
+
+value Proposition : PropositionalExpression
+    properties
+        PredicateDesc predicate
+    options
+        immutable builder
+
+value BinaryPropositionExpression : PropositionalExpression
+    properties
+        PropositionalExpression expression0
+        BinaryConstraintOperator operation
+        PropositionalExpression expression1
     options
         immutable builder
