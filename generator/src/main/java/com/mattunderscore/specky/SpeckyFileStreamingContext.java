@@ -42,6 +42,7 @@ import com.mattunderscore.specky.context.file.FileContext;
 public final class SpeckyFileStreamingContext {
     private final List<Path> filesToParse = new ArrayList<>();
     private final AtomicBoolean consumed = new AtomicBoolean(false);
+    private final ReportingFileErrorListener errorListener = new ReportingFileErrorListener(System.err);
 
     /**
      * Constructor.
@@ -73,6 +74,7 @@ public final class SpeckyFileStreamingContext {
                     input = Files.newInputStream(path);
                 }
                 catch (IOException e) {
+                    errorListener.onException(path, "The file cannot be opened", e);
                     continue;
                 }
 
@@ -81,7 +83,13 @@ public final class SpeckyFileStreamingContext {
                     fileContexts.add(context);
                 }
                 catch (IOException e) {
-                    input.close();
+                    errorListener.onException(path, "The file cannot be read", e);
+                    try {
+                        input.close();
+                    }
+                    catch (IOException e2) {
+                        errorListener.onException(path, "The failed stream cannot be closed", e2);
+                    }
                 }
             }
 
