@@ -68,17 +68,24 @@ public final class ReportingSyntaxErrorListener extends BaseErrorListener {
             unexpectedInput((Token) offendingSymbol, line, charPositionInLine, (InputMismatchException) e, recognizer);
         }
         else {
-            ps.printf("line %d:%d %s\n", line, charPositionInLine, msg);
+            ps.printf("%s\nAt line %d, at column %d\n---\n", msg, line, charPositionInLine);
         }
     }
 
     private void tokenRecognition(int line, int charPositionInLine, LexerNoViableAltException e) {
         final String badToken = e.getInputStream().getText(Interval.of(e.getStartIndex(), e.getStartIndex()));
         if (badToken.startsWith("\"")) {
-            ps.printf("line %d:%d begins an unterminated string literal\n", line, charPositionInLine);
+            ps.printf(
+                "Found an unterminated string literal\nAt line %d, at column %d\n---\n",
+                line,
+                charPositionInLine);
         }
         else {
-            ps.printf("line %d:%d has an unrecognised token %s\n", line, charPositionInLine, badToken);
+            ps.printf(
+                "Encountered an unrecognised token\nSee: %s\nAt line %d, at column %d\n---\n",
+                badToken,
+                line,
+                charPositionInLine);
         }
     }
 
@@ -90,9 +97,7 @@ public final class ReportingSyntaxErrorListener extends BaseErrorListener {
             Recognizer<?, ?> recognizer) {
 
         ps.printf(
-            "line %d:%d encountered %s was expecting one of %s\n",
-            line,
-            charPositionInLine,
+            "Encountered an unexpected token\nEncountered %s\nExpecting one of %s\nAt line %d, at column %d\n---\n",
             getTokenName(offendingSymbol.getType(), recognizer),
             e
                 .getExpectedTokens()
@@ -100,7 +105,9 @@ public final class ReportingSyntaxErrorListener extends BaseErrorListener {
                 .stream()
                 .map(tokenType -> getTokenName(tokenType, recognizer))
                 .distinct()
-                .collect(joining(", ")));
+                .collect(joining(", ")),
+            line,
+            charPositionInLine);
     }
 
     private String getTokenName(int tokenType, Recognizer<?, ?> recognizer) {
