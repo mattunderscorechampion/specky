@@ -32,6 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.antlr.v4.runtime.ANTLRInputStream;
+
+import com.mattunderscore.specky.context.file.FileContext;
+
 /**
  * @author Matt Champion 15/01/2017
  */
@@ -60,12 +64,28 @@ public final class SpeckyFileStreamingContext {
     public synchronized SpeckyParsingContext open() throws IOException {
         if (consumed.compareAndSet(false, true)) {
 
-            final List<InputStream> streamsToParse = new ArrayList<>();
+            final List<FileContext> fileContexts = new ArrayList<>();
             for (final Path path : filesToParse) {
-                streamsToParse.add(Files.newInputStream(path));
+                final FileContext context = new FileContext();
+                context.setFile(path);
+                final InputStream input;
+                try {
+                    input = Files.newInputStream(path);
+                }
+                catch (IOException e) {
+                    continue;
+                }
+
+                try {
+                    context.setAntlrStream(new ANTLRInputStream(input));
+                    fileContexts.add(context);
+                }
+                catch (IOException e) {
+                    input.close();
+                }
             }
 
-            return new SpeckyParsingContext(streamsToParse);
+            return new SpeckyParsingContext(fileContexts);
         }
         else {
             throw new IllegalStateException("Context has already been parsed");

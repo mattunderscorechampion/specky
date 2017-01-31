@@ -28,16 +28,15 @@ import static com.mattunderscore.specky.CompositeSemanticErrorListener.composeLi
 import static com.mattunderscore.specky.CompositeSyntaxErrorListener.composeSyntaxListeners;
 import static com.mattunderscore.specky.ReportingSemanticErrorListener.reportTo;
 import static com.mattunderscore.specky.ReportingSyntaxErrorListener.reportSyntaxErrorsTo;
+import static java.util.stream.Collectors.toList;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 
+import com.mattunderscore.specky.context.file.FileContext;
 import com.mattunderscore.specky.model.SpecDesc;
 
 /**
@@ -45,10 +44,10 @@ import com.mattunderscore.specky.model.SpecDesc;
  */
 public final class SpeckyParsingContext {
     private final AtomicBoolean consumed = new AtomicBoolean(false);
-    private final List<InputStream> streamsToParse;
+    private final List<FileContext> fileContexts;
 
-    /*package*/ SpeckyParsingContext(List<InputStream> streamsToParse) {
-        this.streamsToParse = streamsToParse;
+    /*package*/ SpeckyParsingContext(List<FileContext> fileContexts) {
+        this.fileContexts = fileContexts;
     }
 
     /**
@@ -62,15 +61,10 @@ public final class SpeckyParsingContext {
             final ModelGenerator generator = new ModelGenerator(
                 composeListeners(errorCounter, reportTo(System.err)),
                 composeSyntaxListeners(syntaxErrorCounter, reportSyntaxErrorsTo(System.err)));
-            final List<CharStream> streams = new ArrayList<>();
-            for (final InputStream inputStream : streamsToParse) {
-                try {
-                    streams.add(new ANTLRInputStream(inputStream));
-                }
-                catch (IOException e) {
-                    inputStream.close();
-                }
-            }
+            final List<CharStream> streams = fileContexts
+                .stream()
+                .map(FileContext::getAntlrStream)
+                .collect(toList());
 
             @SuppressWarnings("PMD.PrematureDeclaration")
             final SpecDesc spec = generator.build(streams);
