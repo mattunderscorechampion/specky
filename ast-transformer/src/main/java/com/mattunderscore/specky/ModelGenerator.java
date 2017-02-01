@@ -24,21 +24,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
-import static com.mattunderscore.specky.CompositeSyntaxErrorListener.composeSyntaxListeners;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
-
-import org.antlr.v4.runtime.ANTLRErrorListener;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CommonToken;
-import org.antlr.v4.runtime.UnbufferedTokenStream;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-
+import com.mattunderscore.specky.context.file.FileContext;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
@@ -50,6 +36,21 @@ import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyLexer;
 import com.mattunderscore.specky.type.resolver.MutableTypeResolver;
 import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
+import org.antlr.v4.runtime.BaseErrorListener;
+import org.antlr.v4.runtime.CommonToken;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
+import org.antlr.v4.runtime.UnbufferedTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import static com.mattunderscore.specky.CompositeSyntaxErrorListener.composeSyntaxListeners;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Processor for the ANTLR4 generated AST. Returns a better representation of the DSL.
@@ -60,25 +61,25 @@ public final class ModelGenerator {
 
     private final SemanticErrorListener errorListener;
     private final CountingSyntaxErrorListener errorCounter;
-    private final ANTLRErrorListener syntaxErrorListener;
+    private final SyntaxErrorListener syntaxErrorListener;
 
     /**
      * Constructor.
      */
-    public ModelGenerator(SemanticErrorListener errorListener, ANTLRErrorListener syntaxErrorListener) {
+    public ModelGenerator(SemanticErrorListener errorListener, SyntaxErrorListener syntaxErrorListener) {
         this.errorListener = errorListener;
         errorCounter = new CountingSyntaxErrorListener();
         this.syntaxErrorListener = composeSyntaxListeners(errorCounter, syntaxErrorListener);
     }
 
     /**
-     * @return the {@link SpecDesc} from a {@link CharStream} or null if there are syntax errors
+     * @return the {@link SpecDesc} from a list of {@link FileContext} or null if there are syntax errors
      */
-    public SpecDesc build(List<CharStream> input) {
+    public SpecDesc build(List<FileContext> input) {
         final SpecTypeResolver typeResolver = new SpecTypeResolver();
 
         @SuppressWarnings("PMD.PrematureDeclaration")
-        final List<FileContext> contexts = input
+        final List<ParseContext> contexts = input
             .stream()
             .map(stream -> firstPass(stream, typeResolver))
             .collect(toList());
@@ -131,10 +132,30 @@ public final class ModelGenerator {
             .build();
     }
 
-    private FileContext firstPass(CharStream input, MutableTypeResolver typeResolver) {
-        final SpeckyLexer lexer = new SpeckyLexer(input);
+    private ParseContext firstPass(FileContext fileContext, MutableTypeResolver typeResolver) {
+        final SpeckyLexer lexer = new SpeckyLexer(fileContext.getAntlrStream());
         lexer.removeErrorListeners();
-        lexer.addErrorListener(syntaxErrorListener);
+        final BaseErrorListener syntaxErrListener = new BaseErrorListener() {
+            @Override
+            public void syntaxError(
+                    Recognizer<?, ?> recognizer,
+                    Object offendingSymbol,
+                    int line,
+                    int charPositionInLine,
+                    String msg,
+                    RecognitionException e) {
+
+                syntaxErrorListener.syntaxError(
+                    fileContext.getFile(),
+                    recognizer,
+                    offendingSymbol,
+                    line,
+                    charPositionInLine,
+                    msg,
+                    e);
+            }
+        };
+        lexer.addErrorListener(syntaxErrListener);
 
         final SectionScopeResolver sectionScopeResolver =
             new SectionScopeResolver(typeResolver);
@@ -164,9 +185,9 @@ public final class ModelGenerator {
         parser.addParseListener(sectionAuthorListener);
         parser.addParseListener(sectionPackageListener);
         parser.removeErrorListeners();
-        parser.addErrorListener(syntaxErrorListener);
+        parser.addErrorListener(syntaxErrListener);
 
-        return new FileContext(parser.spec(), sectionScopeResolver);
+        return new ParseContext(parser.spec(), sectionScopeResolver);
     }
 
     private List<AbstractTypeDesc> secondPass(Specky.SpecContext spec, SectionScopeResolver sectionScopeResolver) {
@@ -193,11 +214,11 @@ public final class ModelGenerator {
         return beanListener.getBeanDescs();
     }
 
-    private static final class FileContext {
+    private static final class ParseContext {
         private final Specky.SpecContext specContext;
         private final SectionScopeResolver sectionScopeResolver;
 
-        private FileContext(Specky.SpecContext specContext, SectionScopeResolver sectionScopeResolver) {
+        private ParseContext(Specky.SpecContext specContext, SectionScopeResolver sectionScopeResolver) {
             this.specContext = specContext;
             this.sectionScopeResolver = sectionScopeResolver;
         }

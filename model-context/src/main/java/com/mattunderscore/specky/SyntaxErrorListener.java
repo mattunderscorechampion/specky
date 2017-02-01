@@ -1,4 +1,5 @@
-/* Copyright © 2017 Matthew Champion All rights reserved.
+/* Copyright © 2017 Matthew Champion
+All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -28,43 +29,22 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 
 import java.nio.file.Path;
-import java.util.Collection;
-
-import static java.util.Arrays.asList;
-import static java.util.Arrays.copyOf;
 
 /**
- * Composite syntax error listener.
- * @author Matt Champion 27/01/2017
+ * Listener for syntax errors.
+ *
+ * @author Matt Champion on 01/02/17
  */
-public final class CompositeSyntaxErrorListener implements SyntaxErrorListener {
-    private final Collection<SyntaxErrorListener> delegates;
-
+public interface SyntaxErrorListener {
     /**
-     * Constructor.
+     * Notified on syntax errors.
      */
-    private CompositeSyntaxErrorListener(Collection<SyntaxErrorListener> delegates) {
-        this.delegates = delegates;
-    }
-
-    @Override
-    public void syntaxError(
-            Path path,
+    void syntaxError(
+            Path filePath,
             Recognizer<?, ?> recognizer,
             Object offendingSymbol,
             int line,
             int charPositionInLine,
             String msg,
-            RecognitionException e) {
-
-        delegates.forEach(delegate -> delegate
-            .syntaxError(path, recognizer, offendingSymbol, line, charPositionInLine, msg, e));
-    }
-
-    /**
-     * Compose multiple listeners together.
-     */
-    public static SyntaxErrorListener composeSyntaxListeners(SyntaxErrorListener... listeners) {
-        return new CompositeSyntaxErrorListener(asList(copyOf(listeners, listeners.length)));
-    }
+            RecognitionException e);
 }

@@ -24,20 +24,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
-import static com.mattunderscore.specky.CompositeSemanticErrorListener.composeListeners;
-import static com.mattunderscore.specky.CompositeSyntaxErrorListener.composeSyntaxListeners;
-import static com.mattunderscore.specky.ReportingSemanticErrorListener.reportTo;
-import static com.mattunderscore.specky.ReportingSyntaxErrorListener.reportSyntaxErrorsTo;
-import static java.util.stream.Collectors.toList;
+import com.mattunderscore.specky.context.file.FileContext;
+import com.mattunderscore.specky.model.SpecDesc;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.antlr.v4.runtime.CharStream;
-
-import com.mattunderscore.specky.context.file.FileContext;
-import com.mattunderscore.specky.model.SpecDesc;
+import static com.mattunderscore.specky.CompositeSemanticErrorListener.composeListeners;
+import static com.mattunderscore.specky.CompositeSyntaxErrorListener.composeSyntaxListeners;
+import static com.mattunderscore.specky.ReportingSemanticErrorListener.reportTo;
+import static com.mattunderscore.specky.ReportingSyntaxErrorListener.reportSyntaxErrorsTo;
 
 /**
  * @author Matt Champion 15/01/2017
@@ -61,13 +58,9 @@ public final class SpeckyParsingContext {
             final ModelGenerator generator = new ModelGenerator(
                 composeListeners(errorCounter, reportTo(System.err)),
                 composeSyntaxListeners(syntaxErrorCounter, reportSyntaxErrorsTo(System.err)));
-            final List<CharStream> streams = fileContexts
-                .stream()
-                .map(FileContext::getAntlrStream)
-                .collect(toList());
 
             @SuppressWarnings("PMD.PrematureDeclaration")
-            final SpecDesc spec = generator.build(streams);
+            final SpecDesc spec = generator.build(fileContexts);
 
             final int errorCount = syntaxErrorCounter.getErrorCount() + errorCounter.getErrorCount();
             if (errorCount > 0) {

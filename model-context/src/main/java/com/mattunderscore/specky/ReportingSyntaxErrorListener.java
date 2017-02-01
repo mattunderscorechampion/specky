@@ -25,12 +25,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
-import static java.util.stream.Collectors.joining;
-
-import java.io.PrintStream;
-
+import com.mattunderscore.specky.parser.SpeckyLexer;
 import org.antlr.v4.runtime.ANTLRErrorListener;
-import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.InputMismatchException;
 import org.antlr.v4.runtime.LexerNoViableAltException;
 import org.antlr.v4.runtime.RecognitionException;
@@ -38,14 +34,17 @@ import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.misc.Interval;
 
-import com.mattunderscore.specky.parser.SpeckyLexer;
+import java.io.PrintStream;
+import java.nio.file.Path;
+
+import static java.util.stream.Collectors.joining;
 
 /**
  * A {@link ANTLRErrorListener} for reporting syntax errors.
  *
  * @author Matt Champion 30/01/2017
  */
-public final class ReportingSyntaxErrorListener extends BaseErrorListener {
+public final class ReportingSyntaxErrorListener implements SyntaxErrorListener {
     private final PrintStream ps;
 
     private ReportingSyntaxErrorListener(PrintStream ps) {
@@ -54,6 +53,7 @@ public final class ReportingSyntaxErrorListener extends BaseErrorListener {
 
     @Override
     public void syntaxError(
+            Path path,
             Recognizer<?, ?> recognizer,
             Object offendingSymbol,
             int line,
@@ -62,27 +62,29 @@ public final class ReportingSyntaxErrorListener extends BaseErrorListener {
             RecognitionException e) {
 
         if (e instanceof LexerNoViableAltException) {
-            tokenRecognition(line, charPositionInLine, (LexerNoViableAltException) e);
+            tokenRecognition(path, line, charPositionInLine, (LexerNoViableAltException) e);
         }
         else if (e instanceof InputMismatchException) {
-            unexpectedInput((Token) offendingSymbol, line, charPositionInLine, (InputMismatchException) e, recognizer);
+            unexpectedInput(path, (Token) offendingSymbol, line, charPositionInLine, (InputMismatchException) e, recognizer);
         }
         else {
             ps.printf("%s\nAt line %d, at column %d\n---\n", msg, line, charPositionInLine);
         }
     }
 
-    private void tokenRecognition(int line, int charPositionInLine, LexerNoViableAltException e) {
+    private void tokenRecognition(Path path, int line, int charPositionInLine, LexerNoViableAltException e) {
         final String badToken = e.getInputStream().getText(Interval.of(e.getStartIndex(), e.getStartIndex()));
         if (badToken.startsWith("\"")) {
             ps.printf(
-                "Found an unterminated string literal\nAt line %d, at column %d\n---\n",
+                "Found an unterminated string literal\n%s:%d:%d\n---\n",
+                path,
                 line,
                 charPositionInLine);
         }
         else {
             ps.printf(
-                "Encountered an unrecognised token\nSee: %s\nAt line %d, at column %d\n---\n",
+                "Encountered an unrecognised token\nSee: %s\n%s:%d:%d\n---\n",
+                path,
                 badToken,
                 line,
                 charPositionInLine);
@@ -90,14 +92,14 @@ public final class ReportingSyntaxErrorListener extends BaseErrorListener {
     }
 
     private void unexpectedInput(
-            Token offendingSymbol,
+            Path path, Token offendingSymbol,
             int line,
             int charPositionInLine,
             InputMismatchException e,
             Recognizer<?, ?> recognizer) {
 
         ps.printf(
-            "Encountered an unexpected token\nEncountered %s\nExpecting one of %s\nAt line %d, at column %d\n---\n",
+            "Encountered an unexpected token\nEncountered %s\nExpecting one of %s\n%s:%d:%d\n---\n",
             getTokenName(offendingSymbol.getType(), recognizer),
             e
                 .getExpectedTokens()
@@ -106,6 +108,7 @@ public final class ReportingSyntaxErrorListener extends BaseErrorListener {
                 .map(tokenType -> getTokenName(tokenType, recognizer))
                 .distinct()
                 .collect(joining(", ")),
+            path,
             line,
             charPositionInLine);
     }
@@ -125,7 +128,7 @@ public final class ReportingSyntaxErrorListener extends BaseErrorListener {
     /**
      * Report the errors to a print stream.
      */
-    public static ANTLRErrorListener reportSyntaxErrorsTo(PrintStream ps) {
+    public static SyntaxErrorListener reportSyntaxErrorsTo(PrintStream ps) {
         return new ReportingSyntaxErrorListener(ps);
     }
 }

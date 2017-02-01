@@ -11,8 +11,10 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import java.nio.file.Paths;
 import java.util.List;
 
+import com.mattunderscore.specky.context.file.FileContext;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
@@ -39,7 +41,7 @@ public final class ModelGeneratorTest {
     @Mock
     private SemanticErrorListener errorListener;
     @Mock
-    private ANTLRErrorListener syntaxErrorListener;
+    private SyntaxErrorListener syntaxErrorListener;
 
     @Before
     public void setUp() {
@@ -53,14 +55,17 @@ public final class ModelGeneratorTest {
 
     @Test
     public void build() throws Exception {
-        final CharStream stream = new ANTLRInputStream(SectionImportValueListenerTest
+        final ANTLRInputStream stream = new ANTLRInputStream(SectionImportValueListenerTest
             .class
             .getClassLoader()
             .getResourceAsStream("SectionTest.spec"));
 
         final ModelGenerator modelGenerator = new ModelGenerator(errorListener, syntaxErrorListener);
 
-        final SpecDesc specDesc = modelGenerator.build(singletonList(stream));
+        final FileContext fileContext = new FileContext();
+        fileContext.setFile(Paths.get("."));
+        fileContext.setAntlrStream(stream);
+        final SpecDesc specDesc = modelGenerator.build(singletonList(fileContext));
 
         final List<TypeDesc> types = specDesc.getTypes();
         final List<AbstractTypeDesc> abstractTypes = specDesc.getAbstractTypes();
@@ -161,18 +166,24 @@ public final class ModelGeneratorTest {
 
     @Test
     public void multipleFiles() throws Exception {
-        final CharStream stream0 = new ANTLRInputStream(SectionImportValueListenerTest
+        final ANTLRInputStream stream0 = new ANTLRInputStream(SectionImportValueListenerTest
             .class
             .getClassLoader()
             .getResourceAsStream("AbstractType.spec"));
-        final CharStream stream1 = new ANTLRInputStream(SectionImportValueListenerTest
+        final ANTLRInputStream stream1 = new ANTLRInputStream(SectionImportValueListenerTest
             .class
             .getClassLoader()
             .getResourceAsStream("Bean.spec"));
 
         final ModelGenerator modelGenerator = new ModelGenerator(errorListener, syntaxErrorListener);
 
-        final SpecDesc specDesc = modelGenerator.build(asList(stream0, stream1));
+        final FileContext fileContext0 = new FileContext();
+        fileContext0.setFile(Paths.get("."));
+        fileContext0.setAntlrStream(stream0);
+        final FileContext fileContext1 = new FileContext();
+        fileContext1.setFile(Paths.get("."));
+        fileContext1.setAntlrStream(stream1);
+        final SpecDesc specDesc = modelGenerator.build(asList(fileContext0, fileContext1));
 
         final List<TypeDesc> types0 = specDesc.getTypes();
         final List<AbstractTypeDesc> abstractTypes = specDesc.getAbstractTypes();
@@ -234,14 +245,17 @@ public final class ModelGeneratorTest {
 
     @Test
     public void optionalPrimitives() throws Exception {
-        final CharStream stream = new ANTLRInputStream(SectionImportValueListenerTest
+        final ANTLRInputStream stream = new ANTLRInputStream(SectionImportValueListenerTest
             .class
             .getClassLoader()
             .getResourceAsStream("optional.spec"));
 
         final ModelGenerator modelGenerator = new ModelGenerator(errorListener, syntaxErrorListener);
 
-        final SpecDesc specDesc = modelGenerator.build(singletonList(stream));
+        final FileContext fileContext = new FileContext();
+        fileContext.setFile(Paths.get("."));
+        fileContext.setAntlrStream(stream);
+        final SpecDesc specDesc = modelGenerator.build(singletonList(fileContext));
 
         final List<TypeDesc> types = specDesc.getTypes();
         final List<AbstractTypeDesc> abstractTypes = specDesc.getAbstractTypes();
