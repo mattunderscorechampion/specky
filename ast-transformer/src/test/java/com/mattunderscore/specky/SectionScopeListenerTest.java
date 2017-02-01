@@ -52,8 +52,6 @@ import com.mattunderscore.specky.type.resolver.TypeResolver;
  */
 public final class SectionScopeListenerTest {
     @Mock
-    private SemanticErrorListener errorListener;
-    @Mock
     private TypeResolver typeResolver;
 
     @Before
@@ -63,7 +61,7 @@ public final class SectionScopeListenerTest {
 
     @After
     public void postConditions() {
-        verifyNoMoreInteractions(errorListener);
+        verifyNoMoreInteractions(typeResolver);
     }
 
     @Test

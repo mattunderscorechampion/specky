@@ -37,13 +37,13 @@ import com.mattunderscore.specky.parser.SpeckyBaseListener;
  */
 public final class SectionLicenceListener extends SpeckyBaseListener {
 
-    private final SemanticErrorListener errorListener;
+    private final InternalSemanticErrorListener errorListener;
     private final SectionScopeBuilder scopeResolver;
 
     /**
      * Constructor.
      */
-    public SectionLicenceListener(SectionScopeBuilder scopeResolver, SemanticErrorListener errorListener) {
+    public SectionLicenceListener(SectionScopeBuilder scopeResolver, InternalSemanticErrorListener errorListener) {
         this.scopeResolver = scopeResolver;
         this.errorListener = errorListener;
     }

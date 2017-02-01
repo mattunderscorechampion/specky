@@ -38,14 +38,14 @@ import net.jcip.annotations.NotThreadSafe;
  */
 @NotThreadSafe
 public final class FileTypeListener extends SpeckyBaseListener {
-    private final SemanticErrorListener errorListener;
+    private final InternalSemanticErrorListener errorListener;
     private final MutableTypeResolver typeResolver;
     private String packageName;
 
     /**
      * Constructor.
      */
-    public FileTypeListener(SemanticErrorListener errorListener, MutableTypeResolver typeResolver) {
+    public FileTypeListener(InternalSemanticErrorListener errorListener, MutableTypeResolver typeResolver) {
         this.errorListener = errorListener;
         this.typeResolver = typeResolver;
     }

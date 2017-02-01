@@ -1,4 +1,4 @@
-/* Copyright © 2016 Matthew Champion
+/* Copyright © 2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -27,24 +27,13 @@ package com.mattunderscore.specky;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
-import java.nio.file.Path;
-
 /**
- * A {@link SemanticErrorListener} that counts the errors.
- * @author Matt Champion on 12/10/2016
+ * A listener for semantic errors.
+ * @author Matt Champion on 01/02/17
  */
-public final class CountingSemanticErrorListener implements SemanticErrorListener {
-    private int errorCount;
-
-    @Override
-    public void onSemanticError(Path file, String message, ParserRuleContext ctx) {
-        errorCount += 1;
-    }
-
+public interface InternalSemanticErrorListener {
     /**
-     * @return the number of semantic errors
+     * Notified when a semantic error is encountered.
      */
-    public int getErrorCount() {
-        return errorCount;
-    }
+    void onSemanticError(String message, ParserRuleContext ruleContext);
 }

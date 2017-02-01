@@ -25,6 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky;
 
 import java.io.PrintStream;
+import java.nio.file.Path;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
@@ -44,11 +45,12 @@ public final class ReportingSemanticErrorListener implements SemanticErrorListen
     }
 
     @Override
-    public void onSemanticError(String message, ParserRuleContext ruleContext) {
+    public void onSemanticError(Path file, String message, ParserRuleContext ruleContext) {
         ps.printf(
-            "%s\nSee: %s\nAt line: %d\n---\n",
+            "%s\nSee: %s\n%s:%d\n---\n",
             message,
             ruleContext.getText().trim(),
+            file,
             ruleContext.getStart().getLine());
     }
 

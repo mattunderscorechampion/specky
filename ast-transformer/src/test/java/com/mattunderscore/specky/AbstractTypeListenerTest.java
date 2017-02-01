@@ -36,7 +36,7 @@ import com.squareup.javapoet.CodeBlock;
  */
 public final class AbstractTypeListenerTest {
     @Mock
-    private SemanticErrorListener errorListener;
+    private InternalSemanticErrorListener errorListener;
 
     @Before
     public void setUp() {

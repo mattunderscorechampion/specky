@@ -70,7 +70,7 @@ public final class ValueListener extends SpeckyBaseListener {
     private final ConstraintFactory constraintFactory = new ConstraintFactory();
     private final SectionScopeResolver sectionScopeResolver;
     private final Map<String, AbstractTypeDesc> abstractTypes;
-    private final SemanticErrorListener semanticErrorListener;
+    private final InternalSemanticErrorListener semanticErrorListener;
     private final List<ValueDesc> valueDescs = new ArrayList<>();
 
     private Specky.ImplementationSpecContext implementationSpecContext;
@@ -85,7 +85,7 @@ public final class ValueListener extends SpeckyBaseListener {
     public ValueListener(
             SectionScopeResolver sectionScopeResolver,
             Map<String, AbstractTypeDesc> abstractTypes,
-            SemanticErrorListener semanticErrorListener) {
+            InternalSemanticErrorListener semanticErrorListener) {
 
         this.sectionScopeResolver = sectionScopeResolver;
         this.abstractTypes = abstractTypes;

@@ -62,7 +62,7 @@ public final class SectionImportTypeListenerTest {
     @Mock
     private MutableTypeResolver typeResolver;
     @Mock
-    private SemanticErrorListener errorListener;
+    private InternalSemanticErrorListener errorListener;
 
     @Before
     public void setUp() {

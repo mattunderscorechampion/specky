@@ -64,7 +64,7 @@ public final class SectionImportValueListenerTest {
     @Mock
     private MutableValueResolver valueResolver;
     @Mock
-    private SemanticErrorListener errorListener;
+    private InternalSemanticErrorListener errorListener;
 
     @Before
     public void setUp() {

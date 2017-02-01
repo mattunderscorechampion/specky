@@ -63,7 +63,7 @@ public final class SectionLicenceListenerTest {
     @Mock
     private MutableLicenceResolver licenceResolver;
     @Mock
-    private SemanticErrorListener errorListener;
+    private InternalSemanticErrorListener errorListener;
 
     @Before
     public void setUp() {

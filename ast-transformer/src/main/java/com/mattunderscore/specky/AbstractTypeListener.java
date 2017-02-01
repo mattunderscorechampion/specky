@@ -56,7 +56,7 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
     private final Normaliser normaliser = new Normaliser();
     private final ConstraintFactory constraintFactory = new ConstraintFactory();
     private final SectionScopeResolver sectionScopeResolver;
-    private final SemanticErrorListener semanticErrorListener;
+    private final InternalSemanticErrorListener semanticErrorListener;
 
     private final List<AbstractTypeDesc> abstractTypeDescs = new ArrayList<>();
     private AbstractTypeDesc.Builder currentTypeDesc;
@@ -65,7 +65,7 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
     /**
      * Constructor.
      */
-    public AbstractTypeListener(SectionScopeResolver sectionScopeResolver, SemanticErrorListener semanticErrorListener) {
+    public AbstractTypeListener(SectionScopeResolver sectionScopeResolver, InternalSemanticErrorListener semanticErrorListener) {
         this.sectionScopeResolver = sectionScopeResolver;
         this.semanticErrorListener = semanticErrorListener;
     }

@@ -53,7 +53,7 @@ import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
  */
 public final class FileTypeListenerTest {
     @Mock
-    private SemanticErrorListener errorListener;
+    private InternalSemanticErrorListener errorListener;
 
     @Before
     public void setUp() {

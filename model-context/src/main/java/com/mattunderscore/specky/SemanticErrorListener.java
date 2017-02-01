@@ -1,4 +1,4 @@
-/* Copyright © 2016 Matthew Champion
+/* Copyright © 2016-2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -27,6 +27,8 @@ package com.mattunderscore.specky;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
+import java.nio.file.Path;
+
 /**
  * A listener for Semantic exceptions.
  * @author Matt Champion on 12/10/2016
@@ -35,5 +37,5 @@ public interface SemanticErrorListener {
     /**
      * Notified when a semantic error is encountered.
      */
-    void onSemanticError(String message, ParserRuleContext ruleContext);
+    void onSemanticError(Path file, String message, ParserRuleContext ruleContext);
 }

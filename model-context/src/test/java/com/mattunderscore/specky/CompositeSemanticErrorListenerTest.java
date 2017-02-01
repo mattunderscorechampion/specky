@@ -33,6 +33,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.nio.file.Paths;
+
 /**
  * Unit tests for {@link CompositeSemanticErrorListener}.
  *
@@ -54,9 +56,9 @@ public final class CompositeSemanticErrorListenerTest {
     @Test
     public void onSemanticError() {
         final SemanticErrorListener listener = composeListeners(listener0, listener1);
-        listener.onSemanticError("Test error", ctx);
+        listener.onSemanticError(Paths.get("."), "Test error", ctx);
 
-        verify(listener0).onSemanticError("Test error", ctx);
-        verify(listener1).onSemanticError("Test error", ctx);
+        verify(listener0).onSemanticError(Paths.get("."), "Test error", ctx);
+        verify(listener1).onSemanticError(Paths.get("."), "Test error", ctx);
     }
 }

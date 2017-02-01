@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.nio.file.Paths;
+
 /**
  * Unit tests for {@link CountingSemanticErrorListener}.
  *
@@ -25,7 +27,7 @@ public final class CountingSemanticErrorListenerTest {
     @Test
     public void onSemanticError() {
         final CountingSemanticErrorListener listener = new CountingSemanticErrorListener();
-        listener.onSemanticError("Test error", ctx);
+        listener.onSemanticError(Paths.get("."), "Test error", ctx);
         assertEquals(1, listener.getErrorCount());
     }
 }

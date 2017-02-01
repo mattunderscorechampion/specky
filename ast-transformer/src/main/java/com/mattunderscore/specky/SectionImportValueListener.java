@@ -36,13 +36,13 @@ import com.squareup.javapoet.CodeBlock;
  */
 public final class SectionImportValueListener extends SpeckyBaseListener {
 
-    private final SemanticErrorListener errorListener;
+    private final InternalSemanticErrorListener errorListener;
     private SectionScopeBuilder scopeResolver;
 
     /**
      * Constructor.
      */
-    public SectionImportValueListener(SemanticErrorListener errorListener, SectionScopeBuilder scopeResolver) {
+    public SectionImportValueListener(InternalSemanticErrorListener errorListener, SectionScopeBuilder scopeResolver) {
         this.errorListener = errorListener;
         this.scopeResolver = scopeResolver;
     }

@@ -27,6 +27,7 @@ package com.mattunderscore.specky;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOf;
 
+import java.nio.file.Path;
 import java.util.Collection;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -47,8 +48,8 @@ public final class CompositeSemanticErrorListener implements SemanticErrorListen
     }
 
     @Override
-    public void onSemanticError(String message, ParserRuleContext ruleContext) {
-        delegates.forEach(delegate -> delegate.onSemanticError(message, ruleContext));
+    public void onSemanticError(Path file, String message, ParserRuleContext ruleContext) {
+        delegates.forEach(delegate -> delegate.onSemanticError(file, message, ruleContext));
     }
 
     /**

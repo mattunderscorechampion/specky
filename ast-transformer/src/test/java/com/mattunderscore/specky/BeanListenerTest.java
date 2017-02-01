@@ -42,7 +42,7 @@ import com.squareup.javapoet.CodeBlock;
  */
 public final class BeanListenerTest {
     @Mock
-    private SemanticErrorListener errorListener;
+    private InternalSemanticErrorListener errorListener;
 
     @Before
     public void setUp() {
