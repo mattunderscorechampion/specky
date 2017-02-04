@@ -52,8 +52,8 @@ public final class DefaultsGenerator implements TypeAppender<ImplementationDesc>
 
     @Override
     public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, ImplementationDesc valueDesc) {
-        typeSpecBuilder.addMethod(defaultConstructorGenerator.generate(specDesc, valueDesc));
-        typeSpecBuilder.addMethod(allConstructorGenerator.generate(specDesc, valueDesc));
+        defaultConstructorGenerator.append(typeSpecBuilder, specDesc, valueDesc);
+        allConstructorGenerator.append(typeSpecBuilder, specDesc, valueDesc);
 
         typeSpecBuilder
             .addMethod(MethodSpec

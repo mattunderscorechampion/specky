@@ -88,7 +88,7 @@ public final class TypeGenerator<T extends TypeDesc> {
                     .forEach(builder::addMethod);
             });
 
-        forTypeGenerators.forEach(generator -> builder.addMethod(generator.generate(specDesc, implementationDesc)));
+        forTypeGenerators.forEach(generator -> generator.append(builder, specDesc, implementationDesc));
 
         return builder.build();
     }

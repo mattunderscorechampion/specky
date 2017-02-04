@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import static java.util.Collections.singletonList;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -73,6 +74,6 @@ public class TypeGeneratorTest {
         verify(typeInitialiser).create(specDesc, implementationDesc);
         verify(constructionMethodAppender).append(typeBuilder, specDesc, implementationDesc);
         verify(methodGeneratorForProperty).generate(specDesc, implementationDesc, propertyDesc);
-        verify(methodGeneratorForType).generate(specDesc, implementationDesc);
+        verify(methodGeneratorForType).append(isA(TypeSpec.Builder.class), eq(specDesc), eq(implementationDesc));
     }
 }

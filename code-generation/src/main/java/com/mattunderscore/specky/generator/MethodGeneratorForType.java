@@ -28,6 +28,7 @@ package com.mattunderscore.specky.generator;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Generate a method for a type.
@@ -35,7 +36,7 @@ import com.squareup.javapoet.MethodSpec;
  * @param <T> the type of the description of the type
  * @author Matt Champion on 09/07/2016
  */
-public interface MethodGeneratorForType<T extends TypeDesc> {
+public interface MethodGeneratorForType<T extends TypeDesc> extends TypeAppender<T> {
     /**
      * Generate a new method.
      * @param specDesc the specification description
@@ -43,4 +44,9 @@ public interface MethodGeneratorForType<T extends TypeDesc> {
      * @return the method
      */
     MethodSpec generate(SpecDesc specDesc, T typeDesc);
+
+    @Override
+    default void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, T typeDesc) {
+        typeSpecBuilder.addMethod(generate(specDesc, typeDesc));
+    }
 }

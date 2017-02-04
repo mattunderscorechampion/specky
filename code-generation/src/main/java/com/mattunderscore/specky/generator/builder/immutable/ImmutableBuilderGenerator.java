@@ -74,14 +74,14 @@ public final class ImmutableBuilderGenerator implements TypeAppender<Implementat
                 .addParameter("function", "the function to apply")
                 .setReturnsDescription("a new builder if the condition is {@code true}, otherwise this builder")
                 .toJavaDoc());
-    private final MethodGeneratorForProperty settingConfiguratorGenerator =
+    private final MethodGeneratorForProperty<ImplementationDesc> settingConfiguratorGenerator =
         new SettingConfiguratorGenerator(
             docMethod()
                 .setMethodDescription("Method to configure property $L on the builder.")
                 .setReturnsDescription("a new builder")
                 .toJavaDoc(),
             new InstantiateNewBuilder());
-    private final MethodGeneratorForProperty collectionAddConfiguratorGenerator =
+    private final MethodGeneratorForProperty<ImplementationDesc> collectionAddConfiguratorGenerator =
         new CollectionAddConfiguratorGenerator(
             docMethod()
                 .setMethodDescription("Method to add an element to property $L on the builder.")
@@ -89,14 +89,14 @@ public final class ImmutableBuilderGenerator implements TypeAppender<Implementat
                 .toJavaDoc(),
                 new NewModifiedCollection(),
                 new InstantiateNewBuilder());
-    private final MethodGeneratorForType booleanConditional = new BooleanConditionalConfiguratorGenerator(
+    private final MethodGeneratorForType<ImplementationDesc> booleanConditional = new BooleanConditionalConfiguratorGenerator(
         docMethod()
             .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
             .addParameter("condition", "the condition")
             .addParameter("function", "the function to apply")
             .setReturnsDescription("a new builder if the condition is {@code true}, otherwise this builder")
             .toJavaDoc());
-    private final MethodGeneratorForType functionalConfiguratorGenerator =
+    private final MethodGeneratorForType<ImplementationDesc> functionalConfiguratorGenerator =
         new FunctionalConfiguratorGenerator(
             docMethod()
                 .setMethodDescription("Applies the function to the builder.")
@@ -133,12 +133,11 @@ public final class ImmutableBuilderGenerator implements TypeAppender<Implementat
                 }
             });
 
-        builder
-                .addMethod(constructorGenerator.generate(specDesc, valueDesc))
-                .addMethod(booleanConditional.generate(specDesc, valueDesc))
-                .addMethod(conditionalGenerator.generate(specDesc, valueDesc))
-                .addMethod(functionalConfiguratorGenerator.generate(specDesc, valueDesc))
-                .addMethod(buildMethodGenerator.generate(specDesc, valueDesc));
+        constructorGenerator.append(builder, specDesc, valueDesc);
+        booleanConditional.append(builder, specDesc, valueDesc);
+        conditionalGenerator.append(builder, specDesc, valueDesc);
+        functionalConfiguratorGenerator.append(builder, specDesc, valueDesc);
+        buildMethodGenerator.append(builder, specDesc, valueDesc);
 
         typeSpecBuilder
             .addMethod(methodBuilder("builder")

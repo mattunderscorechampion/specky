@@ -59,8 +59,7 @@ public final class ConstructionMethodAppender implements TypeAppender<Implementa
     @Override
     public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, ImplementationDesc valueDesc) {
         if (valueDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR) {
-            constructorGenerators.forEach(generator -> typeSpecBuilder
-                .addMethod(generator.generate(specDesc, valueDesc)));
+            constructorGenerators.forEach(generator -> generator.append(typeSpecBuilder, specDesc, valueDesc));
         }
         else if (valueDesc.getConstructionMethod() == ConstructionMethod.MUTABLE_BUILDER) {
             mutableBuilderAppender.append(typeSpecBuilder, specDesc, valueDesc);

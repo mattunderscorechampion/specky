@@ -138,12 +138,11 @@ public final class MutableBuilderGenerator implements TypeAppender<Implementatio
                 }
             });
 
-        builder
-            .addMethod(constructorBuilder().addModifiers(PRIVATE).build())
-            .addMethod(booleanConditional.generate(specDesc, valueDesc))
-            .addMethod(supplierConditional.generate(specDesc, valueDesc))
-            .addMethod(buildMethodGenerator.generate(specDesc, valueDesc))
-            .addMethod(consumerConfiguratorGenerator.generate(specDesc, valueDesc));
+        builder.addMethod(constructorBuilder().addModifiers(PRIVATE).build());
+        booleanConditional.append(builder, specDesc, valueDesc);
+        supplierConditional.append(builder, specDesc, valueDesc);
+        buildMethodGenerator.append(builder, specDesc, valueDesc);
+        consumerConfiguratorGenerator.append(builder, specDesc, valueDesc);
 
         typeSpecBuilder
             .addMethod(methodBuilder("builder")
