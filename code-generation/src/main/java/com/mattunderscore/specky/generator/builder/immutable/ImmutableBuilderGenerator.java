@@ -150,9 +150,9 @@ public final class ImmutableBuilderGenerator implements TypeAppender<Implementat
                         .toJavaDoc(),
                     valueDesc.getName())
                 .addCode(defaultBuilder(valueDesc))
-                .build())
-            .addMethod(constructorGenerator.generate(specDesc, valueDesc))
-            .addType(builder.build());
+                .build());
+        constructorGenerator.append(typeSpecBuilder, specDesc, valueDesc);
+        typeSpecBuilder.addType(builder.build());
     }
 
     private CodeBlock defaultBuilder(ImplementationDesc valueDesc) {

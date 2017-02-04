@@ -55,7 +55,6 @@ public class TypeGeneratorTest {
 
         when(typeInitialiser.create(isA(SpecDesc.class), isA(ImplementationDesc.class))).thenReturn(typeBuilder);
         when(methodGeneratorForProperty.generate(isA(SpecDesc.class), isA(ImplementationDesc.class), isA(PropertyDesc.class))).thenReturn(methodBuilder);
-        when(methodGeneratorForType.generate(isA(SpecDesc.class), isA(ImplementationDesc.class))).thenReturn(methodBuilder);
     }
 
     @Test

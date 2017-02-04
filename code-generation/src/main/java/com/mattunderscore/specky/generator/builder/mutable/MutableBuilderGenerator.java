@@ -155,8 +155,8 @@ public final class MutableBuilderGenerator implements TypeAppender<Implementatio
                         .toJavaDoc(),
                     valueDesc.getName())
                 .addStatement("return new Builder()")
-                .build())
-            .addMethod(constructorGenerator.generate(specDesc, valueDesc))
-            .addType(builder.build());
+                .build());
+        constructorGenerator.append(typeSpecBuilder, specDesc, valueDesc);
+        typeSpecBuilder.addType(builder.build());
     }
 }
