@@ -44,7 +44,6 @@ import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.mattunderscore.specky.model.ValueDesc;
-import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 /**
@@ -73,7 +72,6 @@ public class TypeGeneratorTest {
         .properties(singletonList(propertyDesc))
         .build();
     private final TypeSpec.Builder typeBuilder = TypeSpec.classBuilder("A");
-    private final MethodSpec methodBuilder = MethodSpec.methodBuilder("a").build();
 
     @Before
     public void setUp() {
