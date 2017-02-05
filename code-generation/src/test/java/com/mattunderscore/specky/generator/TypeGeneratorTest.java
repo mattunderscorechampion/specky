@@ -25,6 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -38,7 +39,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.mattunderscore.specky.generator.property.field.FieldGeneratorForProperty;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
@@ -60,11 +60,11 @@ public class TypeGeneratorTest {
     @Mock
     private TypeAppender<TypeDesc> superTypeAppender;
     @Mock
-    private FieldGeneratorForProperty<ImplementationDesc> fieldGeneratorForProperty;
+    private TypeAppenderForProperty<ImplementationDesc> fieldGeneratorForProperty;
     @Mock
-    private MethodGeneratorForProperty<ImplementationDesc> methodGeneratorForProperty;
+    private TypeAppenderForProperty<ImplementationDesc> methodGeneratorForProperty;
     @Mock
-    private MethodGeneratorForType<ImplementationDesc> methodGeneratorForType;
+    private TypeAppender<ImplementationDesc> methodGeneratorForType;
 
     private final SpecDesc specDesc = SpecDesc.builder().build();
     private final PropertyDesc propertyDesc = PropertyDesc.builder().build();
@@ -90,8 +90,7 @@ public class TypeGeneratorTest {
                 constructionMethodAppender,
                 superTypeAppender,
                 methodGeneratorForType),
-            singletonList(fieldGeneratorForProperty),
-            singletonList(methodGeneratorForProperty));
+            asList(fieldGeneratorForProperty, methodGeneratorForProperty));
 
         generator.generate(specDesc, implementationDesc);
 

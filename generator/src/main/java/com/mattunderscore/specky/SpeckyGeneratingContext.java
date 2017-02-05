@@ -29,7 +29,6 @@ import static com.mattunderscore.specky.generator.object.method.ToStringGenerato
 import static com.mattunderscore.specky.generator.object.method.ToStringGenerator.SIMPLE_PROPERTY_FORMATTER;
 import static com.mattunderscore.specky.generator.object.method.ToStringGenerator.SQUARE_BRACKETS;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
@@ -41,9 +40,9 @@ import com.mattunderscore.specky.generator.AbstractTypeInitialiser;
 import com.mattunderscore.specky.generator.BeanInitialiser;
 import com.mattunderscore.specky.generator.ConstructionMethodAppender;
 import com.mattunderscore.specky.generator.Generator;
-import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
 import com.mattunderscore.specky.generator.SuperTypeAppender;
 import com.mattunderscore.specky.generator.TypeAppender;
+import com.mattunderscore.specky.generator.TypeAppenderForProperty;
 import com.mattunderscore.specky.generator.TypeGenerator;
 import com.mattunderscore.specky.generator.TypeInitialiser;
 import com.mattunderscore.specky.generator.ValueInitialiser;
@@ -78,13 +77,13 @@ import com.squareup.javapoet.JavaFile;
 public final class SpeckyGeneratingContext {
     private final SpecDesc spec;
     private final AtomicBoolean consumed = new AtomicBoolean(false);
-    private volatile ToStringGenerator toStringGenerator =
+    private volatile TypeAppender<ImplementationDesc> toStringGenerator =
         new ToStringGenerator(
             SQUARE_BRACKETS,
             COMMA_AND_SPACE_SEPARATOR,
             SIMPLE_PROPERTY_FORMATTER);
-    private MethodGeneratorForProperty<ImplementationDesc> accessorGenerator = new AccessorGenerator();
-    private MethodGeneratorForProperty<ImplementationDesc> mutatorGenerator = new MutatorGenerator();
+    private TypeAppenderForProperty<ImplementationDesc> accessorGenerator = new AccessorGenerator();
+    private TypeAppenderForProperty<ImplementationDesc> mutatorGenerator = new MutatorGenerator();
 
     /*package*/ SpeckyGeneratingContext(SpecDesc spec) {
         this.spec = spec;
@@ -132,8 +131,10 @@ public final class SpeckyGeneratingContext {
             final HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
             final EqualsGenerator equalsGenerator = new EqualsGenerator();
             final TypeAppender<TypeDesc> superTypeAppender = new SuperTypeAppender();
-            final MethodGeneratorForProperty<ImplementationDesc> withGenerator =
+            final TypeAppenderForProperty<ImplementationDesc> withGenerator =
                 new WithModifierGenerator("", new InstantiateNewType());
+            final TypeAppenderForProperty<ImplementationDesc> immutableFieldGenerator = new ImmutableFieldGenerator();
+            final TypeAppenderForProperty<ImplementationDesc> mutableFieldGenerator = new MutableFieldGenerator();
             final Generator generator = new Generator(
                 new TypeGenerator<>(
                     new ValueInitialiser(),
@@ -147,8 +148,10 @@ public final class SpeckyGeneratingContext {
                         toStringGenerator,
                         hashCodeGenerator,
                         equalsGenerator),
-                    singletonList(new ImmutableFieldGenerator()),
-                    asList(accessorGenerator, withGenerator)),
+                    asList(
+                        immutableFieldGenerator,
+                        accessorGenerator,
+                        withGenerator)),
                 new TypeGenerator<>(
                     new BeanInitialiser(),
                     Arrays.<TypeAppender<? super ImplementationDesc>>asList(
@@ -161,12 +164,14 @@ public final class SpeckyGeneratingContext {
                         toStringGenerator,
                         hashCodeGenerator,
                         equalsGenerator),
-                    singletonList(new MutableFieldGenerator()),
-                    asList(accessorGenerator, mutatorGenerator, withGenerator)),
+                    asList(
+                        mutableFieldGenerator,
+                        accessorGenerator,
+                        mutatorGenerator,
+                        withGenerator)),
                 new TypeGenerator<>(
                     new AbstractTypeInitialiser(),
                     singletonList(superTypeAppender),
-                    emptyList(),
                     singletonList(new AbstractAccessorGenerator())));
 
             final List<JavaFile> javaFiles = generator.generate(spec);

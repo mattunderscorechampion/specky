@@ -26,9 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator;
 
 import java.util.List;
-import java.util.Objects;
 
-import com.mattunderscore.specky.generator.property.field.FieldGeneratorForProperty;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.TypeSpec;
@@ -42,8 +40,7 @@ import com.squareup.javapoet.TypeSpec;
 public final class TypeGenerator<T extends TypeDesc> {
     private final TypeInitialiser<? super T> typeInitialiser;
     private final List<TypeAppender<? super T>> typeAppenders;
-    private final List<FieldGeneratorForProperty<? super T>> fieldGeneratorForProperties;
-    private final List<MethodGeneratorForProperty<? super T>> forPropertyAppenders;
+    private final List<TypeAppenderForProperty<? super T>> forPropertyAppenders;
 
     /**
      * Constructor.
@@ -51,12 +48,10 @@ public final class TypeGenerator<T extends TypeDesc> {
     public TypeGenerator(
             TypeInitialiser<? super T> typeInitialiser,
             List<TypeAppender<? super T>> typeAppenders,
-            List<FieldGeneratorForProperty<? super T>> fieldGeneratorForProperties,
-            List<MethodGeneratorForProperty<? super T>> forPropertyAppenders) {
+            List<TypeAppenderForProperty<? super T>> forPropertyAppenders) {
 
         this.typeInitialiser = typeInitialiser;
         this.typeAppenders = typeAppenders;
-        this.fieldGeneratorForProperties = fieldGeneratorForProperties;
         this.forPropertyAppenders = forPropertyAppenders;
     }
 
@@ -71,14 +66,8 @@ public final class TypeGenerator<T extends TypeDesc> {
 
         implementationDesc
             .getProperties()
-            .forEach(propertyDesc -> {
-
-                fieldGeneratorForProperties
-                    .forEach(appender -> appender.append(builder, specDesc, implementationDesc, propertyDesc));
-
-                forPropertyAppenders
-                    .forEach(generator -> generator.append(builder, specDesc, implementationDesc, propertyDesc));
-            });
+            .forEach(propertyDesc -> forPropertyAppenders
+                .forEach(appender -> appender.append(builder, specDesc, implementationDesc, propertyDesc)));
 
         return builder.build();
     }
