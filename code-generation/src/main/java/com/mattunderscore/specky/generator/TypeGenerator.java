@@ -40,7 +40,7 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 07/12/2016
  */
 public final class TypeGenerator<T extends TypeDesc> {
-    private final TypeInitialiser typeInitialiser;
+    private final TypeInitialiser<? super T> typeInitialiser;
     private final List<TypeAppender<? super T>> typeAppenders;
     private final List<FieldGeneratorForProperty<? super T>> fieldGeneratorForProperties;
     private final List<MethodGeneratorForType<? super T>> forTypeGenerators;
@@ -50,7 +50,7 @@ public final class TypeGenerator<T extends TypeDesc> {
      * Constructor.
      */
     public TypeGenerator(
-            TypeInitialiser typeInitialiser,
+            TypeInitialiser<? super T> typeInitialiser,
             List<TypeAppender<? super T>> typeAppenders,
             List<FieldGeneratorForProperty<? super T>> fieldGeneratorForProperties,
             List<MethodGeneratorForProperty<? super T>> methodGeneratorForProperties,

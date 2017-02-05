@@ -121,7 +121,7 @@ public final class SpeckyGeneratingContext {
     public SpeckyWritingContext generate() {
         if (consumed.compareAndSet(false, true)) {
             final BuildMethodGenerator buildMethodGenerator = new BuildMethodGenerator();
-            final TypeInitialiser builderInitialiser = new BuilderInitialiser();
+            final TypeInitialiser<ImplementationDesc> builderInitialiser = new BuilderInitialiser();
             final MutableBuilderGenerator mutableBuilderGenerator = new MutableBuilderGenerator(
                 builderInitialiser,
                 buildMethodGenerator);

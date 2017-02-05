@@ -37,7 +37,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
  * {@link TypeInitialiser} for beans.
  * @author Matt Champion on 10/07/2016
  */
-public final class BeanInitialiser implements TypeInitialiser {
+public final class BeanInitialiser implements TypeInitialiser<TypeDesc> {
     @Override
     public TypeSpec.Builder create(SpecDesc specDesc, TypeDesc typeDesc) {
         return TypeSpec

@@ -31,11 +31,12 @@ import com.squareup.javapoet.TypeSpec;
 
 /**
  * Create a type.
+ * @param <T> the type
  * @author Matt Champion on 10/07/2016
  */
-public interface TypeInitialiser {
+public interface TypeInitialiser<T extends TypeDesc> {
     /**
      * @return A new type builder
      */
-    TypeSpec.Builder create(SpecDesc specDesc, TypeDesc typeDesc);
+    TypeSpec.Builder create(SpecDesc specDesc, T typeDesc);
 }

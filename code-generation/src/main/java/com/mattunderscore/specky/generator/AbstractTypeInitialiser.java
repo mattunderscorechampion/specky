@@ -37,7 +37,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
  * {@link TypeInitialiser} for abstract types.
  * @author Matt Champion on 10/07/2016
  */
-public final class AbstractTypeInitialiser implements TypeInitialiser {
+public final class AbstractTypeInitialiser implements TypeInitialiser<TypeDesc> {
 
     /**
      * @return a type builder for abstract types

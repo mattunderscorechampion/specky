@@ -60,7 +60,7 @@ import java.util.List;
  */
 public final class MutableBuilderGenerator implements TypeAppender<ImplementationDesc> {
     private static final List<String> COLLECTION_TYPES = asList("java.util.Set", "java.util.List");
-    private final TypeInitialiser typeInitialiser;
+    private final TypeInitialiser<ImplementationDesc> typeInitialiser;
     private final MethodGeneratorForType<ImplementationDesc> constructorGenerator =
         new ConstructorForBuiltTypeGenerator();
     private final MethodGeneratorForProperty<ImplementationDesc> settingConfiguratorGenerator =
@@ -108,7 +108,9 @@ public final class MutableBuilderGenerator implements TypeAppender<Implementatio
     /**
      * Constructor.
      */
-    public MutableBuilderGenerator(TypeInitialiser typeInitialiser, BuildMethodGenerator buildMethodGenerator) {
+    public MutableBuilderGenerator(
+            TypeInitialiser<ImplementationDesc> typeInitialiser,
+            BuildMethodGenerator buildMethodGenerator) {
         this.typeInitialiser = typeInitialiser;
         this.buildMethodGenerator = buildMethodGenerator;
     }

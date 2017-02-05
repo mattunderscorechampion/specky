@@ -62,7 +62,7 @@ import static javax.lang.model.element.Modifier.STATIC;
  */
 public final class ImmutableBuilderGenerator implements TypeAppender<ImplementationDesc> {
     private static final List<String> COLLECTION_TYPES = asList("java.util.Set", "java.util.List");
-    private final TypeInitialiser typeInitialiser;
+    private final TypeInitialiser<ImplementationDesc> typeInitialiser;
     private final MethodGeneratorForType<ImplementationDesc> constructorGenerator =
         new ConstructorForBuiltTypeGenerator();
     private final MethodGeneratorForType<ImplementationDesc> conditionalGenerator =
@@ -108,7 +108,9 @@ public final class ImmutableBuilderGenerator implements TypeAppender<Implementat
     /**
      * Constructor.
      */
-    public ImmutableBuilderGenerator(TypeInitialiser typeInitialiser, BuildMethodGenerator buildMethodGenerator) {
+    public ImmutableBuilderGenerator(
+            TypeInitialiser<ImplementationDesc> typeInitialiser,
+            BuildMethodGenerator buildMethodGenerator) {
         this.typeInitialiser = typeInitialiser;
         this.buildMethodGenerator = buildMethodGenerator;
     }

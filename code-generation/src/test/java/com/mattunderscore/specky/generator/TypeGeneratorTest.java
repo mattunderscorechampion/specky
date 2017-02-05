@@ -28,7 +28,7 @@ import java.util.Arrays;
  */
 public class TypeGeneratorTest {
     @Mock
-    private TypeInitialiser typeInitialiser;
+    private TypeInitialiser<ImplementationDesc> typeInitialiser;
     @Mock
     private TypeAppender<ImplementationDesc> constructionMethodAppender;
     @Mock

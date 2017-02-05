@@ -26,8 +26,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.generator.builder;
 
 import com.mattunderscore.specky.generator.TypeInitialiser;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.TypeSpec;
 
 import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docType;
@@ -40,9 +40,9 @@ import static javax.lang.model.element.Modifier.STATIC;
  * {@link TypeInitialiser} for Builders.
  * @author Matt Champion on 10/07/2016
  */
-public final class BuilderInitialiser implements TypeInitialiser {
+public final class BuilderInitialiser implements TypeInitialiser<ImplementationDesc> {
     @Override
-    public TypeSpec.Builder create(SpecDesc specDesc, TypeDesc typeDesc) {
+    public TypeSpec.Builder create(SpecDesc specDesc, ImplementationDesc typeDesc) {
         return classBuilder("Builder")
             .addModifiers(PUBLIC, FINAL, STATIC)
             .addJavadoc(
