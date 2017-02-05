@@ -1,4 +1,4 @@
-/* Copyright © 2016 Matthew Champion
+/* Copyright © 2016-2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -143,10 +143,12 @@ public final class SpeckyGeneratingContext {
                             mutableBuilderGenerator,
                             immutableBuilderGenerator,
                             defaultsGenerator),
-                        superTypeAppender),
+                        superTypeAppender,
+                        toStringGenerator,
+                        hashCodeGenerator,
+                        equalsGenerator),
                     singletonList(new ImmutableFieldGenerator()),
-                    asList(accessorGenerator, withGenerator),
-                    asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
+                    asList(accessorGenerator, withGenerator)),
                 new TypeGenerator<>(
                     new BeanInitialiser(),
                     Arrays.<TypeAppender<? super ImplementationDesc>>asList(
@@ -155,16 +157,17 @@ public final class SpeckyGeneratingContext {
                             mutableBuilderGenerator,
                             immutableBuilderGenerator,
                             defaultsGenerator),
-                        superTypeAppender),
+                        superTypeAppender,
+                        toStringGenerator,
+                        hashCodeGenerator,
+                        equalsGenerator),
                     singletonList(new MutableFieldGenerator()),
-                    asList(accessorGenerator, mutatorGenerator, withGenerator),
-                    asList(toStringGenerator, hashCodeGenerator, equalsGenerator)),
+                    asList(accessorGenerator, mutatorGenerator, withGenerator)),
                 new TypeGenerator<>(
                     new AbstractTypeInitialiser(),
                     singletonList(superTypeAppender),
                     emptyList(),
-                    singletonList(new AbstractAccessorGenerator()),
-                    emptyList()));
+                    singletonList(new AbstractAccessorGenerator())));
 
             final List<JavaFile> javaFiles = generator.generate(spec);
             return new SpeckyWritingContext(javaFiles);

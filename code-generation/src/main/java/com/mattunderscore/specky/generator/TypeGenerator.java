@@ -1,4 +1,4 @@
-/* Copyright © 2016 Matthew Champion
+/* Copyright © 2016-2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -43,7 +43,6 @@ public final class TypeGenerator<T extends TypeDesc> {
     private final TypeInitialiser<? super T> typeInitialiser;
     private final List<TypeAppender<? super T>> typeAppenders;
     private final List<FieldGeneratorForProperty<? super T>> fieldGeneratorForProperties;
-    private final List<MethodGeneratorForType<? super T>> forTypeGenerators;
     private final List<MethodGeneratorForProperty<? super T>> forPropertyGenerators;
 
     /**
@@ -53,14 +52,12 @@ public final class TypeGenerator<T extends TypeDesc> {
             TypeInitialiser<? super T> typeInitialiser,
             List<TypeAppender<? super T>> typeAppenders,
             List<FieldGeneratorForProperty<? super T>> fieldGeneratorForProperties,
-            List<MethodGeneratorForProperty<? super T>> methodGeneratorForProperties,
-            List<MethodGeneratorForType<? super T>> methodGeneratorForTypes) {
+            List<MethodGeneratorForProperty<? super T>> methodGeneratorForProperties) {
 
         this.typeInitialiser = typeInitialiser;
         this.typeAppenders = typeAppenders;
         this.fieldGeneratorForProperties = fieldGeneratorForProperties;
         this.forPropertyGenerators = methodGeneratorForProperties;
-        this.forTypeGenerators = methodGeneratorForTypes;
     }
 
     /**
@@ -87,8 +84,6 @@ public final class TypeGenerator<T extends TypeDesc> {
                     .filter(Objects::nonNull)
                     .forEach(builder::addMethod);
             });
-
-        forTypeGenerators.forEach(generator -> generator.append(builder, specDesc, implementationDesc));
 
         return builder.build();
     }
