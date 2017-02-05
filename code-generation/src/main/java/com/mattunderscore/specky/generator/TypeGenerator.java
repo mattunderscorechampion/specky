@@ -43,7 +43,7 @@ public final class TypeGenerator<T extends TypeDesc> {
     private final TypeInitialiser<? super T> typeInitialiser;
     private final List<TypeAppender<? super T>> typeAppenders;
     private final List<FieldGeneratorForProperty<? super T>> fieldGeneratorForProperties;
-    private final List<MethodGeneratorForProperty<? super T>> forPropertyGenerators;
+    private final List<MethodGeneratorForProperty<? super T>> forPropertyAppenders;
 
     /**
      * Constructor.
@@ -52,12 +52,12 @@ public final class TypeGenerator<T extends TypeDesc> {
             TypeInitialiser<? super T> typeInitialiser,
             List<TypeAppender<? super T>> typeAppenders,
             List<FieldGeneratorForProperty<? super T>> fieldGeneratorForProperties,
-            List<MethodGeneratorForProperty<? super T>> methodGeneratorForProperties) {
+            List<MethodGeneratorForProperty<? super T>> forPropertyAppenders) {
 
         this.typeInitialiser = typeInitialiser;
         this.typeAppenders = typeAppenders;
         this.fieldGeneratorForProperties = fieldGeneratorForProperties;
-        this.forPropertyGenerators = methodGeneratorForProperties;
+        this.forPropertyAppenders = forPropertyAppenders;
     }
 
     /**
@@ -79,10 +79,8 @@ public final class TypeGenerator<T extends TypeDesc> {
                     .filter(Objects::nonNull)
                     .forEach(builder::addField);
 
-                forPropertyGenerators
-                    .stream().map(generator -> generator.generate(specDesc, implementationDesc, propertyDesc))
-                    .filter(Objects::nonNull)
-                    .forEach(builder::addMethod);
+                forPropertyAppenders
+                    .forEach(generator -> generator.append(builder, specDesc, implementationDesc, propertyDesc));
             });
 
         return builder.build();

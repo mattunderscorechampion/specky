@@ -25,18 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import com.mattunderscore.specky.generator.property.field.FieldGeneratorForProperty;
-import com.mattunderscore.specky.model.ImplementationDesc;
-import com.mattunderscore.specky.model.PropertyDesc;
-import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
-import com.mattunderscore.specky.model.ValueDesc;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-
 import static java.util.Collections.singletonList;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -45,6 +33,19 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.util.Arrays;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+
+import com.mattunderscore.specky.generator.property.field.FieldGeneratorForProperty;
+import com.mattunderscore.specky.model.ImplementationDesc;
+import com.mattunderscore.specky.model.PropertyDesc;
+import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.model.TypeDesc;
+import com.mattunderscore.specky.model.ValueDesc;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Unit tests for {@link TypeGenerator}.
@@ -79,7 +80,6 @@ public class TypeGeneratorTest {
         initMocks(this);
 
         when(typeInitialiser.create(isA(SpecDesc.class), isA(ImplementationDesc.class))).thenReturn(typeBuilder);
-        when(methodGeneratorForProperty.generate(isA(SpecDesc.class), isA(ImplementationDesc.class), isA(PropertyDesc.class))).thenReturn(methodBuilder);
     }
 
     @Test
@@ -97,7 +97,7 @@ public class TypeGeneratorTest {
 
         verify(typeInitialiser).create(specDesc, implementationDesc);
         verify(constructionMethodAppender).append(typeBuilder, specDesc, implementationDesc);
-        verify(methodGeneratorForProperty).generate(specDesc, implementationDesc, propertyDesc);
+        verify(methodGeneratorForProperty).append(typeBuilder, specDesc, implementationDesc, propertyDesc);
         verify(methodGeneratorForType).append(isA(TypeSpec.Builder.class), eq(specDesc), eq(implementationDesc));
     }
 }

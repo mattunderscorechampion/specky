@@ -127,8 +127,9 @@ public final class ImmutableBuilderGenerator implements TypeAppender<Implementat
                 final FieldSpec builderFieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE).build();
 
                 builder
-                    .addField(builderFieldSpec)
-                    .addMethod(settingConfiguratorGenerator.generate(specDesc, valueDesc, propertyDesc));
+                    .addField(builderFieldSpec);
+
+                settingConfiguratorGenerator.append(builder, specDesc, valueDesc, propertyDesc);
 
                 if (COLLECTION_TYPES.contains(propertyDesc.getType())) {
                     builder.addMethod(collectionAddConfiguratorGenerator.generate(specDesc, valueDesc, propertyDesc));

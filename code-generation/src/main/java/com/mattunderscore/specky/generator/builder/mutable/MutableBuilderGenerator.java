@@ -34,25 +34,25 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
+import java.util.List;
+
 import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
 import com.mattunderscore.specky.generator.MethodGeneratorForType;
-import com.mattunderscore.specky.generator.statements.This;
 import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.TypeInitialiser;
-import com.mattunderscore.specky.generator.statements.UpdateCollection;
 import com.mattunderscore.specky.generator.builder.BuildMethodGenerator;
 import com.mattunderscore.specky.generator.builder.CollectionAddConfiguratorGenerator;
 import com.mattunderscore.specky.generator.builder.SettingConfiguratorGenerator;
 import com.mattunderscore.specky.generator.constructor.ConstructorForBuiltTypeGenerator;
-import com.mattunderscore.specky.model.SpecDesc;
+import com.mattunderscore.specky.generator.statements.This;
+import com.mattunderscore.specky.generator.statements.UpdateCollection;
 import com.mattunderscore.specky.model.ImplementationDesc;
+import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
-
-import java.util.List;
 
 /**
  * Generator for mutable builders.
@@ -131,9 +131,9 @@ public final class MutableBuilderGenerator implements TypeAppender<Implementatio
                         propertyDesc.getDefaultValue())
                     .build();
 
-                builder
-                    .addField(fieldSpec)
-                    .addMethod(settingConfiguratorGenerator.generate(specDesc, valueDesc, propertyDesc));
+                builder.addField(fieldSpec);
+
+                settingConfiguratorGenerator.append(builder, specDesc, valueDesc, propertyDesc);
 
                 if (COLLECTION_TYPES.contains(propertyDesc.getType())) {
                     builder.addMethod(collectionAddConfiguratorGenerator.generate(specDesc, valueDesc, propertyDesc));

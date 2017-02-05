@@ -1,4 +1,4 @@
-/* Copyright © 2016 Matthew Champion
+/* Copyright © 2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,30 +28,16 @@ package com.mattunderscore.specky.generator;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
-import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 /**
- * Generate a method for a type.
- *
+ * Appender to another type called for each property.
  * @param <T> the type of the description of the type
- * @author Matt Champion on 09/07/2016
+ * @author Matt Champion
  */
-public interface MethodGeneratorForProperty<T extends TypeDesc> extends TypeAppenderForProperty<T> {
+public interface TypeAppenderForProperty<T extends TypeDesc> {
     /**
-     * Generate a new method.
-     * @param specDesc the specification description
-     * @param implementationDesc the type description
-     * @param propertyDesc the property description
-     * @return the method
+     * Append to type.
      */
-    MethodSpec generate(SpecDesc specDesc, T implementationDesc, PropertyDesc propertyDesc);
-
-    @Override
-    default void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, T typeDesc, PropertyDesc propertyDesc) {
-        final MethodSpec methodSpec = generate(specDesc, typeDesc, propertyDesc);
-        if (methodSpec != null) {
-            typeSpecBuilder.addMethod(methodSpec);
-        }
-    }
+    void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, T valueDesc, PropertyDesc propertyDesc);
 }
