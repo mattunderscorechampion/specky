@@ -25,10 +25,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.property.field;
 
+import com.mattunderscore.specky.generator.TypeAppenderForProperty;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Generate a field for a type.
@@ -36,7 +38,7 @@ import com.squareup.javapoet.FieldSpec;
  * @param <T> the type of the description of the type
  * @author Matt Champion on 09/07/2016
  */
-public interface FieldGeneratorForProperty<T extends TypeDesc> {
+public interface FieldGeneratorForProperty<T extends TypeDesc> extends TypeAppenderForProperty<T> {
     /**
      * Generate a new field.
      * @param specDesc the specification description
@@ -45,4 +47,12 @@ public interface FieldGeneratorForProperty<T extends TypeDesc> {
      * @return the field
      */
     FieldSpec generate(SpecDesc specDesc, T typeDesc, PropertyDesc propertyDesc);
+
+    @Override
+    default void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, T typeDesc, PropertyDesc propertyDesc) {
+        final FieldSpec fieldSpec = generate(specDesc, typeDesc, propertyDesc);
+        if (fieldSpec != null) {
+            typeSpecBuilder.addField(fieldSpec);
+        }
+    }
 }

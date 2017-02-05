@@ -74,10 +74,7 @@ public final class TypeGenerator<T extends TypeDesc> {
             .forEach(propertyDesc -> {
 
                 fieldGeneratorForProperties
-                    .stream()
-                    .map(generator -> generator.generate(specDesc, implementationDesc, propertyDesc))
-                    .filter(Objects::nonNull)
-                    .forEach(builder::addField);
+                    .forEach(appender -> appender.append(builder, specDesc, implementationDesc, propertyDesc));
 
                 forPropertyAppenders
                     .forEach(generator -> generator.append(builder, specDesc, implementationDesc, propertyDesc));
