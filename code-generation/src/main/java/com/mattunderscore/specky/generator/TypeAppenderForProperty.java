@@ -39,5 +39,5 @@ public interface TypeAppenderForProperty<T extends TypeDesc> {
     /**
      * Append to type.
      */
-    void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, T valueDesc, PropertyDesc propertyDesc);
+    void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, T implementationDesc, PropertyDesc propertyDesc);
 }

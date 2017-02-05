@@ -1,4 +1,4 @@
-/* Copyright © 2016 Matthew Champion
+/* Copyright © 2016-2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -25,23 +25,29 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.property.field;
 
+import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
+import static com.mattunderscore.specky.model.ConstructionMethod.CONSTRUCTOR;
+import static javax.lang.model.element.Modifier.PRIVATE;
+
+import com.mattunderscore.specky.generator.TypeAppenderForProperty;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
-
-import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
-import static com.mattunderscore.specky.model.ConstructionMethod.CONSTRUCTOR;
-import static javax.lang.model.element.Modifier.PRIVATE;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Generator for immutable fields.
  * @author Matt Champion on 07/12/2016
  */
-public final class MutableFieldGenerator implements FieldGeneratorForProperty<ImplementationDesc> {
-    @Override
-    public FieldSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc, PropertyDesc propertyDesc) {
+public final class MutableFieldGenerator implements TypeAppenderForProperty<ImplementationDesc> {
+
+    /*package*/ FieldSpec generate(
+            SpecDesc specDesc,
+            ImplementationDesc implementationDesc,
+            PropertyDesc propertyDesc) {
+
         final TypeName type = getType(propertyDesc);
         final FieldSpec.Builder builder = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE);
 
@@ -50,5 +56,15 @@ public final class MutableFieldGenerator implements FieldGeneratorForProperty<Im
         }
 
         return builder.build();
+    }
+
+    @Override
+    public void append(
+            TypeSpec.Builder typeSpecBuilder,
+            SpecDesc specDesc,
+            ImplementationDesc implementationDesc,
+            PropertyDesc propertyDesc) {
+
+        typeSpecBuilder.addField(generate(specDesc, implementationDesc, propertyDesc));
     }
 }

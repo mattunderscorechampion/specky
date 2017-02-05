@@ -25,40 +25,39 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.property.field;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
-import static javax.lang.model.element.Modifier.FINAL;
-import static javax.lang.model.element.Modifier.PRIVATE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import com.mattunderscore.specky.generator.TypeAppenderForProperty;
-import com.mattunderscore.specky.model.ImplementationDesc;
+import javax.lang.model.element.Modifier;
+
+import org.junit.Test;
+
 import com.mattunderscore.specky.model.PropertyDesc;
-import com.mattunderscore.specky.model.SpecDesc;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeSpec;
 
 /**
- * Generator for immutable fields.
+ * Unit tests for {@link ImmutableFieldGenerator}.
+ *
  * @author Matt Champion on 07/12/2016
  */
-public final class ImmutableFieldGenerator implements TypeAppenderForProperty<ImplementationDesc> {
+public class ImmutableFieldGeneratorTest {
 
-    /*package*/ FieldSpec generate(
-        SpecDesc specDesc,
-        ImplementationDesc implementationDesc,
-        PropertyDesc propertyDesc) {
+    @Test
+    public void generate() {
+        final ImmutableFieldGenerator generator = new ImmutableFieldGenerator();
 
-        final TypeName type = getType(propertyDesc);
-        return FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build();
-    }
+        final PropertyDesc propertyDesc = PropertyDesc
+                .builder()
+                .type("java.lang.String")
+                .name("prop")
+                .build();
 
-    @Override
-    public void append(
-        TypeSpec.Builder typeSpecBuilder,
-        SpecDesc specDesc,
-        ImplementationDesc implementationDesc,
-        PropertyDesc propertyDesc) {
+        final FieldSpec fieldSpec = generator.generate(null, null, propertyDesc);
 
-        typeSpecBuilder.addField(generate(specDesc, implementationDesc, propertyDesc));
+        assertTrue(fieldSpec.hasModifier(Modifier.FINAL));
+        assertTrue(fieldSpec.hasModifier(Modifier.PRIVATE));
+        assertEquals("prop", fieldSpec.name);
+        assertEquals(ClassName.get(String.class), fieldSpec.type);
     }
 }

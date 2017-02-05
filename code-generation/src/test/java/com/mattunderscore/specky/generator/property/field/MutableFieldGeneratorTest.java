@@ -1,4 +1,4 @@
-/* Copyright © 2016 Matthew Champion
+/* Copyright © 2016-2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -25,34 +25,49 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.property.field;
 
-import com.mattunderscore.specky.generator.TypeAppenderForProperty;
+import static com.mattunderscore.specky.model.ConstructionMethod.CONSTRUCTOR;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import javax.lang.model.element.Modifier;
+
+import org.junit.Test;
+
+import com.mattunderscore.specky.model.BeanDesc;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
-import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.TypeDesc;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.TypeSpec;
 
 /**
- * Generate a field for a type.
+ * Unit tests for {@link MutableFieldGenerator}.
  *
- * @param <T> the type of the description of the type
- * @author Matt Champion on 09/07/2016
+ * @author Matt Champion on 07/12/2016
  */
-public interface FieldGeneratorForProperty<T extends TypeDesc> extends TypeAppenderForProperty<T> {
-    /**
-     * Generate a new field.
-     * @param specDesc the specification description
-     * @param typeDesc the type description
-     * @param propertyDesc the property description
-     * @return the field
-     */
-    FieldSpec generate(SpecDesc specDesc, T typeDesc, PropertyDesc propertyDesc);
+public class MutableFieldGeneratorTest {
 
-    @Override
-    default void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, T typeDesc, PropertyDesc propertyDesc) {
-        final FieldSpec fieldSpec = generate(specDesc, typeDesc, propertyDesc);
-        if (fieldSpec != null) {
-            typeSpecBuilder.addField(fieldSpec);
-        }
+    @Test
+    public void generate() {
+        final MutableFieldGenerator generator = new MutableFieldGenerator();
+
+        final ImplementationDesc beanDesc = BeanDesc
+                .builder()
+                .constructionMethod(CONSTRUCTOR)
+                .build();
+
+        final PropertyDesc propertyDesc = PropertyDesc
+                .builder()
+                .type("java.lang.String")
+                .name("prop")
+                .defaultValue(CodeBlock.of("\"\""))
+                .build();
+
+        final FieldSpec fieldSpec = generator.generate(null, beanDesc, propertyDesc);
+
+        assertTrue(fieldSpec.hasModifier(Modifier.PRIVATE));
+        assertEquals("prop", fieldSpec.name);
+        assertEquals(ClassName.get(String.class), fieldSpec.type);
+        assertEquals(CodeBlock.of("\"\""), fieldSpec.initializer);
     }
 }
