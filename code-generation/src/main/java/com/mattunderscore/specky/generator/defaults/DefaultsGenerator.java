@@ -29,7 +29,6 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 
 import javax.lang.model.element.Modifier;
 
-import com.mattunderscore.specky.generator.MethodGeneratorForType;
 import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.constructor.AllPropertiesConstructorGenerator;
 import com.mattunderscore.specky.generator.constructor.DefaultConstructorGenerator;
@@ -45,9 +44,9 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 30/10/2016
  */
 public final class DefaultsGenerator implements TypeAppender<ImplementationDesc> {
-    private final MethodGeneratorForType<ImplementationDesc> defaultConstructorGenerator =
+    private final TypeAppender<ImplementationDesc> defaultConstructorGenerator =
         new DefaultConstructorGenerator(PRIVATE);
-    private final MethodGeneratorForType<ImplementationDesc> allConstructorGenerator =
+    private final TypeAppender<ImplementationDesc> allConstructorGenerator =
         new AllPropertiesConstructorGenerator(PRIVATE);
 
     @Override

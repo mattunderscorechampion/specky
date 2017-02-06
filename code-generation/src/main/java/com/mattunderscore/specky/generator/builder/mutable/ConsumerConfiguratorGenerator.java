@@ -31,20 +31,21 @@ import java.util.function.Consumer;
 
 import javax.lang.model.element.Modifier;
 
-import com.mattunderscore.specky.generator.MethodGeneratorForType;
+import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Generator for consumer configurators.
  *
  * @author Matt Champion on 11/12/2016
  */
-public final class ConsumerConfiguratorGenerator implements MethodGeneratorForType<ImplementationDesc> {
+public final class ConsumerConfiguratorGenerator implements TypeAppender<ImplementationDesc> {
     private final String javaDoc;
 
     /**
@@ -55,12 +56,12 @@ public final class ConsumerConfiguratorGenerator implements MethodGeneratorForTy
     }
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
+    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, ImplementationDesc implementationDesc) {
         final ClassName builderType = ClassName.get(implementationDesc.getPackageName(), implementationDesc.getName(), "Builder");
         final ParameterSpec functionParameter = ParameterSpec
             .builder(get(ClassName.get(Consumer.class), builderType), "consumer")
             .build();
-        return MethodSpec
+        final MethodSpec methodSpec = MethodSpec
             .methodBuilder("apply")
             .addModifiers(Modifier.PUBLIC)
             .addJavadoc(javaDoc)
@@ -72,5 +73,7 @@ public final class ConsumerConfiguratorGenerator implements MethodGeneratorForTy
                 .addStatement("return this")
                 .build())
             .build();
+
+        typeSpecBuilder.addMethod(methodSpec);
     }
 }

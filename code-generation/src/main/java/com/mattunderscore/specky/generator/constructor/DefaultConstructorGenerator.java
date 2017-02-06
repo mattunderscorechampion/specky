@@ -33,7 +33,7 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 
 import javax.lang.model.element.Modifier;
 
-import com.mattunderscore.specky.generator.MethodGeneratorForType;
+import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.constraint.PropertyConstraintGenerator;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
@@ -42,12 +42,13 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Default constructor generator.
  * @author Matt Champion on 13/06/2016
  */
-public final class DefaultConstructorGenerator implements MethodGeneratorForType<ImplementationDesc> {
+public final class DefaultConstructorGenerator implements TypeAppender<ImplementationDesc> {
     private final Modifier constructorAccessability;
     private final PropertyConstraintGenerator propertyConstraintGenerator = new PropertyConstraintGenerator();
 
@@ -59,14 +60,14 @@ public final class DefaultConstructorGenerator implements MethodGeneratorForType
     }
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
+    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, ImplementationDesc typeDesc) {
         final MethodSpec.Builder constructor = constructorBuilder()
             .addModifiers(constructorAccessability)
             .addJavadoc(docMethod()
                 .setMethodDescription("Default constructor.")
                 .toJavaDoc());
 
-        implementationDesc
+        typeDesc
             .getProperties()
             .stream()
             .forEach(propertyDesc -> {
@@ -97,6 +98,7 @@ public final class DefaultConstructorGenerator implements MethodGeneratorForType
                 }
             });
 
-        return constructor.build();
+        final MethodSpec methodSpec = constructor.build();
+        typeSpecBuilder.addMethod(methodSpec);
     }
 }

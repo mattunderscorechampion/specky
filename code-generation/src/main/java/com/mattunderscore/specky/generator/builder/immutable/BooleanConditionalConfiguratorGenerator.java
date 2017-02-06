@@ -31,7 +31,7 @@ import java.util.function.Function;
 
 import javax.lang.model.element.Modifier;
 
-import com.mattunderscore.specky.generator.MethodGeneratorForType;
+import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.ClassName;
@@ -39,13 +39,14 @@ import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Generator for conditional configurators that take a boolean and apply a function.
  *
  * @author Matt Champion on 12/07/16
  */
-public final class BooleanConditionalConfiguratorGenerator implements MethodGeneratorForType<ImplementationDesc> {
+public final class BooleanConditionalConfiguratorGenerator implements TypeAppender<ImplementationDesc> {
     private final String javaDoc;
 
     /**
@@ -56,30 +57,31 @@ public final class BooleanConditionalConfiguratorGenerator implements MethodGene
     }
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
-        final ClassName builderType = ClassName.get(implementationDesc.getPackageName(), implementationDesc.getName(), "Builder");
+    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, ImplementationDesc typeDesc) {
+        final ClassName builderType = ClassName.get(typeDesc.getPackageName(), typeDesc.getName(), "Builder");
         final ParameterSpec conditionParameter = ParameterSpec
                 .builder(TypeName.BOOLEAN, "condition")
                 .build();
         final ParameterSpec modifierParameter = ParameterSpec
                 .builder(get(ClassName.get(Function.class), builderType, builderType), "function")
                 .build();
-        return MethodSpec
-                .methodBuilder("ifThen")
-                .addModifiers(Modifier.PUBLIC)
-                .addJavadoc(javaDoc)
-                .returns(builderType)
-                .addParameter(conditionParameter)
-                .addParameter(modifierParameter)
-                .addCode(CodeBlock
-                    .builder()
-                    .beginControlFlow("if ($N)", conditionParameter)
-                    .addStatement("return $N.apply(this)", modifierParameter)
-                    .endControlFlow()
-                    .beginControlFlow("else")
-                    .addStatement("return this")
-                    .endControlFlow()
-                    .build())
-                .build();
+        final MethodSpec methodSpec = MethodSpec
+            .methodBuilder("ifThen")
+            .addModifiers(Modifier.PUBLIC)
+            .addJavadoc(javaDoc)
+            .returns(builderType)
+            .addParameter(conditionParameter)
+            .addParameter(modifierParameter)
+            .addCode(CodeBlock
+                .builder()
+                .beginControlFlow("if ($N)", conditionParameter)
+                .addStatement("return $N.apply(this)", modifierParameter)
+                .endControlFlow()
+                .beginControlFlow("else")
+                .addStatement("return this")
+                .endControlFlow()
+                .build())
+            .build();
+        typeSpecBuilder.addMethod(methodSpec);
     }
 }

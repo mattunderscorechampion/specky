@@ -25,14 +25,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.builder;
 
-import com.mattunderscore.specky.generator.MethodGeneratorForType;
-import com.mattunderscore.specky.model.ImplementationDesc;
-import com.mattunderscore.specky.model.PropertyDesc;
-import com.mattunderscore.specky.model.SpecDesc;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeName;
+import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
+import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
+import static com.squareup.javapoet.MethodSpec.methodBuilder;
+import static javax.lang.model.element.Modifier.PUBLIC;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -40,19 +36,24 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
-import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
-import static com.squareup.javapoet.MethodSpec.methodBuilder;
-import static javax.lang.model.element.Modifier.PUBLIC;
+import com.mattunderscore.specky.generator.TypeAppender;
+import com.mattunderscore.specky.model.ImplementationDesc;
+import com.mattunderscore.specky.model.PropertyDesc;
+import com.mattunderscore.specky.model.SpecDesc;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Generator for build methods.
  * @author Matt Champion on 16/06/2016
  */
-public final class BuildMethodGenerator implements MethodGeneratorForType<ImplementationDesc> {
+public final class BuildMethodGenerator implements TypeAppender<ImplementationDesc> {
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc valueDesc) {
+    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, ImplementationDesc valueDesc) {
         final MethodSpec.Builder buildMethod = methodBuilder("build")
             .addModifiers(PUBLIC)
             .returns(ClassName.get(valueDesc.getPackageName(), valueDesc.getName()))
@@ -64,7 +65,9 @@ public final class BuildMethodGenerator implements MethodGeneratorForType<Implem
                 valueDesc.getName());
         addValidationStatements(buildMethod, valueDesc);
         addReturnStatement(buildMethod, valueDesc);
-        return buildMethod.build();
+        final MethodSpec methodSpec = buildMethod.build();
+
+        typeSpecBuilder.addMethod(methodSpec);
     }
 
     private void addReturnStatement(MethodSpec.Builder buildMethod, ImplementationDesc valueDesc) {

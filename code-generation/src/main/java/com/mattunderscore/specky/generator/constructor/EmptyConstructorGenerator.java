@@ -29,10 +29,11 @@ import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMetho
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.generator.MethodGeneratorForType;
+import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Empty constructor generator.
@@ -41,14 +42,16 @@ import com.squareup.javapoet.MethodSpec;
  *
  * @author Matt Champion on 10/07/2016
  */
-public final class EmptyConstructorGenerator implements MethodGeneratorForType<ImplementationDesc> {
+public final class EmptyConstructorGenerator implements TypeAppender<ImplementationDesc> {
+
     @Override
-    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
-        return constructorBuilder()
+    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, ImplementationDesc typeDesc) {
+        final MethodSpec methodSpec = constructorBuilder()
             .addModifiers(PUBLIC)
             .addJavadoc(docMethod()
                 .setMethodDescription("Constructor.")
                 .toJavaDoc())
             .build();
+        typeSpecBuilder.addMethod(methodSpec);
     }
 }

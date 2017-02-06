@@ -31,34 +31,36 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 
 import java.util.Objects;
 
-import com.mattunderscore.specky.generator.MethodGeneratorForType;
+import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Hash code generator.
  * @author Matt Champion on 06/07/2016
  */
-public final class HashCodeGenerator implements MethodGeneratorForType<ImplementationDesc> {
+public final class HashCodeGenerator implements TypeAppender<ImplementationDesc> {
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
-        return methodBuilder("hashCode")
+    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, ImplementationDesc typeDesc) {
+        final MethodSpec methodSpec = methodBuilder("hashCode")
             .addAnnotation(Override.class)
             .addModifiers(PUBLIC)
             .returns(TypeName.INT)
             .addStatement(
                 "return $T.hash($L)",
                 ClassName.get(Objects.class),
-                implementationDesc
+                typeDesc
                     .getProperties()
                     .stream()
                     .map(PropertyDesc::getName)
                     .collect(joining(", ")))
             .build();
+        typeSpecBuilder.addMethod(methodSpec);
     }
 }

@@ -30,7 +30,7 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.generator.MethodGeneratorForType;
+import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
@@ -38,12 +38,13 @@ import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Generator for toString implementation.
  * @author Matt Champion on 27/06/16
  */
-public final class ToStringGenerator implements MethodGeneratorForType<ImplementationDesc> {
+public final class ToStringGenerator implements TypeAppender<ImplementationDesc> {
     /**
      * Comma and space separator.
      */
@@ -83,13 +84,14 @@ public final class ToStringGenerator implements MethodGeneratorForType<Implement
     }
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
-        return methodBuilder("toString")
+    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, ImplementationDesc typeDesc) {
+        final MethodSpec methodSpec = methodBuilder("toString")
             .returns(ClassName.get(String.class))
             .addModifiers(PUBLIC)
             .addAnnotation(AnnotationSpec.builder(Override.class).build())
-            .addCode(generateImplementation(implementationDesc))
+            .addCode(generateImplementation(typeDesc))
             .build();
+        typeSpecBuilder.addMethod(methodSpec);
     }
 
     private CodeBlock generateImplementation(ImplementationDesc implementationDesc) {

@@ -31,20 +31,21 @@ import java.util.function.Function;
 
 import javax.lang.model.element.Modifier;
 
-import com.mattunderscore.specky.generator.MethodGeneratorForType;
+import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Generator for functional configurators.
  *
  * @author Matt Champion on 15/09/2016
  */
-public final class FunctionalConfiguratorGenerator implements MethodGeneratorForType<ImplementationDesc> {
+public final class FunctionalConfiguratorGenerator implements TypeAppender<ImplementationDesc> {
     private final String javaDoc;
 
     /**
@@ -55,12 +56,12 @@ public final class FunctionalConfiguratorGenerator implements MethodGeneratorFor
     }
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
-        final ClassName builderType = ClassName.get(implementationDesc.getPackageName(), implementationDesc.getName(), "Builder");
+    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, ImplementationDesc typeDesc) {
+        final ClassName builderType = ClassName.get(typeDesc.getPackageName(), typeDesc.getName(), "Builder");
         final ParameterSpec functionParameter = ParameterSpec
             .builder(get(ClassName.get(Function.class), builderType, builderType), "function")
             .build();
-        return MethodSpec
+        final MethodSpec methodSpec = MethodSpec
             .methodBuilder("apply")
             .addModifiers(Modifier.PUBLIC)
             .addJavadoc(javaDoc)
@@ -71,5 +72,6 @@ public final class FunctionalConfiguratorGenerator implements MethodGeneratorFor
                 .addStatement("return $N.apply(this)", functionParameter)
                 .build())
             .build();
+        typeSpecBuilder.addMethod(methodSpec);
     }
 }

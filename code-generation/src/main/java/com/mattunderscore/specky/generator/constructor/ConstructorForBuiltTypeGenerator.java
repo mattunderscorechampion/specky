@@ -31,7 +31,7 @@ import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 
-import com.mattunderscore.specky.generator.MethodGeneratorForType;
+import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
@@ -39,24 +39,13 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Generator for constructor used by builders.
  * @author Matt Champion on 09/07/2016
  */
-public final class ConstructorForBuiltTypeGenerator implements MethodGeneratorForType<ImplementationDesc> {
-    @Override
-    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc) {
-        final MethodSpec.Builder constructor = constructorBuilder()
-            .addModifiers(PRIVATE)
-            .addJavadoc(docMethod()
-                .setMethodDescription("Constructor.")
-                .toJavaDoc());
-
-        implementationDesc.getProperties().forEach(property -> addProperty(constructor, property));
-
-        return constructor.build();
-    }
+public final class ConstructorForBuiltTypeGenerator implements TypeAppender<ImplementationDesc> {
 
     private void addProperty(MethodSpec.Builder constructor, PropertyDesc property) {
         final TypeName type = getType(property);
@@ -67,5 +56,19 @@ public final class ConstructorForBuiltTypeGenerator implements MethodGeneratorFo
                 "this.$N = $N",
                 FieldSpec.builder(type, property.getName(), PRIVATE, FINAL).build(),
                 constructorParameter);
+    }
+
+    @Override
+    public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, ImplementationDesc typeDesc) {
+        final MethodSpec.Builder constructor = constructorBuilder()
+            .addModifiers(PRIVATE)
+            .addJavadoc(docMethod()
+                .setMethodDescription("Constructor.")
+                .toJavaDoc());
+
+        typeDesc.getProperties().forEach(property -> addProperty(constructor, property));
+
+        final MethodSpec methodSpec = constructor.build();
+        typeSpecBuilder.addMethod(methodSpec);
     }
 }

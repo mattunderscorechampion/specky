@@ -37,7 +37,7 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 10/07/2016
  */
 public final class ConstructionMethodAppender implements TypeAppender<ImplementationDesc> {
-    private final List<MethodGeneratorForType<ImplementationDesc>> constructorGenerators;
+    private final List<TypeAppender<ImplementationDesc>> constructorGenerators;
     private final TypeAppender<ImplementationDesc> mutableBuilderAppender;
     private final TypeAppender<ImplementationDesc> immutableBuilderAppender;
     private final TypeAppender<ImplementationDesc> defaultsAppender;
@@ -46,7 +46,7 @@ public final class ConstructionMethodAppender implements TypeAppender<Implementa
      * Constructor.
      */
     public ConstructionMethodAppender(
-            List<MethodGeneratorForType<ImplementationDesc>> constructorGenerators,
+            List<TypeAppender<ImplementationDesc>> constructorGenerators,
             TypeAppender<ImplementationDesc> mutableBuilderAppender,
             TypeAppender<ImplementationDesc> immutableBuilderAppender,
             TypeAppender<ImplementationDesc> defaultsAppender) {

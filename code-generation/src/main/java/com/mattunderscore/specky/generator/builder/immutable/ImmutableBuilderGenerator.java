@@ -37,7 +37,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.mattunderscore.specky.generator.MethodGeneratorForType;
 import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.TypeAppenderForProperty;
 import com.mattunderscore.specky.generator.TypeInitialiser;
@@ -63,9 +62,9 @@ import com.squareup.javapoet.TypeSpec;
 public final class ImmutableBuilderGenerator implements TypeAppender<ImplementationDesc> {
     private static final List<String> COLLECTION_TYPES = asList("java.util.Set", "java.util.List");
     private final TypeInitialiser<ImplementationDesc> typeInitialiser;
-    private final MethodGeneratorForType<ImplementationDesc> constructorGenerator =
+    private final TypeAppender<ImplementationDesc> constructorGenerator =
         new ConstructorForBuiltTypeGenerator();
-    private final MethodGeneratorForType<ImplementationDesc> conditionalGenerator =
+    private final TypeAppender<ImplementationDesc> conditionalGenerator =
         new SupplierConditionalConfiguratorGenerator(
             docMethod()
                 .setMethodDescription(
@@ -89,14 +88,14 @@ public final class ImmutableBuilderGenerator implements TypeAppender<Implementat
                 .toJavaDoc(),
                 new NewModifiedCollection(),
                 new InstantiateNewBuilder());
-    private final MethodGeneratorForType<ImplementationDesc> booleanConditional = new BooleanConditionalConfiguratorGenerator(
+    private final TypeAppender<ImplementationDesc> booleanConditional = new BooleanConditionalConfiguratorGenerator(
         docMethod()
             .setMethodDescription("Applies the function to the builder if and only if the condition is {@code true}.")
             .addParameter("condition", "the condition")
             .addParameter("function", "the function to apply")
             .setReturnsDescription("a new builder if the condition is {@code true}, otherwise this builder")
             .toJavaDoc());
-    private final MethodGeneratorForType<ImplementationDesc> functionalConfiguratorGenerator =
+    private final TypeAppender<ImplementationDesc> functionalConfiguratorGenerator =
         new FunctionalConfiguratorGenerator(
             docMethod()
                 .setMethodDescription("Applies the function to the builder.")

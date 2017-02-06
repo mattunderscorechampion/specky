@@ -36,7 +36,6 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 import java.util.List;
 
-import com.mattunderscore.specky.generator.MethodGeneratorForType;
 import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.TypeAppenderForProperty;
 import com.mattunderscore.specky.generator.TypeInitialiser;
@@ -61,7 +60,7 @@ import com.squareup.javapoet.TypeSpec;
 public final class MutableBuilderGenerator implements TypeAppender<ImplementationDesc> {
     private static final List<String> COLLECTION_TYPES = asList("java.util.Set", "java.util.List");
     private final TypeInitialiser<ImplementationDesc> typeInitialiser;
-    private final MethodGeneratorForType<ImplementationDesc> constructorGenerator =
+    private final TypeAppender<ImplementationDesc> constructorGenerator =
         new ConstructorForBuiltTypeGenerator();
     private final TypeAppenderForProperty<ImplementationDesc> settingConfiguratorGenerator =
         new SettingConfiguratorGenerator(
@@ -78,7 +77,7 @@ public final class MutableBuilderGenerator implements TypeAppender<Implementatio
                 .toJavaDoc(),
                 new UpdateCollection(),
                 new This());
-    private final MethodGeneratorForType<ImplementationDesc> supplierConditional =
+    private final TypeAppender<ImplementationDesc> supplierConditional =
         new SupplierConditionalConsumerConfiguratorGenerator(
             docMethod()
                 .setMethodDescription("Passes the builder to a consumer to allow it the opportunity of changing it " +
@@ -87,7 +86,7 @@ public final class MutableBuilderGenerator implements TypeAppender<Implementatio
                 .addParameter("consumer", "the consumer")
                 .setReturnsDescription("this builder")
                 .toJavaDoc());
-    private final MethodGeneratorForType<ImplementationDesc> booleanConditional =
+    private final TypeAppender<ImplementationDesc> booleanConditional =
         new BooleanConditionalConsumerConfiguratorGenerator(
             docMethod()
                 .setMethodDescription("Passes the builder to a consumer to allow it the opportunity of changing it" +
@@ -96,7 +95,7 @@ public final class MutableBuilderGenerator implements TypeAppender<Implementatio
                 .addParameter("consumer", "the consumer")
                 .setReturnsDescription("this builder")
                 .toJavaDoc());
-    private final MethodGeneratorForType<ImplementationDesc> consumerConfiguratorGenerator =
+    private final TypeAppender<ImplementationDesc> consumerConfiguratorGenerator =
         new ConsumerConfiguratorGenerator(
             docMethod()
                 .setMethodDescription("Passes the builder to a consumer to allow it the opportunity of changing it.")
