@@ -36,9 +36,9 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 import java.util.List;
 
-import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
 import com.mattunderscore.specky.generator.MethodGeneratorForType;
 import com.mattunderscore.specky.generator.TypeAppender;
+import com.mattunderscore.specky.generator.TypeAppenderForProperty;
 import com.mattunderscore.specky.generator.TypeInitialiser;
 import com.mattunderscore.specky.generator.builder.BuildMethodGenerator;
 import com.mattunderscore.specky.generator.builder.CollectionAddConfiguratorGenerator;
@@ -63,14 +63,14 @@ public final class MutableBuilderGenerator implements TypeAppender<Implementatio
     private final TypeInitialiser<ImplementationDesc> typeInitialiser;
     private final MethodGeneratorForType<ImplementationDesc> constructorGenerator =
         new ConstructorForBuiltTypeGenerator();
-    private final MethodGeneratorForProperty<ImplementationDesc> settingConfiguratorGenerator =
+    private final TypeAppenderForProperty<ImplementationDesc> settingConfiguratorGenerator =
         new SettingConfiguratorGenerator(
             docMethod()
                 .setMethodDescription("Method to configure property $L on the builder.")
                 .setReturnsDescription("this builder")
                 .toJavaDoc(),
             new This());
-    private final MethodGeneratorForProperty<ImplementationDesc> collectionAddConfiguratorGenerator =
+    private final TypeAppenderForProperty<ImplementationDesc> collectionAddConfiguratorGenerator =
         new CollectionAddConfiguratorGenerator(
             docMethod()
                 .setMethodDescription("Method to add an element to property $L on the builder.")
@@ -136,7 +136,7 @@ public final class MutableBuilderGenerator implements TypeAppender<Implementatio
                 settingConfiguratorGenerator.append(builder, specDesc, valueDesc, propertyDesc);
 
                 if (COLLECTION_TYPES.contains(propertyDesc.getType())) {
-                    builder.addMethod(collectionAddConfiguratorGenerator.generate(specDesc, valueDesc, propertyDesc));
+                    collectionAddConfiguratorGenerator.append(builder, specDesc, valueDesc, propertyDesc);
                 }
             });
 

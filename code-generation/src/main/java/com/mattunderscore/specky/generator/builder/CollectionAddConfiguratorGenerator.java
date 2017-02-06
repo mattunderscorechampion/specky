@@ -25,7 +25,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.builder;
 
-import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
+import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
+import static com.squareup.javapoet.MethodSpec.methodBuilder;
+import static java.lang.Character.toUpperCase;
+import static java.util.Arrays.asList;
+import static javax.lang.model.element.Modifier.PUBLIC;
+
+import java.util.List;
+import java.util.Objects;
+
+import com.mattunderscore.specky.generator.TypeAppenderForProperty;
 import com.mattunderscore.specky.generator.statements.StatementAppenderForProperty;
 import com.mattunderscore.specky.generator.statements.StatementGeneratorForType;
 import com.mattunderscore.specky.model.ImplementationDesc;
@@ -36,22 +45,14 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
-
-import java.util.List;
-import java.util.Objects;
-
-import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
-import static com.squareup.javapoet.MethodSpec.methodBuilder;
-import static java.lang.Character.toUpperCase;
-import static java.util.Arrays.asList;
-import static javax.lang.model.element.Modifier.PUBLIC;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Generator for add to collection configurator.
  *
  * @author Matt Champion on 16/09/16
  */
-public final class CollectionAddConfiguratorGenerator implements MethodGeneratorForProperty<ImplementationDesc> {
+public final class CollectionAddConfiguratorGenerator implements TypeAppenderForProperty<ImplementationDesc> {
     private static final List<String> COLLECTION_TYPES = asList("java.util.Set", "java.util.List");
     private final String javadoc;
     private final StatementAppenderForProperty updateStatementGenerator;
@@ -69,8 +70,7 @@ public final class CollectionAddConfiguratorGenerator implements MethodGenerator
         this.returnStatementGenerator = returnStatementGenerator;
     }
 
-    @Override
-    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc, PropertyDesc propertyDesc) {
+    /*package*/ MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc, PropertyDesc propertyDesc) {
         final String typeName = propertyDesc.getType();
 
         if (!COLLECTION_TYPES.contains(typeName)) {
@@ -111,5 +111,16 @@ public final class CollectionAddConfiguratorGenerator implements MethodGenerator
         return builder
             .addStatement("return " + returnStatementGenerator.generate(implementationDesc))
             .build();
+    }
+
+    @Override
+    public void append(
+            TypeSpec.Builder typeSpecBuilder,
+            SpecDesc specDesc,
+            ImplementationDesc implementationDesc,
+            PropertyDesc propertyDesc) {
+
+        final MethodSpec methodSpec = generate(specDesc, implementationDesc, propertyDesc);
+        typeSpecBuilder.addMethod(methodSpec);
     }
 }

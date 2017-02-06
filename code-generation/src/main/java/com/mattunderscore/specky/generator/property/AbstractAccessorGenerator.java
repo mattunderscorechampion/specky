@@ -31,17 +31,18 @@ import static java.lang.Character.toUpperCase;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
+import com.mattunderscore.specky.generator.TypeAppenderForProperty;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Generator for abstract accessor method.
  * @author Matt Champion on 21/06/2016
  */
-public final class AbstractAccessorGenerator implements MethodGeneratorForProperty<TypeDesc> {
+public final class AbstractAccessorGenerator implements TypeAppenderForProperty<TypeDesc> {
     private final AccessorJavadocGenerator accessorJavadocGenerator = new AccessorJavadocGenerator();
 
     /**
@@ -50,13 +51,23 @@ public final class AbstractAccessorGenerator implements MethodGeneratorForProper
     public AbstractAccessorGenerator() {
     }
 
-    @Override
-    public MethodSpec generate(SpecDesc specDesc, TypeDesc implementationDesc, PropertyDesc propertyDesc) {
+    /*package*/ MethodSpec generate(SpecDesc specDesc, TypeDesc implementationDesc, PropertyDesc propertyDesc) {
         return methodBuilder(getAccessorName(propertyDesc))
             .addModifiers(ABSTRACT, PUBLIC)
             .addJavadoc(accessorJavadocGenerator.generateJavaDoc(propertyDesc))
             .returns(getType(propertyDesc))
             .build();
+    }
+
+    @Override
+    public void append(
+            TypeSpec.Builder typeSpecBuilder,
+            SpecDesc specDesc,
+            TypeDesc typeDesc,
+            PropertyDesc propertyDesc) {
+
+        final MethodSpec methodSpec = generate(specDesc, typeDesc, propertyDesc);
+        typeSpecBuilder.addMethod(methodSpec);
     }
 
     private static String getAccessorName(PropertyDesc property) {

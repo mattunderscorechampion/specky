@@ -30,17 +30,18 @@ import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static java.lang.Character.toUpperCase;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
+import com.mattunderscore.specky.generator.TypeAppenderForProperty;
+import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.mattunderscore.specky.model.ImplementationDesc;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Generator for accessor method.
  * @author Matt Champion on 21/06/2016
  */
-public final class AccessorGenerator implements MethodGeneratorForProperty<ImplementationDesc> {
+public final class AccessorGenerator implements TypeAppenderForProperty<ImplementationDesc> {
     private final AccessorJavadocGenerator accessorJavadocGenerator = new AccessorJavadocGenerator();
 
     /**
@@ -49,8 +50,7 @@ public final class AccessorGenerator implements MethodGeneratorForProperty<Imple
     public AccessorGenerator() {
     }
 
-    @Override
-    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc, PropertyDesc propertyDesc) {
+    /*package*/ MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc, PropertyDesc propertyDesc) {
         if (propertyDesc.isOverride()) {
             return methodBuilder(getAccessorName(propertyDesc))
                 .addModifiers(PUBLIC)
@@ -67,6 +67,17 @@ public final class AccessorGenerator implements MethodGeneratorForProperty<Imple
                 .addStatement("return $N", propertyDesc.getName())
                 .build();
         }
+    }
+
+    @Override
+    public void append(
+            TypeSpec.Builder typeSpecBuilder,
+            SpecDesc specDesc,
+            ImplementationDesc implementationDesc,
+            PropertyDesc propertyDesc) {
+
+        final MethodSpec methodSpec = generate(specDesc, implementationDesc, propertyDesc);
+        typeSpecBuilder.addMethod(methodSpec);
     }
 
     private static String getAccessorName(PropertyDesc property) {

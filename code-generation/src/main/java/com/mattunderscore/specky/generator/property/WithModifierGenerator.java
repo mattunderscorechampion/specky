@@ -32,9 +32,9 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 
 import java.util.Objects;
 
-import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
-import com.mattunderscore.specky.generator.statements.StatementGeneratorForType;
+import com.mattunderscore.specky.generator.TypeAppenderForProperty;
 import com.mattunderscore.specky.generator.constraint.PropertyConstraintGenerator;
+import com.mattunderscore.specky.generator.statements.StatementGeneratorForType;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
@@ -42,12 +42,13 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Generator for with modifier method.
  * @author Matt Champion on 29/10/2016
  */
-public final class WithModifierGenerator implements MethodGeneratorForProperty<ImplementationDesc> {
+public final class WithModifierGenerator implements TypeAppenderForProperty<ImplementationDesc> {
     private final String javadoc;
     private final StatementGeneratorForType returnStatementGenerator;
     private final PropertyConstraintGenerator propertyConstraintGenerator = new PropertyConstraintGenerator();
@@ -60,8 +61,7 @@ public final class WithModifierGenerator implements MethodGeneratorForProperty<I
         this.returnStatementGenerator = returnStatementGenerator;
     }
 
-    @Override
-    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc, PropertyDesc propertyDesc) {
+    /*package*/ MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc, PropertyDesc propertyDesc) {
         if (!implementationDesc.isWithModification()) {
             return null;
         }
@@ -90,5 +90,18 @@ public final class WithModifierGenerator implements MethodGeneratorForProperty<I
         return methodBuilder
             .addStatement("return " + returnStatementGenerator.generate(implementationDesc))
             .build();
+    }
+
+    @Override
+    public void append(
+            TypeSpec.Builder typeSpecBuilder,
+            SpecDesc specDesc,
+            ImplementationDesc implementationDesc,
+            PropertyDesc propertyDesc) {
+
+        final MethodSpec methodSpec = generate(specDesc, implementationDesc, propertyDesc);
+        if (methodSpec != null) {
+            typeSpecBuilder.addMethod(methodSpec);
+        }
     }
 }

@@ -25,9 +25,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.builder;
 
-import com.mattunderscore.specky.generator.MethodGeneratorForProperty;
-import com.mattunderscore.specky.generator.statements.StatementGeneratorForType;
+import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
+import static com.squareup.javapoet.MethodSpec.methodBuilder;
+import static javax.lang.model.element.Modifier.PUBLIC;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Objects;
+
+import com.mattunderscore.specky.generator.TypeAppenderForProperty;
 import com.mattunderscore.specky.generator.constraint.PropertyConstraintGenerator;
+import com.mattunderscore.specky.generator.statements.StatementGeneratorForType;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
@@ -35,20 +43,13 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Objects;
-
-import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
-import static com.squareup.javapoet.MethodSpec.methodBuilder;
-import static javax.lang.model.element.Modifier.PUBLIC;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * Generator for setting configurator.
  * @author Matt Champion on 24/07/2016
  */
-public final class SettingConfiguratorGenerator implements MethodGeneratorForProperty<ImplementationDesc> {
+public final class SettingConfiguratorGenerator implements TypeAppenderForProperty<ImplementationDesc> {
     private final String javadoc;
     private final StatementGeneratorForType returnStatementGenerator;
     private final PropertyConstraintGenerator propertyConstraintGenerator = new PropertyConstraintGenerator();
@@ -62,7 +63,12 @@ public final class SettingConfiguratorGenerator implements MethodGeneratorForPro
     }
 
     @Override
-    public MethodSpec generate(SpecDesc specDesc, ImplementationDesc implementationDesc, PropertyDesc propertyDesc) {
+    public void append(
+            TypeSpec.Builder typeSpecBuilder,
+            SpecDesc specDesc,
+            ImplementationDesc implementationDesc,
+            PropertyDesc propertyDesc) {
+
         final TypeName type = getType(propertyDesc);
         final ParameterSpec constructorParameter = ParameterSpec.builder(type, propertyDesc.getName()).build();
         MethodSpec.Builder methodBuilder = methodBuilder(propertyDesc.getName())
@@ -97,8 +103,10 @@ public final class SettingConfiguratorGenerator implements MethodGeneratorForPro
             methodBuilder.addStatement("this.$L = $N", propertyDesc.getName(), constructorParameter);
         }
 
-        return methodBuilder
+        final MethodSpec methodSpec = methodBuilder
             .addStatement("return " + returnStatementGenerator.generate(implementationDesc))
             .build();
+
+        typeSpecBuilder.addMethod(methodSpec);
     }
 }
