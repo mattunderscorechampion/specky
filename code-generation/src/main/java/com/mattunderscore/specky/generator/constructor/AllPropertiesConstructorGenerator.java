@@ -71,7 +71,6 @@ public final class AllPropertiesConstructorGenerator implements TypeAppender<Imp
 
         typeDesc
             .getProperties()
-            .stream()
             .forEach(propertyDesc -> {
                 final TypeName type = getType(propertyDesc);
                 final FieldSpec fieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build();

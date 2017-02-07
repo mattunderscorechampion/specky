@@ -120,7 +120,6 @@ public final class MutableBuilderGenerator implements TypeAppender<Implementatio
 
         valueDesc
             .getProperties()
-            .stream()
             .forEach(propertyDesc -> {
                 final TypeName type = getType(propertyDesc);
                 final FieldSpec fieldSpec = FieldSpec
