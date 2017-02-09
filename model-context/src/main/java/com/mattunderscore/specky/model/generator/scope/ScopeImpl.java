@@ -25,9 +25,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator.scope;
 
+import java.util.Optional;
+
 import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
+import com.squareup.javapoet.CodeBlock;
 
 /**
  * Implementation of {@link Scope}.
@@ -58,21 +61,6 @@ public final class ScopeImpl implements Scope {
     }
 
     @Override
-    public DefaultValueResolver getValueResolver() {
-        return valueResolver;
-    }
-
-    @Override
-    public TypeResolver getTypeResolver() {
-        return typeResolver;
-    }
-
-    @Override
-    public LicenceResolver getLicenceResolver() {
-        return licenceResolver;
-    }
-
-    @Override
     public String getAuthor() {
         return author;
     }
@@ -80,5 +68,20 @@ public final class ScopeImpl implements Scope {
     @Override
     public String getPackage() {
         return packageName;
+    }
+
+    @Override
+    public Optional<String> resolveLicence(String name) {
+        return licenceResolver.resolveLicence(name);
+    }
+
+    @Override
+    public Optional<String> resolveType(String name) {
+        return typeResolver.resolveType(name);
+    }
+
+    @Override
+    public Optional<CodeBlock> resolveValue(String resolvedType, boolean optional) {
+        return valueResolver.resolveValue(resolvedType, optional);
     }
 }

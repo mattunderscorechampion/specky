@@ -38,12 +38,12 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
+import com.mattunderscore.specky.model.generator.scope.Scope;
 import com.mattunderscore.specky.model.generator.scope.SectionScopeResolver;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyBaseListener;
 import com.mattunderscore.specky.proposition.ConstraintFactory;
 import com.mattunderscore.specky.proposition.Normaliser;
-import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.squareup.javapoet.CodeBlock;
 
 import net.jcip.annotations.NotThreadSafe;
@@ -122,16 +122,15 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
 
     @Override
     public void exitTypeSpec(Specky.TypeSpecContext ctx) {
+        final Scope scope = sectionScopeResolver.resolve(currentSection);
         currentTypeDesc = currentTypeDesc
             .name(ctx.Identifier().getText())
-            .author(sectionScopeResolver.resolve(currentSection).getAuthor())
-            .packageName(sectionScopeResolver.resolve(currentSection).getPackage())
+            .author(scope.getAuthor())
+            .packageName(scope.getPackage())
             .ifThen(
                 ctx.licence() == null,
                 builder -> builder
-                    .licence(sectionScopeResolver
-                        .resolve(currentSection)
-                        .getLicenceResolver()
+                    .licence(scope
                         .resolveLicence((String) null)
                         .orElse(null)))
             .ifThen(
@@ -142,9 +141,7 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
                 builder -> {
                     final String licenceName = ctx.licence().Identifier().getText();
                     return builder
-                        .licence(sectionScopeResolver
-                            .resolve(currentSection)
-                            .getLicenceResolver()
+                        .licence(scope
                             .resolveLicence(licenceName)
                             .orElseGet(() -> {
                                 semanticErrorListener.onSemanticError(
@@ -169,9 +166,8 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
     }
 
     private PropertyDesc createProperty(Specky.PropertyContext context) {
-        final TypeResolver typeResolver = sectionScopeResolver
-            .resolve(currentSection)
-            .getTypeResolver();
+        final Scope scope = sectionScopeResolver
+            .resolve(currentSection);
 
         final String defaultValue = context.default_value() == null ?
             null :
@@ -186,13 +182,14 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
                 .map(ParseTree::getText)
                 .collect(toList());
 
+        final String type = scope.resolveType(context.Identifier().getText()).get();
+
         final CodeBlock defaultCode = defaultValue != null ? CodeBlock.of(defaultValue) : sectionScopeResolver
             .resolve(currentSection)
-            .getValueResolver()
-            .resolveValue(typeResolver.resolveType(context.Identifier().getText()).get(), context.OPTIONAL() != null)
+            .resolveValue(type, context.OPTIONAL() != null)
             .get();
 
-        final String resolvedType = typeResolver
+        final String resolvedType = scope
             .resolveType(context
                 .Identifier()
                 .getText(),

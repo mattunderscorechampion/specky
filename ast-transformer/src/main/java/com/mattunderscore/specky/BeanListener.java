@@ -56,7 +56,6 @@ import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyBaseListener;
 import com.mattunderscore.specky.proposition.ConstraintFactory;
 import com.mattunderscore.specky.proposition.Normaliser;
-import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.squareup.javapoet.CodeBlock;
 
 import net.jcip.annotations.NotThreadSafe;
@@ -217,7 +216,6 @@ public final class BeanListener extends SpeckyBaseListener {
                 builder -> builder
                     .licence(sectionScopeResolver
                         .resolve(currentSection)
-                        .getLicenceResolver()
                         .resolveLicence((String) null)
                         .orElse(null)))
             .ifThen(
@@ -230,7 +228,6 @@ public final class BeanListener extends SpeckyBaseListener {
                     return builder
                         .licence(sectionScopeResolver
                             .resolve(currentSection)
-                            .getLicenceResolver()
                             .resolveLicence(licenceName)
                             .orElseGet(() -> {
                                 semanticErrorListener.onSemanticError(
@@ -266,7 +263,7 @@ public final class BeanListener extends SpeckyBaseListener {
         supertypes
             .stream()
             .map(typeName -> {
-                final Optional<String> optionalType = scope.getTypeResolver().resolveType(typeName);
+                final Optional<String> optionalType = scope.resolveType(typeName);
                 return optionalType.orElseGet(() -> {
                     semanticErrorListener.onSemanticError("No resolvable type for " + typeName, ctx);
                     return "unknown type";
@@ -291,9 +288,8 @@ public final class BeanListener extends SpeckyBaseListener {
     }
 
     private PropertyDesc createProperty(Specky.PropertyContext context) {
-        final TypeResolver typeResolver = sectionScopeResolver
-            .resolve(currentSection)
-            .getTypeResolver();
+        final Scope scope = sectionScopeResolver
+            .resolve(currentSection);
 
         final String defaultValue = context.default_value() == null ?
             null :
@@ -308,12 +304,10 @@ public final class BeanListener extends SpeckyBaseListener {
                 .map(ParseTree::getText)
                 .collect(toList());
 
-        final CodeBlock defaultCode = defaultValue != null ? CodeBlock.of(defaultValue) : sectionScopeResolver
-            .resolve(currentSection)
-            .getValueResolver()
-            .resolveValue(typeResolver.resolveType(context.Identifier().getText()).get(), context.OPTIONAL() != null).get();
+        final CodeBlock defaultCode = defaultValue != null ? CodeBlock.of(defaultValue) : scope
+            .resolveValue(scope.resolveType(context.Identifier().getText()).get(), context.OPTIONAL() != null).get();
 
-        final String resolvedType = typeResolver
+        final String resolvedType = scope
             .resolveType(context
                 .Identifier()
                 .getText(),

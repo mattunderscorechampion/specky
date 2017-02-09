@@ -33,22 +33,7 @@ import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
  * Scope to resolveLicence names, symbols and values in.
  * @author Matt Champion on 21/08/2016
  */
-public interface Scope {
-    /**
-     * @return the value resolver for the scope
-     */
-    DefaultValueResolver getValueResolver();
-
-    /**
-     * @return the type resolver for the scope
-     */
-    TypeResolver getTypeResolver();
-
-    /**
-     * @return the licence resolver for the scope
-     */
-    LicenceResolver getLicenceResolver();
-
+public interface Scope extends DefaultValueResolver, TypeResolver, LicenceResolver {
     /**
      * @return the name of the author
      */
