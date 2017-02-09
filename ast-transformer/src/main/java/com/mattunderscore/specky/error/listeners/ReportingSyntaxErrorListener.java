@@ -23,7 +23,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky;
+package com.mattunderscore.specky.error.listeners;
 
 import com.mattunderscore.specky.parser.SpeckyLexer;
 import org.antlr.v4.runtime.ANTLRErrorListener;

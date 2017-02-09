@@ -31,6 +31,8 @@ import org.antlr.v4.runtime.Recognizer;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.mattunderscore.specky.error.listeners.SyntaxErrorListener;
+
 /**
  * Syntax error listener. Counts the number of errors.
  * @author Matt Champion 27/01/2017

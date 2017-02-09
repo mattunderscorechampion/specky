@@ -1,4 +1,5 @@
-/* Copyright © 2017 Matthew Champion All rights reserved.
+/* Copyright © 2017 Matthew Champion
+All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -22,40 +23,17 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky;
-
-import static java.util.Arrays.asList;
-import static java.util.Arrays.copyOf;
-
-import java.nio.file.Path;
-import java.util.Collection;
+package com.mattunderscore.specky.error.listeners;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
- * A composite {@link SemanticErrorListener} that delegates to many others.
- *
- * @author Matt Champion 24/01/2017
+ * A listener for semantic errors.
+ * @author Matt Champion on 01/02/17
  */
-public final class CompositeSemanticErrorListener implements SemanticErrorListener {
-    private final Collection<SemanticErrorListener> delegates;
-
+public interface InternalSemanticErrorListener {
     /**
-     * Constructor.
+     * Notified when a semantic error is encountered.
      */
-    private CompositeSemanticErrorListener(Collection<SemanticErrorListener> delegates) {
-        this.delegates = delegates;
-    }
-
-    @Override
-    public void onSemanticError(Path file, String message, ParserRuleContext ruleContext) {
-        delegates.forEach(delegate -> delegate.onSemanticError(file, message, ruleContext));
-    }
-
-    /**
-     * Compose multiple listeners together.
-     */
-    public static SemanticErrorListener composeListeners(SemanticErrorListener... listeners) {
-        return new CompositeSemanticErrorListener(asList(copyOf(listeners, listeners.length)));
-    }
+    void onSemanticError(String message, ParserRuleContext ruleContext);
 }

@@ -25,16 +25,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky;
 
 import com.mattunderscore.specky.context.file.FileContext;
+import com.mattunderscore.specky.error.listeners.CountingSemanticErrorListener;
 import com.mattunderscore.specky.model.SpecDesc;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.mattunderscore.specky.CompositeSemanticErrorListener.composeListeners;
+import static com.mattunderscore.specky.error.listeners.CompositeSemanticErrorListener.composeListeners;
 import static com.mattunderscore.specky.CompositeSyntaxErrorListener.composeSyntaxListeners;
-import static com.mattunderscore.specky.ReportingSemanticErrorListener.reportTo;
-import static com.mattunderscore.specky.ReportingSyntaxErrorListener.reportSyntaxErrorsTo;
+import static com.mattunderscore.specky.error.listeners.ReportingSemanticErrorListener.reportTo;
+import static com.mattunderscore.specky.error.listeners.ReportingSyntaxErrorListener.reportSyntaxErrorsTo;
 
 /**
  * @author Matt Champion 15/01/2017

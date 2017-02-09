@@ -45,6 +45,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import com.mattunderscore.specky.licence.resolver.MutableLicenceResolver;
+import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
 import com.mattunderscore.specky.model.generator.scope.PendingScope;
 import com.mattunderscore.specky.model.generator.scope.SectionScopeBuilder;
 import com.mattunderscore.specky.parser.Specky;

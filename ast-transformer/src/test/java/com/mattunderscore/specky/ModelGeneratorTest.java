@@ -15,15 +15,16 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import com.mattunderscore.specky.context.file.FileContext;
-import org.antlr.v4.runtime.ANTLRErrorListener;
+
 import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CharStream;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
+import com.mattunderscore.specky.error.listeners.SemanticErrorListener;
+import com.mattunderscore.specky.error.listeners.SyntaxErrorListener;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.ImplementationDesc;

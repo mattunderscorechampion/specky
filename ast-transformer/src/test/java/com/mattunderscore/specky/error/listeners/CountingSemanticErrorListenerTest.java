@@ -1,14 +1,14 @@
-package com.mattunderscore.specky;
+package com.mattunderscore.specky.error.listeners;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.MockitoAnnotations.initMocks;
+
+import java.nio.file.Paths;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-
-import java.nio.file.Paths;
 
 /**
  * Unit tests for {@link CountingSemanticErrorListener}.

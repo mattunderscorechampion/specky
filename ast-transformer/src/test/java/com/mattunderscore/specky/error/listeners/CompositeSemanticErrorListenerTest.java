@@ -1,5 +1,4 @@
-/* Copyright © 2016-2017 Matthew Champion
-All rights reserved.
+/* Copyright © 2017 Matthew Champion All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -23,19 +22,43 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky;
+package com.mattunderscore.specky.error.listeners;
+
+import static com.mattunderscore.specky.error.listeners.CompositeSemanticErrorListener.composeListeners;
+import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.initMocks;
+
+import java.nio.file.Paths;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-
-import java.nio.file.Path;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
 
 /**
- * A listener for Semantic exceptions.
- * @author Matt Champion on 12/10/2016
+ * Unit tests for {@link CompositeSemanticErrorListener}.
+ *
+ * @author Matt Champion 24/01/2017
  */
-public interface SemanticErrorListener {
-    /**
-     * Notified when a semantic error is encountered.
-     */
-    void onSemanticError(Path file, String message, ParserRuleContext ruleContext);
+public final class CompositeSemanticErrorListenerTest {
+    @Mock
+    private ParserRuleContext ctx;
+    @Mock
+    private SemanticErrorListener listener0;
+    @Mock
+    private SemanticErrorListener listener1;
+
+    @Before
+    public void setUp() {
+        initMocks(this);
+    }
+
+    @Test
+    public void onSemanticError() {
+        final SemanticErrorListener listener = composeListeners(listener0, listener1);
+        listener.onSemanticError(Paths.get("."), "Test error", ctx);
+
+        verify(listener0).onSemanticError(Paths.get("."), "Test error", ctx);
+        verify(listener1).onSemanticError(Paths.get("."), "Test error", ctx);
+    }
 }

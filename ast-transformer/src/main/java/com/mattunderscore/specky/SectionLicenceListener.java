@@ -26,6 +26,7 @@ package com.mattunderscore.specky;
 
 import static com.mattunderscore.specky.ParserUtils.toValue;
 
+import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
 import com.mattunderscore.specky.model.generator.scope.SectionScopeBuilder;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyBaseListener;

@@ -33,6 +33,8 @@ import java.util.Collection;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOf;
 
+import com.mattunderscore.specky.error.listeners.SyntaxErrorListener;
+
 /**
  * Composite syntax error listener.
  * @author Matt Champion 27/01/2017

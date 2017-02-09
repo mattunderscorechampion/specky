@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
+import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;

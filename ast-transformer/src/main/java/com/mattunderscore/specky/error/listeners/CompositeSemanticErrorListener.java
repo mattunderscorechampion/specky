@@ -1,5 +1,4 @@
-/* Copyright © 2016 Matthew Champion
-All rights reserved.
+/* Copyright © 2017 Matthew Champion All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -23,28 +22,40 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky;
+package com.mattunderscore.specky.error.listeners;
+
+import static java.util.Arrays.asList;
+import static java.util.Arrays.copyOf;
+
+import java.nio.file.Path;
+import java.util.Collection;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
-import java.nio.file.Path;
-
 /**
- * A {@link SemanticErrorListener} that counts the errors.
- * @author Matt Champion on 12/10/2016
+ * A composite {@link SemanticErrorListener} that delegates to many others.
+ *
+ * @author Matt Champion 24/01/2017
  */
-public final class CountingSemanticErrorListener implements SemanticErrorListener {
-    private int errorCount;
+public final class CompositeSemanticErrorListener implements SemanticErrorListener {
+    private final Collection<SemanticErrorListener> delegates;
+
+    /**
+     * Constructor.
+     */
+    private CompositeSemanticErrorListener(Collection<SemanticErrorListener> delegates) {
+        this.delegates = delegates;
+    }
 
     @Override
-    public void onSemanticError(Path file, String message, ParserRuleContext ctx) {
-        errorCount += 1;
+    public void onSemanticError(Path file, String message, ParserRuleContext ruleContext) {
+        delegates.forEach(delegate -> delegate.onSemanticError(file, message, ruleContext));
     }
 
     /**
-     * @return the number of semantic errors
+     * Compose multiple listeners together.
      */
-    public int getErrorCount() {
-        return errorCount;
+    public static SemanticErrorListener composeListeners(SemanticErrorListener... listeners) {
+        return new CompositeSemanticErrorListener(asList(copyOf(listeners, listeners.length)));
     }
 }

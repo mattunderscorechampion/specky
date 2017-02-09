@@ -1,4 +1,5 @@
-/* Copyright © 2017 Matthew Champion All rights reserved.
+/* Copyright © 2016-2017 Matthew Champion
+All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -22,42 +23,19 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky;
-
-import java.io.PrintStream;
-import java.nio.file.Path;
+package com.mattunderscore.specky.error.listeners;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
+import java.nio.file.Path;
+
 /**
- * A {@link SemanticErrorListener} for reporting semantic errors.
- *
- * @author Matt Champion 24/01/2017
+ * A listener for Semantic exceptions.
+ * @author Matt Champion on 12/10/2016
  */
-public final class ReportingSemanticErrorListener implements SemanticErrorListener {
-    private final PrintStream ps;
-
+public interface SemanticErrorListener {
     /**
-     * Constructor.
+     * Notified when a semantic error is encountered.
      */
-    private ReportingSemanticErrorListener(PrintStream ps) {
-        this.ps = ps;
-    }
-
-    @Override
-    public void onSemanticError(Path file, String message, ParserRuleContext ruleContext) {
-        ps.printf(
-            "%s\nSee: %s\n%s:%d\n---\n",
-            message,
-            ruleContext.getText().trim(),
-            file,
-            ruleContext.getStart().getLine());
-    }
-
-    /**
-     * Report the errors to a print stream.
-     */
-    public static SemanticErrorListener reportTo(PrintStream ps) {
-        return new ReportingSemanticErrorListener(ps);
-    }
+    void onSemanticError(Path file, String message, ParserRuleContext ruleContext);
 }

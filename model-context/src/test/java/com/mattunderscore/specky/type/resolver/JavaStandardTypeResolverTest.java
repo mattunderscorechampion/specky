@@ -30,8 +30,6 @@ import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
-import com.mattunderscore.specky.SemanticErrorListener;
-
 /**
  * Unit tests for {@link JavaStandardTypeResolver}.
  * @author Matt Champion on 08/06/16

@@ -1,5 +1,4 @@
-/* Copyright © 2017 Matthew Champion
-All rights reserved.
+/* Copyright © 2017 Matthew Champion All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -23,28 +22,42 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky;
+package com.mattunderscore.specky.error.listeners;
 
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.Recognizer;
-
+import java.io.PrintStream;
 import java.nio.file.Path;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+
 /**
- * Listener for syntax errors.
+ * A {@link SemanticErrorListener} for reporting semantic errors.
  *
- * @author Matt Champion on 01/02/17
+ * @author Matt Champion 24/01/2017
  */
-public interface SyntaxErrorListener {
+public final class ReportingSemanticErrorListener implements SemanticErrorListener {
+    private final PrintStream ps;
+
     /**
-     * Notified on syntax errors.
+     * Constructor.
      */
-    void syntaxError(
-            Path filePath,
-            Recognizer<?, ?> recognizer,
-            Object offendingSymbol,
-            int line,
-            int charPositionInLine,
-            String msg,
-            RecognitionException e);
+    private ReportingSemanticErrorListener(PrintStream ps) {
+        this.ps = ps;
+    }
+
+    @Override
+    public void onSemanticError(Path file, String message, ParserRuleContext ruleContext) {
+        ps.printf(
+            "%s\nSee: %s\n%s:%d\n---\n",
+            message,
+            ruleContext.getText().trim(),
+            file,
+            ruleContext.getStart().getLine());
+    }
+
+    /**
+     * Report the errors to a print stream.
+     */
+    public static SemanticErrorListener reportTo(PrintStream ps) {
+        return new ReportingSemanticErrorListener(ps);
+    }
 }

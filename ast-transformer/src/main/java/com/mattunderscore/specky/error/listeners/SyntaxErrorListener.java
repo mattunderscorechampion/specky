@@ -23,17 +23,28 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.mattunderscore.specky;
+package com.mattunderscore.specky.error.listeners;
 
-import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
+
+import java.nio.file.Path;
 
 /**
- * A listener for semantic errors.
+ * Listener for syntax errors.
+ *
  * @author Matt Champion on 01/02/17
  */
-public interface InternalSemanticErrorListener {
+public interface SyntaxErrorListener {
     /**
-     * Notified when a semantic error is encountered.
+     * Notified on syntax errors.
      */
-    void onSemanticError(String message, ParserRuleContext ruleContext);
+    void syntaxError(
+            Path filePath,
+            Recognizer<?, ?> recognizer,
+            Object offendingSymbol,
+            int line,
+            int charPositionInLine,
+            String msg,
+            RecognitionException e);
 }

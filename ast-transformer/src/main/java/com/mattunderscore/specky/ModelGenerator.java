@@ -25,6 +25,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky;
 
 import com.mattunderscore.specky.context.file.FileContext;
+import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
+import com.mattunderscore.specky.error.listeners.SemanticErrorListener;
+import com.mattunderscore.specky.error.listeners.SyntaxErrorListener;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;

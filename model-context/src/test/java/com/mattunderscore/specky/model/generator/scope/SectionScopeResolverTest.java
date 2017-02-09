@@ -34,7 +34,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.mattunderscore.specky.SemanticErrorListener;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 
 /**
@@ -43,8 +42,6 @@ import com.mattunderscore.specky.type.resolver.TypeResolver;
  * @author Matt Champion on 24/12/2016
  */
 public class SectionScopeResolverTest {
-    @Mock
-    private SemanticErrorListener errorListener;
     @Mock
     private TypeResolver typeResolver;
 
@@ -55,7 +52,7 @@ public class SectionScopeResolverTest {
 
     @After
     public void postConditions() {
-        verifyNoMoreInteractions(errorListener);
+        verifyNoMoreInteractions(typeResolver);
     }
 
     @Test
