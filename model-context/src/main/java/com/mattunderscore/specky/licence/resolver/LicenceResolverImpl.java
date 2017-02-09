@@ -74,7 +74,7 @@ public final class LicenceResolverImpl implements MutableLicenceResolver {
     }
 
     @Override
-    public Optional<String> resolve(String name) {
+    public Optional<String> resolveLicence(String name) {
         if (name == null) {
             return Optional.ofNullable(defaultLicence);
         }

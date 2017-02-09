@@ -59,7 +59,7 @@ public final class SpecTypeResolver implements MutableTypeResolver {
     }
 
     @Override
-    public Optional<String> resolve(String name) {
+    public Optional<String> resolveType(String name) {
         return ofNullable(specs.get(name));
     }
 }

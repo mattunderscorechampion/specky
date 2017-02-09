@@ -37,14 +37,14 @@ public interface TypeResolver {
      * @param name the type name
      * @return optional fully qualified name
      */
-    Optional<String> resolve(String name);
+    Optional<String> resolveType(String name);
 
     /**
      * @param typeName the name of the type
      * @return optional if the property is optional
      */
-    default Optional<String> resolve(String typeName, boolean optional) {
-        return resolve(typeName)
+    default Optional<String> resolveType(String typeName, boolean optional) {
+        return resolveType(typeName)
             .flatMap(type -> {
                 if (!optional) {
                     return Optional.of(type);

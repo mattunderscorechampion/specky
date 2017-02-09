@@ -39,7 +39,7 @@ public final class LicenceResolverImplTest {
     public void resolveUnknown() {
         final MutableLicenceResolver resolver = new LicenceResolverImpl();
 
-        final Optional<String> result = resolver.resolve("name");
+        final Optional<String> result = resolver.resolveLicence("name");
 
         assertFalse(result.isPresent());
     }
@@ -50,7 +50,7 @@ public final class LicenceResolverImplTest {
 
         resolver.register("name", "licence");
 
-        final Optional<String> result = resolver.resolve("name");
+        final Optional<String> result = resolver.resolveLicence("name");
 
         assertTrue(result.isPresent());
         assertEquals("licence", result.get());
@@ -62,7 +62,7 @@ public final class LicenceResolverImplTest {
 
         resolver.register("licence");
 
-        final Optional<String> result = resolver.resolve(null);
+        final Optional<String> result = resolver.resolveLicence(null);
 
         assertTrue(result.isPresent());
         assertEquals("licence", result.get());

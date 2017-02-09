@@ -45,7 +45,7 @@ public final class MutableValueResolverTest {
     public void resolveNone() {
         final MutableValueResolver resolver = new MutableValueResolverImpl();
 
-        final Optional<CodeBlock> none = resolver.resolve("none", false);
+        final Optional<CodeBlock> none = resolver.resolveValue("none", false);
         assertFalse(none.isPresent());
     }
 
@@ -54,7 +54,7 @@ public final class MutableValueResolverTest {
         final MutableValueResolver resolver = new MutableValueResolverImpl();
 
         resolver.register("some", CodeBlock.of("other"));
-        final Optional<CodeBlock> some =  resolver.resolve("some", false);
+        final Optional<CodeBlock> some =  resolver.resolveValue("some", false);
         assertTrue(some.isPresent());
         assertEquals(CodeBlock.of("other"), some.get());
     }

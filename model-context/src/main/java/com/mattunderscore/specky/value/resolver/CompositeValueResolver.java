@@ -51,10 +51,10 @@ public final class CompositeValueResolver implements DefaultValueResolver {
     }
 
     @Override
-    public Optional<CodeBlock> resolve(String resolvedType, boolean optional) {
+    public Optional<CodeBlock> resolveValue(String resolvedType, boolean optional) {
         return Stream
             .of(resolvers)
-            .map(resolver -> resolver.resolve(resolvedType, optional))
+            .map(resolver -> resolver.resolveValue(resolvedType, optional))
             .filter(Optional::isPresent)
             .map(Optional::get)
             .findFirst();

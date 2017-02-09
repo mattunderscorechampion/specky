@@ -132,7 +132,7 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
                     .licence(sectionScopeResolver
                         .resolve(currentSection)
                         .getLicenceResolver()
-                        .resolve((String) null)
+                        .resolveLicence((String) null)
                         .orElse(null)))
             .ifThen(
                 ctx.licence() != null && ctx.licence().string_value() != null,
@@ -145,7 +145,7 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
                         .licence(sectionScopeResolver
                             .resolve(currentSection)
                             .getLicenceResolver()
-                            .resolve(licenceName)
+                            .resolveLicence(licenceName)
                             .orElseGet(() -> {
                                 semanticErrorListener.onSemanticError(
                                     "An unknown name was used to reference a licence",
@@ -189,11 +189,11 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
         final CodeBlock defaultCode = defaultValue != null ? CodeBlock.of(defaultValue) : sectionScopeResolver
             .resolve(currentSection)
             .getValueResolver()
-            .resolve(typeResolver.resolve(context.Identifier().getText()).get(), context.OPTIONAL() != null)
+            .resolveValue(typeResolver.resolveType(context.Identifier().getText()).get(), context.OPTIONAL() != null)
             .get();
 
         final String resolvedType = typeResolver
-            .resolve(context
+            .resolveType(context
                 .Identifier()
                 .getText(),
             context.OPTIONAL() != null)

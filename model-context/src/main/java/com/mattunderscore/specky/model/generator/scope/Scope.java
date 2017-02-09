@@ -30,7 +30,7 @@ import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 
 /**
- * Scope to resolve names, symbols and values in.
+ * Scope to resolveLicence names, symbols and values in.
  * @author Matt Champion on 21/08/2016
  */
 public interface Scope {

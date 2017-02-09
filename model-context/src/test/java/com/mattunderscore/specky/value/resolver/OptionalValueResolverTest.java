@@ -19,14 +19,14 @@ public class OptionalValueResolverTest {
 
     @Test
     public void optional() {
-        final Optional<CodeBlock> value = resolver.resolve("none", true);
+        final Optional<CodeBlock> value = resolver.resolveValue("none", true);
         assertTrue(value.isPresent());
         assertEquals(CodeBlock.of("null"), value.get());
     }
 
     @Test
     public void required() {
-        final Optional<CodeBlock> value = resolver.resolve("none", false);
+        final Optional<CodeBlock> value = resolver.resolveValue("none", false);
         assertFalse(value.isPresent());
     }
 }

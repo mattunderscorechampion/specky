@@ -218,7 +218,7 @@ public final class BeanListener extends SpeckyBaseListener {
                     .licence(sectionScopeResolver
                         .resolve(currentSection)
                         .getLicenceResolver()
-                        .resolve((String) null)
+                        .resolveLicence((String) null)
                         .orElse(null)))
             .ifThen(
                 ctx.licence() != null && ctx.licence().string_value() != null,
@@ -231,7 +231,7 @@ public final class BeanListener extends SpeckyBaseListener {
                         .licence(sectionScopeResolver
                             .resolve(currentSection)
                             .getLicenceResolver()
-                            .resolve(licenceName)
+                            .resolveLicence(licenceName)
                             .orElseGet(() -> {
                                 semanticErrorListener.onSemanticError(
                                     "An unknown name was used to reference a licence",
@@ -266,7 +266,7 @@ public final class BeanListener extends SpeckyBaseListener {
         supertypes
             .stream()
             .map(typeName -> {
-                final Optional<String> optionalType = scope.getTypeResolver().resolve(typeName);
+                final Optional<String> optionalType = scope.getTypeResolver().resolveType(typeName);
                 return optionalType.orElseGet(() -> {
                     semanticErrorListener.onSemanticError("No resolvable type for " + typeName, ctx);
                     return "unknown type";
@@ -311,10 +311,10 @@ public final class BeanListener extends SpeckyBaseListener {
         final CodeBlock defaultCode = defaultValue != null ? CodeBlock.of(defaultValue) : sectionScopeResolver
             .resolve(currentSection)
             .getValueResolver()
-            .resolve(typeResolver.resolve(context.Identifier().getText()).get(), context.OPTIONAL() != null).get();
+            .resolveValue(typeResolver.resolveType(context.Identifier().getText()).get(), context.OPTIONAL() != null).get();
 
         final String resolvedType = typeResolver
-            .resolve(context
+            .resolveType(context
                 .Identifier()
                 .getText(),
             context.OPTIONAL() != null)

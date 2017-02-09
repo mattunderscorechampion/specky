@@ -44,10 +44,10 @@ import java.util.stream.Stream;
     }
 
     @Override
-    public Optional<String> resolve(String name) {
+    public Optional<String> resolveType(String name) {
         return resolvers
             .stream()
-            .map(resolver -> resolver.resolve(name))
+            .map(resolver -> resolver.resolveType(name))
             .filter(Optional::isPresent)
             .flatMap(o -> o.isPresent() ? Stream.of(o.get()) : Stream.empty())
             .findFirst();

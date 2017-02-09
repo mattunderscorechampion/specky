@@ -37,5 +37,5 @@ public interface DefaultValueResolver {
     /**
      * @return A default value or empty if it could not be resolved
      */
-    Optional<CodeBlock> resolve(String resolvedType, boolean optional);
+    Optional<CodeBlock> resolveValue(String resolvedType, boolean optional);
 }

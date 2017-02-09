@@ -83,15 +83,15 @@ public final class FileTypeListenerTest {
         parser.spec();
 
         // Verify types
-        final Optional<String> t0 = typeResolver.resolve("TestType");
+        final Optional<String> t0 = typeResolver.resolveType("TestType");
         assertEquals(t0.get(), "com.example.TestType");
-        final Optional<String> t1 = typeResolver.resolve("FirstValue");
+        final Optional<String> t1 = typeResolver.resolveType("FirstValue");
         assertEquals(t1.get(), "com.example.FirstValue");
-        final Optional<String> t2 = typeResolver.resolve("SecondValue");
+        final Optional<String> t2 = typeResolver.resolveType("SecondValue");
         assertEquals(t2.get(), "com.example.SecondValue");
-        final Optional<String> t3 = typeResolver.resolve("ValueWithBooleans");
+        final Optional<String> t3 = typeResolver.resolveType("ValueWithBooleans");
         assertEquals(t3.get(), "com.example.ValueWithBooleans");
-        final Optional<String> t4 = typeResolver.resolve("FirstBean");
+        final Optional<String> t4 = typeResolver.resolveType("FirstBean");
         assertEquals(t4.get(), "com.example.FirstBean");
     }
 }

@@ -41,7 +41,7 @@ public final class MutableValueResolverImpl implements MutableValueResolver {
     private final ConcurrentMap<String, CodeBlock> typeToValue = new ConcurrentHashMap<>(10, 0.5f, 2);
 
     @Override
-    public Optional<CodeBlock> resolve(String resolvedType, boolean optional) {
+    public Optional<CodeBlock> resolveValue(String resolvedType, boolean optional) {
         return Optional.ofNullable(typeToValue.get(resolvedType));
     }
 

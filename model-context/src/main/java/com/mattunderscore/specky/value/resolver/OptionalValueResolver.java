@@ -35,7 +35,7 @@ import com.squareup.javapoet.CodeBlock;
  */
 public final class OptionalValueResolver implements DefaultValueResolver {
     @Override
-    public Optional<CodeBlock> resolve(String resolvedType, boolean optional) {
+    public Optional<CodeBlock> resolveValue(String resolvedType, boolean optional) {
         if (optional) {
             return Optional.of(CodeBlock.of("null"));
         }

@@ -43,11 +43,11 @@ public final class NullValueResolverTest {
 
     @Test
     public void objectsAreNull() {
-        assertEquals(CodeBlock.of("null"), resolver.resolve("java.lang.String", false).get());
+        assertEquals(CodeBlock.of("null"), resolver.resolveValue("java.lang.String", false).get());
     }
 
     @Test
     public void primitivesUnresolved() {
-        assertFalse(resolver.resolve("int", false).isPresent());
+        assertFalse(resolver.resolveValue("int", false).isPresent());
     }
 }

@@ -73,7 +73,7 @@ public final class JavaStandardDefaultValueResolver implements DefaultValueResol
     }
 
     @Override
-    public Optional<CodeBlock> resolve(String resolvedType, boolean optional) {
+    public Optional<CodeBlock> resolveValue(String resolvedType, boolean optional) {
         return Optional.ofNullable(typeToDefault.get(resolvedType));
     }
 }

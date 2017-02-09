@@ -72,7 +72,7 @@ public final class SectionLicenceListenerTest {
 
         when(scope.getLicenceResolver()).thenReturn(licenceResolver);
         when(sectionScopeBuilder.currentScope()).thenReturn(scope);
-        when(licenceResolver.resolve(any())).thenReturn(Optional.of("licence"));
+        when(licenceResolver.resolveLicence(any())).thenReturn(Optional.of("licence"));
         when(licenceResolver.register(any())).thenReturn(completedFuture(null));
         when(licenceResolver.register(any(), any())).thenReturn(completedFuture(null));
     }

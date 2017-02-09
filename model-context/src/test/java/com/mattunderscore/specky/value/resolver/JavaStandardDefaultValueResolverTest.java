@@ -42,36 +42,36 @@ public final class JavaStandardDefaultValueResolverTest {
 
     @Test
     public void resolveBool() {
-        assertEquals(CodeBlock.of("$L", false), resolver.resolve("boolean", false).get());
+        assertEquals(CodeBlock.of("$L", false), resolver.resolveValue("boolean", false).get());
     }
 
     @Test
     public void resolveBoolean() {
-        assertEquals(CodeBlock.of("$L", false), resolver.resolve("java.lang.Boolean", false).get());
+        assertEquals(CodeBlock.of("$L", false), resolver.resolveValue("java.lang.Boolean", false).get());
     }
 
     @Test
     public void resolveInt() {
-        assertEquals(CodeBlock.of("$L", 0), resolver.resolve("int", false).get());
+        assertEquals(CodeBlock.of("$L", 0), resolver.resolveValue("int", false).get());
     }
 
     @Test
     public void resolveDbl() {
-        assertEquals(CodeBlock.of("$L", 0.0), resolver.resolve("double", false).get());
+        assertEquals(CodeBlock.of("$L", 0.0), resolver.resolveValue("double", false).get());
     }
 
     @Test
     public void getString() {
-        assertEquals(CodeBlock.of("$S", ""), resolver.resolve("java.lang.String", false).get());
+        assertEquals(CodeBlock.of("$S", ""), resolver.resolveValue("java.lang.String", false).get());
     }
 
     @Test
     public void getInteger() {
-        assertEquals(CodeBlock.of("$L", 0), resolver.resolve("java.lang.Integer", false).get());
+        assertEquals(CodeBlock.of("$L", 0), resolver.resolveValue("java.lang.Integer", false).get());
     }
 
     @Test
     public void getDouble() {
-        assertEquals(CodeBlock.of("$L", 0.0), resolver.resolve("java.lang.Double", false).get());
+        assertEquals(CodeBlock.of("$L", 0.0), resolver.resolveValue("java.lang.Double", false).get());
     }
 }

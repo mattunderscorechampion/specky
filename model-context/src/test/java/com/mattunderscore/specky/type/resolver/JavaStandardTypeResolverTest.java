@@ -40,46 +40,46 @@ public class JavaStandardTypeResolverTest {
 
     @Test
     public void resolveString() {
-        assertEquals("java.lang.String", resolver.resolve("String").get());
+        assertEquals("java.lang.String", resolver.resolveType("String").get());
     }
 
     @Test
     public void resolveInteger() {
-        assertEquals("java.lang.Integer", resolver.resolve("Integer").get());
+        assertEquals("java.lang.Integer", resolver.resolveType("Integer").get());
     }
 
     @Test
     public void resolveDouble() {
-        assertEquals("java.lang.Double", resolver.resolve("Double").get());
+        assertEquals("java.lang.Double", resolver.resolveType("Double").get());
     }
 
     @Test
     public void getString() {
-        assertEquals("java.lang.String", resolver.resolve("java.lang.String").get());
+        assertEquals("java.lang.String", resolver.resolveType("java.lang.String").get());
     }
 
     @Test
     public void getInteger() {
-        assertEquals("java.lang.Integer", resolver.resolve("java.lang.Integer").get());
+        assertEquals("java.lang.Integer", resolver.resolveType("java.lang.Integer").get());
     }
 
     @Test
     public void getDouble() {
-        assertEquals("java.lang.Double", resolver.resolve("java.lang.Double").get());
+        assertEquals("java.lang.Double", resolver.resolveType("java.lang.Double").get());
     }
 
     @Test
     public void unknown() {
-        assertFalse(resolver.resolve("java.lang.BigInteger").isPresent());
+        assertFalse(resolver.resolveType("java.lang.BigInteger").isPresent());
     }
 
     @Test
     public void resolveInt() {
-        assertEquals("int", resolver.resolve("int").get());
+        assertEquals("int", resolver.resolveType("int").get());
     }
 
     @Test
     public void resolveOptionalInt() {
-        assertEquals("java.lang.Integer", resolver.resolve("int", true).get());
+        assertEquals("java.lang.Integer", resolver.resolveType("int", true).get());
     }
 }

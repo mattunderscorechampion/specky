@@ -44,7 +44,7 @@ public class SpecTypeResolverTest {
         final MutableTypeResolver resolver = new SpecTypeResolver();
         resolver.registerTypeName("com.example", "Test");
 
-        assertEquals("com.example.Test", resolver.resolve("Test").get());
+        assertEquals("com.example.Test", resolver.resolveType("Test").get());
     }
 
     @Test
@@ -52,7 +52,7 @@ public class SpecTypeResolverTest {
         final MutableTypeResolver resolver = new SpecTypeResolver();
         resolver.registerTypeName("com.example", "Test");
 
-        assertEquals("com.example.Test", resolver.resolve("com.example.Test").get());
+        assertEquals("com.example.Test", resolver.resolveType("com.example.Test").get());
     }
 
     @Test
@@ -60,7 +60,7 @@ public class SpecTypeResolverTest {
         final MutableTypeResolver resolver = new SpecTypeResolver();
         resolver.registerTypeName("com.example", "Test");
 
-        assertFalse(resolver.resolve("XTest").isPresent());
+        assertFalse(resolver.resolveType("XTest").isPresent());
     }
 
     @Test

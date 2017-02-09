@@ -77,7 +77,7 @@ public final class JavaStandardTypeResolver implements TypeResolver {
     }
 
     @Override
-    public Optional<String> resolve(String name) {
+    public Optional<String> resolveType(String name) {
         return Optional.ofNullable(nameToType.get(name));
     }
 }

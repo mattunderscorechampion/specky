@@ -41,7 +41,7 @@ public final class NullValueResolver implements DefaultValueResolver {
     private static final Set<String> PRIMITIVE_TYPES = new HashSet<>(asList("int", "boolean", "double"));
 
     @Override
-    public Optional<CodeBlock> resolve(String resolvedType, boolean optional) {
+    public Optional<CodeBlock> resolveValue(String resolvedType, boolean optional) {
         if (PRIMITIVE_TYPES.contains(resolvedType)) {
             return Optional.empty();
         }

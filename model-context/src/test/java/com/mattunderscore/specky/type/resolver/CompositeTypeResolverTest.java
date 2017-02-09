@@ -44,7 +44,7 @@ public final class CompositeTypeResolverTest {
                 .registerResolver(new JavaStandardTypeResolver())
                 .registerResolver(mutableResolver);
 
-        assertEquals("java.lang.String", resolver.resolve("String").get());
+        assertEquals("java.lang.String", resolver.resolveType("String").get());
     }
 
     @Test
@@ -55,7 +55,7 @@ public final class CompositeTypeResolverTest {
                 .registerResolver(new JavaStandardTypeResolver())
                 .registerResolver(mutableResolver);
 
-        assertEquals("com.example.Test", resolver.resolve("Test").get());
+        assertEquals("com.example.Test", resolver.resolveType("Test").get());
     }
 
     @Test
@@ -66,6 +66,6 @@ public final class CompositeTypeResolverTest {
                 .registerResolver(new JavaStandardTypeResolver())
                 .registerResolver(mutableResolver);
 
-        assertFalse(resolver.resolve("XTest").isPresent());
+        assertFalse(resolver.resolveType("XTest").isPresent());
     }
 }
