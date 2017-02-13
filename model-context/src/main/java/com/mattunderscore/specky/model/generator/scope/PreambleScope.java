@@ -25,17 +25,29 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator.scope;
 
-/**
- * An empty scope.
- *
- * @author Matt Champion 10/02/2017
- */
-public final class EmptyScope extends AbstractScope {
-    /**
-     * Instance of an empty scope.
-     */
-    public static final Scope INSTANCE = new EmptyScope();
+import java.util.Optional;
 
-    private EmptyScope() {
+import com.mattunderscore.specky.type.resolver.JavaStandardTypeResolver;
+import com.mattunderscore.specky.type.resolver.TypeResolver;
+
+/**
+ * Preamble scope. Contains declarations provided by the Java Runtime.
+ *
+ * @author Matt Champion 13/02/2017
+ */
+public final class PreambleScope extends AbstractScope {
+    /**
+     * Instance of the preamble scope.
+     */
+    public static final Scope INSTANCE = new PreambleScope();
+
+    private final TypeResolver typeResolver = new JavaStandardTypeResolver();
+
+    private PreambleScope() {
+    }
+
+    @Override
+    public Optional<String> resolveType(String name) {
+        return typeResolver.resolveType(name);
     }
 }

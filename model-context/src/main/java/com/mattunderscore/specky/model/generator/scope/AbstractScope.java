@@ -25,17 +25,39 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator.scope;
 
-/**
- * An empty scope.
- *
- * @author Matt Champion 10/02/2017
- */
-public final class EmptyScope extends AbstractScope {
-    /**
-     * Instance of an empty scope.
-     */
-    public static final Scope INSTANCE = new EmptyScope();
+import static java.util.Optional.empty;
 
-    private EmptyScope() {
+import java.util.Optional;
+
+import com.squareup.javapoet.CodeBlock;
+
+/**
+ * Abstract {@link Scope} implementation.
+ * @author Matt Champion 13/02/2017
+ */
+public abstract class AbstractScope implements Scope {
+    @Override
+    public Optional<String> resolveLicence(String name) {
+        return empty();
+    }
+
+    @Override
+    public Optional<String> resolveType(String name) {
+        return empty();
+    }
+
+    @Override
+    public Optional<CodeBlock> resolveValue(String resolvedType, boolean optional) {
+        return empty();
+    }
+
+    @Override
+    public String getAuthor() {
+        return null;
+    }
+
+    @Override
+    public String getPackage() {
+        return null;
     }
 }
