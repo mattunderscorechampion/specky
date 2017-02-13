@@ -1,4 +1,4 @@
-/* Copyright © 2016 Matthew Champion
+/* Copyright © 2016-2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -25,6 +25,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator.scope;
 
+import static java.util.Optional.ofNullable;
+
 import java.util.Optional;
 
 import com.mattunderscore.specky.licence.resolver.LicenceResolver;
@@ -37,6 +39,7 @@ import com.squareup.javapoet.CodeBlock;
  * @author Matt Champion on 21/08/2016
  */
 public final class ScopeImpl implements Scope {
+    private final Scope parentScope;
     private final DefaultValueResolver valueResolver;
     private final TypeResolver typeResolver;
     private final LicenceResolver licenceResolver;
@@ -53,6 +56,21 @@ public final class ScopeImpl implements Scope {
         String author,
         String packageName) {
 
+        this(EmptyScope.INSTANCE, valueResolver, typeResolver, licenceResolver, author, packageName);
+    }
+
+    /**
+     * Constructor.
+     */
+    /*package*/ ScopeImpl(
+        Scope parentScope,
+        DefaultValueResolver valueResolver,
+        TypeResolver typeResolver,
+        LicenceResolver licenceResolver,
+        String author,
+        String packageName) {
+
+        this.parentScope = parentScope;
         this.valueResolver = valueResolver;
         this.typeResolver = typeResolver;
         this.licenceResolver = licenceResolver;
@@ -62,26 +80,32 @@ public final class ScopeImpl implements Scope {
 
     @Override
     public String getAuthor() {
-        return author;
+        return ofNullable(author).orElseGet(parentScope::getAuthor);
     }
 
     @Override
     public String getPackage() {
-        return packageName;
+        return ofNullable(packageName).orElseGet(parentScope::getPackage);
     }
 
     @Override
     public Optional<String> resolveLicence(String name) {
-        return licenceResolver.resolveLicence(name);
+        return ofNullable(licenceResolver
+            .resolveLicence(name)
+            .orElseGet(() -> parentScope.resolveLicence(name).orElse(null)));
     }
 
     @Override
     public Optional<String> resolveType(String name) {
-        return typeResolver.resolveType(name);
+        return ofNullable(typeResolver
+            .resolveType(name)
+            .orElseGet(() -> parentScope.resolveType(name).orElse(null)));
     }
 
     @Override
     public Optional<CodeBlock> resolveValue(String resolvedType, boolean optional) {
-        return valueResolver.resolveValue(resolvedType, optional);
+        return ofNullable(valueResolver
+            .resolveValue(resolvedType, optional)
+            .orElseGet(() -> parentScope.resolveValue(resolvedType, optional).orElse(null)));
     }
 }
