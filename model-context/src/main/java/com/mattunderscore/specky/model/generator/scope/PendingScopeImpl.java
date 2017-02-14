@@ -25,7 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky.model.generator.scope;
 
 import com.mattunderscore.specky.licence.resolver.MutableLicenceResolver;
-import com.mattunderscore.specky.type.resolver.JavaStandardTypeResolver;
 import com.mattunderscore.specky.type.resolver.MutableTypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
@@ -98,12 +97,12 @@ public final class PendingScopeImpl implements PendingScope {
             .with(new NullValueResolver());
 
         final TypeResolver resolver = new TypeResolverBuilder()
-            .registerResolver(new JavaStandardTypeResolver())
             .registerResolver(mutableTypeResolver)
             .registerResolver(typeResolver)
             .build();
 
         return new ScopeImpl(
+            PreambleScope.INSTANCE,
             compositeValueResolver,
             resolver,
             licenceResolver,

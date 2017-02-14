@@ -25,6 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator.scope;
 
+import static com.mattunderscore.specky.model.generator.scope.EmptyScope.INSTANCE;
 import static java.util.Optional.empty;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -71,14 +72,14 @@ public final class ScopeImplTest {
 
     @Test
     public void getAuthor() throws Exception {
-        final Scope scope = new ScopeImpl(valueResolver, typeResolver, licenceResolver, "author", "package");
+        final Scope scope = new ScopeImpl(INSTANCE, valueResolver, typeResolver, licenceResolver, "author", "package");
 
         assertEquals("author", scope.getAuthor());
     }
 
     @Test
     public void getPackage() throws Exception {
-        final Scope scope = new ScopeImpl(valueResolver, typeResolver, licenceResolver, "author", "package");
+        final Scope scope = new ScopeImpl(INSTANCE, valueResolver, typeResolver, licenceResolver, "author", "package");
 
         assertEquals("package", scope.getPackage());
     }
@@ -87,7 +88,7 @@ public final class ScopeImplTest {
     public void resolveLicence() throws Exception {
         when(licenceResolver.resolveLicence("licence")).thenReturn(Optional.of("licence"));
 
-        final Scope scope = new ScopeImpl(valueResolver, typeResolver, licenceResolver, "author", "package");
+        final Scope scope = new ScopeImpl(INSTANCE, valueResolver, typeResolver, licenceResolver, "author", "package");
 
         assertEquals("licence", scope.resolveLicence("licence").get());
         verify(licenceResolver).resolveLicence("licence");
@@ -97,7 +98,7 @@ public final class ScopeImplTest {
     public void resolveType() throws Exception {
         when(typeResolver.resolveType("type")).thenReturn(Optional.of("type"));
 
-        final Scope scope = new ScopeImpl(valueResolver, typeResolver, licenceResolver, "author", "package");
+        final Scope scope = new ScopeImpl(INSTANCE, valueResolver, typeResolver, licenceResolver, "author", "package");
 
         assertEquals("type", scope.resolveType("type").get());
         verify(typeResolver).resolveType("type");
@@ -107,7 +108,7 @@ public final class ScopeImplTest {
     public void resolveValue() throws Exception {
         when(valueResolver.resolveValue("value", false)).thenReturn(Optional.of(CodeBlock.of("value")));
 
-        final Scope scope = new ScopeImpl(valueResolver, typeResolver, licenceResolver, "author", "package");
+        final Scope scope = new ScopeImpl(INSTANCE, valueResolver, typeResolver, licenceResolver, "author", "package");
 
         assertEquals(CodeBlock.of("value"), scope.resolveValue("value", false).get());
         verify(valueResolver).resolveValue("value", false);

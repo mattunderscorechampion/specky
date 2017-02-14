@@ -50,19 +50,6 @@ public final class ScopeImpl implements Scope {
      * Constructor.
      */
     /*package*/ ScopeImpl(
-        DefaultValueResolver valueResolver,
-        TypeResolver typeResolver,
-        LicenceResolver licenceResolver,
-        String author,
-        String packageName) {
-
-        this(EmptyScope.INSTANCE, valueResolver, typeResolver, licenceResolver, author, packageName);
-    }
-
-    /**
-     * Constructor.
-     */
-    /*package*/ ScopeImpl(
         Scope parentScope,
         DefaultValueResolver valueResolver,
         TypeResolver typeResolver,
