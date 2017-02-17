@@ -4,8 +4,13 @@ import static com.mattunderscore.specky.model.generator.scope.PreambleScope.INST
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Optional;
 
 import org.junit.Test;
+
+import com.squareup.javapoet.CodeBlock;
 
 /**
  * Unit tests for {@link PreambleScope}.
@@ -14,47 +19,47 @@ import org.junit.Test;
  */
 public final class PreambleScopeTest {
     @Test
-    public void resolveString() {
+    public void resolveStringType() {
         assertEquals("java.lang.String", INSTANCE.resolveType("String").get());
     }
 
     @Test
-    public void resolveInteger() {
+    public void resolveIntegerType() {
         assertEquals("java.lang.Integer", INSTANCE.resolveType("Integer").get());
     }
 
     @Test
-    public void resolveDouble() {
+    public void resolveDoubleType() {
         assertEquals("java.lang.Double", INSTANCE.resolveType("Double").get());
     }
 
     @Test
-    public void getString() {
+    public void getStringType() {
         assertEquals("java.lang.String", INSTANCE.resolveType("java.lang.String").get());
     }
 
     @Test
-    public void getInteger() {
+    public void getIntegerType() {
         assertEquals("java.lang.Integer", INSTANCE.resolveType("java.lang.Integer").get());
     }
 
     @Test
-    public void getDouble() {
+    public void getDoubleType() {
         assertEquals("java.lang.Double", INSTANCE.resolveType("java.lang.Double").get());
     }
 
     @Test
-    public void unknown() {
+    public void unknownType() {
         assertFalse(INSTANCE.resolveType("java.lang.BigInteger").isPresent());
     }
 
     @Test
-    public void resolveInt() {
+    public void resolveIntType() {
         assertEquals("int", INSTANCE.resolveType("int").get());
     }
 
     @Test
-    public void resolveOptionalInt() {
+    public void resolveOptionalIntType() {
         assertEquals("java.lang.Integer", INSTANCE.resolveType("int", true).get());
     }
 
@@ -64,8 +69,17 @@ public final class PreambleScopeTest {
     }
 
     @Test
-    public void resolveValue() throws Exception {
-        assertFalse(INSTANCE.resolveValue("" ,false).isPresent());
+    public void optional() {
+        final Optional<CodeBlock> value = INSTANCE.resolveValue("none", true);
+        assertTrue(value.isPresent());
+        assertEquals(CodeBlock.of("null"), value.get());
+    }
+
+    @Test
+    public void required() {
+        final Optional<CodeBlock> value = INSTANCE.resolveValue("none", false);
+        assertTrue(value.isPresent());
+        assertEquals(CodeBlock.of("null"), value.get());
     }
 
     @Test

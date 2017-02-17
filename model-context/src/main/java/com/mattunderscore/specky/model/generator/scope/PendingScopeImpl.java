@@ -31,7 +31,6 @@ import com.mattunderscore.specky.type.resolver.TypeResolverBuilder;
 import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
 import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver;
 import com.mattunderscore.specky.value.resolver.MutableValueResolver;
-import com.mattunderscore.specky.value.resolver.NullValueResolver;
 import com.mattunderscore.specky.value.resolver.OptionalValueResolver;
 
 import net.jcip.annotations.NotThreadSafe;
@@ -90,16 +89,15 @@ public final class PendingScopeImpl implements PendingScope {
 
     @Override
     public Scope toScope() {
-        final CompositeValueResolver compositeValueResolver = new CompositeValueResolver()
-            .with(new OptionalValueResolver())
-            .with(new JavaStandardDefaultValueResolver())
-            .with(valueResolver)
-            .with(new NullValueResolver());
-
         final TypeResolver resolver = new TypeResolverBuilder()
             .registerResolver(mutableTypeResolver)
             .registerResolver(typeResolver)
             .build();
+
+        final CompositeValueResolver compositeValueResolver = new CompositeValueResolver()
+            .with(new OptionalValueResolver())
+            .with(new JavaStandardDefaultValueResolver())
+            .with(valueResolver);
 
         return new ScopeImpl(
             PreambleScope.INSTANCE,

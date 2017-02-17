@@ -29,6 +29,10 @@ import java.util.Optional;
 
 import com.mattunderscore.specky.type.resolver.JavaStandardTypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
+import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
+import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
+import com.mattunderscore.specky.value.resolver.NullValueResolver;
+import com.squareup.javapoet.CodeBlock;
 
 /**
  * Preamble scope. Contains declarations provided by the Java Runtime.
@@ -42,6 +46,8 @@ public final class PreambleScope extends AbstractScope {
     public static final Scope INSTANCE = new PreambleScope();
 
     private final TypeResolver typeResolver = new JavaStandardTypeResolver();
+    private final DefaultValueResolver valueResolver = new CompositeValueResolver()
+        .with(new NullValueResolver());
 
     private PreambleScope() {
     }
@@ -49,5 +55,10 @@ public final class PreambleScope extends AbstractScope {
     @Override
     public Optional<String> resolveType(String name) {
         return typeResolver.resolveType(name);
+    }
+
+    @Override
+    public Optional<CodeBlock> resolveValue(String resolvedType, boolean optional) {
+        return valueResolver.resolveValue(resolvedType, optional);
     }
 }
