@@ -38,8 +38,7 @@ import com.squareup.javapoet.CodeBlock;
  * Implementation of {@link Scope}.
  * @author Matt Champion on 21/08/2016
  */
-public final class ScopeImpl implements Scope {
-    private final Scope parentScope;
+public final class ScopeImpl extends AbstractChildScope {
     private final DefaultValueResolver valueResolver;
     private final TypeResolver typeResolver;
     private final LicenceResolver licenceResolver;
@@ -57,7 +56,8 @@ public final class ScopeImpl implements Scope {
         String author,
         String packageName) {
 
-        this.parentScope = parentScope;
+        super(parentScope);
+
         this.valueResolver = valueResolver;
         this.typeResolver = typeResolver;
         this.licenceResolver = licenceResolver;
@@ -66,33 +66,27 @@ public final class ScopeImpl implements Scope {
     }
 
     @Override
-    public String getAuthor() {
-        return ofNullable(author).orElseGet(parentScope::getAuthor);
+    protected Optional<String> getLocalAuthor() {
+        return ofNullable(author);
     }
 
     @Override
-    public String getPackage() {
-        return ofNullable(packageName).orElseGet(parentScope::getPackage);
+    protected Optional<String> getLocalPackage() {
+        return ofNullable(packageName);
     }
 
     @Override
-    public Optional<String> resolveLicence(String name) {
-        return ofNullable(licenceResolver
-            .resolveLicence(name)
-            .orElseGet(() -> parentScope.resolveLicence(name).orElse(null)));
+    protected Optional<String> resolveLocalLicence(String name) {
+        return ofNullable(licenceResolver.resolveLicence(name).orElse(null));
     }
 
     @Override
-    public Optional<String> resolveType(String name) {
-        return ofNullable(typeResolver
-            .resolveType(name)
-            .orElseGet(() -> parentScope.resolveType(name).orElse(null)));
+    protected Optional<String> resolveLocalType(String name) {
+        return ofNullable(typeResolver.resolveType(name).orElse(null));
     }
 
     @Override
-    public Optional<CodeBlock> resolveValue(String resolvedType, boolean optional) {
-        return ofNullable(valueResolver
-            .resolveValue(resolvedType, optional)
-            .orElseGet(() -> parentScope.resolveValue(resolvedType, optional).orElse(null)));
+    protected Optional<CodeBlock> resolveLocalValue(String resolvedType, boolean optional) {
+        return ofNullable(valueResolver.resolveValue(resolvedType, optional).orElse(null));
     }
 }
