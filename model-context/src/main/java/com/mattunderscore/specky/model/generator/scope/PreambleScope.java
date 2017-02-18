@@ -31,7 +31,9 @@ import com.mattunderscore.specky.type.resolver.JavaStandardTypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
 import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
+import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver;
 import com.mattunderscore.specky.value.resolver.NullValueResolver;
+import com.mattunderscore.specky.value.resolver.OptionalValueResolver;
 import com.squareup.javapoet.CodeBlock;
 
 /**
@@ -47,6 +49,8 @@ public final class PreambleScope extends AbstractScope {
 
     private final TypeResolver typeResolver = new JavaStandardTypeResolver();
     private final DefaultValueResolver valueResolver = new CompositeValueResolver()
+        .with(new OptionalValueResolver())
+        .with(new JavaStandardDefaultValueResolver())
         .with(new NullValueResolver());
 
     private PreambleScope() {

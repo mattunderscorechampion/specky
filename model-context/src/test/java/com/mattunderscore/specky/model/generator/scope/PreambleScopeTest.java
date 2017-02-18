@@ -91,4 +91,39 @@ public final class PreambleScopeTest {
     public void getPackage() throws Exception {
         assertNull(INSTANCE.getPackage());
     }
+
+    @Test
+    public void resolveBool() {
+        assertEquals(CodeBlock.of("$L", false), INSTANCE.resolveValue("boolean", false).get());
+    }
+
+    @Test
+    public void resolveBoolean() {
+        assertEquals(CodeBlock.of("$L", false), INSTANCE.resolveValue("java.lang.Boolean", false).get());
+    }
+
+    @Test
+    public void resolveInt() {
+        assertEquals(CodeBlock.of("$L", 0), INSTANCE.resolveValue("int", false).get());
+    }
+
+    @Test
+    public void resolveDbl() {
+        assertEquals(CodeBlock.of("$L", 0.0), INSTANCE.resolveValue("double", false).get());
+    }
+
+    @Test
+    public void getString() {
+        assertEquals(CodeBlock.of("$S", ""), INSTANCE.resolveValue("java.lang.String", false).get());
+    }
+
+    @Test
+    public void getInteger() {
+        assertEquals(CodeBlock.of("$L", 0), INSTANCE.resolveValue("java.lang.Integer", false).get());
+    }
+
+    @Test
+    public void getDouble() {
+        assertEquals(CodeBlock.of("$L", 0.0), INSTANCE.resolveValue("java.lang.Double", false).get());
+    }
 }
