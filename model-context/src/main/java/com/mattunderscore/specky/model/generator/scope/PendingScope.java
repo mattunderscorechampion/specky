@@ -57,7 +57,7 @@ public interface PendingScope {
     /**
      * @return a scope
      */
-    Scope toScope();
+    Scope toScope(Scope parentScope);
 
     /**
      * @param author the name of the author

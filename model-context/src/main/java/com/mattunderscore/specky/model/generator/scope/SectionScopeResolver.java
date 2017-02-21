@@ -67,7 +67,7 @@ public final class SectionScopeResolver implements SectionScopeBuilder {
 
     @Override
     public void completeScope() {
-        final Scope scope = pendingScope.toScope();
+        final Scope scope = pendingScope.toScope(defaultScope);
         final String sectionName = pendingScope.getSectionName();
         if (sectionName == null) {
             defaultScope = scope;

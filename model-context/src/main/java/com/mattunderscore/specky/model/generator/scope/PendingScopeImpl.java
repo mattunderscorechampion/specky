@@ -85,14 +85,14 @@ public final class PendingScopeImpl implements PendingScope {
     }
 
     @Override
-    public Scope toScope() {
+    public Scope toScope(Scope parentScope) {
         final TypeResolver resolver = new TypeResolverBuilder()
             .registerResolver(mutableTypeResolver)
             .registerResolver(typeResolver)
             .build();
 
         return new ScopeImpl(
-            PreambleScope.INSTANCE,
+            parentScope == null ? PreambleScope.INSTANCE : parentScope,
             valueResolver,
             resolver,
             licenceResolver,
