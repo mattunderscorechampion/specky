@@ -117,6 +117,10 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
 
     @Override
     public void exitLicence(Specky.LicenceContext ctx) {
+        if (!isAbstractType()) {
+            return;
+        }
+
         currentTypeDesc.licence(null);
     }
 

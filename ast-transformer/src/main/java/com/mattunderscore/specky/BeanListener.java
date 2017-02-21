@@ -149,6 +149,10 @@ public final class BeanListener extends SpeckyBaseListener {
 
     @Override
     public void exitLicence(Specky.LicenceContext ctx) {
+        if (!isBean()) {
+            return;
+        }
+
         currentTypeDesc.licence(null);
     }
 

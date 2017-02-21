@@ -149,6 +149,10 @@ public final class ValueListener extends SpeckyBaseListener {
 
     @Override
     public void exitLicence(Specky.LicenceContext ctx) {
+        if (!isValue()) {
+            return;
+        }
+
         currentTypeDesc.licence(null);
     }
 
