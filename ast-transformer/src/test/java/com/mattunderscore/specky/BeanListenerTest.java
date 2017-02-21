@@ -105,17 +105,8 @@ public final class BeanListenerTest {
 
         final List<BeanDesc> beanDescs = beanListener.getBeanDescs();
 
-        assertEquals(1, beanDescs.size());
+        assertEquals(2, beanDescs.size());
 
-        final BeanDesc beanDesc = beanDescs.get(0);
-
-        assertEquals("FirstBean", beanDesc.getName());
-        assertNull(beanDesc.getAuthor());
-        assertEquals("Bean type $L.\n\nAuto-generated from specification.", beanDesc.getDescription());
-        assertEquals("com.example", beanDesc.getPackageName());
-        assertEquals("default licence of named section", beanDesc.getLicence());
-        assertEquals(emptyList(), beanDesc.getSupertypes());
-        assertEquals(ConstructionMethod.CONSTRUCTOR, beanDesc.getConstructionMethod());
         final PropertyDesc p0 = PropertyDesc
             .builder()
             .name("num")
@@ -136,8 +127,33 @@ public final class BeanListenerTest {
             .defaultValue(CodeBlock.of("\"\""))
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
+
+        final BeanDesc beanDesc0 = beanDescs.get(0);
+
+        assertEquals("FirstBean", beanDesc0.getName());
+        assertEquals("Matt Champion", beanDesc0.getAuthor());
+        assertEquals("Bean type $L.\n\nAuto-generated from specification.", beanDesc0.getDescription());
+        assertEquals("com.example", beanDesc0.getPackageName());
+        assertEquals("default licence of named section", beanDesc0.getLicence());
+        assertEquals(emptyList(), beanDesc0.getSupertypes());
+        assertEquals(ConstructionMethod.CONSTRUCTOR, beanDesc0.getConstructionMethod());
         assertThat(
-            beanDesc.getProperties(),
+            beanDesc0.getProperties(),
+            containsInAnyOrder(
+                p0,
+                p1));
+
+        final BeanDesc beanDesc1 = beanDescs.get(1);
+
+        assertEquals("SecondBean", beanDesc1.getName());
+        assertEquals("Matt Champion", beanDesc1.getAuthor());
+        assertEquals("Bean type $L.\n\nAuto-generated from specification.", beanDesc1.getDescription());
+        assertEquals("com.example", beanDesc1.getPackageName());
+        assertEquals("default licence of named section", beanDesc0.getLicence());
+        assertEquals(emptyList(), beanDesc1.getSupertypes());
+        assertEquals(ConstructionMethod.CONSTRUCTOR, beanDesc1.getConstructionMethod());
+        assertThat(
+            beanDesc1.getProperties(),
             containsInAnyOrder(
                 p0,
                 p1));

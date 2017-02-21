@@ -72,9 +72,9 @@ public final class ModelGeneratorTest {
         final List<AbstractTypeDesc> abstractTypes = specDesc.getAbstractTypes();
         final List<ImplementationDesc> implementations = specDesc.getImplementations();
 
-        assertEquals(3, types.size());
+        assertEquals(4, types.size());
         assertEquals(1, abstractTypes.size());
-        assertEquals(2, implementations.size());
+        assertEquals(3, implementations.size());
 
         final AbstractTypeDesc abstractType = abstractTypes.get(0);
 
@@ -94,7 +94,7 @@ public final class ModelGeneratorTest {
                 .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
                 .build()));
 
-        final ImplementationDesc valueDesc = implementations.get(1);
+        final ImplementationDesc valueDesc = implementations.get(2);
 
         assertEquals("FirstValue", valueDesc.getName());
         assertEquals("Matt Champion", valueDesc.getAuthor());
@@ -129,15 +129,6 @@ public final class ModelGeneratorTest {
                 vp0,
                 vp1));
 
-        final ImplementationDesc beanDesc = implementations.get(0);
-
-        assertEquals("FirstBean", beanDesc.getName());
-        assertNull(beanDesc.getAuthor());
-        assertEquals("Bean type $L.\n\nAuto-generated from specification.", beanDesc.getDescription());
-        assertEquals("com.example", beanDesc.getPackageName());
-        assertEquals("default licence of named section", beanDesc.getLicence());
-        assertEquals(emptyList(), beanDesc.getSupertypes());
-        assertEquals(ConstructionMethod.CONSTRUCTOR, beanDesc.getConstructionMethod());
         final PropertyDesc bp0 = PropertyDesc
             .builder()
             .name("num")
@@ -158,8 +149,32 @@ public final class ModelGeneratorTest {
             .defaultValue(CodeBlock.of("\"\""))
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
+
+        final ImplementationDesc beanDesc0 = implementations.get(0);
+
+        assertEquals("FirstBean", beanDesc0.getName());
+        assertEquals("Matt Champion", beanDesc0.getAuthor());
+        assertEquals("Bean type $L.\n\nAuto-generated from specification.", beanDesc0.getDescription());
+        assertEquals("com.example", beanDesc0.getPackageName());
+        assertEquals("default licence of named section", beanDesc0.getLicence());
+        assertEquals(emptyList(), beanDesc0.getSupertypes());
+        assertEquals(ConstructionMethod.CONSTRUCTOR, beanDesc0.getConstructionMethod());
         assertThat(
-            beanDesc.getProperties(),
+            beanDesc0.getProperties(),
+            containsInAnyOrder(
+                bp0,
+                bp1));
+
+        final ImplementationDesc beanDesc1 = implementations.get(1);
+
+        assertEquals("SecondBean", beanDesc1.getName());
+        assertEquals("Matt Champion", beanDesc1.getAuthor());
+        assertEquals("Bean type $L.\n\nAuto-generated from specification.", beanDesc1.getDescription());
+        assertEquals("com.example", beanDesc1.getPackageName());
+        assertEquals(emptyList(), beanDesc1.getSupertypes());
+        assertEquals(ConstructionMethod.CONSTRUCTOR, beanDesc1.getConstructionMethod());
+        assertThat(
+            beanDesc1.getProperties(),
             containsInAnyOrder(
                 bp0,
                 bp1));
