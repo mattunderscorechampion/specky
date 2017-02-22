@@ -149,7 +149,7 @@ public final class BeanListenerTest {
         assertEquals("Matt Champion", beanDesc1.getAuthor());
         assertEquals("Bean type $L.\n\nAuto-generated from specification.", beanDesc1.getDescription());
         assertEquals("com.example", beanDesc1.getPackageName());
-        assertEquals("default licence of named section", beanDesc0.getLicence());
+        assertEquals("named licence", beanDesc1.getLicence());
         assertEquals(emptyList(), beanDesc1.getSupertypes());
         assertEquals(ConstructionMethod.CONSTRUCTOR, beanDesc1.getConstructionMethod());
         assertThat(

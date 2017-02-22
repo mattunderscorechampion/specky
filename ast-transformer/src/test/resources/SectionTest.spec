@@ -60,6 +60,7 @@ bean SecondBean
   properties
     Integer num default 5
     String str
+  licence n
   options
     constructor
 
