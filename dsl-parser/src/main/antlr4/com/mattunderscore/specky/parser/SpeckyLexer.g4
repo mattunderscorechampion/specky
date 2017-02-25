@@ -137,6 +137,10 @@ AUTHOR
     :   'author'
     ;
 
+COPYRIGHT_HOLDER
+    :   'copyright holder'
+    ;
+
 NOTE
     :   'note'
     ;

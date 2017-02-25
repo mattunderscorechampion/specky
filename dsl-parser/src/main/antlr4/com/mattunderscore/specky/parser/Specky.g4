@@ -156,6 +156,10 @@ author
     :   AUTHOR INLINE_WS string_value
     ;
 
+copyrightHolder
+    :   COPYRIGHT_HOLDER INLINE_WS string_value
+    ;
+
 licenceDeclaration
     :   LICENCE (INLINE_WS Identifier)? INLINE_WS string_value
     ;
@@ -183,7 +187,7 @@ sectionDeclaration
     ;
 
 defaultSectionDeclaration
-    : sectionContent
+    : (copyrightHolder LINE_BREAK+)? sectionContent
     ;
 
 spec
