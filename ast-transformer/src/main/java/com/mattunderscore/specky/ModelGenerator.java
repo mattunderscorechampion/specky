@@ -24,6 +24,23 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import static com.mattunderscore.specky.CompositeSyntaxErrorListener.composeSyntaxListeners;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+
+import java.nio.file.Path;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import org.antlr.v4.runtime.BaseErrorListener;
+import org.antlr.v4.runtime.CommonToken;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
+import org.antlr.v4.runtime.UnbufferedTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+
 import com.mattunderscore.specky.context.file.FileContext;
 import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
 import com.mattunderscore.specky.error.listeners.SemanticErrorListener;
@@ -40,22 +57,6 @@ import com.mattunderscore.specky.parser.Specky.SpecContext;
 import com.mattunderscore.specky.parser.SpeckyLexer;
 import com.mattunderscore.specky.type.resolver.MutableTypeResolver;
 import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
-import org.antlr.v4.runtime.BaseErrorListener;
-import org.antlr.v4.runtime.CommonToken;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.Recognizer;
-import org.antlr.v4.runtime.UnbufferedTokenStream;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-
-import java.nio.file.Path;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
-
-import static com.mattunderscore.specky.CompositeSyntaxErrorListener.composeSyntaxListeners;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 
 /**
  * Processor for the ANTLR4 generated AST. Returns a better representation of the DSL.
@@ -184,6 +185,8 @@ public final class ModelGenerator {
             new SectionAuthorListener(sectionScopeResolver);
         final SectionPackageListener sectionPackageListener =
             new SectionPackageListener(sectionScopeResolver);
+        final CopyrightHolderListener copyrightHolderListener =
+            new CopyrightHolderListener(sectionScopeResolver);
 
         parser.addParseListener(fileTypeListener);
         parser.addParseListener(sectionLicenceListener);
@@ -192,6 +195,7 @@ public final class ModelGenerator {
         parser.addParseListener(sectionScopeListener);
         parser.addParseListener(sectionAuthorListener);
         parser.addParseListener(sectionPackageListener);
+        parser.addParseListener(copyrightHolderListener);
         parser.removeErrorListeners();
         parser.addErrorListener(syntaxErrListener);
 
