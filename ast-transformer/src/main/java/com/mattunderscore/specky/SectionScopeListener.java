@@ -55,10 +55,7 @@ public final class SectionScopeListener extends SpeckyBaseListener {
     public void enterSectionContent(Specky.SectionContentContext ctx) {
         final ParserRuleContext parent = ctx.getParent();
 
-        if (parent instanceof Specky.DefaultSectionDeclarationContext) {
-            sectionScopeBuilder.beginNewScope(null);
-        }
-        else if (parent instanceof Specky.SectionDeclarationContext) {
+        if (parent instanceof Specky.SectionDeclarationContext) {
             sectionScopeBuilder.beginNewScope(toValue(((Specky.SectionDeclarationContext) parent).string_value()));
         }
     }

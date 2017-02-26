@@ -51,6 +51,13 @@ public final class SectionScopeResolver implements SectionScopeBuilder {
      */
     public SectionScopeResolver(TypeResolver typeResolver) {
         this.typeResolver = typeResolver;
+
+        pendingScope = new PendingScopeImpl(
+            null,
+            new MutableValueResolverImpl(),
+            new SpecTypeResolver(),
+            typeResolver,
+            new LicenceResolverImpl());
     }
 
     @Override
