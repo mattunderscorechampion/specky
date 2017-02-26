@@ -46,6 +46,7 @@ public final class PendingScopeImpl implements PendingScope {
     private final MutableLicenceResolver licenceResolver;
     private String author;
     private String packageName;
+    private String copyrightHolder;
 
     /**
      * Constructor.
@@ -97,7 +98,8 @@ public final class PendingScopeImpl implements PendingScope {
             resolver,
             licenceResolver,
             author,
-            packageName);
+            packageName,
+            copyrightHolder);
     }
 
     @Override
@@ -108,5 +110,10 @@ public final class PendingScopeImpl implements PendingScope {
     @Override
     public void setPackageName(String packageName) {
         this.packageName = packageName;
+    }
+
+    @Override
+    public void setCopyrightHolder(String copyrightHolder) {
+        this.copyrightHolder = copyrightHolder;
     }
 }

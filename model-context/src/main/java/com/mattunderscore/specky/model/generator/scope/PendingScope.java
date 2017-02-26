@@ -68,4 +68,9 @@ public interface PendingScope {
      * @param packageName the package name
      */
     void setPackageName(String packageName);
+
+    /**
+     * @param copyrightHolder the copyright holder
+     */
+    void setCopyrightHolder(String copyrightHolder);
 }

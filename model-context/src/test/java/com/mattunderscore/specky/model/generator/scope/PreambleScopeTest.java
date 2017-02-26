@@ -126,4 +126,9 @@ public final class PreambleScopeTest {
     public void getDouble() {
         assertEquals(CodeBlock.of("$L", 0.0), INSTANCE.resolveValue("java.lang.Double", false).get());
     }
+
+    @Test
+    public void getCopyrightHolder() {
+        assertNull(EmptyScope.INSTANCE.getCopyrightHolder());
+    }
 }

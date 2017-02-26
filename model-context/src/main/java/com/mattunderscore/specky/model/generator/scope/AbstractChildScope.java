@@ -25,6 +25,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator.scope;
 
+import static java.util.Optional.empty;
+
 import java.util.Optional;
 
 import com.squareup.javapoet.CodeBlock;
@@ -47,35 +49,42 @@ public abstract class AbstractChildScope extends AbstractScope {
      * @return the author in the local scope
      */
     protected Optional<String> getLocalAuthor() {
-        return Optional.empty();
+        return empty();
     }
 
     /**
      * @return the package in the local scope
      */
     protected Optional<String> getLocalPackage() {
-        return Optional.empty();
+        return empty();
     }
 
     /**
      * @return resolve the licence from the local scope
      */
     protected Optional<String> resolveLocalLicence(String name) {
-        return Optional.empty();
+        return empty();
     }
 
     /**
      * @return resolve the type from the local scope
      */
     protected Optional<String> resolveLocalType(String name) {
-        return Optional.empty();
+        return empty();
     }
 
     /**
      * @return resolve the default value from the local scope
      */
     protected Optional<CodeBlock> resolveLocalValue(String resolvedType, boolean optional) {
-        return Optional.empty();
+        return empty();
+    }
+
+    /**
+     * @return the copyright holder in the local scope
+     */
+    protected Optional<String> getLocalCopyrightHolder() {
+        return empty();
     }
 
     @Override
@@ -86,6 +95,11 @@ public abstract class AbstractChildScope extends AbstractScope {
     @Override
     public final String getPackage() {
         return getLocalPackage().orElseGet(parentScope::getPackage);
+    }
+
+    @Override
+    public final String getCopyrightHolder() {
+        return getLocalCopyrightHolder().orElseGet(parentScope::getCopyrightHolder);
     }
 
     @Override

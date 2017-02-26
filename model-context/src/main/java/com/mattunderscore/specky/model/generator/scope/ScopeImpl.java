@@ -44,6 +44,7 @@ public final class ScopeImpl extends AbstractChildScope {
     private final LicenceResolver licenceResolver;
     private final String author;
     private final String packageName;
+    private final String copyrightHolder;
 
     /**
      * Constructor.
@@ -54,7 +55,8 @@ public final class ScopeImpl extends AbstractChildScope {
         TypeResolver typeResolver,
         LicenceResolver licenceResolver,
         String author,
-        String packageName) {
+        String packageName,
+        String copyrightHolder) {
 
         super(parentScope);
 
@@ -63,6 +65,7 @@ public final class ScopeImpl extends AbstractChildScope {
         this.licenceResolver = licenceResolver;
         this.author = author;
         this.packageName = packageName;
+        this.copyrightHolder = copyrightHolder;
     }
 
     @Override
@@ -88,5 +91,10 @@ public final class ScopeImpl extends AbstractChildScope {
     @Override
     protected Optional<CodeBlock> resolveLocalValue(String resolvedType, boolean optional) {
         return ofNullable(valueResolver.resolveValue(resolvedType, optional).orElse(null));
+    }
+
+    @Override
+    protected Optional<String> getLocalCopyrightHolder() {
+        return ofNullable(copyrightHolder);
     }
 }

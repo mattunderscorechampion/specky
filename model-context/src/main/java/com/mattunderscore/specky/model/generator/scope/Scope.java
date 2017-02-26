@@ -43,4 +43,9 @@ public interface Scope extends DefaultValueResolver, TypeResolver, LicenceResolv
      * @return the name of the package
      */
     String getPackage();
+
+    /**
+     * @return the copyright holder
+     */
+    String getCopyrightHolder();
 }

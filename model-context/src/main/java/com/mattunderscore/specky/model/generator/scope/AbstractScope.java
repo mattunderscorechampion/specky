@@ -60,4 +60,9 @@ public abstract class AbstractScope implements Scope {
     public String getPackage() {
         return null;
     }
+
+    @Override
+    public String getCopyrightHolder() {
+        return null;
+    }
 }

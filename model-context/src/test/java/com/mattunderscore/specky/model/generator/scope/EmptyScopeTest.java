@@ -60,4 +60,9 @@ public final class EmptyScopeTest {
     public void getPackage() throws Exception {
         assertNull(EmptyScope.INSTANCE.getPackage());
     }
+
+    @Test
+    public void getCopyrightHolder() {
+        assertNull(EmptyScope.INSTANCE.getCopyrightHolder());
+    }
 }
