@@ -25,6 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator.scope;
 
+import com.mattunderscore.specky.context.file.TemplateContext;
 import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
@@ -48,4 +49,9 @@ public interface Scope extends DefaultValueResolver, TypeResolver, LicenceResolv
      * @return the copyright holder
      */
     String getCopyrightHolder();
+
+    /**
+     * @return a template context for the scope
+     */
+    TemplateContext toTemplateContext(String typeName);
 }

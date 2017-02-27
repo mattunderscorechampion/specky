@@ -28,6 +28,7 @@ package com.mattunderscore.specky.model.generator.scope;
 import static com.mattunderscore.specky.model.generator.scope.EmptyScope.INSTANCE;
 import static java.util.Optional.empty;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -40,6 +41,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import com.mattunderscore.specky.context.file.TemplateContext;
 import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
@@ -175,5 +177,15 @@ public final class ScopeImplTest {
         assertEquals(CodeBlock.of("value"), scope.resolveValue("value", false).get());
         verify(valueResolver).resolveValue("value", false);
         verify(parentScope).resolveValue("value", false);
+    }
+
+    @Test
+    public void toTemplateContext() {
+        final Scope scope = new ScopeImpl(parentScope, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright");
+        final TemplateContext templateContext = scope.toTemplateContext("Type");
+
+        assertEquals("Type", templateContext.getTypeName());
+        assertEquals("author", templateContext.getAuthor());
+        assertEquals("copyright", templateContext.getCopyrightHolder());
     }
 }

@@ -25,10 +25,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator.scope;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
+
+import com.mattunderscore.specky.context.file.TemplateContext;
 
 /**
  * Unit tests for {@link EmptyScope}.
@@ -37,32 +40,41 @@ import org.junit.Test;
  */
 public final class EmptyScopeTest {
     @Test
-    public void resolveLicence() throws Exception {
+    public void resolveLicence() {
         assertFalse(EmptyScope.INSTANCE.resolveLicence("").isPresent());
     }
 
     @Test
-    public void resolveType() throws Exception {
+    public void resolveType() {
         assertFalse(EmptyScope.INSTANCE.resolveType("").isPresent());
     }
 
     @Test
-    public void resolveValue() throws Exception {
+    public void resolveValue() {
         assertFalse(EmptyScope.INSTANCE.resolveValue("" ,false).isPresent());
     }
 
     @Test
-    public void getAuthor() throws Exception {
+    public void getAuthor() {
         assertNull(EmptyScope.INSTANCE.getAuthor());
     }
 
     @Test
-    public void getPackage() throws Exception {
+    public void getPackage() {
         assertNull(EmptyScope.INSTANCE.getPackage());
     }
 
     @Test
     public void getCopyrightHolder() {
         assertNull(EmptyScope.INSTANCE.getCopyrightHolder());
+    }
+
+    @Test
+    public void toTemplateContext() {
+        final TemplateContext templateContext = EmptyScope.INSTANCE.toTemplateContext("Type");
+
+        assertEquals("Type", templateContext.getTypeName());
+        assertNull(templateContext.getAuthor());
+        assertNull(templateContext.getCopyrightHolder());
     }
 }

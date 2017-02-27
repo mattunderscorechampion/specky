@@ -29,6 +29,7 @@ import static java.util.Optional.empty;
 
 import java.util.Optional;
 
+import com.mattunderscore.specky.context.file.TemplateContext;
 import com.squareup.javapoet.CodeBlock;
 
 /**
@@ -133,5 +134,15 @@ public abstract class AbstractChildScope extends AbstractScope {
         else {
             return parentScope.resolveValue(resolvedType, optional);
         }
+    }
+
+    @Override
+    public final TemplateContext toTemplateContext(String typeName) {
+        return TemplateContext
+            .builder()
+            .typeName(typeName)
+            .author(getAuthor())
+            .copyrightHolder(getCopyrightHolder())
+            .build();
     }
 }

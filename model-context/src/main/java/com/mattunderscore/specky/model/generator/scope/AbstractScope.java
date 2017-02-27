@@ -29,6 +29,7 @@ import static java.util.Optional.empty;
 
 import java.util.Optional;
 
+import com.mattunderscore.specky.context.file.TemplateContext;
 import com.squareup.javapoet.CodeBlock;
 
 /**
@@ -64,5 +65,13 @@ public abstract class AbstractScope implements Scope {
     @Override
     public String getCopyrightHolder() {
         return null;
+    }
+
+    @Override
+    public TemplateContext toTemplateContext(String typeName) {
+        return TemplateContext
+            .builder()
+            .typeName(typeName)
+            .build();
     }
 }
