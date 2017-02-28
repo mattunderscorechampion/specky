@@ -23,7 +23,7 @@ public final class EvaluateTemplateTest {
 
         final EvaluateTemplate evaluator = new EvaluateTemplate(templateContext);
 
-        final String value = evaluator.apply("${author} ${copyrightHolder} ${type} ${author}");
-        assertEquals("author Matt TestType author", value);
+        final String value = evaluator.apply("${author} \\${author} ${copyrightHolder} ${type} ${author}");
+        assertEquals("author ${author} Matt TestType author", value);
     }
 }
