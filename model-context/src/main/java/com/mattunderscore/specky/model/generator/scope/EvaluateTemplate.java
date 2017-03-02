@@ -1,7 +1,9 @@
 package com.mattunderscore.specky.model.generator.scope;
 
+import static java.time.LocalDateTime.ofInstant;
 import static java.util.regex.Pattern.compile;
 
+import java.time.ZoneId;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -16,9 +18,11 @@ public final class EvaluateTemplate implements Function<String, String> {
         compile("(?<!\\\\)\\$\\{type}"),
         compile("(?<!\\\\)\\$\\{author}"),
         compile("(?<!\\\\)\\$\\{copyrightHolder}"),
+        compile("(?<!\\\\)\\$\\{year}"),
         compile("\\\\\\$\\{type}"),
         compile("\\\\\\$\\{author}"),
-        compile("\\\\\\$\\{copyrightHolder}")
+        compile("\\\\\\$\\{copyrightHolder}"),
+        compile("\\\\\\$\\{year}")
     };
     private final String[] substitutions;
 
@@ -30,9 +34,11 @@ public final class EvaluateTemplate implements Function<String, String> {
             templateContext.getTypeName(),
             templateContext.getAuthor(),
             templateContext.getCopyrightHolder(),
+            Integer.toString(ofInstant(templateContext.getBuildTime(), ZoneId.systemDefault()).getYear()),
             "\\${type}",
             "\\${author}",
-            "\\${copyrightHolder}"
+            "\\${copyrightHolder}",
+            "\\${year}"
         };
 
         assert substitutions.length == PATTERNS.length : "Must be the same number of patterns and substitutions";
