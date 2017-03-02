@@ -12,44 +12,41 @@ import com.mattunderscore.specky.context.file.TemplateContext;
  * @author Matt Champion 27/02/2017
  */
 public final class EvaluateTemplate implements Function<String, String> {
-    private static final Pattern TYPE_PATTERN = compile("(?<!\\\\)\\$\\{type}");
-    private static final Pattern AUTHOR_PATTERN = compile("(?<!\\\\)\\$\\{author}");
-    private static final Pattern COPYRIGHT_HOLDER_PATTERN = compile("(?<!\\\\)\\$\\{copyrightHolder}");
-    private static final Pattern ESCAPED_TYPE_PATTERN = compile("\\\\\\$\\{type}");
-    private static final Pattern ESCAPED_AUTHOR_PATTERN = compile("\\\\\\$\\{author}");
-    private static final Pattern ESCAPED_COPYRIGHT_HOLDER_PATTERN = compile("\\\\\\$\\{copyrightHolder}");
-
-    private final TemplateContext templateContext;
+    private static final Pattern[] PATTERNS = new Pattern[] {
+        compile("(?<!\\\\)\\$\\{type}"),
+        compile("(?<!\\\\)\\$\\{author}"),
+        compile("(?<!\\\\)\\$\\{copyrightHolder}"),
+        compile("\\\\\\$\\{type}"),
+        compile("\\\\\\$\\{author}"),
+        compile("\\\\\\$\\{copyrightHolder}")
+    };
+    private final String[] substitutions;
 
     /**
      * Constructor.
      */
     public EvaluateTemplate(TemplateContext templateContext) {
-        this.templateContext = templateContext;
+        substitutions = new String[] {
+            templateContext.getTypeName(),
+            templateContext.getAuthor(),
+            templateContext.getCopyrightHolder(),
+            "\\${type}",
+            "\\${author}",
+            "\\${copyrightHolder}"
+        };
+
+        assert substitutions.length == PATTERNS.length : "Must be the same number of patterns and substitutions";
     }
 
     @Override
     public String apply(String template) {
-        return
-            replace(
-                replace(
-                    replace(
-                        replace(
-                            replace(
-                                replace(
-                                    template,
-                                    TYPE_PATTERN,
-                                    templateContext.getTypeName()),
-                                AUTHOR_PATTERN,
-                                templateContext.getAuthor()),
-                            COPYRIGHT_HOLDER_PATTERN,
-                            templateContext.getCopyrightHolder()),
-                        ESCAPED_TYPE_PATTERN,
-                        "\\${type}"),
-                    ESCAPED_AUTHOR_PATTERN,
-                    "\\${author}"),
-                ESCAPED_COPYRIGHT_HOLDER_PATTERN,
-                "\\${copyrightHolder}");
+        String value = template;
+
+        for (int i = 0; i < PATTERNS.length; i++) {
+            value = replace(value, PATTERNS[i], substitutions[i]);
+        }
+
+        return value;
     }
 
     private static String replace(String template, Pattern pattern, String substitution) {
