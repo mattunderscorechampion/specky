@@ -169,6 +169,51 @@ public final class ValueListener extends SpeckyBaseListener {
         final List<AbstractTypeDesc> resolveSupertypes =
             resolveSupertypes(currentSupertypes, scope, ctx);
 
+        final List<PropertyDesc> allProperties = getPropertyDescs(ctx, resolveSupertypes);
+
+        currentTypeDesc = currentTypeDesc
+            .name(ctx.Identifier().getText())
+            .author(scope.getAuthor())
+            .packageName(scope.getPackage())
+            .ifThen(
+                ctx.licence() == null,
+                builder -> builder
+                    .licence(formatter.apply(
+                        scope
+                            .resolveLicence((String) null)
+                            .orElse(null))))
+            .ifThen(
+                ctx.licence() != null && ctx.licence().string_value() != null,
+                builder -> builder.licence(formatter.apply(toValue(ctx.licence().string_value()))))
+            .ifThen(
+                ctx.licence() != null && ctx.licence().Identifier() != null,
+                builder -> {
+                    final String licenceName = ctx.licence().Identifier().getText();
+                    return builder
+                        .licence(formatter.apply(
+                            scope
+                                .resolveLicence(licenceName)
+                                .orElseGet(() -> {
+                                    semanticErrorListener.onSemanticError(
+                                        "An unknown name was used to reference a licence",
+                                        ctx.licence());
+                                    return null;
+                                })));
+                })
+            .ifThen(
+                ctx.StringLiteral() == null,
+                builder -> builder.description(formatter.apply("Value type ${type}.\n\nAuto-generated from specification.")))
+            .ifThen(
+                ctx.StringLiteral() != null,
+                builder -> builder.description(formatter.apply(toValue(ctx.StringLiteral()))))
+            .properties(allProperties);
+
+        valueDescs.add(currentTypeDesc.build());
+    }
+
+    private List<PropertyDesc> getPropertyDescs(
+            Specky.ImplementationSpecContext ctx,
+            List<AbstractTypeDesc> resolveSupertypes) {
         final List<PropertyDesc> inheritedProperties = resolveSupertypes
             .stream()
             .map(AbstractTypeDesc::getProperties)
@@ -213,45 +258,7 @@ public final class ValueListener extends SpeckyBaseListener {
                 knownProperties.put(propertyName, mergedProperty);
             }
         }
-
-        currentTypeDesc = currentTypeDesc
-            .name(ctx.Identifier().getText())
-            .author(scope.getAuthor())
-            .packageName(scope.getPackage())
-            .ifThen(
-                ctx.licence() == null,
-                builder -> builder
-                    .licence(formatter.apply(
-                        scope
-                            .resolveLicence((String) null)
-                            .orElse(null))))
-            .ifThen(
-                ctx.licence() != null && ctx.licence().string_value() != null,
-                builder -> builder.licence(formatter.apply(toValue(ctx.licence().string_value()))))
-            .ifThen(
-                ctx.licence() != null && ctx.licence().Identifier() != null,
-                builder -> {
-                    final String licenceName = ctx.licence().Identifier().getText();
-                    return builder
-                        .licence(formatter.apply(
-                            scope
-                                .resolveLicence(licenceName)
-                                .orElseGet(() -> {
-                                    semanticErrorListener.onSemanticError(
-                                        "An unknown name was used to reference a licence",
-                                        ctx.licence());
-                                    return null;
-                                })));
-                })
-            .ifThen(
-                ctx.StringLiteral() == null,
-                builder -> builder.description(formatter.apply("Value type ${type}.\n\nAuto-generated from specification.")))
-            .ifThen(
-                ctx.StringLiteral() != null,
-                builder -> builder.description(formatter.apply(toValue(ctx.StringLiteral()))))
-            .properties(allProperties);
-
-        valueDescs.add(currentTypeDesc.build());
+        return allProperties;
     }
 
     private List<AbstractTypeDesc> resolveSupertypes(List<String> supertypes, Scope scope, ParserRuleContext ctx) {
