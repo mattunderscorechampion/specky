@@ -80,7 +80,7 @@ public final class ModelGeneratorTest {
 
         assertEquals("TestType", abstractType.getName());
         assertEquals("Matt Champion", abstractType.getAuthor());
-        assertEquals("Abstract type $L.\n\nAuto-generated from specification.", abstractType.getDescription());
+        assertEquals("Abstract type TestType.\n\nAuto-generated from specification.", abstractType.getDescription());
         assertEquals("com.example", abstractType.getPackageName());
         assertEquals("default licence", abstractType.getLicence());
         assertEquals(emptyList(), abstractType.getSupertypes());

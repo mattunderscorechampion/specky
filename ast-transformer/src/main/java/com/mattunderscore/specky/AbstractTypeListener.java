@@ -38,6 +38,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
+import com.mattunderscore.specky.model.generator.scope.EvaluateTemplate;
 import com.mattunderscore.specky.model.generator.scope.Scope;
 import com.mattunderscore.specky.model.generator.scope.SectionScopeResolver;
 import com.mattunderscore.specky.parser.Specky;
@@ -127,6 +128,7 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
     @Override
     public void exitTypeSpec(Specky.TypeSpecContext ctx) {
         final Scope scope = sectionScopeResolver.resolve(currentSection);
+        final EvaluateTemplate formatter = new EvaluateTemplate(scope.toTemplateContext(ctx.Identifier().getText()));
         currentTypeDesc = currentTypeDesc
             .name(ctx.Identifier().getText())
             .author(scope.getAuthor())
@@ -134,32 +136,34 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
             .ifThen(
                 ctx.licence() == null,
                 builder -> builder
-                    .licence(scope
-                        .resolveLicence((String) null)
-                        .orElse(null)))
+                    .licence(formatter.apply(
+                        scope
+                            .resolveLicence((String) null)
+                            .orElse(null))))
             .ifThen(
                 ctx.licence() != null && ctx.licence().string_value() != null,
-                builder -> builder.licence(toValue(ctx.licence().string_value())))
+                builder -> builder.licence(formatter.apply(toValue(ctx.licence().string_value()))))
             .ifThen(
                 ctx.licence() != null && ctx.licence().Identifier() != null,
                 builder -> {
                     final String licenceName = ctx.licence().Identifier().getText();
                     return builder
-                        .licence(scope
-                            .resolveLicence(licenceName)
-                            .orElseGet(() -> {
-                                semanticErrorListener.onSemanticError(
-                                    "An unknown name was used to reference a licence",
-                                    ctx.licence());
-                                return null;
-                            }));
+                        .licence(formatter.apply(
+                            scope
+                                .resolveLicence(licenceName)
+                                .orElseGet(() -> {
+                                    semanticErrorListener.onSemanticError(
+                                        "An unknown name was used to reference a licence",
+                                        ctx.licence());
+                                    return null;
+                                })));
                 })
             .ifThen(
                 ctx.StringLiteral() == null,
-                builder -> builder.description("Abstract type $L.\n\nAuto-generated from specification."))
+                builder -> builder.description(formatter.apply("Abstract type ${type}.\n\nAuto-generated from specification.")))
             .ifThen(
                 ctx.StringLiteral() != null,
-                builder -> builder.description(toValue(ctx.StringLiteral())));
+                builder -> builder.description(formatter.apply(toValue(ctx.StringLiteral()))));
 
         abstractTypeDescs.add(currentTypeDesc.build());
         currentTypeDesc = null;

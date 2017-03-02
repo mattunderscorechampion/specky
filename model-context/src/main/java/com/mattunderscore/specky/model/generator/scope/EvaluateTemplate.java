@@ -46,6 +46,10 @@ public final class EvaluateTemplate implements Function<String, String> {
 
     @Override
     public String apply(String template) {
+        if (template == null) {
+            return null;
+        }
+
         String value = template;
 
         for (int i = 0; i < PATTERNS.length; i++) {
