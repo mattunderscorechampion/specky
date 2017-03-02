@@ -163,8 +163,9 @@ public final class ValueListener extends SpeckyBaseListener {
             return;
         }
 
+        final Scope scope = sectionScopeResolver.resolve(currentSection);
         final List<AbstractTypeDesc> resolveSupertypes =
-            resolveSupertypes(currentSupertypes, sectionScopeResolver.resolve(currentSection), ctx);
+            resolveSupertypes(currentSupertypes, scope, ctx);
 
         final List<PropertyDesc> inheritedProperties = resolveSupertypes
             .stream()
@@ -213,13 +214,12 @@ public final class ValueListener extends SpeckyBaseListener {
 
         currentTypeDesc = currentTypeDesc
             .name(ctx.Identifier().getText())
-            .author(sectionScopeResolver.resolve(currentSection).getAuthor())
-            .packageName(sectionScopeResolver.resolve(currentSection).getPackage())
+            .author(scope.getAuthor())
+            .packageName(scope.getPackage())
             .ifThen(
                 ctx.licence() == null,
                 builder -> builder
-                    .licence(sectionScopeResolver
-                        .resolve(currentSection)
+                    .licence(scope
                         .resolveLicence((String) null)
                         .orElse(null)))
             .ifThen(
@@ -230,8 +230,7 @@ public final class ValueListener extends SpeckyBaseListener {
                 builder -> {
                     final String licenceName = ctx.licence().Identifier().getText();
                     return builder
-                        .licence(sectionScopeResolver
-                            .resolve(currentSection)
+                        .licence(scope
                             .resolveLicence(licenceName)
                             .orElseGet(() -> {
                                 semanticErrorListener.onSemanticError(
