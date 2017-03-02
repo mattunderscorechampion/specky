@@ -50,6 +50,7 @@ import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.ValueDesc;
+import com.mattunderscore.specky.model.generator.scope.EvaluateTemplate;
 import com.mattunderscore.specky.model.generator.scope.Scope;
 import com.mattunderscore.specky.model.generator.scope.SectionScopeResolver;
 import com.mattunderscore.specky.parser.Specky;
@@ -164,6 +165,7 @@ public final class ValueListener extends SpeckyBaseListener {
         }
 
         final Scope scope = sectionScopeResolver.resolve(currentSection);
+        final EvaluateTemplate formatter = new EvaluateTemplate(scope.toTemplateContext(ctx.Identifier().getText()));
         final List<AbstractTypeDesc> resolveSupertypes =
             resolveSupertypes(currentSupertypes, scope, ctx);
 
@@ -219,32 +221,34 @@ public final class ValueListener extends SpeckyBaseListener {
             .ifThen(
                 ctx.licence() == null,
                 builder -> builder
-                    .licence(scope
-                        .resolveLicence((String) null)
-                        .orElse(null)))
+                    .licence(formatter.apply(
+                        scope
+                            .resolveLicence((String) null)
+                            .orElse(null))))
             .ifThen(
                 ctx.licence() != null && ctx.licence().string_value() != null,
-                builder -> builder.licence(toValue(ctx.licence().string_value())))
+                builder -> builder.licence(formatter.apply(toValue(ctx.licence().string_value()))))
             .ifThen(
                 ctx.licence() != null && ctx.licence().Identifier() != null,
                 builder -> {
                     final String licenceName = ctx.licence().Identifier().getText();
                     return builder
-                        .licence(scope
-                            .resolveLicence(licenceName)
-                            .orElseGet(() -> {
-                                semanticErrorListener.onSemanticError(
-                                    "An unknown name was used to reference a licence",
-                                    ctx.licence());
-                                return null;
-                            }));
+                        .licence(formatter.apply(
+                            scope
+                                .resolveLicence(licenceName)
+                                .orElseGet(() -> {
+                                    semanticErrorListener.onSemanticError(
+                                        "An unknown name was used to reference a licence",
+                                        ctx.licence());
+                                    return null;
+                                })));
                 })
             .ifThen(
                 ctx.StringLiteral() == null,
-                builder -> builder.description("Value type $L.\n\nAuto-generated from specification."))
+                builder -> builder.description(formatter.apply("Value type ${type}.\n\nAuto-generated from specification.")))
             .ifThen(
                 ctx.StringLiteral() != null,
-                builder -> builder.description(toValue(ctx.StringLiteral())))
+                builder -> builder.description(formatter.apply(toValue(ctx.StringLiteral()))))
             .properties(allProperties);
 
         valueDescs.add(currentTypeDesc.build());
