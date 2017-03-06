@@ -69,6 +69,16 @@ public final class PreambleScopeTest {
     }
 
     @Test
+    public void resolveBSD3Licence() throws Exception {
+        assertTrue(INSTANCE.resolveLicence("BSD-3-Clause").isPresent());
+    }
+
+    @Test
+    public void resolveMITLicence() throws Exception {
+        assertTrue(INSTANCE.resolveLicence("MIT").isPresent());
+    }
+
+    @Test
     public void optional() {
         final Optional<CodeBlock> value = INSTANCE.resolveValue("none", true);
         assertTrue(value.isPresent());

@@ -25,8 +25,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator.scope;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 
+import com.mattunderscore.specky.licence.resolver.LicenceResolver;
+import com.mattunderscore.specky.licence.resolver.LicenceResolverImpl;
 import com.mattunderscore.specky.type.resolver.JavaStandardTypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
@@ -45,15 +50,17 @@ public final class PreambleScope extends AbstractScope {
     /**
      * Instance of the preamble scope.
      */
-    public static final Scope INSTANCE = new PreambleScope();
+    public static final Scope INSTANCE = create();
 
     private final TypeResolver typeResolver = new JavaStandardTypeResolver();
     private final DefaultValueResolver valueResolver = new CompositeValueResolver()
         .with(new OptionalValueResolver())
         .with(new JavaStandardDefaultValueResolver())
         .with(new NullValueResolver());
+    private final LicenceResolver licenceResolver;
 
-    private PreambleScope() {
+    private PreambleScope(LicenceResolver licenceResolver) {
+        this.licenceResolver = licenceResolver;
     }
 
     @Override
@@ -64,5 +71,53 @@ public final class PreambleScope extends AbstractScope {
     @Override
     public Optional<CodeBlock> resolveValue(String resolvedType, boolean optional) {
         return valueResolver.resolveValue(resolvedType, optional);
+    }
+
+    @Override
+    public Optional<String> resolveLicence(String name) {
+        return licenceResolver.resolveLicence(name);
+    }
+
+    private static PreambleScope create() {
+        final LicenceResolverImpl licenceResolver = new LicenceResolverImpl();
+
+        final String bsd3 = loadAsString("com/mattunderscore/specky/bsd-3-clause.template");
+        if (bsd3 != null) {
+            licenceResolver.register("BSD-3-Clause", bsd3);
+            licenceResolver.register("BSD3Clause", bsd3);
+            licenceResolver.register("BSD3", bsd3);
+        }
+        final String mit = loadAsString("com/mattunderscore/specky/mit.template");
+        if (mit != null) {
+            licenceResolver.register("MIT", mit);
+        }
+
+        return new PreambleScope(licenceResolver);
+    }
+
+    private static String loadAsString(String resourceName) {
+        final InputStream resource = PreambleScope
+            .class
+            .getClassLoader()
+            .getResourceAsStream(resourceName);
+
+        if (resource != null) {
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try {
+                while (true) {
+                    final int value = resource.read();
+                    if (value == -1) {
+                        break;
+                    }
+                    baos.write(value);
+                }
+                return baos.toString("UTF-8");
+            }
+            catch (IOException ex) {
+                return null;
+            }
+        }
+
+        return null;
     }
 }
