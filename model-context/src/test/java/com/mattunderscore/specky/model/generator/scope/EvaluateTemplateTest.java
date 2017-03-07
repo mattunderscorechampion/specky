@@ -26,4 +26,17 @@ public final class EvaluateTemplateTest {
         final String value = evaluator.apply("${author} \\${author} ${copyrightHolder} ${type} ${author}");
         assertEquals("author ${author} Matt TestType author", value);
     }
+
+    @Test
+    public void unknownValues() throws Exception {
+        final TemplateContext templateContext = TemplateContext
+            .builder()
+            .typeName("TestType")
+            .build();
+
+        final EvaluateTemplate evaluator = new EvaluateTemplate(templateContext);
+
+        final String value = evaluator.apply("${author} ${copyrightHolder}");
+        assertEquals("unknown unknown", value);
+    }
 }

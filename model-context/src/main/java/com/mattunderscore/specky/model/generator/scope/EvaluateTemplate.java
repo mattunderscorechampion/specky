@@ -30,10 +30,16 @@ public final class EvaluateTemplate implements Function<String, String> {
      * Constructor.
      */
     public EvaluateTemplate(TemplateContext templateContext) {
+        final String author = templateContext.getAuthor() != null ? templateContext.getAuthor() : "unknown";
+        final String copyrightHolder =
+            templateContext.getCopyrightHolder() != null ?
+                templateContext.getCopyrightHolder() :
+                author;
+
         substitutions = new String[] {
             templateContext.getTypeName(),
-            templateContext.getAuthor(),
-            templateContext.getCopyrightHolder(),
+            author,
+            copyrightHolder,
             Integer.toString(ofInstant(templateContext.getBuildTime(), ZoneId.systemDefault()).getYear()),
             "\\${type}",
             "\\${author}",
