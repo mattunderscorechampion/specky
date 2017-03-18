@@ -87,9 +87,30 @@ public final class PreambleScope extends AbstractScope {
             licenceResolver.register("BSD3Clause", bsd3);
             licenceResolver.register("BSD3", bsd3);
         }
+        final String bsd2 = loadAsString("com/mattunderscore/specky/bsd-2-clause.template");
+        if (bsd2 != null) {
+            licenceResolver.register("BSD-2-Clause", bsd2);
+            licenceResolver.register("BSD2Clause", bsd2);
+            licenceResolver.register("BSD2", bsd2);
+        }
         final String mit = loadAsString("com/mattunderscore/specky/mit.template");
         if (mit != null) {
             licenceResolver.register("MIT", mit);
+        }
+        final String apache2 = loadAsString("com/mattunderscore/specky/apache-2.template");
+        if (apache2 != null) {
+            licenceResolver.register("Apache-2", apache2);
+            licenceResolver.register("Apache2", apache2);
+        }
+        final String gpl3 = loadAsString("com/mattunderscore/specky/gpl-3.template");
+        if (gpl3 != null) {
+            licenceResolver.register("GPL-3", gpl3);
+            licenceResolver.register("GPL3", gpl3);
+        }
+        final String gpl2 = loadAsString("com/mattunderscore/specky/gpl-2.template");
+        if (gpl2 != null) {
+            licenceResolver.register("GPL-2", gpl2);
+            licenceResolver.register("GPL2", gpl2);
         }
 
         return new PreambleScope(licenceResolver);
