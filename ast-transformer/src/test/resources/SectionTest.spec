@@ -59,10 +59,10 @@ bean FirstBean
     constructor
 
 bean SecondBean
+  licence n
   properties
     Integer num default 5
     String str
-  licence n
   options
     constructor
 

@@ -141,8 +141,8 @@ licence
 
 implementationSpec
     :   (VALUE | BEAN) INLINE_WS Identifier (INLINE_WS supertypes)? (INLINE_WS StringLiteral)? LINE_BREAK
-        (INLINE_WS? props)?
         (INLINE_WS? licence)?
+        (INLINE_WS? props)?
         (INLINE_WS? opts)?
     ;
 
