@@ -262,8 +262,8 @@ INTEGER_LITERAL
     :   ('+'|'-')? [0-9]+
     ;
 
-CONSTRAINT_STRING_LITERAL
-    :   '"' ~[\r\n"]+ '"'
+CONSTRAINT_STRING_START
+    :   '"' -> more, pushMode(STR)
     ;
 
 NEGATION

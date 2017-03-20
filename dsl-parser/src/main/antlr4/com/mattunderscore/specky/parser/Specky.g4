@@ -74,7 +74,7 @@ constraint_operator
 constraint_literal
     :   REAL_LITERAL
     |   INTEGER_LITERAL
-    |   CONSTRAINT_STRING_LITERAL
+    |   STRING_LITERAL
     ;
 
 constraint_predicate
