@@ -160,8 +160,8 @@ Identifier
     :   Letter LetterOrDigit*
     ;
 
-CONSTRAINT_EXPRESSION
-    :   '[constraint' -> pushMode(CONSTRAINT_MODE)
+INLINE_EXPRESSION
+    :   '[' -> more, pushMode(EXPRESSION_MODE)
     ;
 
 STRING_START
@@ -170,6 +170,12 @@ STRING_START
 
 MULTILINE_STRING_START
     :   '"""' -> more, pushMode(ML_STR)
+    ;
+
+mode EXPRESSION_MODE;
+
+CONSTRAINT_EXPRESSION
+    :   'constraint' -> mode(CONSTRAINT_MODE)
     ;
 
 mode STR;
