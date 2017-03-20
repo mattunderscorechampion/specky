@@ -180,6 +180,10 @@ CONSTRAINT_EXPRESSION
 
 mode STR;
 
+STR_ESCAPED_TEXT
+    : '\\[\\"]' -> more
+    ;
+
 STRING_LITERAL
     : '"' -> popMode
     ;
@@ -189,6 +193,10 @@ STR_TEXT
     ;
 
 mode ML_STR;
+
+ML_STR_ESCAPED_TEXT
+    : '\\[\\"]' -> more
+    ;
 
 MULTILINE_STRING_LITERAL
     : '"""' -> popMode
