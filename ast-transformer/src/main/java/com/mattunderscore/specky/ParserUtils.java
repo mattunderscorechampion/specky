@@ -53,7 +53,7 @@ import com.mattunderscore.specky.parser.Specky.String_valueContext;
             return toValue(multiline);
         }
         else {
-            return toValue(stringValue.StringLiteral());
+            return toValue(stringValue.STRING_LITERAL());
         }
     }
 
@@ -64,7 +64,7 @@ import com.mattunderscore.specky.parser.Specky.String_valueContext;
         if (node == null) {
             return null;
         }
-        else if (node.getSymbol().getType() == Specky.StringLiteral) {
+        else if (node.getSymbol().getType() == Specky.STRING_LITERAL) {
             final String literal = node.getText();
             return literal.substring(1, literal.length() - 1);
         }

@@ -228,7 +228,7 @@ import com.squareup.javapoet.CodeBlock;
             .constraint(normaliser
                 .normalise(constraintFactory
                     .create(context.propertyName().getText(), context.constraint_statement())))
-            .description(toValue(context.StringLiteral()))
+            .description(toValue(context.STRING_LITERAL()))
             .build();
     }
 }

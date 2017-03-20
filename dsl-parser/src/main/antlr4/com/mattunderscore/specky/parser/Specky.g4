@@ -28,7 +28,7 @@ parser grammar Specky;
 options { tokenVocab=SpeckyLexer; }
 
 string_value
-    :   (StringLiteral | MULTILINE_STRING_LITERAL)
+    :   (STRING_LITERAL | MULTILINE_STRING_LITERAL)
     ;
 
 construction
@@ -74,7 +74,7 @@ constraint_operator
 constraint_literal
     :   REAL_LITERAL
     |   INTEGER_LITERAL
-    |   STRING_LITERAL
+    |   CONSTRAINT_STRING_LITERAL
     ;
 
 constraint_predicate
@@ -100,7 +100,7 @@ constraint_statement
     ;
 
 property
-    :   (OPTIONAL INLINE_WS)? Identifier typeParameters? INLINE_WS propertyName (INLINE_WS default_value)? (INLINE_WS constraint_statement)? (INLINE_WS StringLiteral)?
+    :   (OPTIONAL INLINE_WS)? Identifier typeParameters? INLINE_WS propertyName (INLINE_WS default_value)? (INLINE_WS constraint_statement)? (INLINE_WS STRING_LITERAL)?
     ;
 
 qualifiedName
@@ -140,14 +140,14 @@ licence
     ;
 
 implementationSpec
-    :   (VALUE | BEAN) INLINE_WS Identifier (INLINE_WS supertypes)? (INLINE_WS StringLiteral)? LINE_BREAK
+    :   (VALUE | BEAN) INLINE_WS Identifier (INLINE_WS supertypes)? (INLINE_WS STRING_LITERAL)? LINE_BREAK
         (INLINE_WS? licence)?
         (INLINE_WS? props)?
         (INLINE_WS? opts)?
     ;
 
 typeSpec
-    :   TYPE INLINE_WS Identifier (INLINE_WS supertypes)? (INLINE_WS StringLiteral)? LINE_BREAK
+    :   TYPE INLINE_WS Identifier (INLINE_WS supertypes)? (INLINE_WS STRING_LITERAL)? LINE_BREAK
         (INLINE_WS? licence)?
         (INLINE_WS? props)?
     ;

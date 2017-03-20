@@ -184,11 +184,11 @@ public final class ValueListener extends SpeckyBaseListener {
                                 })));
                 })
             .ifThen(
-                ctx.StringLiteral() == null,
+                ctx.STRING_LITERAL() == null,
                 builder -> builder.description(formatter.apply("Value type ${type}.\n\nAuto-generated from specification.")))
             .ifThen(
-                ctx.StringLiteral() != null,
-                builder -> builder.description(formatter.apply(toValue(ctx.StringLiteral()))))
+                ctx.STRING_LITERAL() != null,
+                builder -> builder.description(formatter.apply(toValue(ctx.STRING_LITERAL()))))
             .properties(allProperties);
 
         valueDescs.add(currentTypeDesc.build());

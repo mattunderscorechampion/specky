@@ -48,11 +48,6 @@ LetterOrDigit
         {Character.isJavaIdentifierPart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
     ;
 
-fragment
-MULTILINE_QUOTE
-    :   '"""'
-    ;
-
 SECTION
     :   'section'
     ;
@@ -169,12 +164,32 @@ CONSTRAINT_EXPRESSION
     :   '[constraint' -> pushMode(CONSTRAINT_MODE)
     ;
 
-StringLiteral
-    :   '"' ~[\r\n"]+ '"'
+STRING_START
+    :   '"' -> more, pushMode(STR)
     ;
 
+MULTILINE_STRING_START
+    :   '"""' -> more, pushMode(ML_STR)
+    ;
+
+mode STR;
+
+STRING_LITERAL
+    : '"' -> popMode
+    ;
+
+STR_TEXT
+    : ~[\r\n] -> more
+    ;
+
+mode ML_STR;
+
 MULTILINE_STRING_LITERAL
-    :   MULTILINE_QUOTE (.)+? MULTILINE_QUOTE
+    : '"""' -> popMode
+    ;
+
+ML_STR_TEXT
+    : . -> more
     ;
 
 mode LITERAL;
@@ -233,7 +248,7 @@ INTEGER_LITERAL
     :   ('+'|'-')? [0-9]+
     ;
 
-STRING_LITERAL
+CONSTRAINT_STRING_LITERAL
     :   '"' ~[\r\n"]+ '"'
     ;
 

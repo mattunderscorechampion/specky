@@ -117,7 +117,7 @@ public final class ReportingSyntaxErrorListener implements SyntaxErrorListener {
         if (tokenType == Token.EOF) {
             return "end of file";
         }
-        else if (tokenType == SpeckyLexer.StringLiteral || tokenType == SpeckyLexer.MULTILINE_STRING_LITERAL) {
+        else if (tokenType == SpeckyLexer.STRING_LITERAL || tokenType == SpeckyLexer.MULTILINE_STRING_LITERAL) {
             return "string literal";
         }
         else {
