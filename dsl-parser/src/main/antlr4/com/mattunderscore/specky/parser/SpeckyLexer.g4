@@ -178,6 +178,10 @@ CONSTRAINT_EXPRESSION
     :   'constraint' -> mode(CONSTRAINT_MODE)
     ;
 
+DEFAULT_EXPRESSION
+    :   'default' -> mode(VALUE_MODE)
+    ;
+
 mode STR;
 
 STR_ESCAPED_TEXT
@@ -215,6 +219,44 @@ LITERAL_INLINE_WS
 ANYTHING
     :   ~[ \t\r\n\u000C]+ -> popMode
     ;
+
+mode VALUE_MODE;
+
+VALUE_TYPE_NAME
+    :   Letter LetterOrDigit*
+    ;
+
+VALUE_REAL_LITERAL
+    :   ('+'|'-')? [0-9]* '.' [0-9]+
+    ;
+
+VALUE_INTEGER_LITERAL
+    :   ('+'|'-')? [0-9]+
+    ;
+
+VALUE_STRING_START
+    :   '"' -> more, pushMode(STR)
+    ;
+
+VALUE_OPEN_PARAMETER
+    :   '('
+    ;
+
+VALUE_PARAMETER_SEPARATOR
+    :   ','
+    ;
+
+VALUE_CLOSE_PARAMETER
+    :   ')'
+    ;
+
+VALUE_END
+    :   ']' -> popMode
+    ;
+
+VALUE_INLINE_WS
+    :   [ ]+ -> channel(HIDDEN)
+;
 
 mode CONSTRAINT_MODE;
 

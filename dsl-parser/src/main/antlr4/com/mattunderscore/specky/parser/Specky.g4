@@ -39,7 +39,19 @@ construction
     ;
 
 default_value
-    :    DEFAULT LITERAL_INLINE_WS ANYTHING
+    :   DEFAULT LITERAL_INLINE_WS ANYTHING
+    |   default_value_expression
+    ;
+
+value_expression
+    :   VALUE_TYPE_NAME VALUE_OPEN_PARAMETER (value_expression (VALUE_PARAMETER_SEPARATOR VALUE_INLINE_WS value_expression)*)?  VALUE_CLOSE_PARAMETER
+    |   VALUE_INTEGER_LITERAL
+    |   VALUE_REAL_LITERAL
+    |   STRING_LITERAL
+    ;
+
+default_value_expression
+    : DEFAULT_EXPRESSION VALUE_INLINE_WS value_expression VALUE_END
     ;
 
 typeParameters

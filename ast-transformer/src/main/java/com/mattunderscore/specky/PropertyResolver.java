@@ -195,7 +195,9 @@ import com.squareup.javapoet.CodeBlock;
     private PropertyDesc createProperty(Specky.PropertyContext context, Scope scope) {
         final String defaultValue = context.default_value() == null ?
             null :
-            context.default_value().ANYTHING().getText();
+            context.default_value().ANYTHING() != null ?
+                context.default_value().ANYTHING().getText() :
+                context.default_value().default_value_expression().value_expression().getText();
         final Specky.TypeParametersContext parametersContext = context
             .typeParameters();
         final List<String> typeParameters = parametersContext == null ?

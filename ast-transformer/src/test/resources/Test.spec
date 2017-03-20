@@ -63,3 +63,10 @@ bean FirstBean
     String str
   options
     constructor
+
+bean SecondBean
+  properties
+    Integer num [default 5]
+    String str
+  options
+    constructor
