@@ -105,7 +105,7 @@ public final class BeanListenerTest {
 
         final List<BeanDesc> beanDescs = beanListener.getBeanDescs();
 
-        assertEquals(2, beanDescs.size());
+        assertEquals(3, beanDescs.size());
 
         final PropertyDesc p0 = PropertyDesc
             .builder()
@@ -157,6 +157,15 @@ public final class BeanListenerTest {
             containsInAnyOrder(
                 p0,
                 p1));
+
+        final BeanDesc beanDesc2 = beanDescs.get(2);
+        assertEquals("ThirdBean", beanDesc2.getName());
+        assertEquals("Matt Champion", beanDesc2.getAuthor());
+        assertEquals("Bean type ThirdBean.\n\nAuto-generated from specification.", beanDesc2.getDescription());
+        assertEquals("com.example", beanDesc2.getPackageName());
+        assertEquals("default licence of named section", beanDesc2.getLicence());
+        assertEquals(emptyList(), beanDesc2.getSupertypes());
+        assertEquals(ConstructionMethod.CONSTRUCTOR, beanDesc2.getConstructionMethod());
     }
 
     @Test

@@ -66,3 +66,7 @@ bean SecondBean
   options
     constructor
 
+bean ThirdBean
+  properties
+    FirstBean b [default FirstBean(5, "")]
+

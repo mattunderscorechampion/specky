@@ -37,7 +37,6 @@ type TestType
   properties
     Integer num
 
-
 value FirstValue : TestType
   properties
     Integer num

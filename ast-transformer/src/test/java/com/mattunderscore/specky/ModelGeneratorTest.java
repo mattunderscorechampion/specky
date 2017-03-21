@@ -72,9 +72,9 @@ public final class ModelGeneratorTest {
         final List<AbstractTypeDesc> abstractTypes = specDesc.getAbstractTypes();
         final List<ImplementationDesc> implementations = specDesc.getImplementations();
 
-        assertEquals(4, types.size());
+        assertEquals(5, types.size());
         assertEquals(1, abstractTypes.size());
-        assertEquals(3, implementations.size());
+        assertEquals(4, implementations.size());
 
         final AbstractTypeDesc abstractType = abstractTypes.get(0);
 
@@ -94,7 +94,7 @@ public final class ModelGeneratorTest {
                 .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
                 .build()));
 
-        final ImplementationDesc valueDesc = implementations.get(2);
+        final ImplementationDesc valueDesc = implementations.get(3);
 
         assertEquals("FirstValue", valueDesc.getName());
         assertEquals("Matt Champion", valueDesc.getAuthor());
@@ -178,6 +178,15 @@ public final class ModelGeneratorTest {
             containsInAnyOrder(
                 bp0,
                 bp1));
+
+        final ImplementationDesc beanDesc2 = implementations.get(2);
+
+        assertEquals("ThirdBean", beanDesc2.getName());
+        assertEquals("Matt Champion", beanDesc2.getAuthor());
+        assertEquals("Bean type ThirdBean.\n\nAuto-generated from specification.", beanDesc2.getDescription());
+        assertEquals("com.example", beanDesc2.getPackageName());
+        assertEquals(emptyList(), beanDesc2.getSupertypes());
+        assertEquals(ConstructionMethod.CONSTRUCTOR, beanDesc2.getConstructionMethod());
     }
 
     @Test

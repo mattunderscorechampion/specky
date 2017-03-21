@@ -1,6 +1,7 @@
 package com.mattunderscore.specky;
 
 import static com.mattunderscore.specky.ParserUtils.toValue;
+import static com.squareup.javapoet.ClassName.bestGuess;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
@@ -15,6 +16,7 @@ import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
 import com.mattunderscore.specky.constraint.model.NFDisjointPredicates;
@@ -192,12 +194,64 @@ import com.squareup.javapoet.CodeBlock;
             });
     }
 
+    private CodeBlock getValue(Specky.Value_expressionContext expressionValue, Scope scope) {
+        if (expressionValue.STRING_LITERAL() != null) {
+            return CodeBlock.of(expressionValue.STRING_LITERAL().getText());
+        }
+
+        if (expressionValue.VALUE_REAL_LITERAL() != null) {
+            return CodeBlock.of(expressionValue.VALUE_REAL_LITERAL().getText());
+        }
+
+        if (expressionValue.VALUE_INTEGER_LITERAL() != null) {
+            return CodeBlock.of(expressionValue.VALUE_INTEGER_LITERAL().getText());
+        }
+
+        final Optional<String> maybeType = scope.resolveType(expressionValue.VALUE_TYPE_NAME().getText());
+        if (!maybeType.isPresent()) {
+            errorListener.onSemanticError("Type name not found", expressionValue);
+            return null;
+        }
+
+        final String type = maybeType.get();
+        final CodeBlock.Builder valueBuilder = CodeBlock.builder().add("new $T(", bestGuess(type));
+
+        expressionValue
+            .value_expression()
+            .stream()
+            .map(expr -> getValue(expr, scope))
+            .forEach(valueBuilder::add);
+
+        return valueBuilder.add(")").build();
+    }
+
+    private CodeBlock getDefaultValue(Specky.PropertyContext context, Scope scope) {
+        if (context.default_value() == null) {
+            final Optional<String> maybeType = scope.resolveType(context.Identifier().getText());
+            if (!maybeType.isPresent()) {
+                errorListener.onSemanticError("Type name not found", context);
+                return null;
+            }
+
+            final Optional<CodeBlock> typeDefaultValue = scope
+                .resolveValue(maybeType.get(), context.OPTIONAL() != null);
+            return typeDefaultValue.orElse(null);
+        }
+
+        final TerminalNode anything = context.default_value().ANYTHING();
+        if (anything != null) {
+            return CodeBlock.of(anything.getText());
+        }
+
+        final Specky.Value_expressionContext expressionValue = context
+            .default_value()
+            .default_value_expression()
+            .value_expression();
+
+        return getValue(expressionValue, scope);
+    }
+
     private PropertyDesc createProperty(Specky.PropertyContext context, Scope scope) {
-        final String defaultValue = context.default_value() == null ?
-            null :
-            context.default_value().ANYTHING() != null ?
-                context.default_value().ANYTHING().getText() :
-                context.default_value().default_value_expression().value_expression().getText();
         final Specky.TypeParametersContext parametersContext = context
             .typeParameters();
         final List<String> typeParameters = parametersContext == null ?
@@ -207,9 +261,6 @@ import com.squareup.javapoet.CodeBlock;
                 .stream()
                 .map(ParseTree::getText)
                 .collect(toList());
-
-        final CodeBlock defaultCode = defaultValue != null ? CodeBlock.of(defaultValue) : scope
-            .resolveValue(scope.resolveType(context.Identifier().getText()).get(), context.OPTIONAL() != null).get();
 
         final String resolvedType = scope
             .resolveType(context
@@ -226,7 +277,7 @@ import com.squareup.javapoet.CodeBlock;
             .type(resolvedType)
             .typeParameters(typeParameters)
             .optional(context.OPTIONAL() != null)
-            .defaultValue(defaultCode)
+            .defaultValue(getDefaultValue(context, scope))
             .constraint(normaliser
                 .normalise(constraintFactory
                     .create(context.propertyName().getText(), context.constraint_statement())))
