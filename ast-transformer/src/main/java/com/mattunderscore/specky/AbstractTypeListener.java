@@ -24,17 +24,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
-import static com.mattunderscore.specky.ParserUtils.toValue;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableList;
-import static java.util.stream.Collectors.toList;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
 import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
@@ -45,9 +34,17 @@ import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyBaseListener;
 import com.mattunderscore.specky.proposition.ConstraintFactory;
 import com.mattunderscore.specky.proposition.Normaliser;
-import com.squareup.javapoet.CodeBlock;
-
 import net.jcip.annotations.NotThreadSafe;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.mattunderscore.specky.ParserUtils.toValue;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Listener for abstract types.
@@ -59,6 +56,7 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
     private final ConstraintFactory constraintFactory = new ConstraintFactory();
     private final SectionScopeResolver sectionScopeResolver;
     private final InternalSemanticErrorListener semanticErrorListener;
+    private final ValueParser valueParser;
 
     private final List<AbstractTypeDesc> abstractTypeDescs = new ArrayList<>();
     private AbstractTypeDesc.Builder currentTypeDesc;
@@ -70,6 +68,7 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
     public AbstractTypeListener(SectionScopeResolver sectionScopeResolver, InternalSemanticErrorListener semanticErrorListener) {
         this.sectionScopeResolver = sectionScopeResolver;
         this.semanticErrorListener = semanticErrorListener;
+        valueParser = new ValueParser(semanticErrorListener);
     }
 
     /**
@@ -177,9 +176,6 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
         final Scope scope = sectionScopeResolver
             .resolve(currentSection);
 
-        final String defaultValue = context.default_value() == null ?
-            null :
-            context.default_value().ANYTHING().getText();
         final Specky.TypeParametersContext parametersContext = context
             .typeParameters();
         final List<String> typeParameters = parametersContext == null ?
@@ -189,13 +185,6 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
                 .stream()
                 .map(ParseTree::getText)
                 .collect(toList());
-
-        final String type = scope.resolveType(context.Identifier().getText()).get();
-
-        final CodeBlock defaultCode = defaultValue != null ? CodeBlock.of(defaultValue) : sectionScopeResolver
-            .resolve(currentSection)
-            .resolveValue(type, context.OPTIONAL() != null)
-            .get();
 
         final String resolvedType = scope
             .resolveType(context
@@ -212,7 +201,7 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
             .type(resolvedType)
             .typeParameters(typeParameters)
             .optional(context.OPTIONAL() != null)
-            .defaultValue(defaultCode)
+            .defaultValue(valueParser.getDefaultValue(context, scope))
             .constraint(normaliser
                 .normalise(constraintFactory
                     .create(context.propertyName().getText(), context.constraint_statement())))
