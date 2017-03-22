@@ -9,10 +9,8 @@ import com.mattunderscore.specky.model.generator.scope.Scope;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.proposition.ConstraintFactory;
 import com.mattunderscore.specky.proposition.Normaliser;
-import com.squareup.javapoet.CodeBlock;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -194,32 +192,6 @@ import static java.util.stream.Collectors.toList;
             });
     }
 
-    private CodeBlock getDefaultValue(Specky.PropertyContext context, Scope scope) {
-        if (context.default_value() == null) {
-            final Optional<String> maybeType = scope.resolveType(context.Identifier().getText());
-            if (!maybeType.isPresent()) {
-                errorListener.onSemanticError("Type name not found", context);
-                return null;
-            }
-
-            final Optional<CodeBlock> typeDefaultValue = scope
-                .resolveValue(maybeType.get(), context.OPTIONAL() != null);
-            return typeDefaultValue.orElse(null);
-        }
-
-        final TerminalNode anything = context.default_value().ANYTHING();
-        if (anything != null) {
-            return CodeBlock.of(anything.getText());
-        }
-
-        final Specky.Value_expressionContext expressionValue = context
-            .default_value()
-            .default_value_expression()
-            .value_expression();
-
-        return valueParser.getValue(expressionValue, scope);
-    }
-
     private PropertyDesc createProperty(Specky.PropertyContext context, Scope scope) {
         final Specky.TypeParametersContext parametersContext = context
             .typeParameters();
@@ -246,7 +218,7 @@ import static java.util.stream.Collectors.toList;
             .type(resolvedType)
             .typeParameters(typeParameters)
             .optional(context.OPTIONAL() != null)
-            .defaultValue(getDefaultValue(context, scope))
+            .defaultValue(valueParser.getDefaultValue(context, scope))
             .constraint(normaliser
                 .normalise(constraintFactory
                     .create(context.propertyName().getText(), context.constraint_statement())))

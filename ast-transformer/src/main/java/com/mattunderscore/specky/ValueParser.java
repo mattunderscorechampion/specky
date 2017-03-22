@@ -29,6 +29,7 @@ import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
 import com.mattunderscore.specky.model.generator.scope.Scope;
 import com.mattunderscore.specky.parser.Specky;
 import com.squareup.javapoet.CodeBlock;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.Optional;
 
@@ -80,5 +81,34 @@ import static com.squareup.javapoet.ClassName.bestGuess;
                 .forEach(valueBuilder::add);
 
         return valueBuilder.add(")").build();
+    }
+
+    /**
+     * @return code block for the default value
+     */
+    CodeBlock getDefaultValue(Specky.PropertyContext context, Scope scope) {
+        if (context.default_value() == null) {
+            final Optional<String> maybeType = scope.resolveType(context.Identifier().getText());
+            if (!maybeType.isPresent()) {
+                errorListener.onSemanticError("Type name not found", context);
+                return null;
+            }
+
+            final Optional<CodeBlock> typeDefaultValue = scope
+                    .resolveValue(maybeType.get(), context.OPTIONAL() != null);
+            return typeDefaultValue.orElse(null);
+        }
+
+        final TerminalNode anything = context.default_value().ANYTHING();
+        if (anything != null) {
+            return CodeBlock.of(anything.getText());
+        }
+
+        final Specky.Value_expressionContext expressionValue = context
+                .default_value()
+                .default_value_expression()
+                .value_expression();
+
+        return getValue(expressionValue, scope);
     }
 }
