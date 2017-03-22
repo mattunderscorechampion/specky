@@ -1,23 +1,5 @@
 package com.mattunderscore.specky;
 
-import static com.mattunderscore.specky.ParserUtils.toValue;
-import static com.squareup.javapoet.ClassName.bestGuess;
-import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
 import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
 import com.mattunderscore.specky.constraint.model.NFDisjointPredicates;
 import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
@@ -28,6 +10,22 @@ import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.proposition.ConstraintFactory;
 import com.mattunderscore.specky.proposition.Normaliser;
 import com.squareup.javapoet.CodeBlock;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+import static com.mattunderscore.specky.ParserUtils.toValue;
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Resolver for properties.
@@ -39,6 +37,7 @@ import com.squareup.javapoet.CodeBlock;
     private final List<PropertyDesc> declaredProperties = new ArrayList<>();
     private final Map<String, AbstractTypeDesc> abstractTypes;
     private final InternalSemanticErrorListener errorListener;
+    private final ValueParser valueParser;
 
     /**
      * Constructor.
@@ -46,6 +45,7 @@ import com.squareup.javapoet.CodeBlock;
     PropertyResolver(Map<String, AbstractTypeDesc> abstractTypes, InternalSemanticErrorListener errorListener) {
         this.abstractTypes = abstractTypes;
         this.errorListener = errorListener;
+        valueParser = new ValueParser(errorListener);
     }
 
     /**
@@ -194,37 +194,6 @@ import com.squareup.javapoet.CodeBlock;
             });
     }
 
-    private CodeBlock getValue(Specky.Value_expressionContext expressionValue, Scope scope) {
-        if (expressionValue.STRING_LITERAL() != null) {
-            return CodeBlock.of(expressionValue.STRING_LITERAL().getText());
-        }
-
-        if (expressionValue.VALUE_REAL_LITERAL() != null) {
-            return CodeBlock.of(expressionValue.VALUE_REAL_LITERAL().getText());
-        }
-
-        if (expressionValue.VALUE_INTEGER_LITERAL() != null) {
-            return CodeBlock.of(expressionValue.VALUE_INTEGER_LITERAL().getText());
-        }
-
-        final Optional<String> maybeType = scope.resolveType(expressionValue.VALUE_TYPE_NAME().getText());
-        if (!maybeType.isPresent()) {
-            errorListener.onSemanticError("Type name not found", expressionValue);
-            return null;
-        }
-
-        final String type = maybeType.get();
-        final CodeBlock.Builder valueBuilder = CodeBlock.builder().add("new $T(", bestGuess(type));
-
-        expressionValue
-            .value_expression()
-            .stream()
-            .map(expr -> getValue(expr, scope))
-            .forEach(valueBuilder::add);
-
-        return valueBuilder.add(")").build();
-    }
-
     private CodeBlock getDefaultValue(Specky.PropertyContext context, Scope scope) {
         if (context.default_value() == null) {
             final Optional<String> maybeType = scope.resolveType(context.Identifier().getText());
@@ -248,7 +217,7 @@ import com.squareup.javapoet.CodeBlock;
             .default_value_expression()
             .value_expression();
 
-        return getValue(expressionValue, scope);
+        return valueParser.getValue(expressionValue, scope);
     }
 
     private PropertyDesc createProperty(Specky.PropertyContext context, Scope scope) {
