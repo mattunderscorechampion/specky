@@ -25,13 +25,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
-import static java.util.Arrays.asList;
+import com.mattunderscore.specky.literal.model.LiteralDesc;
+import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import com.squareup.javapoet.CodeBlock;
+import static java.util.Arrays.asList;
 
 /**
  * A value resolver that returns null unless the value if a primitive.
@@ -41,11 +42,11 @@ public final class NullValueResolver implements DefaultValueResolver {
     private static final Set<String> PRIMITIVE_TYPES = new HashSet<>(asList("int", "boolean", "double"));
 
     @Override
-    public Optional<CodeBlock> resolveValue(String resolvedType, boolean optional) {
+    public Optional<LiteralDesc> resolveValue(String resolvedType, boolean optional) {
         if (PRIMITIVE_TYPES.contains(resolvedType)) {
             return Optional.empty();
         }
 
-        return Optional.of(CodeBlock.of("null"));
+        return Optional.of(UnstructuredLiteral.builder().literal("null").build());
     }
 }

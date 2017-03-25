@@ -25,20 +25,20 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.property.field;
 
-import static com.mattunderscore.specky.model.ConstructionMethod.CONSTRUCTOR;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import javax.lang.model.element.Modifier;
-
-import org.junit.Test;
-
+import com.mattunderscore.specky.literal.model.StringLiteral;
 import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
+import org.junit.Test;
+
+import javax.lang.model.element.Modifier;
+
+import static com.mattunderscore.specky.model.ConstructionMethod.CONSTRUCTOR;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests for {@link MutableFieldGenerator}.
@@ -60,7 +60,7 @@ public class MutableFieldGeneratorTest {
                 .builder()
                 .type("java.lang.String")
                 .name("prop")
-                .defaultValue(CodeBlock.of("\"\""))
+                .defaultValue(StringLiteral.builder().stringLiteral("").build())
                 .build();
 
         final FieldSpec fieldSpec = generator.generate(null, beanDesc, propertyDesc);

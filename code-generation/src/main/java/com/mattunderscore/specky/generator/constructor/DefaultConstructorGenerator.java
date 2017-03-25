@@ -25,24 +25,25 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.constructor;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
-import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
-import static com.squareup.javapoet.MethodSpec.constructorBuilder;
-import static javax.lang.model.element.Modifier.FINAL;
-import static javax.lang.model.element.Modifier.PRIVATE;
-
-import javax.lang.model.element.Modifier;
-
+import com.mattunderscore.specky.generator.LiteralValueGenerator;
 import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.constraint.PropertyConstraintGenerator;
+import com.mattunderscore.specky.literal.model.LiteralDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
-import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+
+import javax.lang.model.element.Modifier;
+
+import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
+import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
+import static com.squareup.javapoet.MethodSpec.constructorBuilder;
+import static javax.lang.model.element.Modifier.FINAL;
+import static javax.lang.model.element.Modifier.PRIVATE;
 
 /**
  * Default constructor generator.
@@ -51,12 +52,14 @@ import com.squareup.javapoet.TypeSpec;
 public final class DefaultConstructorGenerator implements TypeAppender<ImplementationDesc> {
     private final Modifier constructorAccessability;
     private final PropertyConstraintGenerator propertyConstraintGenerator = new PropertyConstraintGenerator();
+    private final LiteralValueGenerator literalValueGenerator;
 
     /**
      * Constructor.
      */
     public DefaultConstructorGenerator(Modifier constructorAccessability) {
         this.constructorAccessability = constructorAccessability;
+        literalValueGenerator = new LiteralValueGenerator();
     }
 
     @Override
@@ -73,7 +76,7 @@ public final class DefaultConstructorGenerator implements TypeAppender<Implement
                 final TypeName type = getType(propertyDesc);
                 final FieldSpec fieldSpec = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE, FINAL).build();
 
-                final CodeBlock defaultValue = propertyDesc.getDefaultValue();
+                final LiteralDesc defaultValue = propertyDesc.getDefaultValue();
 
                 if (defaultValue == null) {
                     if (propertyDesc.getConstraint() != null) {
@@ -89,7 +92,7 @@ public final class DefaultConstructorGenerator implements TypeAppender<Implement
                 else {
                     // If the property has a default value use it
                     constructor
-                        .addStatement("this.$N = $L", fieldSpec, defaultValue);
+                        .addStatement("this.$N = $L", fieldSpec, literalValueGenerator.generate(defaultValue));
 
                     if (propertyDesc.getConstraint() != null) {
                         constructor.addCode(propertyConstraintGenerator.generate(propertyDesc));

@@ -1,8 +1,8 @@
 package com.mattunderscore.specky.value.resolver;
 
-import java.util.concurrent.CompletableFuture;
+import com.mattunderscore.specky.literal.model.LiteralDesc;
 
-import com.squareup.javapoet.CodeBlock;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * A mutable resolver.
@@ -12,5 +12,5 @@ public interface MutableValueResolver extends DefaultValueResolver {
     /**
      * Register a default value for a type.
      */
-    CompletableFuture<Void> register(String type, CodeBlock defaultValue);
+    CompletableFuture<Void> register(String type, LiteralDesc defaultValue);
 }

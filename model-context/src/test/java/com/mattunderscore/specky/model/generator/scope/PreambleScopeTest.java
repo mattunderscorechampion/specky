@@ -1,16 +1,19 @@
 package com.mattunderscore.specky.model.generator.scope;
 
+import com.mattunderscore.specky.literal.model.IntegerLiteral;
+import com.mattunderscore.specky.literal.model.LiteralDesc;
+import com.mattunderscore.specky.literal.model.RealLiteral;
+import com.mattunderscore.specky.literal.model.StringLiteral;
+import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
+import org.junit.Test;
+
+import java.util.Optional;
+
 import static com.mattunderscore.specky.model.generator.scope.PreambleScope.INSTANCE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
-import java.util.Optional;
-
-import org.junit.Test;
-
-import com.squareup.javapoet.CodeBlock;
 
 /**
  * Unit tests for {@link PreambleScope}.
@@ -80,16 +83,16 @@ public final class PreambleScopeTest {
 
     @Test
     public void optional() {
-        final Optional<CodeBlock> value = INSTANCE.resolveValue("none", true);
+        final Optional<LiteralDesc> value = INSTANCE.resolveValue("none", true);
         assertTrue(value.isPresent());
-        assertEquals(CodeBlock.of("null"), value.get());
+        assertEquals(UnstructuredLiteral.builder().literal("null").build(), value.get());
     }
 
     @Test
     public void required() {
-        final Optional<CodeBlock> value = INSTANCE.resolveValue("none", false);
+        final Optional<LiteralDesc> value = INSTANCE.resolveValue("none", false);
         assertTrue(value.isPresent());
-        assertEquals(CodeBlock.of("null"), value.get());
+        assertEquals(UnstructuredLiteral.builder().literal("null").build(), value.get());
     }
 
     @Test
@@ -104,37 +107,37 @@ public final class PreambleScopeTest {
 
     @Test
     public void resolveBool() {
-        assertEquals(CodeBlock.of("$L", false), INSTANCE.resolveValue("boolean", false).get());
+        assertEquals(UnstructuredLiteral.builder().literal("false").build(), INSTANCE.resolveValue("boolean", false).get());
     }
 
     @Test
     public void resolveBoolean() {
-        assertEquals(CodeBlock.of("$L", false), INSTANCE.resolveValue("java.lang.Boolean", false).get());
+        assertEquals(UnstructuredLiteral.builder().literal("false").build(), INSTANCE.resolveValue("java.lang.Boolean", false).get());
     }
 
     @Test
     public void resolveInt() {
-        assertEquals(CodeBlock.of("$L", 0), INSTANCE.resolveValue("int", false).get());
+        assertEquals(IntegerLiteral.builder().integerLiteral("0").build(), INSTANCE.resolveValue("int", false).get());
     }
 
     @Test
     public void resolveDbl() {
-        assertEquals(CodeBlock.of("$L", 0.0), INSTANCE.resolveValue("double", false).get());
+        assertEquals(RealLiteral.builder().realLiteral("0.0").build(), INSTANCE.resolveValue("double", false).get());
     }
 
     @Test
     public void getString() {
-        assertEquals(CodeBlock.of("$S", ""), INSTANCE.resolveValue("java.lang.String", false).get());
+        assertEquals(StringLiteral.builder().stringLiteral("").build(), INSTANCE.resolveValue("java.lang.String", false).get());
     }
 
     @Test
     public void getInteger() {
-        assertEquals(CodeBlock.of("$L", 0), INSTANCE.resolveValue("java.lang.Integer", false).get());
+        assertEquals(IntegerLiteral.builder().integerLiteral("0").build(), INSTANCE.resolveValue("java.lang.Integer", false).get());
     }
 
     @Test
     public void getDouble() {
-        assertEquals(CodeBlock.of("$L", 0.0), INSTANCE.resolveValue("java.lang.Double", false).get());
+        assertEquals(RealLiteral.builder().realLiteral("0.0").build(), INSTANCE.resolveValue("java.lang.Double", false).get());
     }
 
     @Test

@@ -25,18 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator.builder.immutable;
 
-import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
-import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
-import static com.squareup.javapoet.MethodSpec.methodBuilder;
-import static java.util.Arrays.asList;
-import static javax.lang.model.element.Modifier.PRIVATE;
-import static javax.lang.model.element.Modifier.PUBLIC;
-import static javax.lang.model.element.Modifier.STATIC;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.mattunderscore.specky.generator.LiteralValueGenerator;
 import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.TypeAppenderForProperty;
 import com.mattunderscore.specky.generator.TypeInitialiser;
@@ -54,6 +43,18 @@ import com.squareup.javapoet.CodeBlock.Builder;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
+import static com.mattunderscore.specky.javapoet.javadoc.JavaDocBuilder.docMethod;
+import static com.squareup.javapoet.MethodSpec.methodBuilder;
+import static java.util.Arrays.asList;
+import static javax.lang.model.element.Modifier.PRIVATE;
+import static javax.lang.model.element.Modifier.PUBLIC;
+import static javax.lang.model.element.Modifier.STATIC;
 
 /**
  * Generator for immutable builders.
@@ -103,6 +104,7 @@ public final class ImmutableBuilderGenerator implements TypeAppender<Implementat
                 .setReturnsDescription("a new builder")
                 .toJavaDoc());
     private final BuildMethodGenerator buildMethodGenerator;
+    private final LiteralValueGenerator literalValueGenerator;
 
     /**
      * Constructor.
@@ -112,6 +114,7 @@ public final class ImmutableBuilderGenerator implements TypeAppender<Implementat
             BuildMethodGenerator buildMethodGenerator) {
         this.typeInitialiser = typeInitialiser;
         this.buildMethodGenerator = buildMethodGenerator;
+        literalValueGenerator = new LiteralValueGenerator();
     }
 
     @Override
@@ -165,7 +168,7 @@ public final class ImmutableBuilderGenerator implements TypeAppender<Implementat
             .map(propertySpec ->
                 propertySpec.getDefaultValue() == null ?
                     CodeBlock.of("null") :
-                    propertySpec.getDefaultValue())
+                    literalValueGenerator.generate(propertySpec.getDefaultValue()))
             .collect(Collectors.toList());
         final Iterator<CodeBlock> iterator = codeBlocks.iterator();
         while (iterator.hasNext()) {

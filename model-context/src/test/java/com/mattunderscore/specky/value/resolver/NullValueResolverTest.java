@@ -25,12 +25,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
+import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
 import org.junit.Test;
 
-import com.squareup.javapoet.CodeBlock;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Unit tests for {@link NullValueResolver}.
@@ -43,7 +42,7 @@ public final class NullValueResolverTest {
 
     @Test
     public void objectsAreNull() {
-        assertEquals(CodeBlock.of("null"), resolver.resolveValue("java.lang.String", false).get());
+        assertEquals(UnstructuredLiteral.builder().literal("null").build(), resolver.resolveValue("java.lang.String", false).get());
     }
 
     @Test

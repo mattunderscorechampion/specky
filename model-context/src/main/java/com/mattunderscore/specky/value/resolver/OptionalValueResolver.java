@@ -25,9 +25,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
-import java.util.Optional;
+import com.mattunderscore.specky.literal.model.LiteralDesc;
+import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
 
-import com.squareup.javapoet.CodeBlock;
+import java.util.Optional;
 
 /**
  * Resolve value for optional properties.
@@ -35,9 +36,9 @@ import com.squareup.javapoet.CodeBlock;
  */
 public final class OptionalValueResolver implements DefaultValueResolver {
     @Override
-    public Optional<CodeBlock> resolveValue(String resolvedType, boolean optional) {
+    public Optional<LiteralDesc> resolveValue(String resolvedType, boolean optional) {
         if (optional) {
-            return Optional.of(CodeBlock.of("null"));
+            return Optional.of(UnstructuredLiteral.builder().literal("null").build());
         }
         else {
             return Optional.empty();

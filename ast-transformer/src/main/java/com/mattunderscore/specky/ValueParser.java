@@ -26,14 +26,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky;
 
 import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
+import com.mattunderscore.specky.literal.model.ComplexLiteral;
+import com.mattunderscore.specky.literal.model.IntegerLiteral;
+import com.mattunderscore.specky.literal.model.LiteralDesc;
+import com.mattunderscore.specky.literal.model.RealLiteral;
+import com.mattunderscore.specky.literal.model.StringLiteral;
+import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
 import com.mattunderscore.specky.model.generator.scope.Scope;
 import com.mattunderscore.specky.parser.Specky;
-import com.squareup.javapoet.CodeBlock;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.Optional;
-
-import static com.squareup.javapoet.ClassName.bestGuess;
 
 /**
  * Parser for values.
@@ -52,17 +55,17 @@ import static com.squareup.javapoet.ClassName.bestGuess;
     /**
      * @return code block for the value
      */
-    CodeBlock getValue(Specky.Value_expressionContext expressionValue, Scope scope) {
+    LiteralDesc getValue(Specky.Value_expressionContext expressionValue, Scope scope) {
         if (expressionValue.STRING_LITERAL() != null) {
-            return CodeBlock.of(expressionValue.STRING_LITERAL().getText());
+            return StringLiteral.builder().stringLiteral(expressionValue.STRING_LITERAL().getText()).build();
         }
 
         if (expressionValue.VALUE_REAL_LITERAL() != null) {
-            return CodeBlock.of(expressionValue.VALUE_REAL_LITERAL().getText());
+            return RealLiteral.builder().realLiteral(expressionValue.VALUE_REAL_LITERAL().getText()).build();
         }
 
         if (expressionValue.VALUE_INTEGER_LITERAL() != null) {
-            return CodeBlock.of(expressionValue.VALUE_INTEGER_LITERAL().getText());
+            return IntegerLiteral.builder().integerLiteral(expressionValue.VALUE_INTEGER_LITERAL().getText()).build();
         }
 
         final Optional<String> maybeType = scope.resolveType(expressionValue.VALUE_TYPE_NAME().getText());
@@ -72,21 +75,21 @@ import static com.squareup.javapoet.ClassName.bestGuess;
         }
 
         final String type = maybeType.get();
-        final CodeBlock.Builder valueBuilder = CodeBlock.builder().add("new $T(", bestGuess(type));
+        final ComplexLiteral.Builder valueBuilder = ComplexLiteral.builder().typeName(type);
 
         expressionValue
                 .value_expression()
                 .stream()
                 .map(expr -> getValue(expr, scope))
-                .forEach(valueBuilder::add);
+                .forEach(valueBuilder::addSubvalue);
 
-        return valueBuilder.add(")").build();
+        return valueBuilder.build();
     }
 
     /**
      * @return code block for the default value
      */
-    CodeBlock getDefaultValue(Specky.PropertyContext context, Scope scope) {
+    LiteralDesc getDefaultValue(Specky.PropertyContext context, Scope scope) {
         if (context.default_value() == null) {
             final Optional<String> maybeType = scope.resolveType(context.Identifier().getText());
             if (!maybeType.isPresent()) {
@@ -94,14 +97,14 @@ import static com.squareup.javapoet.ClassName.bestGuess;
                 return null;
             }
 
-            final Optional<CodeBlock> typeDefaultValue = scope
+            final Optional<LiteralDesc> typeDefaultValue = scope
                     .resolveValue(maybeType.get(), context.OPTIONAL() != null);
             return typeDefaultValue.orElse(null);
         }
 
         final TerminalNode anything = context.default_value().ANYTHING();
         if (anything != null) {
-            return CodeBlock.of(anything.getText());
+            return UnstructuredLiteral.builder().literal(anything.getText()).build();
         }
 
         final Specky.Value_expressionContext expressionValue = context

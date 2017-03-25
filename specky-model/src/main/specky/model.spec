@@ -12,7 +12,6 @@ package com.mattunderscore.specky.model
 imports
     com.mattunderscore.specky.model.ConstructionMethod default ConstructionMethod.CONSTRUCTOR
     com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates
-    com.squareup.javapoet.CodeBlock
 
 value PropertyDesc "Description of a property."
     properties
@@ -21,7 +20,7 @@ value PropertyDesc "Description of a property."
         List<String> typeParameters
         boolean optional "If the property is optional."
         boolean override "If the property is inherited."
-        optional CodeBlock defaultValue "Default value of the property."
+        optional LiteralDesc defaultValue "Default value of the property."
         optional NFConjoinedDisjointPredicates constraint "Constraint applied to the property."
         optional String description "Description of the property."
     licence BSD3Clause

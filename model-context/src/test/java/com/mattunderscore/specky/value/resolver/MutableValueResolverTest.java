@@ -31,6 +31,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 
+import com.mattunderscore.specky.literal.model.LiteralDesc;
+import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
 import org.junit.Test;
 
 import com.squareup.javapoet.CodeBlock;
@@ -45,7 +47,7 @@ public final class MutableValueResolverTest {
     public void resolveNone() {
         final MutableValueResolver resolver = new MutableValueResolverImpl();
 
-        final Optional<CodeBlock> none = resolver.resolveValue("none", false);
+        final Optional<LiteralDesc> none = resolver.resolveValue("none", false);
         assertFalse(none.isPresent());
     }
 
@@ -53,19 +55,19 @@ public final class MutableValueResolverTest {
     public void registerAndResolve() {
         final MutableValueResolver resolver = new MutableValueResolverImpl();
 
-        resolver.register("some", CodeBlock.of("other"));
-        final Optional<CodeBlock> some =  resolver.resolveValue("some", false);
+        resolver.register("some", UnstructuredLiteral.builder().literal("other").build());
+        final Optional<LiteralDesc> some =  resolver.resolveValue("some", false);
         assertTrue(some.isPresent());
-        assertEquals(CodeBlock.of("other"), some.get());
+        assertEquals(UnstructuredLiteral.builder().literal("other").build(), some.get());
     }
 
     @Test
     public void registerTwice() {
         final MutableValueResolver resolver = new MutableValueResolverImpl();
 
-        resolver.register("some", CodeBlock.of("other"));
+        resolver.register("some", UnstructuredLiteral.builder().literal("other").build());
         resolver
-            .register("some", CodeBlock.of("again"))
+            .register("some", UnstructuredLiteral.builder().literal("again").build())
             .exceptionally(t -> {
             assertTrue(t instanceof IllegalArgumentException);
                 return null;

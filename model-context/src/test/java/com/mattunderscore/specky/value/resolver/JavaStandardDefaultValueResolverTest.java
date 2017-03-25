@@ -25,11 +25,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
-import static org.junit.Assert.assertEquals;
-
+import com.mattunderscore.specky.literal.model.IntegerLiteral;
+import com.mattunderscore.specky.literal.model.RealLiteral;
+import com.mattunderscore.specky.literal.model.StringLiteral;
+import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
 import org.junit.Test;
 
-import com.squareup.javapoet.CodeBlock;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for {@link JavaStandardDefaultValueResolver}.
@@ -42,36 +44,36 @@ public final class JavaStandardDefaultValueResolverTest {
 
     @Test
     public void resolveBool() {
-        assertEquals(CodeBlock.of("$L", false), resolver.resolveValue("boolean", false).get());
+        assertEquals(UnstructuredLiteral.builder().literal("false").build(), resolver.resolveValue("boolean", false).get());
     }
 
     @Test
     public void resolveBoolean() {
-        assertEquals(CodeBlock.of("$L", false), resolver.resolveValue("java.lang.Boolean", false).get());
+        assertEquals(UnstructuredLiteral.builder().literal("false").build(), resolver.resolveValue("java.lang.Boolean", false).get());
     }
 
     @Test
     public void resolveInt() {
-        assertEquals(CodeBlock.of("$L", 0), resolver.resolveValue("int", false).get());
+        assertEquals(IntegerLiteral.builder().integerLiteral("0").build(), resolver.resolveValue("int", false).get());
     }
 
     @Test
     public void resolveDbl() {
-        assertEquals(CodeBlock.of("$L", 0.0), resolver.resolveValue("double", false).get());
+        assertEquals(RealLiteral.builder().realLiteral("0.0").build(), resolver.resolveValue("double", false).get());
     }
 
     @Test
     public void getString() {
-        assertEquals(CodeBlock.of("$S", ""), resolver.resolveValue("java.lang.String", false).get());
+        assertEquals(StringLiteral.builder().stringLiteral("").build(), resolver.resolveValue("java.lang.String", false).get());
     }
 
     @Test
     public void getInteger() {
-        assertEquals(CodeBlock.of("$L", 0), resolver.resolveValue("java.lang.Integer", false).get());
+        assertEquals(IntegerLiteral.builder().integerLiteral("0").build(), resolver.resolveValue("java.lang.Integer", false).get());
     }
 
     @Test
     public void getDouble() {
-        assertEquals(CodeBlock.of("$L", 0.0), resolver.resolveValue("java.lang.Double", false).get());
+        assertEquals(RealLiteral.builder().realLiteral("0.0").build(), resolver.resolveValue("java.lang.Double", false).get());
     }
 }

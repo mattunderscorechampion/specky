@@ -25,12 +25,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator.scope;
 
-import static java.util.Optional.empty;
+import com.mattunderscore.specky.context.file.TemplateContext;
+import com.mattunderscore.specky.literal.model.LiteralDesc;
 
 import java.util.Optional;
 
-import com.mattunderscore.specky.context.file.TemplateContext;
-import com.squareup.javapoet.CodeBlock;
+import static java.util.Optional.empty;
 
 /**
  * Abstract {@link Scope} implementation.
@@ -48,7 +48,7 @@ public abstract class AbstractScope implements Scope {
     }
 
     @Override
-    public Optional<CodeBlock> resolveValue(String resolvedType, boolean optional) {
+    public Optional<LiteralDesc> resolveValue(String resolvedType, boolean optional) {
         return empty();
     }
 

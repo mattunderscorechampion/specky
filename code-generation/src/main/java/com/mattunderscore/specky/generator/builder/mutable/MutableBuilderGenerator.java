@@ -36,6 +36,7 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 import java.util.List;
 
+import com.mattunderscore.specky.generator.LiteralValueGenerator;
 import com.mattunderscore.specky.generator.TypeAppender;
 import com.mattunderscore.specky.generator.TypeAppenderForProperty;
 import com.mattunderscore.specky.generator.TypeInitialiser;
@@ -103,6 +104,7 @@ public final class MutableBuilderGenerator implements TypeAppender<Implementatio
                 .setReturnsDescription("this builder")
                 .toJavaDoc());
     private final BuildMethodGenerator buildMethodGenerator;
+    private final LiteralValueGenerator literalValueGenerator;
 
     /**
      * Constructor.
@@ -112,6 +114,7 @@ public final class MutableBuilderGenerator implements TypeAppender<Implementatio
             BuildMethodGenerator buildMethodGenerator) {
         this.typeInitialiser = typeInitialiser;
         this.buildMethodGenerator = buildMethodGenerator;
+        literalValueGenerator = new LiteralValueGenerator();
     }
 
     @Override
@@ -126,7 +129,7 @@ public final class MutableBuilderGenerator implements TypeAppender<Implementatio
                     .builder(type, propertyDesc.getName(), PRIVATE)
                     .initializer(propertyDesc.getDefaultValue() == null ?
                         CodeBlock.of("null") :
-                        propertyDesc.getDefaultValue())
+                            literalValueGenerator.generate(propertyDesc.getDefaultValue()))
                     .build();
 
                 builder.addField(fieldSpec);

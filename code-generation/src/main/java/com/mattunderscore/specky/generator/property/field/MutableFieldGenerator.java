@@ -29,6 +29,7 @@ import static com.mattunderscore.specky.generator.GeneratorUtils.getType;
 import static com.mattunderscore.specky.model.ConstructionMethod.CONSTRUCTOR;
 import static javax.lang.model.element.Modifier.PRIVATE;
 
+import com.mattunderscore.specky.generator.LiteralValueGenerator;
 import com.mattunderscore.specky.generator.TypeAppenderForProperty;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
@@ -42,6 +43,7 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 07/12/2016
  */
 public final class MutableFieldGenerator implements TypeAppenderForProperty<ImplementationDesc> {
+    private final LiteralValueGenerator literalValueGenerator = new LiteralValueGenerator();
 
     /*package*/ FieldSpec generate(
             SpecDesc specDesc,
@@ -52,7 +54,7 @@ public final class MutableFieldGenerator implements TypeAppenderForProperty<Impl
         final FieldSpec.Builder builder = FieldSpec.builder(type, propertyDesc.getName(), PRIVATE);
 
         if (implementationDesc.getConstructionMethod() == CONSTRUCTOR && propertyDesc.getDefaultValue() != null) {
-            builder.initializer(propertyDesc.getDefaultValue());
+            builder.initializer(literalValueGenerator.generate(propertyDesc.getDefaultValue()));
         }
 
         return builder.build();

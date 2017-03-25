@@ -1,14 +1,14 @@
 package com.mattunderscore.specky.value.resolver;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import com.mattunderscore.specky.literal.model.LiteralDesc;
+import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
+import org.junit.Test;
 
 import java.util.Optional;
 
-import org.junit.Test;
-
-import com.squareup.javapoet.CodeBlock;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests for {@link OptionalValueResolver}.
@@ -19,14 +19,14 @@ public class OptionalValueResolverTest {
 
     @Test
     public void optional() {
-        final Optional<CodeBlock> value = resolver.resolveValue("none", true);
+        final Optional<LiteralDesc> value = resolver.resolveValue("none", true);
         assertTrue(value.isPresent());
-        assertEquals(CodeBlock.of("null"), value.get());
+        assertEquals(UnstructuredLiteral.builder().literal("null").build(), value.get());
     }
 
     @Test
     public void required() {
-        final Optional<CodeBlock> value = resolver.resolveValue("none", false);
+        final Optional<LiteralDesc> value = resolver.resolveValue("none", false);
         assertFalse(value.isPresent());
     }
 }

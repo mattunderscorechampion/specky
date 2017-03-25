@@ -9,13 +9,6 @@
 
     <artifactId>specky-model</artifactId>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.squareup</groupId>
-            <artifactId>javapoet</artifactId>
-        </dependency>
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>

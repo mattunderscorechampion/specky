@@ -25,31 +25,31 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
+import com.mattunderscore.specky.literal.model.LiteralDesc;
+
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import com.squareup.javapoet.CodeBlock;
-
 /**
  * Implementation of {@link MutableValueResolver}.
  * @author Matt Champion on 30/07/2016
  */
 public final class MutableValueResolverImpl implements MutableValueResolver {
-    private final ConcurrentMap<String, CodeBlock> typeToValue = new ConcurrentHashMap<>(10, 0.5f, 2);
+    private final ConcurrentMap<String, LiteralDesc> typeToValue = new ConcurrentHashMap<>(10, 0.5f, 2);
 
     @Override
-    public Optional<CodeBlock> resolveValue(String resolvedType, boolean optional) {
+    public Optional<LiteralDesc> resolveValue(String resolvedType, boolean optional) {
         return Optional.ofNullable(typeToValue.get(resolvedType));
     }
 
     @Override
-    public CompletableFuture<Void> register(String type, CodeBlock defaultValue) {
+    public CompletableFuture<Void> register(String type, LiteralDesc defaultValue) {
         Objects.requireNonNull(type);
         Objects.requireNonNull(defaultValue);
-        final CodeBlock currentValue = typeToValue.putIfAbsent(type, defaultValue);
+        final LiteralDesc currentValue = typeToValue.putIfAbsent(type, defaultValue);
 
         final CompletableFuture<Void> result = new CompletableFuture<>();
 

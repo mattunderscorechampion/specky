@@ -1,37 +1,36 @@
 package com.mattunderscore.specky;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.MockitoAnnotations.initMocks;
-
-import java.nio.file.Paths;
-import java.util.List;
-
-import com.mattunderscore.specky.context.file.FileContext;
-
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-
 import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
+import com.mattunderscore.specky.context.file.FileContext;
 import com.mattunderscore.specky.error.listeners.SemanticErrorListener;
 import com.mattunderscore.specky.error.listeners.SyntaxErrorListener;
+import com.mattunderscore.specky.literal.model.IntegerLiteral;
+import com.mattunderscore.specky.literal.model.StringLiteral;
+import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
-import com.squareup.javapoet.CodeBlock;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+
+import java.nio.file.Paths;
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Unit tests for {@link ModelGenerator}.
@@ -90,7 +89,7 @@ public final class ModelGeneratorTest {
                 .builder()
                 .name("num")
                 .type("java.lang.Integer")
-                .defaultValue(CodeBlock.of("0"))
+                .defaultValue(IntegerLiteral.builder().integerLiteral("0").build())
                 .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
                 .build()));
 
@@ -110,7 +109,7 @@ public final class ModelGeneratorTest {
             .typeParameters(emptyList())
             .override(true)
             .optional(false)
-            .defaultValue(CodeBlock.of("0"))
+            .defaultValue(IntegerLiteral.builder().integerLiteral("0").build())
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
         final PropertyDesc vp1 = PropertyDesc
@@ -120,7 +119,7 @@ public final class ModelGeneratorTest {
             .typeParameters(emptyList())
             .override(false)
             .optional(false)
-            .defaultValue(CodeBlock.of("\"\""))
+            .defaultValue(StringLiteral.builder().stringLiteral("").build())
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
         assertThat(
@@ -136,7 +135,7 @@ public final class ModelGeneratorTest {
             .typeParameters(emptyList())
             .override(false)
             .optional(false)
-            .defaultValue(CodeBlock.of("5"))
+            .defaultValue(UnstructuredLiteral.builder().literal("5").build())
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
         final PropertyDesc bp1 = PropertyDesc
@@ -146,7 +145,7 @@ public final class ModelGeneratorTest {
             .typeParameters(emptyList())
             .override(false)
             .optional(false)
-            .defaultValue(CodeBlock.of("\"\""))
+            .defaultValue(StringLiteral.builder().stringLiteral("").build())
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
 
@@ -236,7 +235,7 @@ public final class ModelGeneratorTest {
             .description("Name of person.")
             .override(true)
             .optional(false)
-            .defaultValue(CodeBlock.of("\"\""))
+            .defaultValue(StringLiteral.builder().stringLiteral("").build())
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
         final PropertyDesc p1 = PropertyDesc
@@ -246,7 +245,7 @@ public final class ModelGeneratorTest {
             .typeParameters(emptyList())
             .override(true)
             .optional(false)
-            .defaultValue(CodeBlock.of("0"))
+            .defaultValue(IntegerLiteral.builder().integerLiteral("0").build())
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
         final PropertyDesc p2 = PropertyDesc
@@ -257,7 +256,7 @@ public final class ModelGeneratorTest {
             .description("Timestamp of birth.")
             .override(false)
             .optional(false)
-            .defaultValue(CodeBlock.of("0L"))
+            .defaultValue(IntegerLiteral.builder().integerLiteral("0L").build())
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
         assertThat(
@@ -301,7 +300,7 @@ public final class ModelGeneratorTest {
             .typeParameters(emptyList())
             .override(true)
             .optional(true)
-            .defaultValue(CodeBlock.of("null"))
+            .defaultValue(UnstructuredLiteral.builder().literal("null").build())
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
 

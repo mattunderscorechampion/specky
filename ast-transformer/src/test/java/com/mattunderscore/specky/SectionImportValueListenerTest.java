@@ -24,16 +24,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
-import static java.util.concurrent.CompletableFuture.completedFuture;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
-
-import java.io.IOException;
-
+import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
+import com.mattunderscore.specky.literal.model.LiteralDesc;
+import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
+import com.mattunderscore.specky.model.generator.scope.PendingScope;
+import com.mattunderscore.specky.model.generator.scope.SectionScopeBuilder;
+import com.mattunderscore.specky.parser.Specky;
+import com.mattunderscore.specky.parser.SpeckyLexer;
+import com.mattunderscore.specky.value.resolver.MutableValueResolver;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonToken;
@@ -43,13 +41,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
-import com.mattunderscore.specky.model.generator.scope.PendingScope;
-import com.mattunderscore.specky.model.generator.scope.SectionScopeBuilder;
-import com.mattunderscore.specky.parser.Specky;
-import com.mattunderscore.specky.parser.SpeckyLexer;
-import com.mattunderscore.specky.value.resolver.MutableValueResolver;
-import com.squareup.javapoet.CodeBlock;
+import java.io.IOException;
+
+import static java.util.concurrent.CompletableFuture.completedFuture;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Unit tests for {@link SectionLicenceListener}.
@@ -72,7 +72,7 @@ public final class SectionImportValueListenerTest {
 
         when(scope.getValueResolver()).thenReturn(valueResolver);
         when(sectionScopeBuilder.currentScope()).thenReturn(scope);
-        when(valueResolver.register(isA(String.class), isA(CodeBlock.class))).thenReturn(completedFuture(null));
+        when(valueResolver.register(isA(String.class), isA(LiteralDesc.class))).thenReturn(completedFuture(null));
     }
 
     @After
@@ -96,6 +96,6 @@ public final class SectionImportValueListenerTest {
 
         verify(sectionScopeBuilder, times(1)).currentScope();
 
-        verify(valueResolver).register("com.example.Value", CodeBlock.of("\"x\""));
+        verify(valueResolver).register("com.example.Value", UnstructuredLiteral.builder().literal("\"x\"").build());
     }
 }

@@ -25,27 +25,25 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator.scope;
 
-import static com.mattunderscore.specky.model.generator.scope.EmptyScope.INSTANCE;
-import static java.util.Optional.empty;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
-
-import java.util.Optional;
-
+import com.mattunderscore.specky.context.file.TemplateContext;
+import com.mattunderscore.specky.licence.resolver.LicenceResolver;
+import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
+import com.mattunderscore.specky.type.resolver.TypeResolver;
+import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.mattunderscore.specky.context.file.TemplateContext;
-import com.mattunderscore.specky.licence.resolver.LicenceResolver;
-import com.mattunderscore.specky.type.resolver.TypeResolver;
-import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
-import com.squareup.javapoet.CodeBlock;
+import java.util.Optional;
+
+import static com.mattunderscore.specky.model.generator.scope.EmptyScope.INSTANCE;
+import static java.util.Optional.empty;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Unit tests for {@link ScopeImpl}.
@@ -115,11 +113,11 @@ public final class ScopeImplTest {
 
     @Test
     public void resolveValue() throws Exception {
-        when(valueResolver.resolveValue("value", false)).thenReturn(Optional.of(CodeBlock.of("value")));
+        when(valueResolver.resolveValue("value", false)).thenReturn(Optional.of(UnstructuredLiteral.builder().literal("value").build()));
 
         final Scope scope = new ScopeImpl(INSTANCE, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright");
 
-        assertEquals(CodeBlock.of("value"), scope.resolveValue("value", false).get());
+        assertEquals(UnstructuredLiteral.builder().literal("value").build(), scope.resolveValue("value", false).get());
         verify(valueResolver).resolveValue("value", false);
     }
 
@@ -170,11 +168,11 @@ public final class ScopeImplTest {
     @Test
     public void resolveValueFromParent() throws Exception {
         when(valueResolver.resolveValue("value", false)).thenReturn(empty());
-        when(parentScope.resolveValue("value", false)).thenReturn(Optional.of(CodeBlock.of("value")));
+        when(parentScope.resolveValue("value", false)).thenReturn(Optional.of(UnstructuredLiteral.builder().literal("value").build()));
 
         final Scope scope = new ScopeImpl(parentScope, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright");
 
-        assertEquals(CodeBlock.of("value"), scope.resolveValue("value", false).get());
+        assertEquals(UnstructuredLiteral.builder().literal("value").build(), scope.resolveValue("value", false).get());
         verify(valueResolver).resolveValue("value", false);
         verify(parentScope).resolveValue("value", false);
     }

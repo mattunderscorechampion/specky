@@ -25,12 +25,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
-import static java.util.Arrays.copyOf;
+import com.mattunderscore.specky.literal.model.LiteralDesc;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import com.squareup.javapoet.CodeBlock;
+import static java.util.Arrays.copyOf;
 
 /**
  * Composite value resolver.
@@ -51,7 +51,7 @@ public final class CompositeValueResolver implements DefaultValueResolver {
     }
 
     @Override
-    public Optional<CodeBlock> resolveValue(String resolvedType, boolean optional) {
+    public Optional<LiteralDesc> resolveValue(String resolvedType, boolean optional) {
         return Stream
             .of(resolvers)
             .map(resolver -> resolver.resolveValue(resolvedType, optional))

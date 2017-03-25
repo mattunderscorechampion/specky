@@ -25,14 +25,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator.scope;
 
-import static java.util.Optional.ofNullable;
+import com.mattunderscore.specky.licence.resolver.LicenceResolver;
+import com.mattunderscore.specky.literal.model.LiteralDesc;
+import com.mattunderscore.specky.type.resolver.TypeResolver;
+import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 
 import java.util.Optional;
 
-import com.mattunderscore.specky.licence.resolver.LicenceResolver;
-import com.mattunderscore.specky.type.resolver.TypeResolver;
-import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
-import com.squareup.javapoet.CodeBlock;
+import static java.util.Optional.ofNullable;
 
 /**
  * Implementation of {@link Scope}.
@@ -89,7 +89,7 @@ public final class ScopeImpl extends AbstractChildScope {
     }
 
     @Override
-    protected Optional<CodeBlock> resolveLocalValue(String resolvedType, boolean optional) {
+    protected Optional<LiteralDesc> resolveLocalValue(String resolvedType, boolean optional) {
         return ofNullable(valueResolver.resolveValue(resolvedType, optional).orElse(null));
     }
 

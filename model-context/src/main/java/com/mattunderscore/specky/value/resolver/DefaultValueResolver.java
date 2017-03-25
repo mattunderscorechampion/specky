@@ -25,9 +25,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
-import java.util.Optional;
+import com.mattunderscore.specky.literal.model.LiteralDesc;
 
-import com.squareup.javapoet.CodeBlock;
+import java.util.Optional;
 
 /**
  * Resolve default value for a type.
@@ -37,5 +37,5 @@ public interface DefaultValueResolver {
     /**
      * @return A default value or empty if it could not be resolved
      */
-    Optional<CodeBlock> resolveValue(String resolvedType, boolean optional);
+    Optional<LiteralDesc> resolveValue(String resolvedType, boolean optional);
 }

@@ -25,13 +25,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator.scope;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Optional;
-
 import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.licence.resolver.LicenceResolverImpl;
+import com.mattunderscore.specky.literal.model.LiteralDesc;
 import com.mattunderscore.specky.type.resolver.JavaStandardTypeResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.CompositeValueResolver;
@@ -39,7 +35,11 @@ import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 import com.mattunderscore.specky.value.resolver.JavaStandardDefaultValueResolver;
 import com.mattunderscore.specky.value.resolver.NullValueResolver;
 import com.mattunderscore.specky.value.resolver.OptionalValueResolver;
-import com.squareup.javapoet.CodeBlock;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Optional;
 
 /**
  * Preamble scope. Contains declarations provided by the Java Runtime.
@@ -69,7 +69,7 @@ public final class PreambleScope extends AbstractScope {
     }
 
     @Override
-    public Optional<CodeBlock> resolveValue(String resolvedType, boolean optional) {
+    public Optional<LiteralDesc> resolveValue(String resolvedType, boolean optional) {
         return valueResolver.resolveValue(resolvedType, optional);
     }
 

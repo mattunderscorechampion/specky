@@ -25,10 +25,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.mattunderscore.specky;
 
 import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
+import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
 import com.mattunderscore.specky.model.generator.scope.SectionScopeBuilder;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyBaseListener;
-import com.squareup.javapoet.CodeBlock;
 
 /**
  * DSL AST listener for imported default values.
@@ -57,7 +57,7 @@ public final class SectionImportValueListener extends SpeckyBaseListener {
                 .getValueResolver()
                 .register(
                     ctx.qualifiedName().getText(),
-                    CodeBlock.of(ctx.default_value().ANYTHING().getText()))
+                    UnstructuredLiteral.builder().literal(ctx.default_value().ANYTHING().getText()).build())
                 .exceptionally(t -> {
                     errorListener.onSemanticError(t.getMessage(), ctx);
                     return null;

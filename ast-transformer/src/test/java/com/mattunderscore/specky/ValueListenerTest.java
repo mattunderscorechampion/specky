@@ -1,18 +1,17 @@
 package com.mattunderscore.specky;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toMap;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.MockitoAnnotations.initMocks;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
+import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
+import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
+import com.mattunderscore.specky.literal.model.IntegerLiteral;
+import com.mattunderscore.specky.literal.model.StringLiteral;
+import com.mattunderscore.specky.model.AbstractTypeDesc;
+import com.mattunderscore.specky.model.ConstructionMethod;
+import com.mattunderscore.specky.model.PropertyDesc;
+import com.mattunderscore.specky.model.ValueDesc;
+import com.mattunderscore.specky.model.generator.scope.SectionScopeResolver;
+import com.mattunderscore.specky.parser.Specky;
+import com.mattunderscore.specky.parser.SpeckyLexer;
+import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonToken;
@@ -23,17 +22,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
-import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
-import com.mattunderscore.specky.model.AbstractTypeDesc;
-import com.mattunderscore.specky.model.ConstructionMethod;
-import com.mattunderscore.specky.model.PropertyDesc;
-import com.mattunderscore.specky.model.ValueDesc;
-import com.mattunderscore.specky.model.generator.scope.SectionScopeResolver;
-import com.mattunderscore.specky.parser.Specky;
-import com.mattunderscore.specky.parser.SpeckyLexer;
-import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
-import com.squareup.javapoet.CodeBlock;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toMap;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Unit tests for {@link AbstractTypeListener}.
@@ -122,7 +122,7 @@ public final class ValueListenerTest {
             .typeParameters(emptyList())
             .override(true)
             .optional(false)
-            .defaultValue(CodeBlock.of("0"))
+            .defaultValue(IntegerLiteral.builder().integerLiteral("0").build())
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
         final PropertyDesc p1 = PropertyDesc
@@ -132,7 +132,7 @@ public final class ValueListenerTest {
             .typeParameters(emptyList())
             .override(false)
             .optional(false)
-            .defaultValue(CodeBlock.of("\"\""))
+            .defaultValue(StringLiteral.builder().stringLiteral("").build())
             .constraint(NFConjoinedDisjointPredicates.builder().predicates(emptyList()).build())
             .build();
         assertThat(

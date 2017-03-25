@@ -25,22 +25,23 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
+import com.mattunderscore.specky.literal.model.ComplexLiteral;
+import com.mattunderscore.specky.literal.model.IntegerLiteral;
+import com.mattunderscore.specky.literal.model.LiteralDesc;
+import com.mattunderscore.specky.literal.model.RealLiteral;
+import com.mattunderscore.specky.literal.model.StringLiteral;
+import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
+
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
-
-import com.squareup.javapoet.CodeBlock;
 
 /**
  * Resolve the default value for standard Java types.
  * @author Matt Champion on 23/06/2016
  */
 public final class JavaStandardDefaultValueResolver implements DefaultValueResolver {
-    private final Map<String, CodeBlock> typeToDefault = new HashMap<>();
+    private final Map<String, LiteralDesc> typeToDefault = new HashMap<>();
 
     /**
      * Constructor.
@@ -48,32 +49,32 @@ public final class JavaStandardDefaultValueResolver implements DefaultValueResol
     @SuppressWarnings("PMD.LooseCoupling")
     public JavaStandardDefaultValueResolver() {
         // Primitives
-        typeToDefault.put("int", CodeBlock.of("$L", 0));
-        typeToDefault.put("double", CodeBlock.of("$L", 0.0));
-        typeToDefault.put("boolean", CodeBlock.of("$L", false));
-        typeToDefault.put("long", CodeBlock.of("$LL", 0L));
+        typeToDefault.put("int", IntegerLiteral.builder().integerLiteral("0").build());
+        typeToDefault.put("double", RealLiteral.builder().realLiteral("0.0").build());
+        typeToDefault.put("boolean", UnstructuredLiteral.builder().literal("false").build());
+        typeToDefault.put("long", IntegerLiteral.builder().integerLiteral("0L").build());
 
         // Boxed primitives
-        typeToDefault.put("java.lang.Integer", CodeBlock.of("$L", 0));
-        typeToDefault.put("java.lang.Double", CodeBlock.of("$L", 0.0));
-        typeToDefault.put("java.lang.Boolean", CodeBlock.of("$L", false));
-        typeToDefault.put("java.lang.Long", CodeBlock.of("$LL", 0L));
+        typeToDefault.put("java.lang.Integer", IntegerLiteral.builder().integerLiteral("0").build());
+        typeToDefault.put("java.lang.Double", RealLiteral.builder().realLiteral("0.0").build());
+        typeToDefault.put("java.lang.Boolean", UnstructuredLiteral.builder().literal("false").build());
+        typeToDefault.put("java.lang.Long", IntegerLiteral.builder().integerLiteral("0L").build());
 
         // Big numbers
-        typeToDefault.put("java.math.BigInteger", CodeBlock.of("$T.ZERO", BigInteger.class));
-        typeToDefault.put("java.math.BigDecimal", CodeBlock.of("$T.ZERO", BigDecimal.class));
+        typeToDefault.put("java.math.BigInteger", UnstructuredLiteral.builder().literal("BigInteger.ZERO").build());
+        typeToDefault.put("java.math.BigDecimal", UnstructuredLiteral.builder().literal("BigDecimal.ZERO").build());
 
         // Simple classes
-        typeToDefault.put("java.lang.Object", CodeBlock.of("new $T()", Object.class));
-        typeToDefault.put("java.lang.String", CodeBlock.of("$S", ""));
+        typeToDefault.put("java.lang.Object", ComplexLiteral.builder().typeName("Object").build());
+        typeToDefault.put("java.lang.String", StringLiteral.builder().stringLiteral("").build());
 
         // Generic classes
-        typeToDefault.put("java.util.List", CodeBlock.of("new $T<>()", ArrayList.class));
-        typeToDefault.put("java.util.Set", CodeBlock.of("new $T<>()", HashSet.class));
+        typeToDefault.put("java.util.List", ComplexLiteral.builder().typeName("java.util.ArrayList").build());
+        typeToDefault.put("java.util.Set", ComplexLiteral.builder().typeName("java.util.HashSet").build());
     }
 
     @Override
-    public Optional<CodeBlock> resolveValue(String resolvedType, boolean optional) {
+    public Optional<LiteralDesc> resolveValue(String resolvedType, boolean optional) {
         return Optional.ofNullable(typeToDefault.get(resolvedType));
     }
 }

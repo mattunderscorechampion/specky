@@ -25,12 +25,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator.scope;
 
-import static java.util.Optional.empty;
+import com.mattunderscore.specky.context.file.TemplateContext;
+import com.mattunderscore.specky.literal.model.LiteralDesc;
 
 import java.util.Optional;
 
-import com.mattunderscore.specky.context.file.TemplateContext;
-import com.squareup.javapoet.CodeBlock;
+import static java.util.Optional.empty;
 
 /**
  * Abstract scope that has a parent scope to delegate to if nothing is found.
@@ -77,7 +77,7 @@ public abstract class AbstractChildScope extends AbstractScope {
     /**
      * @return resolve the default value from the local scope
      */
-    protected Optional<CodeBlock> resolveLocalValue(String resolvedType, boolean optional) {
+    protected Optional<LiteralDesc> resolveLocalValue(String resolvedType, boolean optional) {
         return empty();
     }
 
@@ -126,8 +126,8 @@ public abstract class AbstractChildScope extends AbstractScope {
     }
 
     @Override
-    public final Optional<CodeBlock> resolveValue(String resolvedType, boolean optional) {
-        final Optional<CodeBlock> localValue = resolveLocalValue(resolvedType, optional);
+    public final Optional<LiteralDesc> resolveValue(String resolvedType, boolean optional) {
+        final Optional<LiteralDesc> localValue = resolveLocalValue(resolvedType, optional);
         if (localValue.isPresent()) {
             return localValue;
         }
