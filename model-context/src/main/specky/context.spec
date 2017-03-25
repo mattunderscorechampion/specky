@@ -24,23 +24,3 @@ value TemplateContext "Context to evaluate templates in."
     licence BSD3Clause
     options
         immutable builder
-
-value ParameterDesc "Description of parameter."
-    properties
-        String name "Name of the parameter."
-        String type "Type name of the parameter."
-        List<String> typeParameters "Any generic parameters of the type."
-        boolean optional "If the parameter is optional."
-    licence BSD3Clause
-    options
-        immutable builder
-
-value ConstructionDetails "Details of how to construct a value."
-    properties
-        String packageName "Name of the package the type is in."
-        String name "Name of the type."
-        List<ParameterDesc> properties "Parameters of the type."
-        ConstructionMethod method "Construction method of type."
-    licence BSD3Clause
-    options
-        immutable builder
