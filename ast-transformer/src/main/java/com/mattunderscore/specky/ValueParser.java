@@ -39,6 +39,7 @@ import com.mattunderscore.specky.literal.model.StringLiteral;
 import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
 import com.mattunderscore.specky.model.generator.scope.Scope;
 import com.mattunderscore.specky.parser.Specky;
+import com.mattunderscore.specky.type.resolver.TypeResolver;
 
 /**
  * Parser for values.
@@ -57,7 +58,7 @@ import com.mattunderscore.specky.parser.Specky;
     /**
      * @return code block for the value
      */
-    LiteralDesc getValue(Specky.Value_expressionContext expressionValue, Scope scope) {
+    LiteralDesc getValue(Specky.Value_expressionContext expressionValue, TypeResolver typeResolver) {
         if (expressionValue.STRING_LITERAL() != null) {
             return StringLiteral.builder().stringLiteral(expressionValue.STRING_LITERAL().getText()).build();
         }
@@ -78,7 +79,7 @@ import com.mattunderscore.specky.parser.Specky;
                 .build();
         }
 
-        final Optional<String> maybeType = scope.resolveType(expressionValue.VALUE_IDENTIFIER().get(0).getText());
+        final Optional<String> maybeType = typeResolver.resolveType(expressionValue.VALUE_IDENTIFIER().get(0).getText());
         if (!maybeType.isPresent()) {
             errorListener.onSemanticError("Type name not found", expressionValue);
             return null;
@@ -90,7 +91,7 @@ import com.mattunderscore.specky.parser.Specky;
         expressionValue
                 .value_expression()
                 .stream()
-                .map(expr -> getValue(expr, scope))
+                .map(expr -> getValue(expr, typeResolver))
                 .forEach(valueBuilder::addSubvalue);
 
         return valueBuilder.build();

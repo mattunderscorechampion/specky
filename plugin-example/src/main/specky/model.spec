@@ -35,7 +35,7 @@ author "Matt Champion"
 package com.mattunderscore.specky.model.test
 
 imports
-    com.mattunderscore.specky.model.test.ConstructionMethod default ConstructionMethod.CONSTRUCTOR
+    com.mattunderscore.specky.model.test.ConstructionMethod [default ConstructionMethod.CONSTRUCTOR]
     com.mattunderscore.specky.constraint.model.test.NFConjoinedDisjointPredicates
     com.squareup.javapoet.CodeBlock
 

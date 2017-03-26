@@ -24,11 +24,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
+import com.mattunderscore.specky.literal.model.LiteralDesc;
 import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
+import com.mattunderscore.specky.model.generator.scope.PendingScope;
 import com.mattunderscore.specky.model.generator.scope.SectionScopeBuilder;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyBaseListener;
+import com.mattunderscore.specky.type.resolver.TypeResolver;
 
 /**
  * DSL AST listener for imported default values.
@@ -37,6 +42,7 @@ import com.mattunderscore.specky.parser.SpeckyBaseListener;
  */
 public final class SectionImportValueListener extends SpeckyBaseListener {
 
+    private final ValueParser valueParser;
     private final InternalSemanticErrorListener errorListener;
     private SectionScopeBuilder scopeResolver;
 
@@ -46,22 +52,41 @@ public final class SectionImportValueListener extends SpeckyBaseListener {
     public SectionImportValueListener(InternalSemanticErrorListener errorListener, SectionScopeBuilder scopeResolver) {
         this.errorListener = errorListener;
         this.scopeResolver = scopeResolver;
+        valueParser = new ValueParser(errorListener);
     }
 
     @Override
     public void exitSingleImport(Specky.SingleImportContext ctx) {
 
         if (ctx.default_value() != null) {
-            scopeResolver
-                .currentScope()
+            final PendingScope pendingScope = scopeResolver
+                .currentScope();
+            pendingScope
                 .getValueResolver()
                 .register(
                     ctx.qualifiedName().getText(),
-                    UnstructuredLiteral.builder().literal(ctx.default_value().ANYTHING().getText()).build())
+                    getDefaultValue(ctx.default_value(), pendingScope.getImportTypeResolver()))
                 .exceptionally(t -> {
                     errorListener.onSemanticError(t.getMessage(), ctx);
                     return null;
                 });
         }
+    }
+
+    /**
+     * @return code block for the default value
+     */
+    private LiteralDesc getDefaultValue(Specky.Default_valueContext context, TypeResolver typeResolver) {
+
+        final TerminalNode anything = context.ANYTHING();
+        if (anything != null) {
+            return UnstructuredLiteral.builder().literal(anything.getText()).build();
+        }
+
+        final Specky.Value_expressionContext expressionValue = context
+            .default_value_expression()
+            .value_expression();
+
+        return valueParser.getValue(expressionValue, typeResolver);
     }
 }

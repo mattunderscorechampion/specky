@@ -48,7 +48,7 @@ package com.mattunderscore.specky.constraint.model.test
 imports
     com.mattunderscore.specky.constraint.model.test.BinaryConstraintOperator
     com.mattunderscore.specky.constraint.model.test.ConstraintOperator
-    com.mattunderscore.specky.constraint.model.test.SubjectModifier default SubjectModifier.IDENTITY
+    com.mattunderscore.specky.constraint.model.test.SubjectModifier [default SubjectModifier.IDENTITY]
 
 value PredicateDesc "Description of a predicate."
     properties
