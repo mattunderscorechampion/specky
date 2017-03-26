@@ -25,8 +25,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import java.util.Optional;
+
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
 import com.mattunderscore.specky.literal.model.ComplexLiteral;
+import com.mattunderscore.specky.literal.model.ConstantLiteral;
 import com.mattunderscore.specky.literal.model.IntegerLiteral;
 import com.mattunderscore.specky.literal.model.LiteralDesc;
 import com.mattunderscore.specky.literal.model.RealLiteral;
@@ -34,9 +39,6 @@ import com.mattunderscore.specky.literal.model.StringLiteral;
 import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
 import com.mattunderscore.specky.model.generator.scope.Scope;
 import com.mattunderscore.specky.parser.Specky;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
-import java.util.Optional;
 
 /**
  * Parser for values.
@@ -68,7 +70,15 @@ import java.util.Optional;
             return IntegerLiteral.builder().integerLiteral(expressionValue.VALUE_INTEGER_LITERAL().getText()).build();
         }
 
-        final Optional<String> maybeType = scope.resolveType(expressionValue.VALUE_TYPE_NAME().getText());
+        if (expressionValue.VALUE_MEMBER_ACCESSOR() != null) {
+            return ConstantLiteral
+                .builder()
+                .typeName(expressionValue.VALUE_IDENTIFIER().get(0).getText())
+                .constant(expressionValue.VALUE_IDENTIFIER().get(1).getText())
+                .build();
+        }
+
+        final Optional<String> maybeType = scope.resolveType(expressionValue.VALUE_IDENTIFIER().get(0).getText());
         if (!maybeType.isPresent()) {
             errorListener.onSemanticError("Type name not found", expressionValue);
             return null;

@@ -222,7 +222,7 @@ ANYTHING
 
 mode VALUE_MODE;
 
-VALUE_TYPE_NAME
+VALUE_IDENTIFIER
     :   Letter LetterOrDigit*
     ;
 
@@ -248,6 +248,10 @@ VALUE_PARAMETER_SEPARATOR
 
 VALUE_CLOSE_PARAMETER
     :   ')'
+    ;
+
+VALUE_MEMBER_ACCESSOR
+    :   '.'
     ;
 
 VALUE_END

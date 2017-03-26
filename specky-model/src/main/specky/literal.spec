@@ -14,6 +14,14 @@ value UnstructuredLiteral : LiteralDesc "Represents an unstructured literal."
     options
         builder
 
+value ConstantLiteral : LiteralDesc "Represents a constant or enum literal."
+    properties
+        String typeName
+        String constant
+    licence BSD3Clause
+    options
+        builder
+
 value IntegerLiteral : LiteralDesc "Represents an integer literal."
     properties
         String integerLiteral

@@ -25,16 +25,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.value.resolver;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import com.mattunderscore.specky.literal.model.ComplexLiteral;
+import com.mattunderscore.specky.literal.model.ConstantLiteral;
 import com.mattunderscore.specky.literal.model.IntegerLiteral;
 import com.mattunderscore.specky.literal.model.LiteralDesc;
 import com.mattunderscore.specky.literal.model.RealLiteral;
 import com.mattunderscore.specky.literal.model.StringLiteral;
 import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * Resolve the default value for standard Java types.
@@ -61,8 +62,16 @@ public final class JavaStandardDefaultValueResolver implements DefaultValueResol
         typeToDefault.put("java.lang.Long", IntegerLiteral.builder().integerLiteral("0L").build());
 
         // Big numbers
-        typeToDefault.put("java.math.BigInteger", UnstructuredLiteral.builder().literal("BigInteger.ZERO").build());
-        typeToDefault.put("java.math.BigDecimal", UnstructuredLiteral.builder().literal("BigDecimal.ZERO").build());
+        typeToDefault.put("java.math.BigInteger", ConstantLiteral
+            .builder()
+            .typeName("java.math.BigInteger")
+            .constant("ZERO")
+            .build());
+        typeToDefault.put("java.math.BigDecimal", ConstantLiteral
+            .builder()
+            .typeName("java.math.BigDecimal")
+            .constant("ZERO")
+            .build());
 
         // Simple classes
         typeToDefault.put("java.lang.Object", ComplexLiteral.builder().typeName("Object").build());

@@ -25,13 +25,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
+import static com.squareup.javapoet.ClassName.bestGuess;
+
 import com.mattunderscore.specky.literal.model.ComplexLiteral;
+import com.mattunderscore.specky.literal.model.ConstantLiteral;
 import com.mattunderscore.specky.literal.model.IntegerLiteral;
 import com.mattunderscore.specky.literal.model.LiteralDesc;
 import com.mattunderscore.specky.literal.model.RealLiteral;
 import com.mattunderscore.specky.literal.model.StringLiteral;
 import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 
 /**
@@ -58,11 +60,16 @@ public final class LiteralValueGenerator {
         else if (literalDesc instanceof UnstructuredLiteral) {
             return CodeBlock.of(((UnstructuredLiteral) literalDesc).getLiteral());
         }
+        else if (literalDesc instanceof ConstantLiteral) {
+            final ConstantLiteral constantLiteral = (ConstantLiteral) literalDesc;
+            return CodeBlock.of("$T.$N", bestGuess(constantLiteral.getTypeName()), constantLiteral.getConstant());
+        }
         else if (literalDesc instanceof ComplexLiteral) {
+            final ComplexLiteral complexLiteral = (ComplexLiteral) literalDesc;
             final CodeBlock.Builder builder = CodeBlock
                     .builder()
-                    .add("new $T(", ClassName.bestGuess(((ComplexLiteral) literalDesc).getTypeName()));
-            ((ComplexLiteral) literalDesc)
+                    .add("new $T(", bestGuess(complexLiteral.getTypeName()));
+            complexLiteral
                     .getSubvalues()
                     .stream()
                     .map(this::generate)

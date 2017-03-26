@@ -1,13 +1,16 @@
 package com.mattunderscore.specky.generator;
 
+import static com.squareup.javapoet.ClassName.bestGuess;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
+import com.mattunderscore.specky.literal.model.ConstantLiteral;
 import com.mattunderscore.specky.literal.model.IntegerLiteral;
 import com.mattunderscore.specky.literal.model.RealLiteral;
 import com.mattunderscore.specky.literal.model.StringLiteral;
 import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
 import com.squareup.javapoet.CodeBlock;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author Matt Champion on 25/03/17
@@ -47,5 +50,19 @@ public class LiteralValueGeneratorTest {
         final CodeBlock block = literalValueGenerator.generate(UnstructuredLiteral.builder().literal("null").build());
 
         assertEquals(CodeBlock.of("null"), block);
+    }
+
+    @Test
+    public void generateConstant() throws Exception {
+        final LiteralValueGenerator literalValueGenerator = new LiteralValueGenerator();
+
+        final CodeBlock block = literalValueGenerator.generate(
+            ConstantLiteral
+                .builder()
+                .typeName("java.math.BigInteger")
+                .constant("ZERO")
+                .build());
+
+        assertEquals(CodeBlock.builder().add("$T.$N", bestGuess("java.math.BigInteger"), "ZERO").build(), block);
     }
 }
