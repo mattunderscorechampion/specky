@@ -57,15 +57,22 @@ public final class EqualsGenerator implements TypeAppender<ImplementationDesc> {
             .endControlFlow()
             .beginControlFlow("else if ($1N == null || !this.getClass().equals($1N.getClass()))", other)
             .addStatement("return false")
-            .endControlFlow()
-            .addStatement(
-                "final $1T that = ($1T) $2N",
-                ClassName.get(implementationDesc.getPackageName(), implementationDesc.getName()), other)
-            .addStatement("return " + implementationDesc
-                .getProperties()
-                .stream()
-                .map(this::generatePropertyComparison)
-                .collect(Collectors.joining(" && ")));
+            .endControlFlow();
+
+            if (implementationDesc.getProperties().size() > 0) {
+                codeBlock
+                    .addStatement(
+                        "final $1T that = ($1T) $2N",
+                        ClassName.get(implementationDesc.getPackageName(), implementationDesc.getName()), other)
+                    .addStatement("return " + implementationDesc
+                        .getProperties()
+                        .stream()
+                        .map(this::generatePropertyComparison)
+                        .collect(Collectors.joining(" && ")));
+            }
+            else {
+                codeBlock.addStatement("return true");
+            }
 
         return codeBlock.build();
     }

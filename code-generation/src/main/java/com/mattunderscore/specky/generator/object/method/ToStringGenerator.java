@@ -95,20 +95,25 @@ public final class ToStringGenerator implements TypeAppender<ImplementationDesc>
     }
 
     private CodeBlock generateImplementation(ImplementationDesc implementationDesc) {
-        final String properties = implementationDesc
-            .getProperties()
-            .stream()
-            .map(propertyFormatter::formatProperty)
-            .collect(joining(propertySeparator));
-        return CodeBlock
-            .builder()
-            .addStatement(
-                "return \"$L$L$L$L\"",
-                implementationDesc.getName(),
-                propertyListBookend.getPrefix(),
-                properties,
-                propertyListBookend.getSuffix())
-            .build();
+        if (implementationDesc.getProperties().size() > 0) {
+            final String properties = implementationDesc
+                .getProperties()
+                .stream()
+                .map(propertyFormatter::formatProperty)
+                .collect(joining(propertySeparator));
+            return CodeBlock
+                .builder()
+                .addStatement(
+                    "return \"$L$L$L$L\"",
+                    implementationDesc.getName(),
+                    propertyListBookend.getPrefix(),
+                    properties,
+                    propertyListBookend.getSuffix())
+                .build();
+        }
+        else {
+            return CodeBlock.of("return $S;", implementationDesc.getName());
+        }
     }
 
     /**

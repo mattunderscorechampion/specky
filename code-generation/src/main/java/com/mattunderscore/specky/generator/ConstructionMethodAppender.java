@@ -25,10 +25,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
-import java.util.List;
-
+import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ConstructionMethod;
 import com.mattunderscore.specky.model.ImplementationDesc;
+import com.mattunderscore.specky.model.PropertyDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.squareup.javapoet.TypeSpec;
 
@@ -37,7 +37,8 @@ import com.squareup.javapoet.TypeSpec;
  * @author Matt Champion on 10/07/2016
  */
 public final class ConstructionMethodAppender implements TypeAppender<ImplementationDesc> {
-    private final List<TypeAppender<ImplementationDesc>> constructorGenerators;
+    private final TypeAppender<ImplementationDesc> constructorGenerator;
+    private final TypeAppender<ImplementationDesc> defaultConstructorGenerator;
     private final TypeAppender<ImplementationDesc> mutableBuilderAppender;
     private final TypeAppender<ImplementationDesc> immutableBuilderAppender;
     private final TypeAppender<ImplementationDesc> defaultsAppender;
@@ -46,11 +47,13 @@ public final class ConstructionMethodAppender implements TypeAppender<Implementa
      * Constructor.
      */
     public ConstructionMethodAppender(
-            List<TypeAppender<ImplementationDesc>> constructorGenerators,
+            TypeAppender<ImplementationDesc> constructorGenerator,
+            TypeAppender<ImplementationDesc> defaultConstructorGenerator,
             TypeAppender<ImplementationDesc> mutableBuilderAppender,
             TypeAppender<ImplementationDesc> immutableBuilderAppender,
             TypeAppender<ImplementationDesc> defaultsAppender) {
-        this.constructorGenerators = constructorGenerators;
+        this.constructorGenerator = constructorGenerator;
+        this.defaultConstructorGenerator = defaultConstructorGenerator;
         this.mutableBuilderAppender = mutableBuilderAppender;
         this.immutableBuilderAppender = immutableBuilderAppender;
         this.defaultsAppender = defaultsAppender;
@@ -59,7 +62,10 @@ public final class ConstructionMethodAppender implements TypeAppender<Implementa
     @Override
     public void append(TypeSpec.Builder typeSpecBuilder, SpecDesc specDesc, ImplementationDesc valueDesc) {
         if (valueDesc.getConstructionMethod() == ConstructionMethod.CONSTRUCTOR) {
-            constructorGenerators.forEach(generator -> generator.append(typeSpecBuilder, specDesc, valueDesc));
+            constructorGenerator.append(typeSpecBuilder, specDesc, valueDesc);
+            if (!(valueDesc instanceof BeanDesc) && valueDesc.getProperties().stream().anyMatch(PropertyDesc::isOptional)) {
+                defaultConstructorGenerator.append(typeSpecBuilder, specDesc, valueDesc);
+            }
         }
         else if (valueDesc.getConstructionMethod() == ConstructionMethod.MUTABLE_BUILDER) {
             mutableBuilderAppender.append(typeSpecBuilder, specDesc, valueDesc);

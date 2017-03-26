@@ -140,7 +140,8 @@ public final class SpeckyGeneratingContext {
                     new ValueInitialiser(),
                     Arrays.<TypeAppender<? super ImplementationDesc>>asList(
                         new ConstructionMethodAppender(
-                            asList(new AllPropertiesConstructorGenerator(PUBLIC), new DefaultConstructorGenerator(PUBLIC)),
+                            new AllPropertiesConstructorGenerator(PUBLIC),
+                            new DefaultConstructorGenerator(PUBLIC),
                             mutableBuilderGenerator,
                             immutableBuilderGenerator,
                             defaultsGenerator),
@@ -156,7 +157,8 @@ public final class SpeckyGeneratingContext {
                     new BeanInitialiser(),
                     Arrays.<TypeAppender<? super ImplementationDesc>>asList(
                         new ConstructionMethodAppender(
-                            singletonList(new EmptyConstructorGenerator()),
+                            new EmptyConstructorGenerator(),
+                            new EmptyConstructorGenerator(),
                             mutableBuilderGenerator,
                             immutableBuilderGenerator,
                             defaultsGenerator),
