@@ -21,6 +21,7 @@ value TemplateContext "Context to evaluate templates in."
         Instant buildTime
         optional String copyrightHolder
         optional String author
+        optional Path file
     licence BSD3Clause
     options
         immutable builder

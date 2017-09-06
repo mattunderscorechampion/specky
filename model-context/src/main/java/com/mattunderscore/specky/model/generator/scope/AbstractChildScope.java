@@ -143,6 +143,7 @@ public abstract class AbstractChildScope extends AbstractScope {
             .typeName(typeName)
             .author(getAuthor())
             .copyrightHolder(getCopyrightHolder())
+            .file(getFile())
             .build();
     }
 }

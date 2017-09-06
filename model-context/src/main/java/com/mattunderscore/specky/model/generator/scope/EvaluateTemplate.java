@@ -3,6 +3,7 @@ package com.mattunderscore.specky.model.generator.scope;
 import static java.time.LocalDateTime.ofInstant;
 import static java.util.regex.Pattern.compile;
 
+import java.nio.file.Path;
 import java.time.ZoneId;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -19,10 +20,12 @@ public final class EvaluateTemplate implements Function<String, String> {
         compile("(?<!\\\\)\\$\\{author}"),
         compile("(?<!\\\\)\\$\\{copyrightHolder}"),
         compile("(?<!\\\\)\\$\\{year}"),
+        compile("(?<!\\\\)\\$\\{fileName}"),
         compile("\\\\\\$\\{type}"),
         compile("\\\\\\$\\{author}"),
         compile("\\\\\\$\\{copyrightHolder}"),
-        compile("\\\\\\$\\{year}")
+        compile("\\\\\\$\\{year}"),
+        compile("\\\\\\$\\{fileName}")
     };
     private final String[] substitutions;
 
@@ -36,15 +39,20 @@ public final class EvaluateTemplate implements Function<String, String> {
                 templateContext.getCopyrightHolder() :
                 author;
 
+        final Path file = templateContext.getFile();
+        final String fileName = file == null ? "unknown file" : file.getFileName().toString();
+
         substitutions = new String[] {
             templateContext.getTypeName(),
             author,
             copyrightHolder,
             Integer.toString(ofInstant(templateContext.getBuildTime(), ZoneId.systemDefault()).getYear()),
+            fileName,
             "\\${type}",
             "\\${author}",
             "\\${copyrightHolder}",
-            "\\${year}"
+            "\\${year}",
+            "\\${fileName}"
         };
 
         assert substitutions.length == PATTERNS.length : "Must be the same number of patterns and substitutions";
