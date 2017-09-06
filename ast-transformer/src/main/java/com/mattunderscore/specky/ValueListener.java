@@ -185,7 +185,8 @@ public final class ValueListener extends SpeckyBaseListener {
                 })
             .ifThen(
                 ctx.STRING_LITERAL() == null,
-                builder -> builder.description(formatter.apply("Value type ${type}.\n\nAuto-generated from specification.")))
+                builder -> builder.description(
+                    formatter.apply("Value type ${type}.\n\nAuto-generated from specification ${fileName}.")))
             .ifThen(
                 ctx.STRING_LITERAL() != null,
                 builder -> builder.description(formatter.apply(toValue(ctx.STRING_LITERAL()))))

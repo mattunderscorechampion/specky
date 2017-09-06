@@ -159,7 +159,8 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
                 })
             .ifThen(
                 ctx.STRING_LITERAL() == null,
-                builder -> builder.description(formatter.apply("Abstract type ${type}.\n\nAuto-generated from specification.")))
+                builder -> builder.description(
+                    formatter.apply("Abstract type ${type}.\n\nAuto-generated from specification ${fileName}.")))
             .ifThen(
                 ctx.STRING_LITERAL() != null,
                 builder -> builder.description(formatter.apply(toValue(ctx.STRING_LITERAL()))));

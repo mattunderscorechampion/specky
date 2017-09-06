@@ -79,7 +79,7 @@ public final class ModelGeneratorTest {
 
         assertEquals("TestType", abstractType.getName());
         assertEquals("Matt Champion", abstractType.getAuthor());
-        assertEquals("Abstract type TestType.\n\nAuto-generated from specification.", abstractType.getDescription());
+        assertEquals("Abstract type TestType.\n\nAuto-generated from specification ..", abstractType.getDescription());
         assertEquals("com.example", abstractType.getPackageName());
         assertEquals("default licence", abstractType.getLicence());
         assertEquals(emptyList(), abstractType.getSupertypes());
@@ -97,7 +97,7 @@ public final class ModelGeneratorTest {
 
         assertEquals("FirstValue", valueDesc.getName());
         assertEquals("Matt Champion", valueDesc.getAuthor());
-        assertEquals("Value type FirstValue.\n\nAuto-generated from specification.", valueDesc.getDescription());
+        assertEquals("Value type FirstValue.\n\nAuto-generated from specification ..", valueDesc.getDescription());
         assertEquals("com.example", valueDesc.getPackageName());
         assertEquals("default licence", valueDesc.getLicence());
         assertEquals(singletonList("TestType"), valueDesc.getSupertypes());
@@ -153,7 +153,7 @@ public final class ModelGeneratorTest {
 
         assertEquals("FirstBean", beanDesc0.getName());
         assertEquals("Matt Champion", beanDesc0.getAuthor());
-        assertEquals("Bean type FirstBean.\n\nAuto-generated from specification.", beanDesc0.getDescription());
+        assertEquals("Bean type FirstBean.\n\nAuto-generated from specification ..", beanDesc0.getDescription());
         assertEquals("com.example", beanDesc0.getPackageName());
         assertEquals("default licence of named section", beanDesc0.getLicence());
         assertEquals(emptyList(), beanDesc0.getSupertypes());
@@ -168,7 +168,7 @@ public final class ModelGeneratorTest {
 
         assertEquals("SecondBean", beanDesc1.getName());
         assertEquals("Matt Champion", beanDesc1.getAuthor());
-        assertEquals("Bean type SecondBean.\n\nAuto-generated from specification.", beanDesc1.getDescription());
+        assertEquals("Bean type SecondBean.\n\nAuto-generated from specification ..", beanDesc1.getDescription());
         assertEquals("com.example", beanDesc1.getPackageName());
         assertEquals(emptyList(), beanDesc1.getSupertypes());
         assertEquals(ConstructionMethod.CONSTRUCTOR, beanDesc1.getConstructionMethod());
@@ -182,7 +182,7 @@ public final class ModelGeneratorTest {
 
         assertEquals("ThirdBean", beanDesc2.getName());
         assertEquals("Matt Champion", beanDesc2.getAuthor());
-        assertEquals("Bean type ThirdBean.\n\nAuto-generated from specification.", beanDesc2.getDescription());
+        assertEquals("Bean type ThirdBean.\n\nAuto-generated from specification ..", beanDesc2.getDescription());
         assertEquals("com.example", beanDesc2.getPackageName());
         assertEquals(emptyList(), beanDesc2.getSupertypes());
         assertEquals(ConstructionMethod.CONSTRUCTOR, beanDesc2.getConstructionMethod());

@@ -111,7 +111,7 @@ public final class ValueListenerTest {
 
         assertEquals("FirstValue", valueDesc.getName());
         assertEquals("Matt Champion", valueDesc.getAuthor());
-        assertEquals("Value type FirstValue.\n\nAuto-generated from specification.", valueDesc.getDescription());
+        assertEquals("Value type FirstValue.\n\nAuto-generated from specification path.", valueDesc.getDescription());
         assertEquals("com.example", valueDesc.getPackageName());
         assertEquals("default licence", valueDesc.getLicence());
         assertEquals(singletonList("TestType"), valueDesc.getSupertypes());

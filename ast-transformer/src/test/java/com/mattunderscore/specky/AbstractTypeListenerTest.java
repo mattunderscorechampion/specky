@@ -98,7 +98,7 @@ public final class AbstractTypeListenerTest {
 
         assertEquals("TestType", abstractTypeDesc.getName());
         assertEquals("Matt Champion", abstractTypeDesc.getAuthor());
-        assertEquals("Abstract type TestType.\n\nAuto-generated from specification.", abstractTypeDesc.getDescription());
+        assertEquals("Abstract type TestType.\n\nAuto-generated from specification path.", abstractTypeDesc.getDescription());
         assertEquals("com.example", abstractTypeDesc.getPackageName());
         assertEquals("default licence", abstractTypeDesc.getLicence());
         assertEquals(emptyList(), abstractTypeDesc.getSupertypes());
