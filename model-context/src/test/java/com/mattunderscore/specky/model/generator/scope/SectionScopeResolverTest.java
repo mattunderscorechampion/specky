@@ -25,16 +25,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator.scope;
 
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.MockitoAnnotations.initMocks;
-
+import com.mattunderscore.specky.type.resolver.TypeResolver;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.mattunderscore.specky.type.resolver.TypeResolver;
+import java.nio.file.Paths;
+
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Unit tests for {@link SectionScopeResolver}.
@@ -57,14 +58,14 @@ public class SectionScopeResolverTest {
 
     @Test
     public void resolveNone() throws Exception {
-        final SectionScopeResolver resolver = new SectionScopeResolver(typeResolver);
+        final SectionScopeResolver resolver = new SectionScopeResolver(typeResolver, Paths.get("./path"));
 
         assertNull(resolver.resolve("none"));
     }
 
     @Test
     public void resolveNoDefault() throws Exception {
-        final SectionScopeResolver resolver = new SectionScopeResolver(typeResolver);
+        final SectionScopeResolver resolver = new SectionScopeResolver(typeResolver, Paths.get("./path"));
 
         assertNull(resolver.resolve());
     }

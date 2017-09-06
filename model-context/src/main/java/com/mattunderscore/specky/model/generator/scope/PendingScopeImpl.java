@@ -32,6 +32,8 @@ import com.mattunderscore.specky.value.resolver.MutableValueResolver;
 
 import net.jcip.annotations.NotThreadSafe;
 
+import java.nio.file.Path;
+
 /**
  * Implementation of {@link PendingScope}.
  *
@@ -47,6 +49,7 @@ public final class PendingScopeImpl implements PendingScope {
     private String author;
     private String packageName;
     private String copyrightHolder;
+    private Path file;
 
     /**
      * Constructor.
@@ -56,13 +59,15 @@ public final class PendingScopeImpl implements PendingScope {
         MutableValueResolver valueResolver,
         MutableTypeResolver mutableTypeResolver,
         TypeResolver typeResolver,
-        MutableLicenceResolver licenceResolver) {
+        MutableLicenceResolver licenceResolver,
+        Path file) {
 
         this.sectionName = sectionName;
         this.valueResolver = valueResolver;
         this.mutableTypeResolver = mutableTypeResolver;
         this.typeResolver = typeResolver;
         this.licenceResolver = licenceResolver;
+        this.file = file;
     }
 
     @Override
@@ -99,7 +104,8 @@ public final class PendingScopeImpl implements PendingScope {
             licenceResolver,
             author,
             packageName,
-            copyrightHolder);
+            copyrightHolder,
+            file);
     }
 
     @Override

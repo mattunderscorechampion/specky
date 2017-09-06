@@ -24,6 +24,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.model.generator.scope;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,11 +46,12 @@ public final class SectionScopeResolver implements SectionScopeBuilder {
     private final Map<String, Scope> scopes = new HashMap<>();
     private Scope defaultScope;
     private PendingScope pendingScope;
+    private final Path file;
 
     /**
      * Constructor.
      */
-    public SectionScopeResolver(TypeResolver typeResolver) {
+    public SectionScopeResolver(TypeResolver typeResolver, Path file) {
         this.typeResolver = typeResolver;
 
         pendingScope = new PendingScopeImpl(
@@ -57,7 +59,9 @@ public final class SectionScopeResolver implements SectionScopeBuilder {
             new MutableValueResolverImpl(),
             new SpecTypeResolver(),
             typeResolver,
-            new LicenceResolverImpl());
+            new LicenceResolverImpl(),
+            file);
+        this.file = file;
     }
 
     @Override
@@ -67,7 +71,8 @@ public final class SectionScopeResolver implements SectionScopeBuilder {
             new MutableValueResolverImpl(),
             new SpecTypeResolver(),
             typeResolver,
-            new LicenceResolverImpl());
+            new LicenceResolverImpl(),
+            file);
         pendingScope = scope;
         return scope;
     }

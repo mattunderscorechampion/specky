@@ -28,6 +28,7 @@ package com.mattunderscore.specky.model.generator.scope;
 import com.mattunderscore.specky.context.file.TemplateContext;
 import com.mattunderscore.specky.literal.model.LiteralDesc;
 
+import java.nio.file.Path;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
@@ -64,6 +65,11 @@ public abstract class AbstractScope implements Scope {
 
     @Override
     public String getCopyrightHolder() {
+        return null;
+    }
+
+    @Override
+    public Path getFile() {
         return null;
     }
 

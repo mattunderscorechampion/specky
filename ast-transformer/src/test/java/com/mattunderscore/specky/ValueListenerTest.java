@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +67,7 @@ public final class ValueListenerTest {
         final SpecTypeResolver typeResolver =
             new SpecTypeResolver();
         final SectionScopeResolver sectionScopeResolver =
-            new SectionScopeResolver(typeResolver);
+                new SectionScopeResolver(typeResolver, Paths.get("./path"));
         final FileTypeListener fileTypeListener =
             new FileTypeListener(errorListener, typeResolver);
         final SectionLicenceListener sectionLicenceListener =

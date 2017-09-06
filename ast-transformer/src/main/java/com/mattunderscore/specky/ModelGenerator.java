@@ -167,7 +167,7 @@ public final class ModelGenerator {
                 (message, ruleContext) -> errorListener.onSemanticError(fileContext.getFile(), message, ruleContext);
 
         final SectionScopeResolver sectionScopeResolver =
-            new SectionScopeResolver(typeResolver);
+            new SectionScopeResolver(typeResolver, fileContext.getFile());
 
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 

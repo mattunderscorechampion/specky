@@ -35,6 +35,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 import static com.mattunderscore.specky.model.generator.scope.EmptyScope.INSTANCE;
@@ -60,6 +62,8 @@ public final class ScopeImplTest {
     @Mock
     private LicenceResolver licenceResolver;
 
+    private final Path file = Paths.get("./path");
+
     @Before
     public void setUp() {
         initMocks(this);
@@ -72,21 +76,21 @@ public final class ScopeImplTest {
 
     @Test
     public void getAuthor() throws Exception {
-        final Scope scope = new ScopeImpl(INSTANCE, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright");
+        final Scope scope = new ScopeImpl(INSTANCE, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright", file);
 
         assertEquals("author", scope.getAuthor());
     }
 
     @Test
     public void getPackage() throws Exception {
-        final Scope scope = new ScopeImpl(INSTANCE, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright");
+        final Scope scope = new ScopeImpl(INSTANCE, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright", file);
 
         assertEquals("package", scope.getPackage());
     }
 
     @Test
     public void getCopyrightHolder() throws Exception {
-        final Scope scope = new ScopeImpl(INSTANCE, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright");
+        final Scope scope = new ScopeImpl(INSTANCE, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright", file);
 
         assertEquals("copyright", scope.getCopyrightHolder());
     }
@@ -95,7 +99,7 @@ public final class ScopeImplTest {
     public void resolveLicence() throws Exception {
         when(licenceResolver.resolveLicence("licence")).thenReturn(Optional.of("licence"));
 
-        final Scope scope = new ScopeImpl(INSTANCE, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright");
+        final Scope scope = new ScopeImpl(INSTANCE, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright", file);
 
         assertEquals("licence", scope.resolveLicence("licence").get());
         verify(licenceResolver).resolveLicence("licence");
@@ -105,7 +109,7 @@ public final class ScopeImplTest {
     public void resolveType() throws Exception {
         when(typeResolver.resolveType("type")).thenReturn(Optional.of("type"));
 
-        final Scope scope = new ScopeImpl(INSTANCE, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright");
+        final Scope scope = new ScopeImpl(INSTANCE, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright", file);
 
         assertEquals("type", scope.resolveType("type").get());
         verify(typeResolver).resolveType("type");
@@ -115,7 +119,7 @@ public final class ScopeImplTest {
     public void resolveValue() throws Exception {
         when(valueResolver.resolveValue("value", false)).thenReturn(Optional.of(UnstructuredLiteral.builder().literal("value").build()));
 
-        final Scope scope = new ScopeImpl(INSTANCE, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright");
+        final Scope scope = new ScopeImpl(INSTANCE, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright", file);
 
         assertEquals(UnstructuredLiteral.builder().literal("value").build(), scope.resolveValue("value", false).get());
         verify(valueResolver).resolveValue("value", false);
@@ -125,7 +129,7 @@ public final class ScopeImplTest {
     public void getAuthorFromParent() throws Exception {
         when(parentScope.getAuthor()).thenReturn("author");
 
-        final Scope scope = new ScopeImpl(parentScope, valueResolver, typeResolver, licenceResolver, null, null, "copyright");
+        final Scope scope = new ScopeImpl(parentScope, valueResolver, typeResolver, licenceResolver, null, null, "copyright", file);
 
         assertEquals("author", scope.getAuthor());
         verify(parentScope).getAuthor();
@@ -135,7 +139,7 @@ public final class ScopeImplTest {
     public void getPackageFromParent() throws Exception {
         when(parentScope.getPackage()).thenReturn("package");
 
-        final Scope scope = new ScopeImpl(parentScope, valueResolver, typeResolver, licenceResolver, null, null, "copyright");
+        final Scope scope = new ScopeImpl(parentScope, valueResolver, typeResolver, licenceResolver, null, null, "copyright", file);
 
         assertEquals("package", scope.getPackage());
         verify(parentScope).getPackage();
@@ -146,7 +150,7 @@ public final class ScopeImplTest {
         when(licenceResolver.resolveLicence("licence")).thenReturn(empty());
         when(parentScope.resolveLicence("licence")).thenReturn(Optional.of("licence"));
 
-        final Scope scope = new ScopeImpl(parentScope, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright");
+        final Scope scope = new ScopeImpl(parentScope, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright", file);
 
         assertEquals("licence", scope.resolveLicence("licence").get());
         verify(licenceResolver).resolveLicence("licence");
@@ -158,7 +162,7 @@ public final class ScopeImplTest {
         when(typeResolver.resolveType("type")).thenReturn(empty());
         when(parentScope.resolveType("type")).thenReturn(Optional.of("type"));
 
-        final Scope scope = new ScopeImpl(parentScope, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright");
+        final Scope scope = new ScopeImpl(parentScope, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright", file);
 
         assertEquals("type", scope.resolveType("type").get());
         verify(typeResolver).resolveType("type");
@@ -170,7 +174,7 @@ public final class ScopeImplTest {
         when(valueResolver.resolveValue("value", false)).thenReturn(empty());
         when(parentScope.resolveValue("value", false)).thenReturn(Optional.of(UnstructuredLiteral.builder().literal("value").build()));
 
-        final Scope scope = new ScopeImpl(parentScope, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright");
+        final Scope scope = new ScopeImpl(parentScope, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright", file);
 
         assertEquals(UnstructuredLiteral.builder().literal("value").build(), scope.resolveValue("value", false).get());
         verify(valueResolver).resolveValue("value", false);
@@ -178,8 +182,15 @@ public final class ScopeImplTest {
     }
 
     @Test
+    public void getFile() throws Exception {
+        final Scope scope = new ScopeImpl(parentScope, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright", file);
+
+        assertEquals(file, scope.getFile());
+    }
+
+    @Test
     public void toTemplateContext() {
-        final Scope scope = new ScopeImpl(parentScope, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright");
+        final Scope scope = new ScopeImpl(parentScope, valueResolver, typeResolver, licenceResolver, "author", "package", "copyright", file);
         final TemplateContext templateContext = scope.toTemplateContext("Type");
 
         assertEquals("Type", templateContext.getTypeName());

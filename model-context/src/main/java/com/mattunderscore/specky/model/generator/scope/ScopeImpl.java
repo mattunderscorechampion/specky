@@ -30,6 +30,7 @@ import com.mattunderscore.specky.literal.model.LiteralDesc;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 
+import java.nio.file.Path;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
@@ -45,18 +46,22 @@ public final class ScopeImpl extends AbstractChildScope {
     private final String author;
     private final String packageName;
     private final String copyrightHolder;
+    private final Path file;
 
     /**
      * Constructor.
      */
+    // CHECKSTYLE.OFF: ParameterNumber
     /*package*/ ScopeImpl(
+    // CHECKSTYLE.ON: ParameterNumber
         Scope parentScope,
         DefaultValueResolver valueResolver,
         TypeResolver typeResolver,
         LicenceResolver licenceResolver,
         String author,
         String packageName,
-        String copyrightHolder) {
+        String copyrightHolder,
+        Path file) {
 
         super(parentScope);
 
@@ -66,6 +71,7 @@ public final class ScopeImpl extends AbstractChildScope {
         this.author = author;
         this.packageName = packageName;
         this.copyrightHolder = copyrightHolder;
+        this.file = file;
     }
 
     @Override
@@ -96,5 +102,10 @@ public final class ScopeImpl extends AbstractChildScope {
     @Override
     protected Optional<String> getLocalCopyrightHolder() {
         return ofNullable(copyrightHolder);
+    }
+
+    @Override
+    public Path getFile() {
+        return file;
     }
 }

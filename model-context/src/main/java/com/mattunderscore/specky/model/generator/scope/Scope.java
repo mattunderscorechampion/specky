@@ -30,6 +30,8 @@ import com.mattunderscore.specky.licence.resolver.LicenceResolver;
 import com.mattunderscore.specky.type.resolver.TypeResolver;
 import com.mattunderscore.specky.value.resolver.DefaultValueResolver;
 
+import java.nio.file.Path;
+
 /**
  * Scope to resolveLicence names, symbols and values in.
  * @author Matt Champion on 21/08/2016
@@ -49,6 +51,11 @@ public interface Scope extends DefaultValueResolver, TypeResolver, LicenceResolv
      * @return the copyright holder
      */
     String getCopyrightHolder();
+
+    /**
+     * @return the file the scope is in
+     */
+    Path getFile();
 
     /**
      * @return a template context for the scope
