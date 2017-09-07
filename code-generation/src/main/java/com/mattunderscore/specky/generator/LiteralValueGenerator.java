@@ -31,6 +31,7 @@ import com.mattunderscore.specky.literal.model.ComplexLiteral;
 import com.mattunderscore.specky.literal.model.ConstantLiteral;
 import com.mattunderscore.specky.literal.model.IntegerLiteral;
 import com.mattunderscore.specky.literal.model.LiteralDesc;
+import com.mattunderscore.specky.literal.model.NamedComplexLiteral;
 import com.mattunderscore.specky.literal.model.RealLiteral;
 import com.mattunderscore.specky.literal.model.StringLiteral;
 import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
@@ -75,6 +76,20 @@ public final class LiteralValueGenerator {
                     .map(this::generate)
                     .forEach(builder::add);
             builder.add(")");
+            return builder.build();
+        }
+        else if (literalDesc instanceof NamedComplexLiteral) {
+            // Assume builder
+            final NamedComplexLiteral complexLiteral = (NamedComplexLiteral) literalDesc;
+            final CodeBlock.Builder builder = CodeBlock
+                    .builder()
+                    .add("$T.builder()", bestGuess(complexLiteral.getTypeName()));
+            for (int i = 0; i < complexLiteral.getNames().size(); i++) {
+                builder.add(".$N(", complexLiteral.getNames().get(i));
+                builder.add(generate(complexLiteral.getSubvalues().get(i)));
+                builder.add(")");
+            }
+            builder.add(".build()");
             return builder.build();
         }
         else {

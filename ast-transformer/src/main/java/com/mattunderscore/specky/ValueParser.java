@@ -27,6 +27,7 @@ package com.mattunderscore.specky;
 
 import java.util.Optional;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
@@ -34,6 +35,7 @@ import com.mattunderscore.specky.literal.model.ComplexLiteral;
 import com.mattunderscore.specky.literal.model.ConstantLiteral;
 import com.mattunderscore.specky.literal.model.IntegerLiteral;
 import com.mattunderscore.specky.literal.model.LiteralDesc;
+import com.mattunderscore.specky.literal.model.NamedComplexLiteral;
 import com.mattunderscore.specky.literal.model.RealLiteral;
 import com.mattunderscore.specky.literal.model.StringLiteral;
 import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
@@ -79,6 +81,14 @@ import com.mattunderscore.specky.type.resolver.TypeResolver;
                 .build();
         }
 
+        if (expressionValue.VALUE_IDENTIFIER().size() == 1) {
+            return getComplexLiteral(expressionValue, typeResolver);
+        }
+
+        return getNamedComplexLiteral(expressionValue, typeResolver);
+    }
+
+    private LiteralDesc getComplexLiteral(Specky.Value_expressionContext expressionValue, TypeResolver typeResolver) {
         final Optional<String> maybeType = typeResolver.resolveType(expressionValue.VALUE_IDENTIFIER().get(0).getText());
         if (!maybeType.isPresent()) {
             errorListener.onSemanticError("Type name not found", expressionValue);
@@ -87,6 +97,32 @@ import com.mattunderscore.specky.type.resolver.TypeResolver;
 
         final String type = maybeType.get();
         final ComplexLiteral.Builder valueBuilder = ComplexLiteral.builder().typeName(type);
+
+        expressionValue
+                .value_expression()
+                .stream()
+                .map(expr -> getValue(expr, typeResolver))
+                .forEach(valueBuilder::addSubvalue);
+
+        return valueBuilder.build();
+    }
+
+    private LiteralDesc getNamedComplexLiteral(Specky.Value_expressionContext expressionValue, TypeResolver typeResolver) {
+        final Optional<String> maybeType = typeResolver.resolveType(expressionValue.VALUE_IDENTIFIER().get(0).getText());
+        if (!maybeType.isPresent()) {
+            errorListener.onSemanticError("Type name not found", expressionValue);
+            return null;
+        }
+
+        final String type = maybeType.get();
+        final NamedComplexLiteral.Builder valueBuilder = NamedComplexLiteral.builder().typeName(type);
+
+        expressionValue
+            .VALUE_IDENTIFIER()
+            .stream()
+            .skip(1)
+            .map(ParseTree::getText)
+            .forEach(valueBuilder::addName);
 
         expressionValue
                 .value_expression()

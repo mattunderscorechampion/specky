@@ -50,3 +50,12 @@ value ComplexLiteral : LiteralDesc "Represents a composite literal."
     licence BSD3Clause
     options
         builder
+
+value NamedComplexLiteral : LiteralDesc "Represents a composite literal where child values are named."
+    properties
+        String typeName
+        List<String> names
+        List<LiteralDesc> subvalues
+    licence BSD3Clause
+    options
+        builder

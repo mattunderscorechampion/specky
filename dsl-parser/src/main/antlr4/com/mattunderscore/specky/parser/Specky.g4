@@ -1,4 +1,4 @@
-/* Copyright © 2016 Matthew Champion
+/* Copyright © 2016, 2017 Matthew Champion
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -44,7 +44,8 @@ default_value
     ;
 
 value_expression
-    :   VALUE_IDENTIFIER VALUE_OPEN_PARAMETER (value_expression (VALUE_PARAMETER_SEPARATOR VALUE_INLINE_WS value_expression)*)?  VALUE_CLOSE_PARAMETER
+    :   VALUE_IDENTIFIER VALUE_OPEN_PARAMETER (VALUE_IDENTIFIER VALUE_INLINE_WS value_expression (VALUE_PARAMETER_SEPARATOR VALUE_INLINE_WS VALUE_IDENTIFIER VALUE_INLINE_WS value_expression)*)?  VALUE_CLOSE_PARAMETER
+    |   VALUE_IDENTIFIER VALUE_OPEN_PARAMETER (value_expression (VALUE_PARAMETER_SEPARATOR VALUE_INLINE_WS value_expression)*)?  VALUE_CLOSE_PARAMETER
     |   VALUE_IDENTIFIER VALUE_MEMBER_ACCESSOR VALUE_IDENTIFIER
     |   VALUE_INTEGER_LITERAL
     |   VALUE_REAL_LITERAL
