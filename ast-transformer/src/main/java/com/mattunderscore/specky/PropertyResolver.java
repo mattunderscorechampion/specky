@@ -203,12 +203,16 @@ import static java.util.stream.Collectors.toList;
                 .map(ParseTree::getText)
                 .collect(toList());
 
-        final String resolvedType = scope
-            .resolveType(context
-                    .Identifier()
-                    .getText(),
-                context.OPTIONAL() != null)
-            .get();
+        final String unresolvedType = context
+            .Identifier()
+            .getText();
+        final Optional<String> optionalType = scope.resolveType(unresolvedType, context.OPTIONAL() != null);
+
+        if (!optionalType.isPresent()) {
+            errorListener.onSemanticError("Type " + unresolvedType + " cannot be found", context);
+        }
+
+        final String resolvedType = optionalType.orElse("unknown type");
 
         return PropertyDesc
             .builder()
