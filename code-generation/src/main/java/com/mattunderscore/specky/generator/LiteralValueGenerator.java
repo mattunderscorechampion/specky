@@ -27,6 +27,9 @@ package com.mattunderscore.specky.generator;
 
 import static com.squareup.javapoet.ClassName.bestGuess;
 
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import com.mattunderscore.specky.literal.model.ComplexLiteral;
 import com.mattunderscore.specky.literal.model.ConstantLiteral;
 import com.mattunderscore.specky.literal.model.IntegerLiteral;
@@ -70,11 +73,12 @@ public final class LiteralValueGenerator {
             final CodeBlock.Builder builder = CodeBlock
                     .builder()
                     .add("new $T(", bestGuess(complexLiteral.getTypeName()));
-            complexLiteral
+            builder.add(complexLiteral
                     .getSubvalues()
                     .stream()
                     .map(this::generate)
-                    .forEach(builder::add);
+                    .map(Objects::toString)
+                    .collect(Collectors.joining(", ")));
             builder.add(")");
             return builder.build();
         }

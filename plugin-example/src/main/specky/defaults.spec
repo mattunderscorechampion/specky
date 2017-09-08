@@ -30,6 +30,7 @@ package com.example
 type SimpleDefaults
     properties
         int id default 5
+        int extra default 5
 
 value ConstructorSimpleDefaults : SimpleDefaults
     options
@@ -41,12 +42,12 @@ value BuilderSimpleDefaults : SimpleDefaults
 
 value ComplexDefaults
     properties
-        SimpleDefaults nested [default ConstructorSimpleDefaults(6)]
+        SimpleDefaults nested [default ConstructorSimpleDefaults(6, 7)]
     options
         immutable builder
 
 value NamedComplexDefaults
     properties
-        SimpleDefaults nested [default BuilderSimpleDefaults(id 6)]
+        SimpleDefaults nested [default BuilderSimpleDefaults(id 6, extra 7)]
     options
         immutable builder
