@@ -62,7 +62,8 @@ import com.mattunderscore.specky.type.resolver.TypeResolver;
      */
     LiteralDesc getValue(Specky.Value_expressionContext expressionValue, TypeResolver typeResolver) {
         if (expressionValue.STRING_LITERAL() != null) {
-            return StringLiteral.builder().stringLiteral(expressionValue.STRING_LITERAL().getText()).build();
+            final String stringValue = expressionValue.STRING_LITERAL().getText();
+            return StringLiteral.builder().stringLiteral(stringValue.substring(1, stringValue.length() - 1)).build();
         }
 
         if (expressionValue.VALUE_REAL_LITERAL() != null) {
