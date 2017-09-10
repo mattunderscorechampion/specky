@@ -100,6 +100,7 @@ constraint_proposition
     |   NEGATION CONSTRAINT_INLINE_WS constraint_proposition
     |   SIZE_OF CONSTRAINT_INLINE_WS constraint_proposition
     |   HAS_SOME CONSTRAINT_INLINE_WS constraint_proposition
+    |   PROPERTY CONSTRAINT_INLINE_WS CONSTRAINT_IDENTIFIER CONSTRAINT_INLINE_WS constraint_proposition
     ;
 
 constraint_expression

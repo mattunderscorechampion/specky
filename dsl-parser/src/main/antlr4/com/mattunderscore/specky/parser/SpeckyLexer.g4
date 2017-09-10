@@ -308,6 +308,10 @@ INTEGER_LITERAL
     :   ('+'|'-')? [0-9]+
     ;
 
+PROPERTY
+    :   '.'
+    ;
+
 CONSTRAINT_STRING_START
     :   '"' -> more, pushMode(STR)
     ;
@@ -326,6 +330,10 @@ CLOSE_PARENTHESIS
 
 EQUAL_TO
     :   '='
+    ;
+
+CONSTRAINT_IDENTIFIER
+    :   Letter LetterOrDigit*
     ;
 
 CONSTRAINT_END
