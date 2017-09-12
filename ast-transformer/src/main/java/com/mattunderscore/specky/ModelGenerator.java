@@ -41,6 +41,7 @@ import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.UnbufferedTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
+import com.mattunderscore.specky.construction.method.resolver.MutableConstructionMethodResolver;
 import com.mattunderscore.specky.context.file.FileContext;
 import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
 import com.mattunderscore.specky.error.listeners.SemanticErrorListener;
@@ -169,10 +170,14 @@ public final class ModelGenerator {
         final SectionScopeResolver sectionScopeResolver =
             new SectionScopeResolver(typeResolver, fileContext.getFile());
 
+        final MutableConstructionMethodResolver constructionMethodResolver = new MutableConstructionMethodResolver();
+
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
         final FileTypeListener fileTypeListener =
             new FileTypeListener(errListener, typeResolver);
+        final FileConstructionMethodListener fileConstructionMethodListener =
+            new FileConstructionMethodListener(errListener, constructionMethodResolver);
         final SectionLicenceListener sectionLicenceListener =
             new SectionLicenceListener(sectionScopeResolver, errListener);
         final SectionImportTypeListener sectionImportTypeListener =
@@ -189,6 +194,7 @@ public final class ModelGenerator {
             new CopyrightHolderListener(sectionScopeResolver);
 
         parser.addParseListener(fileTypeListener);
+        parser.addParseListener(fileConstructionMethodListener);
         parser.addParseListener(sectionLicenceListener);
         parser.addParseListener(sectionImportTypeListener);
         parser.addParseListener(sectionImportValueListener);
