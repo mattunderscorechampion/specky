@@ -28,6 +28,7 @@ package com.mattunderscore.specky.construction.method.resolver;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import com.mattunderscore.specky.model.ConstructionMethod;
 import net.jcip.annotations.NotThreadSafe;
@@ -49,10 +50,17 @@ public final class MutableConstructionMethodResolver implements ConstructionMeth
     /**
      * Register a construction method.
      */
-    public MutableConstructionMethodResolver registerConstructionMethod(
+    public CompletableFuture<Void> registerConstructionMethod(
             String type,
             ConstructionMethod constructionMethod) {
-        constructionMethods.put(type, constructionMethod);
-        return this;
+        final ConstructionMethod present = constructionMethods.putIfAbsent(type, constructionMethod);
+        if (present == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        else {
+            final CompletableFuture<Void> future = new CompletableFuture<>();
+            future.completeExceptionally(new IllegalArgumentException("The construction method cannot be registered"));
+            return future;
+        }
     }
 }

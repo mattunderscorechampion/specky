@@ -27,9 +27,10 @@ package com.mattunderscore.specky.construction.method.resolver;
 
 import static com.mattunderscore.specky.model.ConstructionMethod.MUTABLE_BUILDER;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import org.junit.Test;
 
@@ -45,14 +46,27 @@ public final class MutableConstructionMethodResolverTest {
     public void registerAndLookup() {
         final MutableConstructionMethodResolver resolver = new MutableConstructionMethodResolver();
 
-        final MutableConstructionMethodResolver newResolver = resolver.registerConstructionMethod(
+        final CompletableFuture<Void> f = resolver.registerConstructionMethod(
             "Type",
             MUTABLE_BUILDER);
 
-        assertSame(resolver, newResolver);
+        assertTrue(f.isDone());
 
         final Optional<ConstructionMethod> type = resolver.resolveConstructionMethod("Type");
 
         assertEquals(MUTABLE_BUILDER, type.get());
+    }
+
+    @Test
+    public void registerTwice() {
+        final MutableConstructionMethodResolver resolver = new MutableConstructionMethodResolver();
+
+        resolver.registerConstructionMethod("Type", MUTABLE_BUILDER);
+
+        final CompletableFuture<Void> f = resolver.registerConstructionMethod(
+            "Type",
+            MUTABLE_BUILDER);
+
+        assertTrue(f.isCompletedExceptionally());
     }
 }
