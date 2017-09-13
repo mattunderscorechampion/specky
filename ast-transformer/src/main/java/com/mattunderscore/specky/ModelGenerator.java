@@ -205,7 +205,7 @@ public final class ModelGenerator {
         parser.removeErrorListeners();
         parser.addErrorListener(syntaxErrListener);
 
-        return new ParseContext(fileContext.getFile(), parser.spec(), sectionScopeResolver);
+        return new ParseContext(fileContext.getFile(), parser.spec(), sectionScopeResolver, errListener);
     }
 
     private List<AbstractTypeDesc> secondPass(
@@ -253,11 +253,17 @@ public final class ModelGenerator {
         private final Path file;
         private final Specky.SpecContext specContext;
         private final SectionScopeResolver sectionScopeResolver;
+        private final InternalSemanticErrorListener errListener;
 
-        private ParseContext(Path file, SpecContext specContext, SectionScopeResolver sectionScopeResolver) {
+        private ParseContext(
+                Path file,
+                SpecContext specContext,
+                SectionScopeResolver sectionScopeResolver,
+                InternalSemanticErrorListener errListener) {
             this.file = file;
             this.specContext = specContext;
             this.sectionScopeResolver = sectionScopeResolver;
+            this.errListener = errListener;
         }
     }
 }
