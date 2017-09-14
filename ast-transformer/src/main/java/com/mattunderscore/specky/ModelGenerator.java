@@ -95,9 +95,11 @@ public final class ModelGenerator {
             return null;
         }
 
+        contexts.forEach(this::secondPass);
+
         final List<AbstractTypeDesc> abstractTypes = contexts
             .stream()
-            .map(context -> secondPass(context.file, context.specContext, context.sectionScopeResolver))
+            .map(context -> thirdPass(context.file, context.specContext, context.sectionScopeResolver))
             .flatMap(Collection::stream)
             .collect(toList());
 
@@ -109,13 +111,13 @@ public final class ModelGenerator {
 
         final List<ValueDesc> valueDescs = contexts
             .stream()
-            .map(context -> thirdPass(context.file, context.specContext, context.sectionScopeResolver, nameToAbstractType))
+            .map(context -> fourthPass(context.file, context.specContext, context.sectionScopeResolver, nameToAbstractType))
             .flatMap(Collection::stream)
             .collect(toList());
 
         final List<BeanDesc> beanDescs = contexts
             .stream()
-            .map(context -> fourthPass(context.file, context.specContext, context.sectionScopeResolver, nameToAbstractType))
+            .map(context -> fifthPass(context.file, context.specContext, context.sectionScopeResolver, nameToAbstractType))
             .flatMap(Collection::stream)
             .collect(toList());
 
@@ -178,6 +180,20 @@ public final class ModelGenerator {
             new FileTypeListener(errListener, typeResolver);
         final FileConstructionMethodListener fileConstructionMethodListener =
             new FileConstructionMethodListener(errListener, constructionMethodResolver);
+
+        parser.addParseListener(fileTypeListener);
+        parser.addParseListener(fileConstructionMethodListener);
+        parser.removeErrorListeners();
+        parser.addErrorListener(syntaxErrListener);
+
+        return new ParseContext(fileContext.getFile(), parser.spec(), sectionScopeResolver, errListener);
+    }
+
+    private void secondPass(ParseContext context) {
+        final InternalSemanticErrorListener errListener = context.errListener;
+
+        final SectionScopeResolver sectionScopeResolver = context.sectionScopeResolver;
+
         final SectionLicenceListener sectionLicenceListener =
             new SectionLicenceListener(sectionScopeResolver, errListener);
         final SectionImportTypeListener sectionImportTypeListener =
@@ -193,22 +209,19 @@ public final class ModelGenerator {
         final CopyrightHolderListener copyrightHolderListener =
             new CopyrightHolderListener(sectionScopeResolver);
 
-        parser.addParseListener(fileTypeListener);
-        parser.addParseListener(fileConstructionMethodListener);
-        parser.addParseListener(sectionLicenceListener);
-        parser.addParseListener(sectionImportTypeListener);
-        parser.addParseListener(sectionImportValueListener);
-        parser.addParseListener(sectionScopeListener);
-        parser.addParseListener(sectionAuthorListener);
-        parser.addParseListener(sectionPackageListener);
-        parser.addParseListener(copyrightHolderListener);
-        parser.removeErrorListeners();
-        parser.addErrorListener(syntaxErrListener);
+        final DelegatingParseListener parseListener = new DelegatingParseListener(
+            sectionLicenceListener,
+            sectionImportTypeListener,
+            sectionImportValueListener,
+            sectionScopeListener,
+            sectionAuthorListener,
+            sectionPackageListener,
+            copyrightHolderListener);
 
-        return new ParseContext(fileContext.getFile(), parser.spec(), sectionScopeResolver, errListener);
+        ParseTreeWalker.DEFAULT.walk(parseListener, context.specContext);
     }
 
-    private List<AbstractTypeDesc> secondPass(
+    private List<AbstractTypeDesc> thirdPass(
             Path file,
             Specky.SpecContext spec,
             SectionScopeResolver sectionScopeResolver) {
@@ -221,7 +234,7 @@ public final class ModelGenerator {
         return abstractTypeListener.getAbstractTypeDescs();
     }
 
-    private List<ValueDesc> thirdPass(
+    private List<ValueDesc> fourthPass(
             Path file,
             Specky.SpecContext spec,
             SectionScopeResolver sectionScopeResolver,
@@ -235,7 +248,7 @@ public final class ModelGenerator {
         return valueListener.getValueDescs();
     }
 
-    private List<BeanDesc> fourthPass(
+    private List<BeanDesc> fifthPass(
             Path file,
             Specky.SpecContext spec,
             SectionScopeResolver sectionScopeResolver,
