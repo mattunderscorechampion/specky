@@ -47,11 +47,9 @@ import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
 import com.mattunderscore.specky.error.listeners.SemanticErrorListener;
 import com.mattunderscore.specky.error.listeners.SyntaxErrorListener;
 import com.mattunderscore.specky.model.AbstractTypeDesc;
-import com.mattunderscore.specky.model.BeanDesc;
 import com.mattunderscore.specky.model.ImplementationDesc;
 import com.mattunderscore.specky.model.SpecDesc;
 import com.mattunderscore.specky.model.TypeDesc;
-import com.mattunderscore.specky.model.ValueDesc;
 import com.mattunderscore.specky.model.generator.scope.SectionScopeResolver;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.Specky.SpecContext;
@@ -111,25 +109,11 @@ public final class ModelGenerator {
                 abstractTypeDesc -> abstractTypeDesc.getPackageName() + "." + abstractTypeDesc.getName(),
                 abstractTypeDesc -> abstractTypeDesc));
 
-        // Parse the values
-        final List<ValueDesc> valueDescs = contexts
+        // Parse the implementations
+        final List<ImplementationDesc> implementations = contexts
             .stream()
             .map(context -> fourthPass(context, nameToAbstractType))
             .flatMap(Collection::stream)
-            .collect(toList());
-
-        // Parse the beans
-        final List<BeanDesc> beanDescs = contexts
-            .stream()
-            .map(context -> fifthPass(context, nameToAbstractType))
-            .flatMap(Collection::stream)
-            .collect(toList());
-
-        // Combine the implementations
-        final List<ImplementationDesc> implementations = Stream
-            .concat(
-                beanDescs.stream(),
-                valueDescs.stream())
             .collect(toList());
 
         // Combine all the types
@@ -238,24 +222,24 @@ public final class ModelGenerator {
         return abstractTypeListener.getAbstractTypeDescs();
     }
 
-    private List<ValueDesc> fourthPass(ParseContext ctx, Map<String, AbstractTypeDesc> nameToAbstractType) {
+    private List<ImplementationDesc> fourthPass(ParseContext ctx, Map<String, AbstractTypeDesc> nameToAbstractType) {
 
         final InternalSemanticErrorListener errListener =
                 (message, ruleContext) -> errorListener.onSemanticError(ctx.file, message, ruleContext);
 
         final ValueListener valueListener = new ValueListener(ctx.scopeResolver, nameToAbstractType, errListener);
-        ParseTreeWalker.DEFAULT.walk(valueListener, ctx.specContext);
-        return valueListener.getValueDescs();
-    }
-
-    private List<BeanDesc> fifthPass(ParseContext ctx, Map<String, AbstractTypeDesc> nameToAbstractType) {
-
-        final InternalSemanticErrorListener errListener =
-                (message, ruleContext) -> errorListener.onSemanticError(ctx.file, message, ruleContext);
-
         final BeanListener beanListener = new BeanListener(ctx.scopeResolver, nameToAbstractType, errListener);
-        ParseTreeWalker.DEFAULT.walk(beanListener, ctx.specContext);
-        return beanListener.getBeanDescs();
+
+        final DelegatingParseListener parseListener = new DelegatingParseListener(
+            valueListener,
+            beanListener);
+        ParseTreeWalker.DEFAULT.walk(parseListener, ctx.specContext);
+
+        return Stream
+            .concat(
+                beanListener.getBeanDescs().stream(),
+                valueListener.getValueDescs().stream())
+            .collect(toList());
     }
 
     private static final class ParseContext {
