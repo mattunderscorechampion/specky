@@ -97,42 +97,49 @@ public final class ModelGenerator {
 
         contexts.forEach(this::secondPass);
 
+        // Parse the abstract types
         final List<AbstractTypeDesc> abstractTypes = contexts
             .stream()
             .map(this::thirdPass)
             .flatMap(Collection::stream)
             .collect(toList());
 
+        // Collect a map of names to abstract types
         final Map<String, AbstractTypeDesc> nameToAbstractType = abstractTypes
             .stream()
             .collect(toMap(
                 abstractTypeDesc -> abstractTypeDesc.getPackageName() + "." + abstractTypeDesc.getName(),
                 abstractTypeDesc -> abstractTypeDesc));
 
+        // Parse the values
         final List<ValueDesc> valueDescs = contexts
             .stream()
             .map(context -> fourthPass(context, nameToAbstractType))
             .flatMap(Collection::stream)
             .collect(toList());
 
+        // Parse the beans
         final List<BeanDesc> beanDescs = contexts
             .stream()
             .map(context -> fifthPass(context, nameToAbstractType))
             .flatMap(Collection::stream)
             .collect(toList());
 
+        // Combine the implementations
         final List<ImplementationDesc> implementations = Stream
             .concat(
                 beanDescs.stream(),
                 valueDescs.stream())
             .collect(toList());
 
+        // Combine all the types
         final List<TypeDesc> types = Stream
             .concat(
                 abstractTypes.stream(),
                 implementations.stream())
             .collect(toList());
 
+        // Create the description of the specification
         return SpecDesc
             .builder()
             .abstractTypes(abstractTypes)
