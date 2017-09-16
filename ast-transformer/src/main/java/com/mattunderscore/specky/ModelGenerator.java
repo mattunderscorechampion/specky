@@ -99,7 +99,7 @@ public final class ModelGenerator {
 
         final List<AbstractTypeDesc> abstractTypes = contexts
             .stream()
-            .map(context -> thirdPass(context.file, context.specContext, context.sectionScopeResolver))
+            .map(this::thirdPass)
             .flatMap(Collection::stream)
             .collect(toList());
 
@@ -111,13 +111,13 @@ public final class ModelGenerator {
 
         final List<ValueDesc> valueDescs = contexts
             .stream()
-            .map(context -> fourthPass(context.file, context.specContext, context.sectionScopeResolver, nameToAbstractType))
+            .map(context -> fourthPass(context, nameToAbstractType))
             .flatMap(Collection::stream)
             .collect(toList());
 
         final List<BeanDesc> beanDescs = contexts
             .stream()
-            .map(context -> fifthPass(context.file, context.specContext, context.sectionScopeResolver, nameToAbstractType))
+            .map(context -> fifthPass(context, nameToAbstractType))
             .flatMap(Collection::stream)
             .collect(toList());
 
@@ -192,7 +192,7 @@ public final class ModelGenerator {
     private void secondPass(ParseContext context) {
         final InternalSemanticErrorListener errListener = context.errListener;
 
-        final SectionScopeResolver sectionScopeResolver = context.sectionScopeResolver;
+        final SectionScopeResolver sectionScopeResolver = context.scopeResolver;
 
         final SectionLicenceListener sectionLicenceListener =
             new SectionLicenceListener(sectionScopeResolver, errListener);
@@ -221,61 +221,50 @@ public final class ModelGenerator {
         ParseTreeWalker.DEFAULT.walk(parseListener, context.specContext);
     }
 
-    private List<AbstractTypeDesc> thirdPass(
-            Path file,
-            Specky.SpecContext spec,
-            SectionScopeResolver sectionScopeResolver) {
+    private List<AbstractTypeDesc> thirdPass(ParseContext ctx) {
 
         final InternalSemanticErrorListener errListener =
-                (message, ruleContext) -> errorListener.onSemanticError(file, message, ruleContext);
+                (message, ruleContext) -> errorListener.onSemanticError(ctx.file, message, ruleContext);
 
-        final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(sectionScopeResolver, errListener);
-        ParseTreeWalker.DEFAULT.walk(abstractTypeListener, spec);
+        final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(ctx.scopeResolver, errListener);
+        ParseTreeWalker.DEFAULT.walk(abstractTypeListener, ctx.specContext);
         return abstractTypeListener.getAbstractTypeDescs();
     }
 
-    private List<ValueDesc> fourthPass(
-            Path file,
-            Specky.SpecContext spec,
-            SectionScopeResolver sectionScopeResolver,
-            Map<String, AbstractTypeDesc> nameToAbstractType) {
+    private List<ValueDesc> fourthPass(ParseContext ctx, Map<String, AbstractTypeDesc> nameToAbstractType) {
 
         final InternalSemanticErrorListener errListener =
-                (message, ruleContext) -> errorListener.onSemanticError(file, message, ruleContext);
+                (message, ruleContext) -> errorListener.onSemanticError(ctx.file, message, ruleContext);
 
-        final ValueListener valueListener = new ValueListener(sectionScopeResolver, nameToAbstractType, errListener);
-        ParseTreeWalker.DEFAULT.walk(valueListener, spec);
+        final ValueListener valueListener = new ValueListener(ctx.scopeResolver, nameToAbstractType, errListener);
+        ParseTreeWalker.DEFAULT.walk(valueListener, ctx.specContext);
         return valueListener.getValueDescs();
     }
 
-    private List<BeanDesc> fifthPass(
-            Path file,
-            Specky.SpecContext spec,
-            SectionScopeResolver sectionScopeResolver,
-            Map<String, AbstractTypeDesc> nameToAbstractType) {
+    private List<BeanDesc> fifthPass(ParseContext ctx, Map<String, AbstractTypeDesc> nameToAbstractType) {
 
         final InternalSemanticErrorListener errListener =
-                (message, ruleContext) -> errorListener.onSemanticError(file, message, ruleContext);
+                (message, ruleContext) -> errorListener.onSemanticError(ctx.file, message, ruleContext);
 
-        final BeanListener beanListener = new BeanListener(sectionScopeResolver, nameToAbstractType, errListener);
-        ParseTreeWalker.DEFAULT.walk(beanListener, spec);
+        final BeanListener beanListener = new BeanListener(ctx.scopeResolver, nameToAbstractType, errListener);
+        ParseTreeWalker.DEFAULT.walk(beanListener, ctx.specContext);
         return beanListener.getBeanDescs();
     }
 
     private static final class ParseContext {
         private final Path file;
         private final Specky.SpecContext specContext;
-        private final SectionScopeResolver sectionScopeResolver;
+        private final SectionScopeResolver scopeResolver;
         private final InternalSemanticErrorListener errListener;
 
         private ParseContext(
                 Path file,
                 SpecContext specContext,
-                SectionScopeResolver sectionScopeResolver,
+                SectionScopeResolver scopeResolver,
                 InternalSemanticErrorListener errListener) {
             this.file = file;
             this.specContext = specContext;
-            this.sectionScopeResolver = sectionScopeResolver;
+            this.scopeResolver = scopeResolver;
             this.errListener = errListener;
         }
     }
