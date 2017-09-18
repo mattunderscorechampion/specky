@@ -41,6 +41,7 @@ import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.UnbufferedTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
+import com.mattunderscore.specky.construction.method.resolver.ConstructionMethodResolver;
 import com.mattunderscore.specky.construction.method.resolver.MutableConstructionMethodResolver;
 import com.mattunderscore.specky.context.file.FileContext;
 import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
@@ -177,7 +178,12 @@ public final class ModelGenerator {
         parser.removeErrorListeners();
         parser.addErrorListener(syntaxErrListener);
 
-        return new ParseContext(fileContext.getFile(), parser.spec(), sectionScopeResolver, errListener);
+        return new ParseContext(
+            fileContext.getFile(),
+            parser.spec(),
+            sectionScopeResolver,
+            errListener,
+            constructionMethodResolver);
     }
 
     private void secondPass(ParseContext context) {
@@ -247,16 +253,20 @@ public final class ModelGenerator {
         private final Specky.SpecContext specContext;
         private final SectionScopeResolver scopeResolver;
         private final InternalSemanticErrorListener errListener;
+        private final ConstructionMethodResolver constructionMethodResolver;
 
         private ParseContext(
-                Path file,
-                SpecContext specContext,
-                SectionScopeResolver scopeResolver,
-                InternalSemanticErrorListener errListener) {
+            Path file,
+            SpecContext specContext,
+            SectionScopeResolver scopeResolver,
+            InternalSemanticErrorListener errListener,
+            ConstructionMethodResolver constructionMethodResolver) {
+
             this.file = file;
             this.specContext = specContext;
             this.scopeResolver = scopeResolver;
             this.errListener = errListener;
+            this.constructionMethodResolver = constructionMethodResolver;
         }
     }
 }
