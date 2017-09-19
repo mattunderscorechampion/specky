@@ -25,8 +25,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
+import static com.mattunderscore.specky.model.ConstructionMethod.IMMUTABLE_BUILDER;
+import static com.mattunderscore.specky.model.ConstructionMethod.MUTABLE_BUILDER;
 import static com.squareup.javapoet.ClassName.bestGuess;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -38,6 +41,7 @@ import com.mattunderscore.specky.literal.model.NamedComplexLiteral;
 import com.mattunderscore.specky.literal.model.RealLiteral;
 import com.mattunderscore.specky.literal.model.StringLiteral;
 import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
+import com.mattunderscore.specky.model.ConstructionMethod;
 import com.squareup.javapoet.CodeBlock;
 
 /**
@@ -68,36 +72,58 @@ public final class LiteralValueGenerator {
             final ConstantLiteral constantLiteral = (ConstantLiteral) literalDesc;
             return CodeBlock.of("$T.$N", bestGuess(constantLiteral.getTypeName()), constantLiteral.getConstant());
         }
-        else if (literalDesc instanceof ComplexLiteral) {
+        else {
+            return generateComplexLiteral(literalDesc);
+        }
+    }
+
+    private CodeBlock generateComplexLiteral(LiteralDesc literalDesc) {
+        if (literalDesc instanceof ComplexLiteral) {
             final ComplexLiteral complexLiteral = (ComplexLiteral) literalDesc;
-            final CodeBlock.Builder builder = CodeBlock
-                    .builder()
-                    .add("new $T(", bestGuess(complexLiteral.getTypeName()));
-            builder.add(complexLiteral
-                    .getSubvalues()
-                    .stream()
-                    .map(this::generate)
-                    .map(Objects::toString)
-                    .collect(Collectors.joining(", ")));
-            builder.add(")");
-            return builder.build();
+            return useConstructor(complexLiteral.getTypeName(), complexLiteral.getSubvalues());
         }
         else if (literalDesc instanceof NamedComplexLiteral) {
-            // Assume builder
             final NamedComplexLiteral complexLiteral = (NamedComplexLiteral) literalDesc;
-            final CodeBlock.Builder builder = CodeBlock
-                    .builder()
-                    .add("$T.builder()", bestGuess(complexLiteral.getTypeName()));
-            for (int i = 0; i < complexLiteral.getNames().size(); i++) {
-                builder.add(".$N(", complexLiteral.getNames().get(i));
-                builder.add(generate(complexLiteral.getSubvalues().get(i)));
-                builder.add(")");
+            final String typeName = complexLiteral.getTypeName();
+            final List<LiteralDesc> subvalues = complexLiteral.getSubvalues();
+            final ConstructionMethod constructionMethod = complexLiteral.getConstructionMethod();
+            if (constructionMethod == IMMUTABLE_BUILDER || constructionMethod == MUTABLE_BUILDER) {
+                final List<String> names = complexLiteral.getNames();
+                return useBuilder(typeName, names, subvalues);
             }
-            builder.add(".build()");
-            return builder.build();
+            else {
+                // Assume order
+                return useConstructor(typeName, subvalues);
+            }
         }
         else {
             throw new IllegalArgumentException(literalDesc + " not supported");
         }
+    }
+
+    private CodeBlock useBuilder(String typeName, List<String> names, List<LiteralDesc> subvalues) {
+        final CodeBlock.Builder builder = CodeBlock
+                .builder()
+                .add("$T.builder()", bestGuess(typeName));
+        for (int i = 0; i < names.size(); i++) {
+            builder.add(".$N(", names.get(i));
+            builder.add(generate(subvalues.get(i)));
+            builder.add(")");
+        }
+        builder.add(".build()");
+        return builder.build();
+    }
+
+    private CodeBlock useConstructor(String typeName, List<LiteralDesc> subvalues) {
+        final CodeBlock.Builder builder = CodeBlock
+                .builder()
+                .add("new $T(", bestGuess(typeName));
+        builder.add(subvalues
+                .stream()
+                .map(this::generate)
+                .map(Objects::toString)
+                .collect(Collectors.joining(", ")));
+        builder.add(")");
+        return builder.build();
     }
 }
