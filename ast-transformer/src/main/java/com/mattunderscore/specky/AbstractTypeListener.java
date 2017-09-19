@@ -65,10 +65,14 @@ public final class AbstractTypeListener extends SpeckyBaseListener {
     /**
      * Constructor.
      */
-    public AbstractTypeListener(SectionScopeResolver sectionScopeResolver, InternalSemanticErrorListener semanticErrorListener) {
+    public AbstractTypeListener(
+        SectionScopeResolver sectionScopeResolver,
+        InternalSemanticErrorListener semanticErrorListener,
+        ValueParser valueParser) {
+
         this.sectionScopeResolver = sectionScopeResolver;
         this.semanticErrorListener = semanticErrorListener;
-        valueParser = new ValueParser(semanticErrorListener);
+        this.valueParser = valueParser;
     }
 
     /**

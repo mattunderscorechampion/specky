@@ -89,7 +89,10 @@ public final class SectionImportValueListenerTest {
         final SpeckyLexer lexer = new SpeckyLexer(stream);
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
-        final SectionImportValueListener listener = new SectionImportValueListener(errorListener, sectionScopeBuilder);
+        final SectionImportValueListener listener = new SectionImportValueListener(
+            new ValueParser(errorListener),
+            errorListener,
+            sectionScopeBuilder);
         parser.addParseListener(listener);
 
         parser.spec();

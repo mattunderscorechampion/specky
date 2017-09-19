@@ -49,10 +49,14 @@ public final class SectionImportValueListener extends SpeckyBaseListener {
     /**
      * Constructor.
      */
-    public SectionImportValueListener(InternalSemanticErrorListener errorListener, SectionScopeBuilder scopeResolver) {
+    public SectionImportValueListener(
+        ValueParser valueParser,
+        InternalSemanticErrorListener errorListener,
+        SectionScopeBuilder scopeResolver) {
+
+        this.valueParser = valueParser;
         this.errorListener = errorListener;
         this.scopeResolver = scopeResolver;
-        valueParser = new ValueParser(errorListener);
     }
 
     @Override

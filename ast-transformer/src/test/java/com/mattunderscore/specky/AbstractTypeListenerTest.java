@@ -69,7 +69,7 @@ public final class AbstractTypeListenerTest {
         final SectionImportTypeListener sectionImportTypeListener =
             new SectionImportTypeListener(errorListener, sectionScopeResolver);
         final SectionImportValueListener sectionImportValueListener =
-            new SectionImportValueListener(errorListener, sectionScopeResolver);
+            new SectionImportValueListener(new ValueParser(errorListener), errorListener, sectionScopeResolver);
         final SectionScopeListener sectionScopeListener =
             new SectionScopeListener(sectionScopeResolver);
         final SectionAuthorListener sectionAuthorListener =
@@ -87,7 +87,10 @@ public final class AbstractTypeListenerTest {
 
         final Specky.SpecContext spec = parser.spec();
 
-        final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(sectionScopeResolver, errorListener);
+        final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(
+            sectionScopeResolver,
+            errorListener,
+            new ValueParser(errorListener));
         ParseTreeWalker.DEFAULT.walk(abstractTypeListener, spec);
 
         final List<AbstractTypeDesc> abstractTypeDescs = abstractTypeListener.getAbstractTypeDescs();

@@ -196,7 +196,7 @@ public final class ModelGenerator {
         final SectionImportTypeListener sectionImportTypeListener =
             new SectionImportTypeListener(errListener, sectionScopeResolver);
         final SectionImportValueListener sectionImportValueListener =
-            new SectionImportValueListener(errListener, sectionScopeResolver);
+            new SectionImportValueListener(new ValueParser(errListener), errListener, sectionScopeResolver);
         final SectionScopeListener sectionScopeListener =
             new SectionScopeListener(sectionScopeResolver);
         final SectionAuthorListener sectionAuthorListener =
@@ -223,7 +223,10 @@ public final class ModelGenerator {
         final InternalSemanticErrorListener errListener =
                 (message, ruleContext) -> errorListener.onSemanticError(ctx.file, message, ruleContext);
 
-        final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(ctx.scopeResolver, errListener);
+        final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(
+            ctx.scopeResolver,
+            errListener,
+            new ValueParser(errListener));
         ParseTreeWalker.DEFAULT.walk(abstractTypeListener, ctx.specContext);
         return abstractTypeListener.getAbstractTypeDescs();
     }
@@ -233,8 +236,16 @@ public final class ModelGenerator {
         final InternalSemanticErrorListener errListener =
                 (message, ruleContext) -> errorListener.onSemanticError(ctx.file, message, ruleContext);
 
-        final ValueListener valueListener = new ValueListener(ctx.scopeResolver, nameToAbstractType, errListener);
-        final BeanListener beanListener = new BeanListener(ctx.scopeResolver, nameToAbstractType, errListener);
+        final ValueListener valueListener = new ValueListener(
+            ctx.scopeResolver,
+            nameToAbstractType,
+            errListener,
+            new ValueParser(errListener));
+        final BeanListener beanListener = new BeanListener(
+            ctx.scopeResolver,
+            nameToAbstractType,
+            errListener,
+            new ValueParser(errListener));
 
         final DelegatingParseListener parseListener = new DelegatingParseListener(
             valueListener,

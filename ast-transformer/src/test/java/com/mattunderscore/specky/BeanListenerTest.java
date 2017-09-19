@@ -1,5 +1,29 @@
 package com.mattunderscore.specky;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toMap;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.MockitoAnnotations.initMocks;
+
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
+
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CommonToken;
+import org.antlr.v4.runtime.UnbufferedTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+
 import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
 import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
 import com.mattunderscore.specky.literal.model.IntegerLiteral;
@@ -13,29 +37,6 @@ import com.mattunderscore.specky.model.generator.scope.SectionScopeResolver;
 import com.mattunderscore.specky.parser.Specky;
 import com.mattunderscore.specky.parser.SpeckyLexer;
 import com.mattunderscore.specky.type.resolver.SpecTypeResolver;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CommonToken;
-import org.antlr.v4.runtime.UnbufferedTokenStream;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
-
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toMap;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Unit tests for {@link AbstractTypeListener}.
@@ -76,7 +77,7 @@ public final class BeanListenerTest {
         final SectionImportTypeListener sectionImportTypeListener =
             new SectionImportTypeListener(errorListener, sectionScopeResolver);
         final SectionImportValueListener sectionImportValueListener =
-            new SectionImportValueListener(errorListener, sectionScopeResolver);
+            new SectionImportValueListener(new ValueParser(errorListener), errorListener, sectionScopeResolver);
         final SectionScopeListener sectionScopeListener =
             new SectionScopeListener(sectionScopeResolver);
         final SectionAuthorListener sectionAuthorListener =
@@ -94,14 +95,21 @@ public final class BeanListenerTest {
 
         final Specky.SpecContext spec = parser.spec();
 
-        final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(sectionScopeResolver, errorListener);
+        final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(
+            sectionScopeResolver,
+            errorListener,
+            new ValueParser(errorListener));
         ParseTreeWalker.DEFAULT.walk(abstractTypeListener, spec);
         final Map<String, AbstractTypeDesc> abstractTypes = abstractTypeListener
             .getAbstractTypeDescs()
             .stream()
             .collect(toMap(abstractTypeDesc -> abstractTypeDesc.getPackageName() + "." + abstractTypeDesc.getName(), abstractTypeDesc -> abstractTypeDesc));
 
-        final BeanListener beanListener = new BeanListener(sectionScopeResolver, abstractTypes, errorListener);
+        final BeanListener beanListener = new BeanListener(
+            sectionScopeResolver,
+            abstractTypes,
+            errorListener,
+            new ValueParser(errorListener));
         ParseTreeWalker.DEFAULT.walk(beanListener, spec);
 
         final List<BeanDesc> beanDescs = beanListener.getBeanDescs();
@@ -189,7 +197,7 @@ public final class BeanListenerTest {
         final SectionImportTypeListener sectionImportTypeListener =
             new SectionImportTypeListener(errorListener, sectionScopeResolver);
         final SectionImportValueListener sectionImportValueListener =
-            new SectionImportValueListener(errorListener, sectionScopeResolver);
+            new SectionImportValueListener(new ValueParser(errorListener), errorListener, sectionScopeResolver);
         final SectionScopeListener sectionScopeListener =
             new SectionScopeListener(sectionScopeResolver);
         final SectionAuthorListener sectionAuthorListener =
@@ -207,14 +215,21 @@ public final class BeanListenerTest {
 
         final Specky.SpecContext spec = parser.spec();
 
-        final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(sectionScopeResolver, errorListener);
+        final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(
+            sectionScopeResolver,
+            errorListener,
+            new ValueParser(errorListener));
         ParseTreeWalker.DEFAULT.walk(abstractTypeListener, spec);
         final Map<String, AbstractTypeDesc> abstractTypes = abstractTypeListener
             .getAbstractTypeDescs()
             .stream()
             .collect(toMap(abstractTypeDesc -> abstractTypeDesc.getPackageName() + "." + abstractTypeDesc.getName(), abstractTypeDesc -> abstractTypeDesc));
 
-        final BeanListener beanListener = new BeanListener(sectionScopeResolver, abstractTypes, errorListener);
+        final BeanListener beanListener = new BeanListener(
+            sectionScopeResolver,
+            abstractTypes,
+            errorListener,
+            new ValueParser(errorListener));
         ParseTreeWalker.DEFAULT.walk(beanListener, spec);
 
         final List<BeanDesc> beanDescs = beanListener.getBeanDescs();

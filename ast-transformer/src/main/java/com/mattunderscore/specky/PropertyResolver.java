@@ -40,10 +40,14 @@ import static java.util.stream.Collectors.toList;
     /**
      * Constructor.
      */
-    PropertyResolver(Map<String, AbstractTypeDesc> abstractTypes, InternalSemanticErrorListener errorListener) {
+    PropertyResolver(
+        Map<String, AbstractTypeDesc> abstractTypes,
+        InternalSemanticErrorListener errorListener,
+        ValueParser valueParser) {
+
         this.abstractTypes = abstractTypes;
         this.errorListener = errorListener;
-        valueParser = new ValueParser(errorListener);
+        this.valueParser = valueParser;
     }
 
     /**

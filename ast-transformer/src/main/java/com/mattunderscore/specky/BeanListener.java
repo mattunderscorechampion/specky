@@ -59,6 +59,7 @@ public final class BeanListener extends SpeckyBaseListener {
     private final Map<String, AbstractTypeDesc> abstractTypes;
     private final InternalSemanticErrorListener semanticErrorListener;
     private final List<BeanDesc> valueDescs = new ArrayList<>();
+    private final ValueParser valueParser;
 
     private Specky.ImplementationSpecContext implementationSpecContext;
     private BeanDesc.Builder currentTypeDesc = BeanDesc.builder();
@@ -72,11 +73,13 @@ public final class BeanListener extends SpeckyBaseListener {
     public BeanListener(
             SectionScopeResolver sectionScopeResolver,
             Map<String, AbstractTypeDesc> abstractTypes,
-            InternalSemanticErrorListener semanticErrorListener) {
+            InternalSemanticErrorListener semanticErrorListener,
+            ValueParser valueParser) {
 
         this.sectionScopeResolver = sectionScopeResolver;
         this.abstractTypes = abstractTypes;
         this.semanticErrorListener = semanticErrorListener;
+        this.valueParser = valueParser;
     }
 
     /**
@@ -90,7 +93,7 @@ public final class BeanListener extends SpeckyBaseListener {
     public void enterImplementationSpec(Specky.ImplementationSpecContext ctx) {
         currentTypeDesc = BeanDesc.builder();
         currentSupertypes = emptyList();
-        propertyResolver = new PropertyResolver(abstractTypes, semanticErrorListener);
+        propertyResolver = new PropertyResolver(abstractTypes, semanticErrorListener, valueParser);
         implementationSpecContext = ctx;
     }
 
