@@ -5,6 +5,9 @@ author "Matt Champion"
 
 package com.mattunderscore.specky.literal.model
 
+imports
+    com.mattunderscore.specky.model.ConstructionMethod default ConstructionMethod.CONSTRUCTOR
+
 type LiteralDesc "Description of a literal."
 
 value UnstructuredLiteral : LiteralDesc "Represents an unstructured literal."
@@ -47,6 +50,7 @@ value ComplexLiteral : LiteralDesc "Represents a composite literal."
     properties
         String typeName
         List<LiteralDesc> subvalues
+        ConstructionMethod constructionMethod
     licence BSD3Clause
     options
         builder
@@ -56,6 +60,7 @@ value NamedComplexLiteral : LiteralDesc "Represents a composite literal where ch
         String typeName
         List<String> names
         List<LiteralDesc> subvalues
+        ConstructionMethod constructionMethod default ConstructionMethod.IMMUTABLE_BUILDER
     licence BSD3Clause
     options
         builder
