@@ -196,7 +196,10 @@ public final class ModelGenerator {
         final SectionImportTypeListener sectionImportTypeListener =
             new SectionImportTypeListener(errListener, sectionScopeResolver);
         final SectionImportValueListener sectionImportValueListener =
-            new SectionImportValueListener(new ValueParser(errListener), errListener, sectionScopeResolver);
+            new SectionImportValueListener(
+                new ValueParser(errListener, context.constructionMethodResolver),
+                errListener,
+                sectionScopeResolver);
         final SectionScopeListener sectionScopeListener =
             new SectionScopeListener(sectionScopeResolver);
         final SectionAuthorListener sectionAuthorListener =
@@ -226,7 +229,7 @@ public final class ModelGenerator {
         final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(
             ctx.scopeResolver,
             errListener,
-            new ValueParser(errListener));
+            new ValueParser(errListener, ctx.constructionMethodResolver));
         ParseTreeWalker.DEFAULT.walk(abstractTypeListener, ctx.specContext);
         return abstractTypeListener.getAbstractTypeDescs();
     }
@@ -240,12 +243,12 @@ public final class ModelGenerator {
             ctx.scopeResolver,
             nameToAbstractType,
             errListener,
-            new ValueParser(errListener));
+            new ValueParser(errListener, ctx.constructionMethodResolver));
         final BeanListener beanListener = new BeanListener(
             ctx.scopeResolver,
             nameToAbstractType,
             errListener,
-            new ValueParser(errListener));
+            new ValueParser(errListener, ctx.constructionMethodResolver));
 
         final DelegatingParseListener parseListener = new DelegatingParseListener(
             valueListener,

@@ -25,6 +25,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import com.mattunderscore.specky.constraint.model.NFConjoinedDisjointPredicates;
+import com.mattunderscore.specky.construction.method.resolver.ConstructionMethodResolver;
+import com.mattunderscore.specky.construction.method.resolver.MutableConstructionMethodResolver;
 import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
 import com.mattunderscore.specky.literal.model.IntegerLiteral;
 import com.mattunderscore.specky.literal.model.StringLiteral;
@@ -66,6 +68,7 @@ public final class BeanListenerTest {
         final SpeckyLexer lexer = new SpeckyLexer(stream);
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
+        final ConstructionMethodResolver constructionMethodResolver = new MutableConstructionMethodResolver();
         final SpecTypeResolver typeResolver =
             new SpecTypeResolver();
         final SectionScopeResolver sectionScopeResolver =
@@ -77,7 +80,10 @@ public final class BeanListenerTest {
         final SectionImportTypeListener sectionImportTypeListener =
             new SectionImportTypeListener(errorListener, sectionScopeResolver);
         final SectionImportValueListener sectionImportValueListener =
-            new SectionImportValueListener(new ValueParser(errorListener), errorListener, sectionScopeResolver);
+            new SectionImportValueListener(
+                new ValueParser(errorListener, constructionMethodResolver),
+                errorListener,
+                sectionScopeResolver);
         final SectionScopeListener sectionScopeListener =
             new SectionScopeListener(sectionScopeResolver);
         final SectionAuthorListener sectionAuthorListener =
@@ -98,7 +104,7 @@ public final class BeanListenerTest {
         final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(
             sectionScopeResolver,
             errorListener,
-            new ValueParser(errorListener));
+            new ValueParser(errorListener, constructionMethodResolver));
         ParseTreeWalker.DEFAULT.walk(abstractTypeListener, spec);
         final Map<String, AbstractTypeDesc> abstractTypes = abstractTypeListener
             .getAbstractTypeDescs()
@@ -109,7 +115,7 @@ public final class BeanListenerTest {
             sectionScopeResolver,
             abstractTypes,
             errorListener,
-            new ValueParser(errorListener));
+            new ValueParser(errorListener, constructionMethodResolver));
         ParseTreeWalker.DEFAULT.walk(beanListener, spec);
 
         final List<BeanDesc> beanDescs = beanListener.getBeanDescs();
@@ -186,6 +192,7 @@ public final class BeanListenerTest {
         final SpeckyLexer lexer = new SpeckyLexer(stream);
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
+        final ConstructionMethodResolver constructionMethodResolver = new MutableConstructionMethodResolver();
         final SpecTypeResolver typeResolver =
             new SpecTypeResolver();
         final SectionScopeResolver sectionScopeResolver =
@@ -197,7 +204,10 @@ public final class BeanListenerTest {
         final SectionImportTypeListener sectionImportTypeListener =
             new SectionImportTypeListener(errorListener, sectionScopeResolver);
         final SectionImportValueListener sectionImportValueListener =
-            new SectionImportValueListener(new ValueParser(errorListener), errorListener, sectionScopeResolver);
+            new SectionImportValueListener(
+                new ValueParser(errorListener, constructionMethodResolver),
+                errorListener,
+                sectionScopeResolver);
         final SectionScopeListener sectionScopeListener =
             new SectionScopeListener(sectionScopeResolver);
         final SectionAuthorListener sectionAuthorListener =
@@ -218,7 +228,7 @@ public final class BeanListenerTest {
         final AbstractTypeListener abstractTypeListener = new AbstractTypeListener(
             sectionScopeResolver,
             errorListener,
-            new ValueParser(errorListener));
+            new ValueParser(errorListener, constructionMethodResolver));
         ParseTreeWalker.DEFAULT.walk(abstractTypeListener, spec);
         final Map<String, AbstractTypeDesc> abstractTypes = abstractTypeListener
             .getAbstractTypeDescs()
@@ -229,7 +239,7 @@ public final class BeanListenerTest {
             sectionScopeResolver,
             abstractTypes,
             errorListener,
-            new ValueParser(errorListener));
+            new ValueParser(errorListener, constructionMethodResolver));
         ParseTreeWalker.DEFAULT.walk(beanListener, spec);
 
         final List<BeanDesc> beanDescs = beanListener.getBeanDescs();

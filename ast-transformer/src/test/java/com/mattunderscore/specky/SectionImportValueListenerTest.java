@@ -24,6 +24,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky;
 
+import com.mattunderscore.specky.construction.method.resolver.MutableConstructionMethodResolver;
 import com.mattunderscore.specky.error.listeners.InternalSemanticErrorListener;
 import com.mattunderscore.specky.literal.model.LiteralDesc;
 import com.mattunderscore.specky.literal.model.UnstructuredLiteral;
@@ -90,7 +91,7 @@ public final class SectionImportValueListenerTest {
         final Specky parser = new Specky(new UnbufferedTokenStream<CommonToken>(lexer));
 
         final SectionImportValueListener listener = new SectionImportValueListener(
-            new ValueParser(errorListener),
+            new ValueParser(errorListener, new MutableConstructionMethodResolver()),
             errorListener,
             sectionScopeBuilder);
         parser.addParseListener(listener);
