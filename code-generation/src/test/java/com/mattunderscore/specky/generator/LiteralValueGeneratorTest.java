@@ -1,6 +1,7 @@
 package com.mattunderscore.specky.generator;
 
 import static com.mattunderscore.specky.model.ConstructionMethod.CONSTRUCTOR;
+import static com.mattunderscore.specky.model.ConstructionMethod.FROM_DEFAULTS;
 import static com.squareup.javapoet.ClassName.bestGuess;
 import static org.junit.Assert.assertEquals;
 
@@ -122,5 +123,24 @@ public class LiteralValueGeneratorTest {
                 .build());
 
         assertEquals(CodeBlock.builder().add("$T.builder().first($L).build()", bestGuess("com.example.Ex"), 5).build(), block);
+    }
+
+    @Test
+    public void generateDefaultsFromNamedComplexLiteral() throws Exception {
+        final LiteralValueGenerator literalValueGenerator = new LiteralValueGenerator();
+
+        final CodeBlock block = literalValueGenerator.generate(
+            NamedComplexLiteral
+                .builder()
+                .typeName("com.example.Ex")
+                .addName("first")
+                .addSubvalue(IntegerLiteral
+                    .builder()
+                    .integerLiteral("5")
+                    .build())
+                .constructionMethod(FROM_DEFAULTS)
+                .build());
+
+        assertEquals(CodeBlock.builder().add("$T.defaults().withFirst($L)", bestGuess("com.example.Ex"), 5).build(), block);
     }
 }

@@ -25,9 +25,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.mattunderscore.specky.generator;
 
+import static com.mattunderscore.specky.model.ConstructionMethod.FROM_DEFAULTS;
 import static com.mattunderscore.specky.model.ConstructionMethod.IMMUTABLE_BUILDER;
 import static com.mattunderscore.specky.model.ConstructionMethod.MUTABLE_BUILDER;
 import static com.squareup.javapoet.ClassName.bestGuess;
+import static java.lang.Character.toUpperCase;
 
 import java.util.List;
 import java.util.Objects;
@@ -91,6 +93,10 @@ public final class LiteralValueGenerator {
                 final List<String> names = complexLiteral.getNames();
                 return useBuilder(typeName, names, subvalues);
             }
+            else if (constructionMethod == FROM_DEFAULTS) {
+                final List<String> names = complexLiteral.getNames();
+                return useDefaults(typeName, names, subvalues);
+            }
             else {
                 // Assume order
                 return useConstructor(typeName, subvalues);
@@ -99,6 +105,20 @@ public final class LiteralValueGenerator {
         else {
             throw new IllegalArgumentException(literalDesc + " not supported");
         }
+    }
+
+    private CodeBlock useDefaults(String typeName, List<String> names, List<LiteralDesc> subvalues) {
+        final CodeBlock.Builder builder = CodeBlock
+            .builder()
+            .add("$T.defaults()", bestGuess(typeName));
+
+        for (int i = 0; i < names.size(); i++) {
+            builder.add(".$N(", "with" + toUpperCase(names.get(i).charAt(0)) + names.get(i).substring(1));
+            builder.add(generate(subvalues.get(i)));
+            builder.add(")");
+        }
+
+        return builder.build();
     }
 
     private CodeBlock useBuilder(String typeName, List<String> names, List<LiteralDesc> subvalues) {
